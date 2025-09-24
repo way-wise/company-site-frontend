@@ -1,8 +1,7 @@
 "use client";
-import Logo from "@/assets/svgs/Logo";
-import { Button } from "../ui/button";
-import { Heart, LogOut, ShoppingBag } from "lucide-react";
-import Link from "next/link";
+import Logo from "@/assets/shared/way-wise-logo.svg";
+import LogoText from "@/assets/shared/way-wise-text.png";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +10,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { logout } from "@/services/AuthService";
-import { useUser } from "@/context/UserContext";
-import { usePathname, useRouter } from "next/navigation";
 import { protectedRoutes } from "@/contants";
+import { useUser } from "@/context/UserContext";
+import { logout } from "@/services/AuthService";
+import { Heart, LogOut, ShoppingBag } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 export default function Navbar() {
   const { user, setIsLoading } = useUser();
@@ -25,18 +27,17 @@ export default function Navbar() {
   const handleLogOut = () => {
     logout();
     setIsLoading(true);
-    if (protectedRoutes.some((route) => pathname.match(route))) {
+    if (protectedRoutes.some((route: string) => pathname.match(route))) {
       router.push("/");
     }
   };
 
   return (
     <header className="border-b bg-background w-full sticky top-0 z-10">
-      <div className="container flex justify-between items-center mx-auto h-16 px-5">
-        <Link href="/">
-          <h1 className="text-2xl font-black flex items-center">
-            <Logo /> Next Mart
-          </h1>
+      <div className="container flex justify-between items-center mx-auto  px-5 py-4">
+        <Link href="/" className="flex items-center gap-3">
+          <Image src={Logo} alt="Logo" width={56} height={60} />
+          <Image src={LogoText} alt="Logo" width={214} height={51} />
         </Link>
         <div className="max-w-md  flex-grow">
           <input
