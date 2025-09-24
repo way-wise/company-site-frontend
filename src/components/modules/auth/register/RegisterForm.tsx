@@ -1,6 +1,6 @@
 "use client";
 
-import Logo from "@/assets/svgs/Logo";
+import Logo from "@/assets/shared/way-wise-logo.png";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { registrationSchema } from "./registerValidation";
 
@@ -29,7 +29,7 @@ export default function RegisterForm() {
   const password = form.watch("password");
   const passwordConfirm = form.watch("passwordConfirm");
   //   console.log(password, passwordConfirm);
-  const router = useRouter();
+  // const router = useRouter();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     // try {
@@ -49,7 +49,7 @@ export default function RegisterForm() {
   return (
     <div className="border-2 border-gray-300 rounded-xl flex-grow max-w-md w-full p-5">
       <div className="flex items-center space-x-4 ">
-        <Logo />
+        <Image src={Logo} alt="Logo" width={32} height={32} />
         <div>
           <h1 className="text-xl font-semibold">Register</h1>
           <p className="font-extralight text-sm text-gray-600">
