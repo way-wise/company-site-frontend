@@ -1,8 +1,10 @@
+import { StaticImageData } from "next/image";
+
 export interface Service {
   id: number;
   title: string;
   description: string;
-  bgImage: string;
+  bgImage: StaticImageData;
   url: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: StaticImageData;
 }
