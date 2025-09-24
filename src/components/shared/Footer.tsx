@@ -1,4 +1,4 @@
-import Logo from "@/assets/shared/way-wise-logo.svg";
+import Logo from "@/assets/images/shared/way-wise-logo.svg";
 import { Facebook, Instagram, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

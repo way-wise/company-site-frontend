@@ -1,5 +1,5 @@
 "use client";
-import Logo from "@/assets/shared/way-wise-logo.png";
+import Logo from "@/assets/images/shared/way-wise-logo.png";
 import { Button } from "@/components/ui/button";
 import {
   Form,

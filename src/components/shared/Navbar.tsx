@@ -1,6 +1,6 @@
 "use client";
-import Logo from "@/assets/shared/way-wise-logo.svg";
-import LogoText from "@/assets/shared/way-wise-text.png";
+import Logo from "@/assets/images/shared/way-wise-logo.svg";
+import LogoText from "@/assets/images/shared/way-wise-text.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Phone } from "lucide-react";
@@ -62,11 +62,11 @@ export default function Navbar() {
             className="w-8 h-8 md:w-12 md:h-12 lg:w-14 lg:h-14"
           />
           <Image
-            src={LogoText} 
+            src={LogoText}
             alt="Logo"
             width={214}
             height={51}
-            className="w-32 h-auto lg:w-52" 
+            className="w-32 h-auto lg:w-52"
           />
         </Link>
 

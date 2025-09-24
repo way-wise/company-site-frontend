@@ -1,6 +1,6 @@
-import heroCircle from "@/assets/home/hero-circle.gif";
-import heroRightCircle from "@/assets/home/hero-right-circle.gif";
-import mainBackground from "@/assets/home/main-background.png";
+import heroCircle from "@/assets/images/home/hero-circle.gif";
+import heroRightCircle from "@/assets/images/home/hero-right-circle.gif";
+import mainBackground from "@/assets/images/home/main-background.png";
 import Image from "next/image";
 
 const HeroSection = () => {
