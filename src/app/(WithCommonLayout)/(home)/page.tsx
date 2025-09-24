@@ -1,11 +1,13 @@
 import CategorySection from "@/components/modules/home/CategorySection";
 import HeroSection from "@/components/modules/home/HeroSection";
+import Services from "@/components/modules/home/Services";
 
 const HomePage = () => {
   return (
     <div>
       <HeroSection />
       <CategorySection />
+      <Services />
     </div>
   );
 };
