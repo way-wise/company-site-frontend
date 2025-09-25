@@ -13,6 +13,7 @@ const HomePage = () => {
       <Services />
       <Projects />
       <Offers />
+      {/* <ScrollComp /> */}
       <ContactUs />
     </div>
   );

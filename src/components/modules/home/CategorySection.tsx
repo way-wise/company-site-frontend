@@ -10,7 +10,7 @@ const CategorySection = () => {
   const categories = categoryData;
 
   return (
-    <section className="w-full py-12">
+    <section className="w-full py-16">
       <div className=" mx-auto px-4">
         <div className="flex justify-center">
           <Carousel

@@ -43,7 +43,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 relative">
+    <div className="min-h-screen bg-slate-100 relative ">
       {/* Left border accent */}
       <div className="absolute left-0 top-0 w-1 h-full bg-blue-200"></div>
 

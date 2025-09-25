@@ -76,7 +76,7 @@ const Services = () => {
     },
   ];
   return (
-    <section className="py-16 px-4 container mx-auto">
+    <section className="py-20 px-4 container mx-auto">
       <div className="mb-16">
         <SectionTitle
           title="Our Services"

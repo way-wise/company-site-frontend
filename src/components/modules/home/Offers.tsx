@@ -1,3 +1,4 @@
+"use client";
 import SectionTitle from "@/components/modules/home/SectionTitle";
 import { StaticImageData } from "next/image";
 import OffersCard from "./OffersCard";
@@ -74,7 +75,7 @@ const Offers = () => {
   ];
 
   return (
-    <section className="py-16 px-4 bg-[#F2F6FF] relative overflow-hidden">
+    <section className="py-20 px-4 bg-[#F2F6FF] relative overflow-hidden">
       {/* Left top corner background image */}
       <div
         className="absolute top-0 left-0 w-[350px] h-full "
@@ -85,7 +86,6 @@ const Offers = () => {
           backgroundPosition: "top left",
         }}
       />
-
       {/* Right bottom corner background image */}
       <div
         className="absolute bottom-0 right-0 w-[350px] h-full "
@@ -96,7 +96,6 @@ const Offers = () => {
           backgroundPosition: "bottom right",
         }}
       />
-
       <div className="container mx-auto relative z-10">
         <div className="mb-16 ">
           <SectionTitle
