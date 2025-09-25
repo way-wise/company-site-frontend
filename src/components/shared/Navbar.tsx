@@ -33,7 +33,7 @@ export default function Navbar() {
     },
     {
       label: `Service We Provide`,
-      href: "/service-we-provide",
+      href: "/services",
     },
     {
       label: "About Us",
@@ -44,6 +44,14 @@ export default function Navbar() {
       href: "/contact-us",
     },
   ];
+
+  // Function to check if a route is active
+  const isRouteActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(href);
+  };
 
   return (
     <header
@@ -74,10 +82,7 @@ export default function Navbar() {
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex gap-8 mx-auto">
             {navigationLinks.map((link) => {
-              const pathWithoutLocale = pathname.replace(/^\//, "") || "/";
-              const isActive =
-                link.href === pathWithoutLocale ||
-                (link.href === "/" && pathWithoutLocale === "/");
+              const isActive = isRouteActive(link.href);
 
               return (
                 <Link
@@ -139,10 +144,7 @@ export default function Navbar() {
 
                 {/* Mobile Navigation Links */}
                 {navigationLinks.map((link) => {
-                  const pathWithoutLocale = pathname.replace(/^\//, "") || "/";
-                  const isActive =
-                    link.href === pathWithoutLocale ||
-                    (link.href === "/" && pathWithoutLocale === "/");
+                  const isActive = isRouteActive(link.href);
 
                   return (
                     <Link
