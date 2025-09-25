@@ -43,11 +43,11 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 relative ">
+    <div className=" bg-slate-100  ">
       {/* Left border accent */}
-      <div className="absolute left-0 top-0 w-1 h-full bg-blue-200"></div>
+      <div className=" h-full bg-blue-200"></div>
 
-      <div className="max-w-7xl mx-auto px-8 py-16">
+      <div className="container mx-auto px-8 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Left Column - Information Section */}
           <div className="space-y-8">
