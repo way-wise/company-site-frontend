@@ -16,7 +16,7 @@ const Footer = () => {
     >
       <div className="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-t from-white/10 via-white/90 to-white dark:from-dark/10 dark:via-dark/90 dark:to-dark"></div>
 
-      <div className="container mx-auto">
+      <div className="container mx-auto px-2">
         <div className="-mx-4 flex flex-wrap">
           {/* Logo and Description Section */}
           <div className="w-full px-4 md:w-1/2 lg:w-4/12 xl:w-5/12">
