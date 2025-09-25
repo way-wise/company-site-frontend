@@ -83,8 +83,8 @@ const Services = () => {
           description="We offer a comprehensive suite of services designed to meet all your digital needs.
 Our team of experts is committed to delivering top-notch solutions that drive
 growth, enhance your brand, and streamline your operations."
-          titleClass="text-[#1B3447] text-[55px] font-bold"
-          descriptionClass="text-[#3D4E5C] text-[20px]"
+          titleClass="text-[#1B3447] text-5xl lg:text-[55px] font-bold"
+          descriptionClass="text-[#3D4E5C] text-2xl lg:text-[20px]"
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
