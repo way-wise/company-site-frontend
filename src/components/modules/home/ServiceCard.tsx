@@ -46,7 +46,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
 
           {/* Arrow Button */}
           <Link
-            href={service.url}
+            href={`/services/${service.id}`}
             className="self-end w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center hover:bg-white/30 transition-colors duration-200 group"
           >
             <svg
