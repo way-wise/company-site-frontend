@@ -125,3 +125,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.swiper {
+  overflow: visible; /* shows stacked effect */
+}
