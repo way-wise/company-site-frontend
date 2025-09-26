@@ -39,10 +39,7 @@ const serviceOutcomes = [
 ];
 export default function WebDevelopment() {
   return (
-    <div
-      className="bg-[#f2f6ff] overflow-hidden w-full min-h-screen relative translate-y-[-1rem] animate-fade-in opacity-0"
-      data-model-id="216:552"
-    >
+    <div className="bg-[#f2f6ff] overflow-hidden w-full min-h-screen relative  animate-fade-in opacity-0">
       {/* Video/Image Placeholder */}
       <section className="relative py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:600ms]">
         <div className="max-w-[1170px] mx-auto px-4 md:px-0">

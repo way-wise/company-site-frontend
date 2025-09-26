@@ -89,10 +89,8 @@ const ServiceSlider = () => {
     <section className="py-20 px-4 container mx-auto">
       <div className="mb-16">
         <SectionTitle
-          title="Our Services"
-          description="We offer a comprehensive suite of services designed to meet all your digital needs.
-Our team of experts is committed to delivering top-notch solutions that drive
-growth, enhance your brand, and streamline your operations."
+          title="Service You May Like"
+          description=""
           titleClass="text-[#1B3447] text-4xl pb-4  xl:text-[55px] font-bold"
           descriptionClass="text-[#3D4E5C] text-base xl:text-[20px]"
         />
@@ -102,7 +100,6 @@ growth, enhance your brand, and streamline your operations."
           modules={[Autoplay, Navigation, Pagination]}
           spaceBetween={30}
           slidesPerView={1}
-          centeredSlides={true}
           grabCursor={true}
           pagination={{
             clickable: true,
