@@ -42,7 +42,7 @@ const Feadback = () => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 px-4 bg-[url('@/assets/images/feadback/feadback-bg.png')] bg-cover bg-center bg-no-repeat">
+    <section className="py-12 sm:py-16 lg:py-20 px-4 bg-[url('@/assets/images/feadback/feadback-bg.png')] bg-cover bg-center bg-no-repeat overflow-hidden">
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-8 sm:mb-10 lg:mb-12">
           <h2 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[55px] font-bold leading-tight">
@@ -54,11 +54,11 @@ const Feadback = () => {
         </div>
 
         {/* Swiper with Cards Effect and Navigation Arrows */}
-        <div className="relative w-full max-w-4xl mx-auto px-8 sm:px-12 lg:px-16">
+        <div className="relative w-full max-w-4xl mx-auto px-8 sm:px-12 lg:px-16 overflow-hidden">
           {/* Left Arrow - Responsive positioning */}
           <button
             onClick={() => swiperRef.current?.slidePrev()}
-            className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
+            className="absolute left-2 sm:left-4 lg:left-0 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
           >
             <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
@@ -82,7 +82,7 @@ const Feadback = () => {
           {/* Right Arrow - Responsive positioning */}
           <button
             onClick={() => swiperRef.current?.slideNext()}
-            className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
+            className="absolute right-2 sm:right-4 lg:right-0 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
           >
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
