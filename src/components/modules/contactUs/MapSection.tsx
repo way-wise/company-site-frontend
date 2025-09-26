@@ -22,7 +22,7 @@ const contactCards = [
     image: "https://c.animaapp.com/mg0gx2pzE6gABw/img/rectangle-116.png",
     iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-3722049.svg",
   },
-];
+]; 
 
 const MapSection = () => {
   return (

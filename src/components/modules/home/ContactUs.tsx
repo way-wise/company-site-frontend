@@ -43,22 +43,22 @@ const ContactUs = () => {
   };
 
   return (
-    <div className=" bg-slate-100  ">
+    <div className="bg-slate-100">
       {/* Left border accent */}
-      <div className=" h-full bg-blue-200"></div>
+      <div className="h-full bg-blue-200"></div>
 
-      <div className="container mx-auto px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start">
           {/* Left Column - Information Section */}
-          <div className="space-y-8">
-            <div className="space-y-6">
-              <h1 className="text-5xl font-bold text-gray-800 leading-tight">
+          <div className="space-y-6 sm:space-y-8">
+            <div className="space-y-4 sm:space-y-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
                 Have a Project Idea?
               </h1>
-              <h2 className="text-5xl font-bold text-gray-800 leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
                 Let's get started
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed max-w-md">
+              <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-md">
                 We'll schedule a call to discuss your idea. After discovery
                 sessions, we'll send a proposal, and upon approval, we'll get
                 started.
@@ -66,18 +66,16 @@ const ContactUs = () => {
             </div>
 
             {/* Checklist */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center justify-start gap-2">
-                <CircleCheck className="text-gray-600" />
-
-                <span className="text-gray-700">
+                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+                <span className="text-sm sm:text-base text-gray-700">
                   We will respond to you within 24 hrs
                 </span>
               </div>
               <div className="flex items-center justify-start gap-2">
-                <CircleCheck className="text-gray-600" />
-
-                <span className="text-gray-700">
+                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+                <span className="text-sm sm:text-base text-gray-700">
                   We'll sign an NDA if requested.
                 </span>
               </div>
@@ -113,8 +111,8 @@ const ContactUs = () => {
           </div>
 
           {/* Right Column - Form Section */}
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Full Name */}
               <div>
                 <label
@@ -129,13 +127,15 @@ const ContactUs = () => {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
                   required
                 />
               </div>
-              <div className="flex space-x-4">
+
+              {/* Email and WhatsApp - Responsive layout */}
+              <div className="flex flex-col sm:flex-row gap-4">
                 {/* Email */}
-                <div>
+                <div className="flex-1">
                   <label
                     htmlFor="email"
                     className="block text-sm font-medium text-[#1B3447] mb-2"
@@ -148,13 +148,13 @@ const ContactUs = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
                     required
                   />
                 </div>
 
                 {/* WhatsApp Number */}
-                <div>
+                <div className="flex-1">
                   <label
                     htmlFor="whatsappNumber"
                     className="block text-sm font-medium text-[#1B3447] mb-2"
@@ -167,14 +167,16 @@ const ContactUs = () => {
                     name="whatsappNumber"
                     value={formData.whatsappNumber}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
                     required
                   />
                 </div>
               </div>
-              <div className="flex space-x-4">
+
+              {/* Service and Budget - Responsive layout */}
+              <div className="flex flex-col sm:flex-row gap-4">
                 {/* Service Required */}
-                <div className="w-full">
+                <div className="flex-1">
                   <label
                     htmlFor="serviceRequired"
                     className="block text-sm font-medium text-[#1B3447] mb-2"
@@ -186,7 +188,7 @@ const ContactUs = () => {
                     name="serviceRequired"
                     value={formData.serviceRequired}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-[#1B3447]"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
                     required
                   >
                     <option value="">Select Your Service</option>
@@ -199,7 +201,7 @@ const ContactUs = () => {
                 </div>
 
                 {/* Project Budget */}
-                <div className="w-full">
+                <div className="flex-1">
                   <label
                     htmlFor="projectBudget"
                     className="block text-sm font-medium text-[#1B3447] mb-2"
@@ -211,7 +213,7 @@ const ContactUs = () => {
                     name="projectBudget"
                     value={formData.projectBudget}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-[#1B3447]"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
                     required
                   >
                     <option value="">Select Your Range</option>
@@ -223,6 +225,7 @@ const ContactUs = () => {
                   </select>
                 </div>
               </div>
+
               {/* Project Description */}
               <div>
                 <label
@@ -237,7 +240,7 @@ const ContactUs = () => {
                   value={formData.projectDescription}
                   onChange={handleInputChange}
                   rows={4}
-                  className="w-full px-4 py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none placeholder:text-[#1B3447]"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none text-sm sm:text-base"
                   placeholder="Tell us about your project..."
                   required
                 />
@@ -246,7 +249,7 @@ const ContactUs = () => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-brand hover:bg-brand/90 text-white py-4 px-6 rounded-lg font-medium  focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 outline-none transition-all cursor-pointer"
+                className="w-full bg-brand hover:bg-brand/90 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 outline-none transition-all cursor-pointer"
               >
                 Send Inquiry
               </button>
