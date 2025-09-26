@@ -22,7 +22,7 @@ const contactCards = [
     image: "https://c.animaapp.com/mg0gx2pzE6gABw/img/rectangle-116.png",
     iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-3722049.svg",
   },
-]; 
+];
 
 const MapSection = () => {
   return (
@@ -62,7 +62,7 @@ const MapSection = () => {
                         <div className="font-normal text-[#00a3ff] text-xs sm:text-sm tracking-[0] leading-6">
                           {card.title}
                         </div>
-                        <div className="font-semibold text-[#1b3447] text-sm sm:text-base lg:text-xl tracking-[0] leading-normal break-words">
+                        <div className="font-semibold text-[#1b3447] text-sm sm:text-base xl:text-xl tracking-[0] leading-normal break-words">
                           {card.subtitle}
                         </div>
                       </div>
