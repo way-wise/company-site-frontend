@@ -10,7 +10,7 @@ const CategorySection = () => {
   const categories = categoryData;
 
   return (
-    <section className="w-full py-16">
+    <section className="w-full py-12 lg:py-16">
       <div className=" mx-auto px-4">
         <div className="flex justify-center">
           <Carousel
@@ -31,9 +31,9 @@ const CategorySection = () => {
                       <Image
                         src={category.image}
                         alt={category.name}
-                        width={155}
-                        height={34}
-                        className=""
+                        width={310}
+                        height={68}
+                        className="w-full h-full"
                       />
                     </div>
                     {/* <span className="text-xs font-medium text-gray-600 group-hover:text-[#340049] text-center">

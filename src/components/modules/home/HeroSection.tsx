@@ -3,7 +3,7 @@ import mainBackground from "@/assets/images/home/hero-bg.png";
 const HeroSection = () => {
   return (
     <section
-      className="h-[80vh]"
+      className="w-full h-full py-10 lg:h-[80vh]"
       style={{
         backgroundImage: `url(${mainBackground.src})`,
         backgroundSize: "cover",
@@ -11,38 +11,12 @@ const HeroSection = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Main Background Image is now set via CSS background */}
-
-      {/* Left side GIF */}
-      {/* <div className="absolute bottom-0 left-0 z-10">
-        <Image
-          src={heroCircle}
-          alt="Hero Circle Animation"
-          width={350}
-          height={350}
-          className="opacity-90"
-          priority
-        />
-      </div> */}
-
-      {/* Right side GIF */}
-      {/* <div className="absolute bottom-0 right-0 z-10">
-        <Image
-          src={heroRightCircle}
-          alt="Hero Right Circle Animation"
-          width={300}
-          height={300}
-          className="opacity-90"
-          priority
-        />
-      </div> */}
-
       {/* Main content */}
       <div className="  flex flex-col items- justify-center h-full   px-4 text-center">
         <div className="max-w-5xl mx-auto">
           {/* Main heading */}
           <h1 className="mb-8">
-            <div className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-wide">
+            <div className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-wide">
               <p className="text-white ">INSPIRING</p>
               <p className="text-transparent bg-gradient-to-r from-[#00D4FF] to-[#0099CC] bg-clip-text ">
                 INNOVATION
@@ -52,7 +26,7 @@ const HeroSection = () => {
           </h1>
 
           {/* Description */}
-          <p className="text-white/80 text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto mb-12 leading-relaxed">
+          <p className="text-white/80 text-md md:text-xl lg:text-2xl max-w-3xl mx-auto mb-12 leading-relaxed">
             We are a global software development firm delivering
             <br />
             innovative, customized solutions that empower businesses

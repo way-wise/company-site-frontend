@@ -54,11 +54,11 @@ const Feadback = () => {
         </div>
 
         {/* Swiper with Cards Effect and Navigation Arrows */}
-        <div className="relative flex items-center justify-center w-full max-w-4xl mx-auto">
+        <div className="relative w-full max-w-4xl mx-auto px-8 sm:px-12 lg:px-16">
           {/* Left Arrow - Responsive positioning */}
           <button
             onClick={() => swiperRef.current?.slidePrev()}
-            className="absolute -left-4 sm:-left-6 lg:-left-8 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
+            className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
           >
             <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
@@ -82,7 +82,7 @@ const Feadback = () => {
           {/* Right Arrow - Responsive positioning */}
           <button
             onClick={() => swiperRef.current?.slideNext()}
-            className="absolute -right-4 sm:-right-6 lg:-right-8 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
           >
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
