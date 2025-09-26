@@ -72,8 +72,8 @@ const Projects = () => {
             description="We offer a comprehensive suite of services designed to meet all your digital needs.
 Our team of experts is committed to delivering top-notch solutions that drive
 growth, enhance your brand, and streamline your operations."
-            titleClass="text-white text-[55px] font-bold"
-            descriptionClass="text-[#fff] text-[20px]"
+            titleClass="text-white text-4xl pb-4  xl:text-[55px] font-bold"
+            descriptionClass="text-[#fff] text-base xltext-[20px]"
           />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-8 ">
