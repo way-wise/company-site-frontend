@@ -76,7 +76,7 @@ const MapSection = () => {
       </section>
 
       {/* Spacer to prevent content overlap - only on larger screens */}
-      <div className="hidden md:block h-32 lg:h-40 xl:h-48"></div>
+      <div className="hidden md:block h-32 lg:h-40 xl:h-80"></div>
     </div>
   );
 };
