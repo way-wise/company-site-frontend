@@ -42,21 +42,25 @@ const Feadback = () => {
   ];
 
   return (
-    <section className="py-20 px-4 bg-[url('@/assets/images/feadback/feadback-bg.png')] bg-cover bg-center bg-no-repeat">
-      <div className="container mx-auto max-w-2/3">
-        <div className="text-center mb-12">
-          <h2 className="text-white text-[55px] font-bold">Our Clients</h2>
-          <p className="text-white text-[55px] font-bold">Recommend Us.</p>
+    <section className="py-12 sm:py-16 lg:py-20 px-4 bg-[url('@/assets/images/feadback/feadback-bg.png')] bg-cover bg-center bg-no-repeat">
+      <div className="container mx-auto max-w-7xl">
+        <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+          <h2 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[55px] font-bold leading-tight">
+            Our Clients
+          </h2>
+          <p className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[55px] font-bold leading-tight">
+            Recommend Us.
+          </p>
         </div>
 
         {/* Swiper with Cards Effect and Navigation Arrows */}
-        <div className="relative flex items-center justify-center w-full  xl:w-2/4 mx-auto">
-          {/* Left Arrow - Positioned outside the card */}
+        <div className="relative flex items-center justify-center w-full max-w-4xl mx-auto">
+          {/* Left Arrow - Responsive positioning */}
           <button
             onClick={() => swiperRef.current?.slidePrev()}
-            className="absolute left-0 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
+            className="absolute -left-4 sm:-left-6 lg:-left-8 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
           >
-            <ArrowLeft />
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
           <Swiper
@@ -75,12 +79,12 @@ const Feadback = () => {
             ))}
           </Swiper>
 
-          {/* Right Arrow - Positioned outside the card */}
+          {/* Right Arrow - Responsive positioning */}
           <button
             onClick={() => swiperRef.current?.slideNext()}
-            className="absolute right-0 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
+            className="absolute -right-4 sm:-right-6 lg:-right-8 w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-10"
           >
-            <ArrowRight />
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
       </div>
