@@ -129,3 +129,20 @@
 .swiper {
   overflow: visible; /* shows stacked effect */
 }
+
+/* Fade-in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+  animation-delay: var(--animation-delay, 0ms);
+}
