@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import FeadBackCard from "./FeadBackCard";
 
-import companyLogo from "@/assets/images/category/fidden.png";
+import companyLogo from "@/assets/images/category/fidden.svg";
 import clientImg from "@/assets/images/feadback/image1.png";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 

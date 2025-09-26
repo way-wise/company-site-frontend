@@ -1,8 +1,8 @@
-import fiddenImg from "@/assets/images/category/fidden.png";
-import flyArzanImg from "@/assets/images/category/fly-arzan.png";
-import penWiseImg from "@/assets/images/category/pen-wise.png";
-import rnImg from "@/assets/images/category/r-n.png";
-import seatWavesImg from "@/assets/images/category/seat-waves.png";
+import fiddenImg from "@/assets/images/category/fidden.svg";
+import flyArzanImg from "@/assets/images/category/fly-arzan.svg";
+import penWiseImg from "@/assets/images/category/pen-wise.svg";
+import rnImg from "@/assets/images/category/r-n.svg";
+import seatWavesImg from "@/assets/images/category/seat-waves.svg";
 
 export const categoryData = [
   {
