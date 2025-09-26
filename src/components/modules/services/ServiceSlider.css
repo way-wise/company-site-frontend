@@ -1,0 +1,64 @@
+/* Custom Swiper styles for ServiceSlider */
+.mySwiper {
+  padding: 20px 0 60px 0;
+}
+
+.mySwiper .swiper-slide {
+  height: auto;
+  display: flex;
+  align-items: stretch;
+}
+
+.mySwiper .swiper-pagination {
+  bottom: 20px;
+}
+
+.mySwiper .swiper-pagination-bullet {
+  background: #1b3447;
+  opacity: 0.3;
+  width: 12px;
+  height: 12px;
+  margin: 0 6px;
+}
+
+.mySwiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  background: #1b3447;
+}
+
+.mySwiper .swiper-button-next,
+.mySwiper .swiper-button-prev {
+  color: #000;
+  width: 40px;
+  height: 40px;
+  margin-top: -22px;
+  /* background: rgba(255, 255, 255, 0.9); */
+  border-radius: 50%;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+  transition: all 0.3s ease;
+}
+
+.mySwiper .swiper-button-next:hover,
+.mySwiper .swiper-button-prev:hover {
+  /* background: #1b3447; */
+  color: #00a3ff;
+  transform: scale(1.1);
+}
+
+.mySwiper .swiper-button-next:after,
+.mySwiper .swiper-button-prev:after {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mySwiper .swiper-button-next,
+  .mySwiper .swiper-button-prev {
+    display: none;
+  }
+
+  .mySwiper {
+    padding: 20px 0 50px 0;
+  }
+}

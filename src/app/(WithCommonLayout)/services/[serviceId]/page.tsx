@@ -2,6 +2,7 @@ import CategorySection from "@/components/modules/home/CategorySection";
 import ContactUs from "@/components/modules/home/ContactUs";
 import Feadback from "@/components/modules/home/Feadback";
 import ServiceDetails from "@/components/modules/services/ServiceDetails";
+import ServiceSlider from "@/components/modules/services/ServiceSlider";
 import SuccessProjects from "@/components/modules/services/SuccessProjects";
 import PageHeader from "@/components/shared/PageHeader";
 
@@ -17,6 +18,7 @@ const ServiceDetailsPage = () => {
       <ServiceDetails />
       <SuccessProjects />
       <CategorySection />
+      <ServiceSlider />
       <Feadback />
       <ContactUs />
     </main>
