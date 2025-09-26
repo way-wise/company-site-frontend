@@ -2,6 +2,17 @@
 
 import firoz from "@/assets/images/contact/firoz.svg";
 import lee from "@/assets/images/contact/lee.svg";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { CircleCheck } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -17,11 +28,16 @@ const ContactUs = () => {
   });
 
   const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -114,20 +130,20 @@ const ContactUs = () => {
           <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Full Name */}
-              <div>
-                <label
+              <div className="space-y-2">
+                <Label
                   htmlFor="fullName"
-                  className="block text-sm font-medium text-[#1B3447] mb-2"
+                  className="text-sm font-medium text-[#1B3447]"
                 >
                   Full Name
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   id="fullName"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
+                  className="w-full "
                   required
                 />
               </div>
@@ -135,39 +151,39 @@ const ContactUs = () => {
               {/* Email and WhatsApp - Responsive layout */}
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* Email */}
-                <div className="flex-1">
-                  <label
+                <div className="flex-1 space-y-2">
+                  <Label
                     htmlFor="email"
-                    className="block text-sm font-medium text-[#1B3447] mb-2"
+                    className="text-sm font-medium text-[#1B3447]"
                   >
                     Your Email
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="email"
                     id="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
+                    className="w-full"
                     required
                   />
                 </div>
 
                 {/* WhatsApp Number */}
-                <div className="flex-1">
-                  <label
+                <div className="flex-1 space-y-2">
+                  <Label
                     htmlFor="whatsappNumber"
-                    className="block text-sm font-medium text-[#1B3447] mb-2"
+                    className="text-sm font-medium text-[#1B3447]"
                   >
                     WhatsApp Number
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="tel"
                     id="whatsappNumber"
                     name="whatsappNumber"
                     value={formData.whatsappNumber}
                     onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
+                    className="w-full"
                     required
                   />
                 </div>
@@ -176,83 +192,93 @@ const ContactUs = () => {
               {/* Service and Budget - Responsive layout */}
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* Service Required */}
-                <div className="flex-1">
-                  <label
+                <div className="flex-1 space-y-2">
+                  <Label
                     htmlFor="serviceRequired"
-                    className="block text-sm font-medium text-[#1B3447] mb-2"
+                    className="text-sm font-medium text-[#1B3447]"
                   >
                     Service Required
-                  </label>
-                  <select
-                    id="serviceRequired"
-                    name="serviceRequired"
+                  </Label>
+                  <Select
                     value={formData.serviceRequired}
-                    onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
+                    onValueChange={(value) =>
+                      handleSelectChange("serviceRequired", value)
+                    }
                     required
                   >
-                    <option value="">Select Your Service</option>
-                    <option value="web-development">Web Development</option>
-                    <option value="mobile-app">Mobile App Development</option>
-                    <option value="ui-ux-design">UI/UX Design</option>
-                    <option value="consulting">Consulting</option>
-                    <option value="other">Other</option>
-                  </select>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Your Service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="web-development">
+                        Web Development
+                      </SelectItem>
+                      <SelectItem value="mobile-app">
+                        Mobile App Development
+                      </SelectItem>
+                      <SelectItem value="ui-ux-design">UI/UX Design</SelectItem>
+                      <SelectItem value="consulting">Consulting</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Project Budget */}
-                <div className="flex-1">
-                  <label
+                <div className="flex-1 space-y-2">
+                  <Label
                     htmlFor="projectBudget"
-                    className="block text-sm font-medium text-[#1B3447] mb-2"
+                    className="text-sm font-medium text-[#1B3447]"
                   >
                     Project Budget
-                  </label>
-                  <select
-                    id="projectBudget"
-                    name="projectBudget"
+                  </Label>
+                  <Select
                     value={formData.projectBudget}
-                    onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm sm:text-base"
+                    onValueChange={(value) =>
+                      handleSelectChange("projectBudget", value)
+                    }
                     required
                   >
-                    <option value="">Select Your Range</option>
-                    <option value="under-5k">Under $5,000</option>
-                    <option value="5k-10k">$5,000 - $10,000</option>
-                    <option value="10k-25k">$10,000 - $25,000</option>
-                    <option value="25k-50k">$25,000 - $50,000</option>
-                    <option value="50k-plus">$50,000+</option>
-                  </select>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Your Range" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="under-5k">Under $5,000</SelectItem>
+                      <SelectItem value="5k-10k">$5,000 - $10,000</SelectItem>
+                      <SelectItem value="10k-25k">$10,000 - $25,000</SelectItem>
+                      <SelectItem value="25k-50k">$25,000 - $50,000</SelectItem>
+                      <SelectItem value="50k-plus">$50,000+</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
               {/* Project Description */}
-              <div>
-                <label
+              <div className="space-y-2">
+                <Label
                   htmlFor="projectDescription"
-                  className="block text-sm font-medium text-[#1B3447] mb-2"
+                  className="text-sm font-medium text-[#1B3447]"
                 >
                   Project Description
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                   id="projectDescription"
                   name="projectDescription"
                   value={formData.projectDescription}
                   onChange={handleInputChange}
-                  rows={4}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-[#A3B5C7] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none text-sm sm:text-base"
+                  rows={8}
+                  className="w-full resize-none"
                   placeholder="Tell us about your project..."
                   required
                 />
               </div>
 
               {/* Submit Button */}
-              <button
+              <Button
                 type="submit"
-                className="w-full bg-brand hover:bg-brand/90 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 outline-none transition-all cursor-pointer"
+                className="w-full bg-brand hover:bg-brand/90 text-white !py-6 sm:py-4 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base"
               >
                 Send Inquiry
-              </button>
+              </Button>
             </form>
           </div>
         </div>
