@@ -1,6 +1,7 @@
 // components/WebDevelopment.tsx
 
 import { Check } from "lucide-react";
+import Image from "next/image";
 
 const expertiseAreas = [
   {
@@ -43,23 +44,25 @@ export default function WebDevelopment() {
       data-model-id="216:552"
     >
       {/* Video/Image Placeholder */}
-      <section className="relative py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:600ms]">
-        <div className="max-w-[1170px] mx-auto">
-          <div className="w-full h-[500px] bg-[#d9d9d9] rounded-[10px] flex items-center justify-center">
-            <img
+      <section className="relative py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:600ms]">
+        <div className="max-w-[1170px] mx-auto px-4 md:px-0">
+          <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] bg-[#d9d9d9] rounded-[10px] flex items-center justify-center">
+            <Image
               className="w-full h-full object-cover rounded-[10px]"
               alt="Service Video"
-              src="https://c.animaapp.com/mg0sjtgwWIqUMb/img/rectangle.svg"
+              src={require("@/assets/images/services/service-details.png")}
+              width={1000}
+              height={1000}
             />
           </div>
         </div>
       </section>
-      <section className="py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:800ms]">
-        <div className="max-w-[1170px] mx-auto px-8">
-          <h2 className="text-[35px] font-semibold text-[#1b3447] [font-family:'Inter',Helvetica] mb-8">
+      <section className="py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:800ms]">
+        <div className="max-w-[1170px] mx-auto px-4 md:px-8">
+          <h2 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-4 md:mb-8">
             Web Development
           </h2>
-          <p className="text-xl text-[#3d4e5c] [font-family:'Inter',Helvetica] leading-[30px] mb-16">
+          <p className="text-base md:text-lg lg:text-xl text-[#3d4e5c] leading-6 md:leading-8 mb-8 md:mb-16">
             At Way-Wise Tech, we transform your digital vision into reality
             through cutting-edge web development solutions. Our team of skilled
             developers crafts websites and web applications that not only look
@@ -75,23 +78,23 @@ export default function WebDevelopment() {
             connectivity with third-party services.
           </p>
 
-          <h3 className="text-[35px] font-semibold text-[#1b3447] [font-family:'Inter',Helvetica] mb-12">
+          <h3 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-8 md:mb-12">
             Our Web Development Expertise
           </h3>
 
-          <div className="grid grid-cols-2 gap-x-16 gap-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-x-16 lg:gap-y-12">
             {expertiseAreas.map((area, index) => (
-              <div key={index} className="flex gap-6">
-                <div className="w-10 h-10 bg-[#00a3ff] rounded-[20px] flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-medium text-lg [font-family:'Inter',Helvetica]">
+              <div key={index} className="flex gap-4 md:gap-6">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-[#00a3ff] rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-medium text-sm md:text-lg">
                     {area.number}
                   </span>
                 </div>
                 <div>
-                  <h4 className="text-xl font-semibold text-[#1b3447] [font-family:'Inter',Helvetica] mb-4">
+                  <h4 className="text-lg md:text-xl font-semibold text-[#1b3447] mb-2 md:mb-4">
                     {area.title}
                   </h4>
-                  <p className="text-sm text-[#3d4e5c] [font-family:'Inter',Helvetica] leading-6 whitespace-pre-line">
+                  <p className="text-sm text-[#3d4e5c] leading-5 md:leading-6 whitespace-pre-line">
                     {area.description}
                   </p>
                 </div>
@@ -102,26 +105,26 @@ export default function WebDevelopment() {
       </section>
 
       {/* Service Outcome Section */}
-      <section className="py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:1000ms]">
-        <div className="max-w-[1170px] mx-auto px-8">
-          <h2 className="text-[35px] font-semibold text-[#1b3447] [font-family:'Inter',Helvetica] mb-8">
+      <section className="py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:1000ms]">
+        <div className="max-w-[1170px] mx-auto px-4 md:px-8">
+          <h2 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-4 md:mb-8">
             Service Outcome
           </h2>
-          <p className="text-base text-[#657585] [font-family:'Inter',Helvetica] leading-[30px] mb-12">
+          <p className="text-sm md:text-base text-[#657585] leading-6 md:leading-8 mb-8 md:mb-12">
             Here are six key points that can be associated with a digital
-            transformation gallery case global digital systems engineer
-            <br />
-            services leader helping fortune 500 companies on their innovation
-            agenda:
+            transformation gallery case global digital systems engineer services
+            leader helping fortune 500 companies on their innovation agenda:
           </p>
 
-          <div className="grid grid-cols-2 gap-x-16 gap-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-x-16 lg:gap-y-8">
             {serviceOutcomes.map((outcome, index) => (
-              <div key={index} className="flex items-center gap-4">
-                <div className=" bg-white rounded-full flex items-center justify-center p-2">
-                  <Check className="w-6 h-6  " />
+              <div key={index} className="flex items-center gap-3 md:gap-4">
+                <div className="bg-white rounded-full flex items-center justify-center p-2 flex-shrink-0">
+                  <Check className="w-4 h-4 md:w-6 md:h-6" />
                 </div>
-                <span className="text-base text-[#657585] ">{outcome}</span>
+                <span className="text-sm md:text-base text-[#657585]">
+                  {outcome}
+                </span>
               </div>
             ))}
           </div>
