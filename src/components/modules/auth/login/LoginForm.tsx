@@ -1,104 +1,117 @@
 "use client";
-import Logo from "@/assets/images/shared/way-wise-logo.png";
+
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useLogin } from "@/hooks/useAuthMutations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import Link from "next/link";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { loginSchema } from "./loginValidation";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { LoginFormData, loginSchema } from "./loginValidation";
 
 export default function LoginForm() {
-  const form = useForm({
+  const [showPassword, setShowPassword] = useState(false);
+  const loginMutation = useLogin();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  // const [reCaptchaStatus, setReCaptchaStatus] = useState(false);
-
-  // const searchParams = useSearchParams();
-  // const redirect = searchParams.get("redirectPath");
-  // const router = useRouter();
-
-  const {
-    formState: { isSubmitting },
-  } = form;
-
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    // try {
-    //   const res = await loginUser(data);
-    //   if (res?.success) {
-    //     toast.success(res?.message);
-    //     if (redirect) {
-    //       router.push(redirect);
-    //     } else {
-    //       router.push("/");
-    //     }
-    //   } else {
-    //     toast.error(res?.message);
-    //   }
-    // } catch (err: any) {
-    //   console.error(err);
-    // }
-    console.log(data);
+  const onSubmit = (data: LoginFormData) => {
+    loginMutation.mutate(data);
   };
 
   return (
-    <div className="border-2 border-gray-300 rounded-xl flex-grow max-w-md w-full p-5">
-      <div className="flex items-center space-x-4 ">
-        <Image src={Logo} alt="Logo" width={32} height={32} />
-        <div>
-          <h1 className="text-xl font-semibold">Login</h1>
-          <p className="font-extralight text-sm text-gray-600">Welcome back!</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-4">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome Back
+          </h1>
+          <p className="text-gray-600">Sign in to your account</p>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type="email"
+                  {...register("email")}
+                  placeholder="Enter your email"
+                  className="pl-10 h-12"
+                />
+              </div>
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  {...register("password")}
+                  placeholder="Enter your password"
+                  className="pl-10 pr-10 h-12"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isSubmitting || loginMutation.isPending}
+              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg"
+            >
+              {isSubmitting || loginMutation.isPending
+                ? "Signing In..."
+                : "Sign In"}
+            </Button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Don't have an account?{" "}
+              <a
+                href="/register"
+                className="text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Create Account
+              </a>
+            </p>
+          </div>
         </div>
       </div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" {...field} value={field.value || ""} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" {...field} value={field.value || ""} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button type="submit" className="mt-5 w-full">
-            {isSubmitting ? "Logging...." : "Login"}
-          </Button>
-        </form>
-      </Form>
-      <p className="text-sm text-gray-600 text-center my-3">
-        Do not have any account ?
-        <Link href="/register" className="text-primary">
-          Register
-        </Link>
-      </p>
     </div>
   );
 }

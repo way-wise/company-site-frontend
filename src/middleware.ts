@@ -1,50 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser } from "./services/AuthService";
-
-type Role = keyof typeof roleBasedPrivateRoutes;
 
 const authRoutes = ["/login", "/register"];
-
-const roleBasedPrivateRoutes = {
-  user: [/^\/user/, /^\/create-shop/],
-  admin: [/^\/admin/],
-};
+const protectedRoutes = ["/dashboard", "/profile", "/admin"];
 
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
+  const token = request.cookies.get("accessToken")?.value;
 
-  const userInfo = await getCurrentUser();
-
-  if (!userInfo) {
-    if (authRoutes.includes(pathname)) {
-      return NextResponse.next();
-    } else {
-      return NextResponse.redirect(
-        new URL(
-          `http://localhost:3000/login?redirectPath=${pathname}`,
-          request.url
-        )
-      );
-    }
+  // If no token and trying to access protected route
+  if (!token && protectedRoutes.some((route) => pathname.startsWith(route))) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  if (userInfo?.role && roleBasedPrivateRoutes[userInfo?.role as Role]) {
-    const routes = roleBasedPrivateRoutes[userInfo?.role as Role];
-    if (routes.some((route) => pathname.match(route))) {
-      return NextResponse.next();
-    }
+  // If has token and trying to access auth routes
+  if (token && authRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
-  return NextResponse.redirect(new URL("/", request.url));
+  return NextResponse.next();
 };
 
 export const config = {
   matcher: [
     "/login",
-    "/create-shop",
-    "/admin",
-    "/admin/:page",
-    "/user",
-    "/user/:page",
+    "/register",
+    "/dashboard/:path*",
+    "/profile/:path*",
+    "/admin/:path*",
   ],
 };

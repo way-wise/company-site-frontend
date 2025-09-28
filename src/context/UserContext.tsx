@@ -1,52 +1,80 @@
-import { getCurrentUser } from "@/services/AuthService";
-import { IUser } from "@/types";
+"use client";
+
+import apiClient from "@/lib/axios";
+import { cookieManager } from "@/lib/cookies";
+import { User } from "@/types";
 import {
   createContext,
-  Dispatch,
-  SetStateAction,
+  ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
 } from "react";
 
-interface IUserProviderValues {
-  user: IUser | null;
+interface AuthContextType {
+  user: User | null;
   isLoading: boolean;
-  setUser: (user: IUser | null) => void;
-  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  isAuthenticated: boolean;
+  setUser: (user: User | null) => void;
+  logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
-const UserContext = createContext<IUserProviderValues | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<IUser | null>(null);
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleUser = async () => {
-    const user = await getCurrentUser();
-    setUser(user);
-    setIsLoading(false);
+  // Refresh user data from server
+  const refreshUser = useCallback(async () => {
+    try {
+      const response = await apiClient.get("/auth/me");
+      if (response.data.success) {
+        setUser(response.data.data);
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Logout user
+  const logout = useCallback(() => {
+    cookieManager.clear();
+    setUser(null);
+  }, []);
+
+  // Initialize auth on mount
+  useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
+
+  const value: AuthContextType = {
+    user,
+    isLoading,
+    isAuthenticated: !!user,
+    setUser,
+    logout,
+    refreshUser,
   };
 
-  useEffect(() => {
-    handleUser();
-  }, [isLoading]);
-
-  return (
-    <UserContext.Provider value={{ user, setUser, isLoading, setIsLoading }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useUser = () => {
-  const context = useContext(UserContext);
-
-  if (context == undefined) {
-    throw new Error("useUser must be used within the UserProvider context");
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-
   return context;
 };
-
-export default UserProvider;

@@ -1,21 +1,34 @@
-import { StaticImageData } from "next/image";
-
-export interface Service {
-  id: number;
-  title: string;
-  description: string;
-  bgImage: StaticImageData;
-  url: string;
-  icon: StaticImageData;
+// Base API Response
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  message: string;
+  data?: T;
 }
 
-export interface Project {
-  id: number;
-  title: string;
-  description: string;
-  tags: string[];
-  url: string;
-  // Either an image or a background color
-  image?: StaticImageData;
-  backgroundColor?: string;
+// User Types
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  contactNumber: string;
+  gender: "MALE" | "FEMALE" | "OTHER";
+  role: "CLIENT" | "ADMIN";
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterCredentials {
+  password: string;
+  client: {
+    name: string;
+    email: string;
+    contactNumber: string;
+    gender: "MALE" | "FEMALE" | "OTHER";
+  };
 }
