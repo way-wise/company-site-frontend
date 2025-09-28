@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const response = await apiClient.get("/auth/me");
       if (response.data.success) {
+        console.log(response.data);
         setUser(response.data.data);
       } else {
         setUser(null);
