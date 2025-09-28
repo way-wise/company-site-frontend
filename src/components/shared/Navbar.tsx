@@ -3,6 +3,7 @@ import Logo from "@/assets/images/shared/way-wise-logo.svg";
 import LogoText from "@/assets/images/shared/way-wise-text.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/context/UserContext";
 import { Menu, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +13,9 @@ import { useEffect, useState } from "react";
 export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user } = useAuth();
 
+  console.log(user);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {

@@ -47,7 +47,7 @@ export default function WebDevelopment() {
             <Image
               className="w-full h-full object-cover rounded-[10px]"
               alt="Service Video"
-              src={require("@/assets/images/services/service-details.png")}
+              src="/images/services/service-details.png"
               width={1000}
               height={1000}
             />
@@ -71,7 +71,7 @@ export default function WebDevelopment() {
             CMS solutions that empower you to manage your website content
             effortlessly. Our PWAS combine the best of web and mobile apps,
             offering seamless experiences across all devices. We create and
-            integrate APIs to enhance your website's functionality and
+            integrate APIs to enhance your website&apos;s functionality and
             connectivity with third-party services.
           </p>
 

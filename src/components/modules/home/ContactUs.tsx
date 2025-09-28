@@ -72,12 +72,12 @@ const ContactUs = () => {
                 Have a Project Idea?
               </h1>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
-                Let's get started
+                Let&apos;s get started
               </h2>
               <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-md">
-                We'll schedule a call to discuss your idea. After discovery
-                sessions, we'll send a proposal, and upon approval, we'll get
-                started.
+                We&apos;ll schedule a call to discuss your idea. After discovery
+                sessions, we&apos;ll send a proposal, and upon approval,
+                we&apos;ll get started.
               </p>
             </div>
 
@@ -92,7 +92,7 @@ const ContactUs = () => {
               <div className="flex items-center justify-start gap-2">
                 <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                 <span className="text-sm sm:text-base text-gray-700">
-                  We'll sign an NDA if requested.
+                  We&apos;ll sign an NDA if requested.
                 </span>
               </div>
             </div>
