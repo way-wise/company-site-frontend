@@ -8,7 +8,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import FeadBackCard from "./FeadBackCard";
 
 import bulletImg from "@/assets/images/category/bullet.svg";
-import companyLogo from "@/assets/images/category/fidden.svg";
+import fiddenImg from "@/assets/images/category/fidden.svg";
+import flyArzanImg from "@/assets/images/category/fly-arzan.svg";
+
+import fidden from "@/assets/images/feadback/fidden.jpg";
+import flyArzan from "@/assets/images/feadback/flyarjon.jpg";
 import clientImg from "@/assets/images/feadback/image1.png";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -28,20 +32,20 @@ const Feadback = () => {
       companyLogo: bulletImg,
     },
     {
-      image: clientImg,
+      image: fidden,
       feedback:
         "The software is developed with a well-structured codebase, which makes it easier to maintain and scale. The overall functionality works as expected, and adding new features will be efficient.",
       name: "Fidden",
       designation: "Founder, TechCorp",
-      companyLogo: companyLogo,
+      companyLogo: fiddenImg,
     },
     {
-      image: clientImg,
+      image: flyArzan,
       feedback:
         "Performance is good and the system runs smoothly without major bugs. However, the initial loading time can be optimized further to improve user experience. Caching and asset optimization may help here.",
       name: "Third Client",
       designation: "Manager, StartupX",
-      companyLogo: companyLogo,
+      companyLogo: flyArzanImg,
     },
   ];
 
