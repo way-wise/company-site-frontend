@@ -110,7 +110,7 @@ export default function Navbar() {
 
           {/* Desktop Phone Section */}
           <div
-            className="hidden lg:flex gap-2  rounded-md cursor-pointer"
+            className="hidden lg:flex gap-2  rounded-xs cursor-pointer shadow-md"
             onClick={() => router.push("/book")}
           >
             <Image
@@ -118,10 +118,10 @@ export default function Navbar() {
               alt="Phone"
               width={66}
               height={66}
-              className="w-24 h-full "
+              className="w-24 h-full shadow-md rounded-xs"
             />
           </div>
-          <div className="hidden lg:flex items-center justify-center gap-2 bg-brand rounded-md p-2">
+          <div className="hidden lg:flex items-center justify-center gap-2  rounded-md p-2 bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat">
             <Phone className="w-5 h-5 text-white" />
             <div>
               <p className="text-white text-sm">+880 1712 345678</p>
