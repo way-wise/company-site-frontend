@@ -6,7 +6,7 @@ import { useAuth } from "@/context/UserContext";
 import { useLogin } from "@/hooks/useAuthMutations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { LoginFormData, loginSchema } from "./loginValidation";
@@ -15,9 +15,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
   const { refreshUser } = useAuth();
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const redirectTo = searchParams.get("redirect") || "/";
 
   const {
     register,
@@ -32,8 +30,8 @@ export default function LoginForm() {
       onSuccess: () => {
         // Refresh user context after successful login
         refreshUser();
-        // Redirect to intended page or home
-        router.push(redirectTo);
+        // Redirect to home page
+        router.push("/");
       },
     });
   };
