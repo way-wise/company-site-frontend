@@ -87,11 +87,6 @@ const SidebarMenu = () => {
         },
       ],
     },
-    // {
-    //   title: "Settings",
-    //   icon: <Settings className="icon" />,
-    //   url: "/dashboard/settings",
-    // },
   ];
 
   return (
