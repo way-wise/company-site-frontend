@@ -37,11 +37,11 @@ const ServiceCard = ({ service }: { service: Service }) => {
 
         {/* Content */}
         <div className="flex-1 flex flex-col px-6">
-          <h3 className=" text-2xl xl:text-3xl font-bold text-white mb-3 leading-tight">
+          <h3 className=" text-2xl xl:text-3xl font-bold text-normal mb-3 leading-tight">
             {service.title}
           </h3>
           <div className="flex justify-between items-center mb-6">
-            <p className="text-white/90 text-sm leading-relaxed  flex-1">
+            <p className="text-normal/90 text-sm leading-relaxed  flex-1">
               {service.description}
             </p>
 

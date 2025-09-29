@@ -12,12 +12,13 @@ const CategorySection = () => {
   return (
     <section className="w-full py-6 ">
       <div className=" mx-auto px-4 container">
-        <div className="flex justify-start items-center w-full">
-          <div className="tex font-semibold">
-            <p>Our Featured </p>
-            <p>Partners</p>
+        <div className="flex flex-col lg:flex-row justify-start items-center w-full gap-2">
+          <div className=" font-semibold text-center">
+            <p>
+              Our Featured <br className="hidden lg:block" /> Partners
+            </p>
           </div>
-          <div className="flex items-center px-4">
+          <div className="flex items-center md:px-4">
             <Carousel
               opts={{
                 align: "center",
@@ -25,7 +26,7 @@ const CategorySection = () => {
               }}
               className="w-full "
             >
-              <CarouselContent className="flex items-center justify-center gap-4 lg:gap-12">
+              <CarouselContent className="flex items-center justify-center gap-2 md:gap-4 lg:gap-12">
                 {categories.map((category) => (
                   <CarouselItem
                     className="basis-1/3 md:basis-1/5 lg:basis-1/6 xl:basis-1/8"
