@@ -51,7 +51,7 @@ const statistics = [
 
 const SuccessProjects = () => {
   return (
-    <section className="py-20 px-4 bg-[url('@/assets/images/services/success-bg.png')] bg-cover bg-center bg-no-repeat ">
+    <section className="py-20 px-4 bg-[url('@/assets/images/feadback/feadback-bg.png')] bg-cover bg-center bg-no-repeat ">
       <div className="container mx-auto px-2">
         <div className="mb-20">
           <SectionTitle
@@ -78,21 +78,21 @@ const SuccessProjects = () => {
 
             {processSteps?.map((step) => (
               <div key={step.id} className="relative z-10">
-                <div className="bg-[#0E338C] backdrop-blur-sm   rounded-2xl p-4 lg:p-6 max-w-sm mx-auto shadow-2xl  transition-all duration-300 hover:scale-105">
+                <div className="bg-[#E1E8F9] backdrop-blur-sm   rounded-2xl p-4 lg:p-6 max-w-sm mx-auto shadow-2xl  transition-all duration-300 hover:scale-105">
                   {/* Number circle */}
-                  <div className="w-20 h-20 bg-[#00A3FF] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg border-8 border-[#0A55AF]">
+                  <div className="w-20 h-20 bg-[#00A3FF] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg border-8 border-[#9ED3FB]">
                     <span className="text-white text-xl font-bold">
                       {step.number}
                     </span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-white text-2xl font-bold text-center mb-4 leading-tight">
+                  <h3 className="text-normal text-2xl font-bold text-center mb-4 leading-tight">
                     {step.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-white/80 text-md text-center leading-relaxed">
+                  <p className="text-normal/80 text-md text-center leading-relaxed">
                     {step.description}
                   </p>
                 </div>
@@ -110,8 +110,8 @@ const SuccessProjects = () => {
                 <span
                   className="text-transparent text-[120px] lg:text-[150px] font-black select-none"
                   style={{
-                    WebkitTextStroke: "1px #1142B2",
-                    stroke: "1px #1142B2",
+                    WebkitTextStroke: "1px #616781",
+                    stroke: "1px #616781",
                   }}
                 >
                   {stat.number}
