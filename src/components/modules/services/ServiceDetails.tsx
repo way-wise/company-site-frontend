@@ -1,8 +1,8 @@
 // components/WebDevelopment.tsx
 
+import serviceDetails from "@/assets/images/services/service-details.png";
 import { Check } from "lucide-react";
 import Image from "next/image";
-
 const expertiseAreas = [
   {
     number: "01",
@@ -47,7 +47,7 @@ export default function WebDevelopment() {
             <Image
               className="w-full h-full object-cover rounded-[10px]"
               alt="Service Video"
-              src="/images/services/service-details.png"
+              src={serviceDetails}
               width={1000}
               height={1000}
             />
