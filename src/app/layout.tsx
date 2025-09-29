@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: " WayWise Tech",
+  title: " Company Profile | WayWise Tech | Best It Compnay In USA",
   description: "Company Profile | WayWise Tech | Best It Compnay In USA",
 };
 

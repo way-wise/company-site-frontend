@@ -12,12 +12,12 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
   return (
     <div className="rounded-xl sm:rounded-2xl shadow-lg grid grid-cols-1 sm:grid-cols-2 bg-white overflow-hidden">
       {/* Left section - Image or Background Color */}
-      <div className="order-1 sm:order-1">
+      <div className="order-1 sm:order-1 w-full">
         {project?.image ? (
           <Image
             src={project?.image}
             alt={project?.title}
-            className="w-full h-48 sm:h-auto object-cover object-top md:object-center"
+            className="w-full h-48 sm:h-auto object-cover object-top md:object-center rounded-t-xl sm:rounded-l-2xl sm:rounded-r-none"
           />
         ) : (
           <div className="w-full h-48 sm:h-full rounded-t-xl sm:rounded-l-2xl sm:rounded-r-none bg-[#FBE8A4]">
