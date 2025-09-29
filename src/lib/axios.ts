@@ -7,7 +7,7 @@ import { cookieManager } from "./cookies";
 
 // Create axios instance with best practices
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_API || "http://localhost:3001/api/v1",
+  baseURL: process.env.NEXT_PUBLIC_BASE_API || "http://localhost:5000/api/v1",
   timeout: 20000,
   headers: {
     "Content-Type": "application/json",

@@ -2,9 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/UserContext";
 import { useLogin } from "@/hooks/useAuthMutations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { LoginFormData, loginSchema } from "./loginValidation";
@@ -12,6 +14,10 @@ import { LoginFormData, loginSchema } from "./loginValidation";
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
+  const { refreshUser } = useAuth();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   const {
     register,
@@ -22,7 +28,14 @@ export default function LoginForm() {
   });
 
   const onSubmit = (data: LoginFormData) => {
-    loginMutation.mutate(data);
+    loginMutation.mutate(data, {
+      onSuccess: () => {
+        // Refresh user context after successful login
+        refreshUser();
+        // Redirect to intended page or home
+        router.push(redirectTo);
+      },
+    });
   };
 
   return (
@@ -87,6 +100,16 @@ export default function LoginForm() {
                 </p>
               )}
             </div>
+
+            {/* API Error Display */}
+            {loginMutation.error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-red-600 text-sm">
+                  {loginMutation.error.message ||
+                    "Login failed. Please try again."}
+                </p>
+              </div>
+            )}
 
             <Button
               type="submit"
