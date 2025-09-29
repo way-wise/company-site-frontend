@@ -38,7 +38,7 @@ const CategorySection = () => {
                           alt={category.name}
                           width={155}
                           height={34}
-                          className="w-20 lg:w-64 h-auto"
+                          className="w-20 lg:w-64 h-auto rounded-md"
                         />
                       </div>
                       {/* <span className="text-xs font-medium text-gray-600 group-hover:text-[#340049] text-center">
