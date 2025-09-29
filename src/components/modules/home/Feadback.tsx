@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import FeadBackCard from "./FeadBackCard";
 
+import bulletImg from "@/assets/images/category/bullet.svg";
 import companyLogo from "@/assets/images/category/fidden.svg";
 import clientImg from "@/assets/images/feadback/image1.png";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -21,23 +22,23 @@ const Feadback = () => {
     {
       image: clientImg,
       feedback:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-      name: "Client Name Goes Here",
-      designation: "CEO, Fidden.io",
-      companyLogo: companyLogo,
+        "The web app design looks clean and professional. Navigation is smooth, and the responsive layout works well across devices. A few minor UI polishings could make the experience even better.",
+      name: "Nichol",
+      designation: "CEO, Bullet-Proof",
+      companyLogo: bulletImg,
     },
     {
       image: clientImg,
       feedback:
-        "Lorem <Ips></Ips>um is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-      name: "Another Client",
+        "The software is developed with a well-structured codebase, which makes it easier to maintain and scale. The overall functionality works as expected, and adding new features will be efficient.",
+      name: "Fidden",
       designation: "Founder, TechCorp",
       companyLogo: companyLogo,
     },
     {
       image: clientImg,
       feedback:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+        "Performance is good and the system runs smoothly without major bugs. However, the initial loading time can be optimized further to improve user experience. Caching and asset optimization may help here.",
       name: "Third Client",
       designation: "Manager, StartupX",
       companyLogo: companyLogo,

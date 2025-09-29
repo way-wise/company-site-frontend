@@ -70,10 +70,10 @@ const ContactUs = () => {
             <div className="space-y-4 sm:space-y-6 text-center lg:text-left">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
                 Have a Project Idea?
-              </h1>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
+                <br />
                 Let&apos;s get started
-              </h2>
+              </h1>
+
               <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-md">
                 We&apos;ll schedule a call to discuss your idea. After discovery
                 sessions, we&apos;ll send a proposal, and upon approval,
