@@ -76,7 +76,7 @@ growth, enhance your brand, and streamline your operations."
             descriptionClass="text-[#fff] text-base xltext-[20px]"
           />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2  gap-8 ">
+        <div className="grid grid-cols-1 lg:grid-cols-2  gap-8 xl:gap-20 ">
           {projects.map((project) => (
             <ProjectsCard key={project.id} project={project} />
           ))}

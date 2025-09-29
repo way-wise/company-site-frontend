@@ -64,28 +64,31 @@ export default function Navbar() {
         isScrolled ? "shadow-sm" : "border-gray-100"
       }`}
     >
-      <div className="container flex justify-between items-center mx-auto px-4 md:px-5 py-4">
+      <div className="container flex justify-between items-center mx-auto px-2  py-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
+          {/* Logo Icon */}
           <Image
             src={Logo}
             alt="Logo"
             width={56}
             height={60}
-            className="w-8 h-8 md:w-12 md:h-12 lg:w-14 lg:h-14"
+            className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
           />
+
+          {/* Logo Text */}
           <Image
             src={LogoText}
-            alt="Logo"
+            alt="Logo Text"
             width={214}
             height={51}
-            className="w-32 h-auto lg:w-52"
+            className="w-20 sm:w-28 md:w-36 xl:w-52 h-auto"
           />
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="flex items-center gap-8">
-          <nav className="hidden lg:flex gap-8 mx-auto">
+        <div className="flex justify-end  items-center  gap-8">
+          <nav className="hidden lg:flex gap-4 xl:gap-8 mx-auto">
             {navigationLinks.map((link) => {
               const isActive = isRouteActive(link.href);
 
@@ -93,7 +96,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-lg transition-colors ${
+                  className={`text-md transition-colors ${
                     isActive
                       ? "text-brand font-semibold"
                       : "text-[#1B3447] hover:text-brand"
@@ -107,15 +110,15 @@ export default function Navbar() {
 
           {/* Desktop Phone Section */}
           <div
-            className=" gap-2  rounded-md cursor-pointer"
+            className="hidden lg:flex gap-2  rounded-md cursor-pointer"
             onClick={() => router.push("/book")}
           >
             <Image
               src={profileGuide}
               alt="Phone"
-              width={70}
-              height={70}
-              className="w-full h-full"
+              width={66}
+              height={66}
+              className="w-24 h-full "
             />
           </div>
           <div className="hidden lg:flex items-center justify-center gap-2 bg-brand rounded-md p-2">
@@ -128,7 +131,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu */}
-        <div className="flex items-center lg:hidden">
+        <div className="flex justify-end items-center lg:hidden">
           <Sheet>
             <div className="flex items-center gap-2">
               {/* Mobile Phone Button */}
@@ -178,6 +181,18 @@ export default function Navbar() {
                   );
                 })}
 
+                <div
+                  className="flex lg:hidden gap-2  rounded-md cursor-pointer"
+                  onClick={() => router.push("/book")}
+                >
+                  <Image
+                    src={profileGuide}
+                    alt="Phone"
+                    width={65}
+                    height={65}
+                    className="w-20 h-auto"
+                  />
+                </div>
                 {/* Mobile Phone Numbers */}
                 <div className="pt-4 border-t border-gray-200">
                   <div className="flex items-center gap-2 mb-2">
