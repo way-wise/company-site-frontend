@@ -78,7 +78,7 @@ const SuccessProjects = () => {
 
             {processSteps?.map((step) => (
               <div key={step.id} className="relative z-10">
-                <div className="bg-[#E1E8F9] backdrop-blur-sm   rounded-2xl p-4 lg:p-6 max-w-sm mx-auto shadow-2xl  transition-all duration-300 hover:scale-105">
+                <div className="bg-[#E1E8F9]  backdrop-blur-sm   rounded-2xl p-4 lg:p-6 max-w-sm mx-auto shadow-2xl  transition-all duration-300 hover:scale-105">
                   {/* Number circle */}
                   <div className="w-20 h-20 bg-[#00A3FF] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg border-8 border-[#9ED3FB]">
                     <span className="text-white text-xl font-bold">
@@ -87,7 +87,7 @@ const SuccessProjects = () => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-normal text-2xl font-bold text-center mb-4 leading-tight">
+                  <h3 className="text-normal  text-2xl font-bold text-center mb-4 leading-tight">
                     {step.title}
                   </h3>
 

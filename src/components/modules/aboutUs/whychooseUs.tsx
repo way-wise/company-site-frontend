@@ -1,3 +1,5 @@
+import aboutMain from "@/assets/images/about-us/about-main.svg";
+import aboutUs from "@/assets/images/about-us/about-us.svg";
 import Image from "next/image";
 
 const whyChooseUsItems = [
@@ -43,7 +45,7 @@ const ChooseUs = () => {
                   <Image
                     className="w-full h-full object-cover rounded-[10px_10px_10px_100px]"
                     alt="Main content image"
-                    src="https://c.animaapp.com/mg0bsu4lmvR5Na/img/rectangle-110.png"
+                    src={aboutMain}
                     width={100}
                     height={100}
                   />
@@ -51,11 +53,11 @@ const ChooseUs = () => {
               </div>
 
               {/* Small Image */}
-              <div className="absolute -bottom-8 -right-4 sm:-right-8 lg:-right-12 w-[200px] sm:w-[250px] lg:w-[292px] h-[180px] sm:h-[220px] lg:h-[277px] bg-[#d9d9d9] rounded-xl border-[10px] border-solid border-white overflow-hidden">
+              <div className="absolute -bottom-8 -right-4 sm:-right-8 lg:-right-12 w-[200px] sm:w-[250px] lg:w-[292px] h-[180px] sm:h-[220px] lg:h-[277px] bg-white rounded-xl border-[10px] border-solid border-white overflow-hidden">
                 <Image
                   className="w-full h-full object-cover rounded-xl"
-                  alt="Secondary content image"
-                  src="https://c.animaapp.com/mg0bsu4lmvR5Na/img/rectangle-112.png"
+                  alt="Secondary content image "
+                  src={aboutUs}
                   width={100}
                   height={100}
                 />
