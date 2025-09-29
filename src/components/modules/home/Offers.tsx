@@ -73,14 +73,14 @@ const Offers = () => {
   ];
 
   return (
-    <section className="relative bg-[#F2F6FF]">
+    <section className="relative  bg-[url('@/assets/images/offers/offer-bg.png')] bg-cover bg-center bg-no-repeat">
       <div className="container mx-auto relative z-10 py-10 lg:py-20 px-4">
         <div className="mb-8 lg:mb-16">
           <SectionTitle
             title="What We Offer"
             description="We deliver tailored IT services—from web development and graphic design to digital marketing, virtual assistance, data entry, media transcription, and server deployment."
-            titleClass="text-normal text-3xl sm:text-4xl lg:text-[55px] font-bold"
-            descriptionClass="text-normal text-base sm:text-lg lg:text-[20px]"
+            titleClass="text-white text-3xl sm:text-4xl lg:text-[55px] font-bold"
+            descriptionClass="text-white text-base sm:text-lg lg:text-[20px]"
           />
         </div>
 
