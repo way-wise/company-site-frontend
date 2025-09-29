@@ -46,7 +46,7 @@ const OffersCard = ({
         </div>
 
         <Link
-          href="#"
+          href="/contact-us"
           className={`w-full flex justify-between items-center gap-3 sm:gap-4 lg:gap-12 ${buttonColor} text-normal px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 lg:py-4 rounded-lg font-medium ${buttonHoverColor} transition-colors lg:w-fit`}
         >
           <p className="text-sm sm:text-base lg:text-base"> Send Inquiry</p>
