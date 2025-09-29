@@ -58,7 +58,7 @@ const HeroSection = () => {
             </button>
           </div>
         </div>
-        <div className="flex justify-end items-center">
+        <div className="flex md:justify-end justify-center items-center">
           <div className="animate-bounce-slow">
             <Image
               src={heroLeftBg.src}

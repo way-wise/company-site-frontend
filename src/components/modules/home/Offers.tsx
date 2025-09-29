@@ -93,7 +93,7 @@ const Offers = () => {
 
         {/* Desktop: Stack Scroll */}
         <div
-          className="hidden lg:block relative pb-28"
+          className="hidden sm:block relative pb-28"
           style={{
             height: `calc(${offers.length} * ${
               typeof window !== "undefined" && window.innerWidth >= 1440
