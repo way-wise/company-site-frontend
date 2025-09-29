@@ -115,7 +115,7 @@ const ContactUs = () => {
               </div>
 
               <div className="flex flex-col items-center space-y-3">
-                <div className=" bg-[#D7E5F3] px- pt-3 rounded-xl">
+                <div className=" bg-[#D7E5F3] px-3 pt-3 rounded-xl">
                   <Image src={lee} alt="Seung Lee" width={180} height={180} />
                 </div>
                 <div className="text-center">

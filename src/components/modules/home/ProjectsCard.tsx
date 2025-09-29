@@ -20,10 +20,7 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
             className="w-full h-48 sm:h-auto object-cover object-top md:object-center"
           />
         ) : (
-          <div
-            className="w-full h-48 sm:h-full rounded-t-xl sm:rounded-l-2xl sm:rounded-r-none"
-            style={{ backgroundColor: project.backgroundColor }}
-          >
+          <div className="w-full h-48 sm:h-full rounded-t-xl sm:rounded-l-2xl sm:rounded-r-none bg-[#FBE8A4]">
             {/* Optional: Add some subtle pattern or texture for solid colors */}
             <div className="bg-[#FBE8A4] h-full"></div>
           </div>

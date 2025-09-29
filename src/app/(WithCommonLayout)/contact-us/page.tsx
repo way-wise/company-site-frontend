@@ -4,7 +4,7 @@ import PageHeader from "@/components/shared/PageHeader";
 
 const ContactUsPage = () => {
   return (
-    <div>
+    <main>
       <PageHeader
         title="CONTACT"
         description="US"
@@ -13,7 +13,7 @@ const ContactUsPage = () => {
       />
       <MapSection />
       <ContactUs />
-    </div>
+    </main>
   );
 };
 

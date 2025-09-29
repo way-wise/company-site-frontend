@@ -3,7 +3,6 @@ import heroLeftBg from "@/assets/images/home/hero-ai.png";
 import Image from "next/image";
 
 const HeroSection = () => {
-  console.log(heroLeftBg.src);
   return (
     <section
       className="w-full h-full py-10 lg:h-[80vh] bg-left  md:bg-right lg:bg-center"

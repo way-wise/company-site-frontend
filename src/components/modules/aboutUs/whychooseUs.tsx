@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const whyChooseUsItems = [
   {
     number: "01",
@@ -38,20 +40,24 @@ const ChooseUs = () => {
               <div className="relative">
                 <div className="absolute -top-4 -left-4 w-full h-full rounded-[10px_10px_10px_100px] border-[3px] border-solid border-[#d964a1]" />
                 <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[466px] bg-[#d9d9d9] rounded-[10px_10px_10px_100px] overflow-hidden">
-                  <img
+                  <Image
                     className="w-full h-full object-cover rounded-[10px_10px_10px_100px]"
                     alt="Main content image"
                     src="https://c.animaapp.com/mg0bsu4lmvR5Na/img/rectangle-110.png"
+                    width={100}
+                    height={100}
                   />
                 </div>
               </div>
 
               {/* Small Image */}
               <div className="absolute -bottom-8 -right-4 sm:-right-8 lg:-right-12 w-[200px] sm:w-[250px] lg:w-[292px] h-[180px] sm:h-[220px] lg:h-[277px] bg-[#d9d9d9] rounded-xl border-[10px] border-solid border-white overflow-hidden">
-                <img
+                <Image
                   className="w-full h-full object-cover rounded-xl"
                   alt="Secondary content image"
                   src="https://c.animaapp.com/mg0bsu4lmvR5Na/img/rectangle-112.png"
+                  width={100}
+                  height={100}
                 />
               </div>
             </div>

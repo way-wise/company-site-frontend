@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 
 const contactCards = [
   {
@@ -29,10 +30,12 @@ const MapSection = () => {
     <div className="bg-[#f2f6ff] w-full relative" data-model-id="286:917">
       {/* Map Background Section */}
       <section className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[598px] animate-fade-in opacity-0 [--animation-delay:400ms]">
-        <img
+        <Image
           className="w-full h-full object-cover"
           alt="Map background"
           src="https://c.animaapp.com/mg0gx2pzE6gABw/img/image-37.png"
+          width={1200}
+          height={598}
         />
       </section>
 
@@ -45,18 +48,22 @@ const MapSection = () => {
                 {contactCards.map((card, index) => (
                   <div key={index} className="flex flex-col">
                     <div className="w-full h-48 sm:h-56 md:h-64 lg:h-[260px] mb-4 sm:mb-6">
-                      <img
+                      <Image
                         className="w-full h-full rounded-[10px] object-cover"
                         alt={`Contact ${card.title}`}
                         src={card.image}
+                        width={100}
+                        height={100}
                       />
                     </div>
 
                     <div className="flex items-center gap-3 sm:gap-4">
-                      <img
+                      <Image
                         className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0"
                         alt={card.title}
                         src={card.iconSrc}
+                        width={100}
+                        height={100}
                       />
                       <div className="flex flex-col min-w-0">
                         <div className="font-normal text-[#00a3ff] text-xs sm:text-sm tracking-[0] leading-6">

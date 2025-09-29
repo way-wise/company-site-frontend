@@ -1,3 +1,5 @@
+import { StaticImageData } from "next/image";
+
 // Base API Response
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -32,3 +34,21 @@ export interface RegisterCredentials {
     gender: "MALE" | "FEMALE" | "OTHER";
   };
 }
+
+export type Project = {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
+  url: string;
+  image: StaticImageData;
+};
+
+export type Service = {
+  id: number;
+  title: string;
+  description: string;
+  bgImage: StaticImageData;
+  url: string;
+  icon: StaticImageData;
+};

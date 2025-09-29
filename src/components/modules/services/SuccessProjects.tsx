@@ -76,7 +76,7 @@ const SuccessProjects = () => {
               ></div>
             </div>
 
-            {processSteps.map((step, index) => (
+            {processSteps?.map((step) => (
               <div key={step.id} className="relative z-10">
                 <div className="bg-[#0E338C] backdrop-blur-sm   rounded-2xl p-4 lg:p-6 max-w-sm mx-auto shadow-2xl  transition-all duration-300 hover:scale-105">
                   {/* Number circle */}

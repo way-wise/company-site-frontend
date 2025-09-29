@@ -74,7 +74,7 @@ const Offers = () => {
 
   return (
     <section className="relative  bg-[url('@/assets/images/offers/offer-bg.png')] bg-cover bg-center bg-no-repeat">
-      <div className="container mx-auto relative z-10 py-10 lg:py-20 px-4">
+      <div className="container mx-auto relative z-10 py-10 lg:py-20 px-2">
         <div className="mb-8 lg:mb-16">
           <SectionTitle
             title="What We Offer"
@@ -85,20 +85,20 @@ const Offers = () => {
         </div>
 
         {/* Mobile: Simple vertical stack */}
-        <div className="block lg:hidden space-y-4 sm:space-y-6">
+        {/* <div className="block lg:hidden space-y-4 sm:space-y-6">
           {offers.map((offer) => (
             <OffersCard key={offer.id} {...offer} />
           ))}
-        </div>
+        </div> */}
 
         {/* Desktop: Stack Scroll */}
         <div
-          className="hidden sm:block relative pb-28"
+          className="block relative pb-28"
           style={{
             height: `calc(${offers.length} * ${
               typeof window !== "undefined" && window.innerWidth >= 1440
                 ? "60vh"
-                : window.innerWidth >= 1024
+                : typeof window !== "undefined" && window.innerWidth >= 1024
                 ? "70vh"
                 : "auto"
             })`,

@@ -12,7 +12,10 @@ import clientImg from "@/assets/images/feadback/image1.png";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Feadback = () => {
-  const swiperRef = useRef<any>(null);
+  const swiperRef = useRef<{
+    slidePrev: () => void;
+    slideNext: () => void;
+  } | null>(null);
 
   const feedbacks = [
     {
