@@ -64,7 +64,7 @@ const Projects = () => {
     },
   ];
   return (
-    <section className="py-20 px-4   bg-[url('@/assets/images/projects/prjects.png')] bg-cover bg-center bg-no-repeat">
+    <section className="py-20 px-4   bg-[url('@/assets/images/projects/project-bg.png')] bg-cover bg-center bg-no-repeat">
       <div className="container mx-auto">
         <div className="mb-16 ">
           <SectionTitle
