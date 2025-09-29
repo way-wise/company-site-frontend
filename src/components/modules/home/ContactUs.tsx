@@ -1,7 +1,7 @@
 "use client";
 
 import firoz from "@/assets/images/contact/firoz.svg";
-import lee from "@/assets/images/contact/lee.svg";
+import lee from "@/assets/images/contact/lee1.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -115,8 +115,14 @@ const ContactUs = () => {
               </div>
 
               <div className="flex flex-col items-center space-y-3">
-                <div className=" bg-[#D7E5F3] px-3 pt-3 rounded-xl">
-                  <Image src={lee} alt="Seung Lee" width={180} height={180} />
+                <div className=" bg-[#C6CFFF]  pt-3 rounded-xl">
+                  <Image
+                    src={lee}
+                    alt="Seung Lee"
+                    width={180}
+                    height={180}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="text-center">
                   <p className="font-bold text-gray-800">Seung Lee</p>
