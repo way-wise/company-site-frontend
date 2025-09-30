@@ -3,8 +3,9 @@ import { Project } from "@/types";
 import ProjectsCard from "./ProjectsCard";
 
 // Import project images
-import fiddenImg from "@/assets/images/projects/fidden-web.png";
+import fiddenImg from "@/assets/images/projects/fidden-io.png";
 import seatWavesImg from "@/assets/images/projects/seat-wave.png";
+import weOutImg from "@/assets/images/projects/weout-1.png";
 
 const Projects = () => {
   const projects: Project[] = [
@@ -12,28 +13,29 @@ const Projects = () => {
       id: 1,
       title: "SeatWaves Ticket Marketplace",
       description:
-        "In today's digital world, a robust online presence is essential for any business",
+        "SeatWaves is an online ticket marketplace that makes finding and buying event tickets simple. Users can browse events, compare prices, and securely purchase tickets all in one place.",
       tags: ["UI/UX Design", "Development"],
       url: "#",
       image: seatWavesImg,
     },
+
     {
       id: 2,
       title: "Fidden Website Landing Page",
       description:
         "In today's digital world, a robust online presence is essential for any business",
-      tags: ["UI/UX Design", "Development"],
+      tags: ["UI/UX Design", "App Development"],
       url: "#",
       image: fiddenImg,
     },
     {
       id: 3,
-      title: "Digital Transformation Gallery Case",
+      title: "We Out Project",
       description:
         "In today's digital world, a robust online presence is essential for any business",
       tags: ["UX Design", "Development"],
       url: "#",
-      image: fiddenImg, // Yellow/Orange color
+      image: weOutImg,
     },
     {
       id: 4,
