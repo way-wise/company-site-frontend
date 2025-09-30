@@ -124,8 +124,8 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center justify-center gap-2  rounded-md p-2 bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat">
             <Phone className="w-5 h-5 text-white" />
             <div>
-              <p className="text-white text-sm">+880 1712 345678</p>
-              <p className="text-white text-sm">+110 5258 461070</p>
+              <p className="text-white text-sm">+1-310-528-6170</p>
+              <p className="text-white text-sm">+880 1748 771945</p>
             </div>
           </div>
         </div>
