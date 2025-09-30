@@ -6,8 +6,18 @@ import {
   userService,
   UsersQueryParams,
 } from "@/services/UserService";
+import { User } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+// Type for API error responses
+interface ApiError extends Error {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
 
 // Query keys for consistent caching
 export const userQueryKeys = {
@@ -67,10 +77,11 @@ export const useCreateUser = () => {
         toast.error(data.message || "Failed to create user");
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Create user error:", error);
+      const apiError = error as ApiError;
       const errorMessage =
-        error.response?.data?.message ||
+        apiError.response?.data?.message ||
         error.message ||
         "Failed to create user";
       toast.error(errorMessage);
@@ -88,7 +99,7 @@ export const useUpdateUser = () => {
       userData,
     }: {
       userId: string;
-      userData: Partial<any>;
+      userData: Partial<User>;
     }) => userService.updateUser(userId, userData),
     onSuccess: (data, variables) => {
       if (data.success) {
@@ -102,10 +113,11 @@ export const useUpdateUser = () => {
         toast.error(data.message || "Failed to update user");
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Update user error:", error);
+      const apiError = error as ApiError;
       const errorMessage =
-        error.response?.data?.message ||
+        apiError.response?.data?.message ||
         error.message ||
         "Failed to update user";
       toast.error(errorMessage);
@@ -138,10 +150,13 @@ export const useBanUser = () => {
         toast.error(data.message || "Failed to ban user");
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Ban user error:", error);
+      const apiError = error as ApiError;
       const errorMessage =
-        error.response?.data?.message || error.message || "Failed to ban user";
+        apiError.response?.data?.message ||
+        error.message ||
+        "Failed to ban user";
       toast.error(errorMessage);
     },
   });
@@ -166,10 +181,11 @@ export const useUnbanUser = () => {
         toast.error(data.message || "Failed to unban user");
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Unban user error:", error);
+      const apiError = error as ApiError;
       const errorMessage =
-        error.response?.data?.message ||
+        apiError.response?.data?.message ||
         error.message ||
         "Failed to unban user";
       toast.error(errorMessage);
@@ -195,10 +211,11 @@ export const useDeleteUser = () => {
         toast.error(data.message || "Failed to delete user");
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Delete user error:", error);
+      const apiError = error as ApiError;
       const errorMessage =
-        error.response?.data?.message ||
+        apiError.response?.data?.message ||
         error.message ||
         "Failed to delete user";
       toast.error(errorMessage);

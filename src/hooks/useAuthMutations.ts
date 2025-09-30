@@ -9,7 +9,6 @@ import { toast } from "sonner";
 // Login mutation
 export const useLogin = () => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   return useMutation({
     mutationFn: (credentials: LoginCredentials) =>

@@ -1,11 +1,5 @@
-import DashboardOverview from "./_components/dashboardComp/dashboardOverview";
-
 const DashboardOverviewPage = async () => {
-  return (
-    <div>
-      <DashboardOverview />
-    </div>
-  );
+  return <div>this is client page</div>;
 };
 
 export default DashboardOverviewPage;
