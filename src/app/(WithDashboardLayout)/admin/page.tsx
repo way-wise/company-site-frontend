@@ -1,9 +1,11 @@
-const AdminHomePage = () => {
+import DashboardOverview from "./_components/dashboardComp/dashboardOverview";
+
+const DashboardOverviewPage = async () => {
   return (
     <div>
-      <h1>Admin Home Page</h1>
+      <DashboardOverview />
     </div>
   );
 };
 
-export default AdminHomePage;
+export default DashboardOverviewPage;
