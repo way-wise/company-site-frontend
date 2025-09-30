@@ -26,15 +26,19 @@ import {
   ModalTitle,
 } from "@/components/ui/modal";
 import { Textarea } from "@/components/ui/textarea";
-import { apiClient } from "@/lib/axios";
+import {
+  useBanUser,
+  useCreateUser,
+  useDeleteUser,
+  useUnbanUser,
+  useUsers,
+} from "@/hooks/useUserMutations";
 import { User } from "@/types";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Ban, Eye, MoreVertical, Plus, Trash } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 // Helper function to format date
@@ -43,58 +47,35 @@ const formatDate = (dateString: string) => {
 };
 
 // Schema for user creation
-const signUpSchema = z.object({
+const createUserSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-type SignUpFormData = z.infer<typeof signUpSchema>;
+// Schema for ban reason
+const banReasonSchema = z.object({
+  banReason: z.string().min(1, "Ban reason is required"),
+});
 
-// API functions
-const fetchUsers = async (page: number, limit: number, search: string) => {
-  const url = `/users?page=${page}&limit=${limit}${
-    search.trim() ? `&search=${encodeURIComponent(search.trim())}` : ""
-  }`;
-  const response = await apiClient.get(url);
-  return response.data;
-};
-
-const createUser = async (userData: SignUpFormData) => {
-  const response = await apiClient.post("/users", userData);
-  return response.data;
-};
-
-const banUser = async (userId: string, banReason: string) => {
-  const response = await apiClient.post(`/users/${userId}/ban`, { banReason });
-  return response.data;
-};
-
-const unbanUser = async (userId: string) => {
-  const response = await apiClient.post(`/users/${userId}/unban`);
-  return response.data;
-};
-
-const deleteUser = async (userId: string) => {
-  const response = await apiClient.delete(`/users/${userId}`);
-  return response.data;
-};
+type CreateUserFormData = z.infer<typeof createUserSchema>;
+type BanReasonFormData = z.infer<typeof banReasonSchema>;
 
 export const UsersTable = () => {
+  // Modal states
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [banModalOpen, setBanModalOpen] = useState(false);
   const [unbanModalOpen, setUnbanModalOpen] = useState(false);
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
   const [userId, setUserId] = useState<string | undefined>("");
+
+  // Pagination and search states
   const [pagination, setPagination] = useState({
     pageIndex: 1,
     pageSize: 10,
   });
-  // debounce search
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-
-  const queryClient = useQueryClient();
 
   // Debounce search input
   useEffect(() => {
@@ -106,24 +87,33 @@ export const UsersTable = () => {
   }, [search]);
 
   // Get users data using TanStack Query
-  const { data, isLoading } = useQuery({
-    queryKey: [
-      "users",
-      pagination.pageIndex,
-      pagination.pageSize,
-      debouncedSearch,
-    ],
-    queryFn: () =>
-      fetchUsers(pagination.pageIndex, pagination.pageSize, debouncedSearch),
+  const {
+    data: usersData,
+    isLoading,
+    error,
+    isError,
+    refetch,
+  } = useUsers({
+    page: pagination.pageIndex,
+    limit: pagination.pageSize,
+    search: debouncedSearch,
   });
 
   // Add User Form
   const addUserForm = useForm({
-    resolver: yupResolver(signUpSchema),
+    resolver: yupResolver(createUserSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
+    },
+  });
+
+  // Ban Reason Form
+  const banForm = useForm({
+    resolver: yupResolver(banReasonSchema),
+    defaultValues: {
+      banReason: "",
     },
   });
 
@@ -135,100 +125,59 @@ export const UsersTable = () => {
     });
   };
 
-  // Mutations
-  const createUserMutation = useMutation({
-    mutationFn: createUser,
-    onSuccess: () => {
-      toast.success("User added successfully");
-      setAddUserModalOpen(false);
-      addUserForm.reset();
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to create user");
-    },
-  });
-
-  const banUserMutation = useMutation({
-    mutationFn: ({
-      userId,
-      banReason,
-    }: {
-      userId: string;
-      banReason: string;
-    }) => banUser(userId, banReason),
-    onSuccess: () => {
-      toast.success("User banned successfully");
-      setBanModalOpen(false);
-      banForm.reset();
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to ban user");
-    },
-  });
-
-  const unbanUserMutation = useMutation({
-    mutationFn: unbanUser,
-    onSuccess: () => {
-      toast.success("User unbanned successfully");
-      setUnbanModalOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to unban user");
-    },
-  });
-
-  const deleteUserMutation = useMutation({
-    mutationFn: deleteUser,
-    onSuccess: () => {
-      toast.success("User deleted successfully");
-      setDeleteModalOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to delete user");
-    },
-  });
+  // Custom hooks for mutations
+  const createUserMutation = useCreateUser();
+  const banUserMutation = useBanUser();
+  const unbanUserMutation = useUnbanUser();
+  const deleteUserMutation = useDeleteUser();
 
   // Handle Add User
-  const handleAddUser = (values: SignUpFormData) => {
-    createUserMutation.mutate(values);
+  const handleAddUser = (values: CreateUserFormData) => {
+    createUserMutation.mutate(values, {
+      onSuccess: () => {
+        setAddUserModalOpen(false);
+        addUserForm.reset();
+      },
+    });
   };
 
-  // Ban Form
-  const banForm = useForm({
-    defaultValues: {
-      banReason: "",
-    },
-  });
-
   // Handle User Ban
-  const handleBanUser = () => {
+  const handleBanUser = (values: BanReasonFormData) => {
     if (userId) {
-      banUserMutation.mutate({
-        userId,
-        banReason: banForm.getValues("banReason"),
+      banUserMutation.mutate(
+        {
+          userId,
+          banData: values,
+        },
+        {
+          onSuccess: () => {
+            setBanModalOpen(false);
+            banForm.reset();
+          },
+        }
+      );
+    }
+  };
+
+  // Handle User Unban
+  const handleUnbanUser = () => {
+    if (userId) {
+      unbanUserMutation.mutate(userId, {
+        onSuccess: () => {
+          setUnbanModalOpen(false);
+        },
       });
     }
   };
 
-  // Unban Form
-  const unbanForm = useForm();
-  const handleUnbanUser = () => {
-    if (userId) {
-      unbanUserMutation.mutate(userId);
-    }
-  };
-
-  // Delete Form
-  const deleteForm = useForm();
-
   // Handle User Deletion
   const handleDeleteUser = () => {
     if (userId) {
-      deleteUserMutation.mutate(userId);
+      deleteUserMutation.mutate(userId, {
+        onSuccess: () => {
+          setDeleteModalOpen(false);
+        },
+      });
     }
   };
 
@@ -348,13 +297,66 @@ export const UsersTable = () => {
             className="max-w-xs"
           />
         </div>
-        <DataTable
-          data={data}
-          columns={columns}
-          isPending={isLoading}
-          pagination={pagination}
-          onPaginationChange={setPagination}
-        />
+
+        {/* Error State */}
+        {isError && (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="mb-4 text-destructive">
+              <p className="text-lg font-medium">Failed to load users</p>
+              <p className="text-sm text-muted-foreground">
+                {error?.message || "Something went wrong while fetching users"}
+              </p>
+            </div>
+            <Button onClick={() => refetch()} variant="outline">
+              Try Again
+            </Button>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {isLoading && !usersData && (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+              </div>
+              <p className="text-muted-foreground">Loading users...</p>
+            </div>
+          </div>
+        )}
+
+        {/* Data Table */}
+        {!isLoading && !isError && (
+          <DataTable
+            data={usersData?.users || []}
+            columns={columns}
+            isPending={isLoading}
+            pagination={pagination}
+            onPaginationChange={setPagination}
+          />
+        )}
+
+        {/* Empty State */}
+        {!isLoading &&
+          !isError &&
+          (!usersData?.users || usersData.users.length === 0) && (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="mb-4">
+                <p className="text-lg font-medium">No users found</p>
+                <p className="text-sm text-muted-foreground">
+                  {debouncedSearch
+                    ? "Try adjusting your search criteria"
+                    : "No users have been created yet"}
+                </p>
+              </div>
+              {!debouncedSearch && (
+                <Button onClick={() => setAddUserModalOpen(true)}>
+                  <Plus />
+                  <span>Add First User</span>
+                </Button>
+              )}
+            </div>
+          )}
       </div>
 
       {/* User Creation Modal */}
@@ -486,32 +488,30 @@ export const UsersTable = () => {
           <ModalHeader>
             <ModalTitle>Unban User</ModalTitle>
           </ModalHeader>
-          <Form {...unbanForm}>
-            <form onSubmit={unbanForm.handleSubmit(handleUnbanUser)}>
-              <FormFieldset disabled={unbanUserMutation.isPending}>
-                <p className="mb-5 text-muted-foreground">
-                  This will allow the user to log in and use the application
-                  again.
-                </p>
-                <div className="flex justify-end gap-3 py-5">
-                  <Button
-                    type="button"
-                    onClick={() => setUnbanModalOpen(false)}
-                    variant="secondary"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="destructive"
-                    isLoading={unbanUserMutation.isPending}
-                  >
-                    Continue
-                  </Button>
-                </div>
-              </FormFieldset>
-            </form>
-          </Form>
+          <div className="p-6">
+            <div className="space-y-4">
+              <p className="mb-5 text-muted-foreground">
+                This will allow the user to log in and use the application
+                again.
+              </p>
+              <div className="flex justify-end gap-3 py-5">
+                <Button
+                  type="button"
+                  onClick={() => setUnbanModalOpen(false)}
+                  variant="secondary"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleUnbanUser}
+                  variant="destructive"
+                  isLoading={unbanUserMutation.isPending}
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalContent>
       </Modal>
 
@@ -521,32 +521,30 @@ export const UsersTable = () => {
           <ModalHeader>
             <ModalTitle>Delete User</ModalTitle>
           </ModalHeader>
-          <Form {...deleteForm}>
-            <form onSubmit={deleteForm.handleSubmit(handleDeleteUser)}>
-              <FormFieldset disabled={deleteUserMutation.isPending}>
-                <p className="text-muted-foreground">
-                  This action cannot be undone. This will permanently delete the
-                  user and remove associated data.
-                </p>
-                <div className="flex justify-end gap-3 py-5">
-                  <Button
-                    type="button"
-                    onClick={() => setDeleteModalOpen(false)}
-                    variant="secondary"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="destructive"
-                    isLoading={deleteUserMutation.isPending}
-                  >
-                    Continue
-                  </Button>
-                </div>
-              </FormFieldset>
-            </form>
-          </Form>
+          <div className="p-6">
+            <div className="space-y-4">
+              <p className="text-muted-foreground">
+                This action cannot be undone. This will permanently delete the
+                user and remove associated data.
+              </p>
+              <div className="flex justify-end gap-3 py-5">
+                <Button
+                  type="button"
+                  onClick={() => setDeleteModalOpen(false)}
+                  variant="secondary"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleDeleteUser}
+                  variant="destructive"
+                  isLoading={deleteUserMutation.isPending}
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalContent>
       </Modal>
     </>

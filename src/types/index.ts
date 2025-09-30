@@ -20,6 +20,29 @@ export interface User {
   updatedAt: string;
 }
 
+// Pagination Types
+export interface PaginationMeta {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  itemsPerPage: number;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: PaginationMeta;
+}
+
+// User Management Types
+export interface UserStats {
+  totalUsers: number;
+  activeUsers: number;
+  bannedUsers: number;
+  adminUsers: number;
+}
+
 export interface LoginCredentials {
   email: string;
   password: string;

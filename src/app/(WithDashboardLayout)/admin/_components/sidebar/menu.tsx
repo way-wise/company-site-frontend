@@ -1,11 +1,8 @@
 import {
-  BadgeCent,
   BicepsFlexed,
-  Building2,
   Dumbbell,
   Home,
   LayoutGrid,
-  MessageSquareMore,
   Play,
   Rows3,
   UsersRound,
@@ -29,61 +26,37 @@ const SidebarMenu = () => {
     {
       title: "Users",
       icon: <UsersRound className="icon" />,
-      url: "/dashboard/users",
-    },
-    {
-      title: "Points",
-      icon: <BadgeCent className="icon" />,
-      baseUrl: "/dashboard/points",
-      submenu: [
-        {
-          title: "Points",
-          url: "/dashboard/points",
-        },
-        {
-          title: "Leaderboard",
-          url: "/dashboard/points/leaderboard",
-        },
-      ],
-    },
-    {
-      title: "Demo Centers",
-      icon: <Building2 className="icon" />,
-      url: "/dashboard/demo-centers",
-    },
-    {
-      title: "Feedbacks",
-      icon: <MessageSquareMore className="icon" />,
-      url: "/dashboard/feedback",
-    },
-    {
-      title: "Equipment",
-      icon: <Dumbbell className="icon" />,
-      url: "/dashboard/equipments",
-    },
-    {
-      title: "Body Parts",
-      icon: <BicepsFlexed className="icon" />,
-      url: "/dashboard/body-parts",
+      url: "/admin/users",
     },
 
     {
-      title: "Racks",
-      icon: <Rows3 className="icon" />,
-      url: "/dashboard/racks",
+      title: "Brands",
+      icon: <Dumbbell className="icon" />,
+      url: "/admin/brands",
     },
     {
-      title: "YouTube Videos",
+      title: "Categories",
+      icon: <BicepsFlexed className="icon" />,
+      url: "/admin/categories",
+    },
+
+    {
+      title: "Products",
+      icon: <Rows3 className="icon" />,
+      url: "/admin/products",
+    },
+    {
+      title: "Clients List",
       icon: <Play className="icon" />,
-      baseUrl: "/dashboard/exercise",
+      baseUrl: "/admin/clients-list",
       submenu: [
         {
-          title: "Exercise Library",
-          url: "/dashboard/exercise-library",
+          title: "Clients List",
+          url: "/admin/clients-list",
         },
         {
-          title: "Exercise Setup ",
-          url: "/dashboard/exercise-setup",
+          title: "Clients List",
+          url: "/admin/clients-list",
         },
       ],
     },
