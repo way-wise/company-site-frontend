@@ -1,5 +1,5 @@
 import {
-  BicepsFlexed,
+  CassetteTape,
   Dumbbell,
   Home,
   LayoutGrid,
@@ -30,13 +30,13 @@ const SidebarMenu = () => {
     },
 
     {
-      title: "Brands",
+      title: "Projects",
       icon: <Dumbbell className="icon" />,
-      url: "/admin/brands",
+      url: "/admin/projects",
     },
     {
       title: "Categories",
-      icon: <BicepsFlexed className="icon" />,
+      icon: <CassetteTape className="icon" />,
       url: "/admin/categories",
     },
 
@@ -46,12 +46,12 @@ const SidebarMenu = () => {
       url: "/admin/products",
     },
     {
-      title: "Clients List",
+      title: "Demo",
       icon: <Play className="icon" />,
       baseUrl: "/admin/clients-list",
       submenu: [
         {
-          title: "Clients List",
+          title: "Projects List",
           url: "/admin/clients-list",
         },
         {
