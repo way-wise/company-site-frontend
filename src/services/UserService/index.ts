@@ -5,7 +5,7 @@ import { ApiResponse, User } from "@/types";
 
 // Types for user management
 export interface PaginatedUsersResponse {
-  users: User[];
+  data: User[];
   pagination: {
     currentPage: number;
     totalPages: number;

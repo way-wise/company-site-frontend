@@ -34,7 +34,6 @@ import {
   useUsers,
 } from "@/hooks/useUserMutations";
 import { User } from "@/types";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Ban, Eye, MoreVertical, Plus, Trash } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -98,10 +97,9 @@ export const UsersTable = () => {
     limit: pagination.pageSize,
     search: debouncedSearch,
   });
-
+  console.log(usersData);
   // Add User Form
   const addUserForm = useForm({
-    resolver: yupResolver(createUserSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -111,7 +109,6 @@ export const UsersTable = () => {
 
   // Ban Reason Form
   const banForm = useForm({
-    resolver: yupResolver(banReasonSchema),
     defaultValues: {
       banReason: "",
     },
@@ -133,29 +130,40 @@ export const UsersTable = () => {
 
   // Handle Add User
   const handleAddUser = (values: CreateUserFormData) => {
-    createUserMutation.mutate(values, {
-      onSuccess: () => {
-        setAddUserModalOpen(false);
-        addUserForm.reset();
-      },
-    });
+    // Validate form data
+    try {
+      const validatedData = createUserSchema.parse(values);
+      createUserMutation.mutate(validatedData, {
+        onSuccess: () => {
+          setAddUserModalOpen(false);
+          addUserForm.reset();
+        },
+      });
+    } catch (error) {
+      console.error("Validation error:", error);
+    }
   };
 
   // Handle User Ban
   const handleBanUser = (values: BanReasonFormData) => {
     if (userId) {
-      banUserMutation.mutate(
-        {
-          userId,
-          banData: values,
-        },
-        {
-          onSuccess: () => {
-            setBanModalOpen(false);
-            banForm.reset();
+      try {
+        const validatedData = banReasonSchema.parse(values);
+        banUserMutation.mutate(
+          {
+            userId,
+            banData: validatedData,
           },
-        }
-      );
+          {
+            onSuccess: () => {
+              setBanModalOpen(false);
+              banForm.reset();
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Validation error:", error);
+      }
     }
   };
 
@@ -326,37 +334,15 @@ export const UsersTable = () => {
         )}
 
         {/* Data Table */}
-        {!isLoading && !isError && (
+        {!isLoading && !isError && usersData && (
           <DataTable
-            data={usersData?.users || []}
+            data={usersData.data || []}
             columns={columns}
             isPending={isLoading}
             pagination={pagination}
             onPaginationChange={setPagination}
           />
         )}
-
-        {/* Empty State */}
-        {!isLoading &&
-          !isError &&
-          (!usersData?.users || usersData.users.length === 0) && (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="mb-4">
-                <p className="text-lg font-medium">No users found</p>
-                <p className="text-sm text-muted-foreground">
-                  {debouncedSearch
-                    ? "Try adjusting your search criteria"
-                    : "No users have been created yet"}
-                </p>
-              </div>
-              {!debouncedSearch && (
-                <Button onClick={() => setAddUserModalOpen(true)}>
-                  <Plus />
-                  <span>Add First User</span>
-                </Button>
-              )}
-            </div>
-          )}
       </div>
 
       {/* User Creation Modal */}
