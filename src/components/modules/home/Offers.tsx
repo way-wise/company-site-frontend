@@ -26,7 +26,7 @@ const Offers = () => {
       id: 1,
       title: "Experienced Engineers",
       description:
-        "Our team of 10 highly skilled engineers excels in delivering innovative solutions.",
+        "Our team of 21 highly skilled engineers excels in delivering innovative solutions.",
       projectCount: "30+",
       backgroundColor: "bg-[#C6CFFF]",
       buttonColor: "bg-[#9AABFF]",
@@ -78,7 +78,7 @@ const Offers = () => {
         <div className="mb-8 lg:mb-16">
           <SectionTitle
             title="What We Offer"
-            description="We deliver tailored IT services—from web development and graphic design to digital marketing, virtual assistance, data entry, media transcription, and server deployment."
+            description="We deliver tailored IT services—from web development, App Development and graphic design to digital marketing, virtual assistance, data entry, and server deployment."
             titleClass="text-white text-3xl sm:text-4xl lg:text-[55px] font-bold"
             descriptionClass="text-white text-base sm:text-lg lg:text-[20px]"
           />

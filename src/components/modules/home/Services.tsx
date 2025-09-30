@@ -24,7 +24,7 @@ const Services = () => {
       id: 1,
       title: "Web Application",
       description:
-        "In today's digital world, a robust online presence is essential for any business",
+        "Build responsive and scalable web applications that improve user engagement and business operations.",
       bgImage: webAppBg,
       url: "#",
       icon: webIcon,
@@ -33,7 +33,7 @@ const Services = () => {
       id: 2,
       title: "Mobile Application",
       description:
-        "In today's digital world, a robust online presence is essential for any business",
+        "Develop intuitive mobile apps for iOS and Android to reach customers on the go and boost retention.",
       bgImage: mobileAppBg,
       url: "#",
       icon: mobileIcon,
@@ -42,7 +42,7 @@ const Services = () => {
       id: 3,
       title: "Digital Marketing",
       description:
-        "In today's digital world, a robust online presence is essential for any business",
+        "Create targeted marketing campaigns that increase brand awareness and drive measurable conversions.",
       bgImage: digitalMarketingBg,
       url: "#",
       icon: digitalIcon,
@@ -51,7 +51,7 @@ const Services = () => {
       id: 4,
       title: "Graphics Design",
       description:
-        "In today's digital world, a robust online presence is essential for any business",
+        "Design visually appealing graphics that communicate your brand message effectively across platforms.",
       bgImage: graphicsDesignBg,
       url: "#",
       icon: graphicsIcon,
@@ -60,7 +60,7 @@ const Services = () => {
       id: 5,
       title: "Internet of Things",
       description:
-        "In today's digital world, a robust online presence is essential for any business",
+        "Implement smart IoT solutions to connect devices, gather insights, and optimize processes in real time.",
       bgImage: internetThingsBg,
       url: "#",
       icon: cloudIcon,
@@ -69,7 +69,7 @@ const Services = () => {
       id: 6,
       title: "Cloud Engineering",
       description:
-        "In today's digital world, a robust online presence is essential for any business",
+        "Design and maintain secure cloud infrastructure that scales with your business needs efficiently.",
       bgImage: cloudEngineeringBg,
       url: "#",
       icon: internetIcon,

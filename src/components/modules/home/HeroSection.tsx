@@ -1,6 +1,7 @@
 import mainBackground from "@/assets/images/home/full-bg.png";
 import heroLeftBg from "@/assets/images/home/hero-ai.png";
 import Image from "next/image";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -36,7 +37,10 @@ const HeroSection = () => {
 
           {/* CTA Button */}
           <div>
-            <button className="bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-white lg:px-8 lg:py-4 px-4 py-3 rounded-lg text-lg font-semibold hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105 flex items-center gap-2 text-left">
+            <Link
+              href="/services"
+              className="bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-white lg:px-8 lg:py-4 px-4 py-3 rounded-lg text-lg font-semibold hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105 flex items-center gap-2 text-left"
+            >
               Let&apos;s Get Started
               <svg
                 width="20"
@@ -54,7 +58,7 @@ const HeroSection = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-            </button>
+            </Link>
           </div>
         </div>
         <div className="flex md:justify-end justify-center items-center">
