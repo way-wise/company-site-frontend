@@ -97,7 +97,7 @@ export const UsersTable = () => {
     limit: pagination.pageSize,
     search: debouncedSearch,
   });
-  console.log(usersData);
+
   // Add User Form
   const addUserForm = useForm({
     defaultValues: {
@@ -241,7 +241,7 @@ export const UsersTable = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-36">
                 <DropdownMenuItem asChild>
-                  <Link href={`/client/users/${id}`}>
+                  <Link href={`/admin/users/${id}`}>
                     <Eye />
                     <span>View</span>
                   </Link>
@@ -336,13 +336,36 @@ export const UsersTable = () => {
         {/* Data Table */}
         {!isLoading && !isError && usersData && (
           <DataTable
-            data={usersData.data || []}
+            data={usersData?.data || []}
             columns={columns}
             isPending={isLoading}
             pagination={pagination}
             onPaginationChange={setPagination}
           />
         )}
+
+        {/* Empty State */}
+        {!isLoading &&
+          !isError &&
+          usersData &&
+          (!usersData.data || usersData.data.length === 0) && (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="mb-4">
+                <p className="text-lg font-medium">No users found</p>
+                <p className="text-sm text-muted-foreground">
+                  {debouncedSearch
+                    ? "Try adjusting your search criteria"
+                    : "No users have been created yet"}
+                </p>
+              </div>
+              {!debouncedSearch && (
+                <Button onClick={() => setAddUserModalOpen(true)}>
+                  <Plus />
+                  <span>Add First User</span>
+                </Button>
+              )}
+            </div>
+          )}
       </div>
 
       {/* User Creation Modal */}

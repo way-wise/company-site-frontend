@@ -7,8 +7,7 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { apiClient } from "@/lib/axios";
-import { useQuery } from "@tanstack/react-query";
+import { useUser } from "@/hooks/useUserMutations";
 import {
   ArrowLeft,
   Check,
@@ -23,20 +22,14 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString();
 };
 
-// Fetch user details
-const fetchUserDetails = async (id: string) => {
-  const response = await apiClient.get(`/users/${id}`);
-  return response.data;
-};
-
 // UserDetails component
 const UserDetails = ({ id }: { id: string }) => {
   const router = useRouter();
-  const { data, isLoading } = useQuery({
-    queryKey: ["user", id],
-    queryFn: () => fetchUserDetails(id),
-  });
+  const { data: userResponse, isLoading, error } = useUser(id);
 
+  // Extract user data from the response
+  const user = userResponse?.data;
+  console.log(user);
   return (
     <>
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
@@ -49,11 +42,21 @@ const UserDetails = ({ id }: { id: string }) => {
       <div className="rounded-xl border bg-card p-6">
         {isLoading ? (
           <UserDetailsSkeleton />
-        ) : (
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="mb-4 text-destructive">
+              <p className="text-lg font-medium">Failed to load user details</p>
+              <p className="text-sm text-muted-foreground">
+                {error?.message ||
+                  "Something went wrong while fetching user details"}
+              </p>
+            </div>
+          </div>
+        ) : user ? (
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-start sm:text-left">
-            {data?.image ? (
+            {user?.image ? (
               <Image
-                src={data?.image}
+                src={user?.image}
                 alt="Profile Image"
                 width={150}
                 height={150}
@@ -66,9 +69,9 @@ const UserDetails = ({ id }: { id: string }) => {
             )}
             <div>
               <h1 className="flex items-center justify-center gap-2 text-2xl font-medium sm:justify-start">
-                <span>{data?.name}</span>
+                <span>{user?.name}</span>
 
-                {data?.emailVerified ? (
+                {user?.emailVerified ? (
                   <Badge variant="success" size="icon">
                     <Check className="size-4" />
                   </Badge>
@@ -79,20 +82,20 @@ const UserDetails = ({ id }: { id: string }) => {
                 )}
               </h1>
               <Link
-                href={`mailto:${data?.email}`}
+                href={`mailto:${user?.email}`}
                 className="text-muted-foreground"
               >
-                {data?.email}
+                {user?.email}
               </Link>
               <p className="text-muted-foreground">
-                Since {data?.createdAt && formatDate(data?.createdAt)}
+                Since {user?.createdAt && formatDate(user?.createdAt)}
               </p>
               <div className="flex items-center gap-2 py-3">
                 <div className="flex items-center gap-1.5 rounded-full bg-muted py-1.5 pr-2.5 pl-2 text-muted-foreground">
                   <ShieldUser className="size-6 stroke-[1.5]" />
-                  <span className="capitalize">{data?.role}</span>
+                  <span className="capitalize">{user?.role}</span>
                 </div>
-                {data?.banned ? (
+                {!user?.isActive ? (
                   <div className="flex items-center gap-1.5 rounded-full bg-destructive/70 py-1.5 pr-2.5 pl-2 text-white">
                     <CircleX className="size-6 stroke-[1.5]" />
                     <span className="capitalize">Banned</span>
@@ -100,23 +103,27 @@ const UserDetails = ({ id }: { id: string }) => {
                 ) : (
                   <div className="flex items-center gap-1.5 rounded-full bg-muted py-1.5 pr-2.5 pl-2 text-muted-foreground">
                     <Check className="size-6 stroke-[1.5]" />
-                    <span className="capitalize">Not Banned</span>
+                    <span className="capitalize">Active</span>
                   </div>
                 )}
               </div>
             </div>
           </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <p className="text-muted-foreground">User not found</p>
+          </div>
         )}
       </div>
 
-      <div className="mt-5 rounded-lg border bg-white p-5">
+      {/* <div className="mt-5 rounded-lg border bg-white p-5">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">Rewards Points</h3>
           <span className="text-md text-muted-foreground">
-            {data?.totalPoints ?? 0}
+            {user?.totalPoints ?? 0}
           </span>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

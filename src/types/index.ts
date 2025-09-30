@@ -18,6 +18,9 @@ export interface User {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  image?: string;
+  emailVerified?: boolean;
+  totalPoints?: number;
 }
 
 // Pagination Types

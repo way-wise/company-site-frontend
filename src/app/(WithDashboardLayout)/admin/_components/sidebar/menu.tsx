@@ -16,7 +16,7 @@ const SidebarMenu = () => {
     {
       title: "Dashboard",
       icon: <LayoutGrid className="icon" />,
-      url: "/dashboard",
+      url: "/admin",
     },
     {
       title: "Back to Home",
