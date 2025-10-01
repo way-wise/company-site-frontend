@@ -6,8 +6,14 @@ import digitalMarketingBg from "@/assets/images/services/digital-marketing.png";
 import graphicsDesignBg from "@/assets/images/services/graphics-design.png";
 import internetThingsBg from "@/assets/images/services/internetthings.png";
 import mobileAppBg from "@/assets/images/services/mobile-application.png";
-import serviceDetails from "@/assets/images/services/service-details.png";
 import webAppBg from "@/assets/images/services/web-application.png";
+
+import aiImg from "@/assets/images/services/ai.jpg";
+import appImg from "@/assets/images/services/app.jpg";
+import cloudImg from "@/assets/images/services/cloud.jpg";
+import digitalImg from "@/assets/images/services/digital.jpg";
+import grpahicsImg from "@/assets/images/services/graphic.jpg";
+import webImg from "@/assets/images/services/web.jpg";
 
 // Import service icons
 import cloudIcon from "@/assets/icons/services/cloud.svg";
@@ -27,7 +33,7 @@ export const servicesData: ServiceDetail[] = [
     bgImage: webAppBg,
     url: "/services/web-application",
     icon: webIcon,
-    videoImage: serviceDetails,
+    videoImage: webImg,
     detailedDescription:
       "At Way-Wise Tech, we transform your digital vision into reality through cutting-edge web development solutions. Our team of skilled developers crafts websites and web applications that not only look stunning but also deliver exceptional performance and user experience. We create tailor-made websites that perfectly align with your brand identity and business goals. From small online stores to large-scale marketplaces, we build robust e-commerce platforms that drive sales and enhance customer engagement. We develop easy-to-use CMS solutions that empower you to manage your website content effortlessly. Our PWAS combine the best of web and mobile apps, offering seamless experiences across all devices. We create and integrate APIs to enhance your website's functionality and connectivity with third-party services.",
     expertiseAreas: [
@@ -74,7 +80,7 @@ export const servicesData: ServiceDetail[] = [
     bgImage: mobileAppBg,
     url: "/services/mobile-application",
     icon: mobileIcon,
-    videoImage: serviceDetails,
+    videoImage: appImg,
     detailedDescription:
       "Transform your business with powerful mobile applications that engage users and drive growth. Our expert team develops native and cross-platform mobile apps for iOS and Android, ensuring seamless performance and exceptional user experiences. We leverage the latest technologies including React Native, Flutter, and Swift to create apps that are fast, reliable, and scalable. From concept to deployment, we handle every aspect of mobile app development with precision and creativity.",
     expertiseAreas: [
@@ -121,7 +127,7 @@ export const servicesData: ServiceDetail[] = [
     bgImage: digitalMarketingBg,
     url: "/services/digital-marketing",
     icon: digitalIcon,
-    videoImage: serviceDetails,
+    videoImage: digitalImg,
     detailedDescription:
       "Elevate your brand with data-driven digital marketing strategies that deliver real results. Our comprehensive approach combines SEO, social media marketing, content marketing, PPC advertising, and email campaigns to maximize your online presence. We analyze market trends, understand your target audience, and craft personalized campaigns that resonate with your customers. From increasing brand awareness to driving conversions, we help you achieve your business goals through strategic digital marketing.",
     expertiseAreas: [
@@ -168,7 +174,7 @@ export const servicesData: ServiceDetail[] = [
     bgImage: graphicsDesignBg,
     url: "/services/graphics-design",
     icon: graphicsIcon,
-    videoImage: serviceDetails,
+    videoImage: grpahicsImg,
     detailedDescription:
       "Bring your brand to life with stunning visual designs that captivate and inspire. Our creative team specializes in crafting unique brand identities, eye-catching marketing materials, and engaging digital designs. From logos and branding to social media graphics and print materials, we ensure every design element reflects your brand's personality and values. We combine creativity with strategic thinking to deliver designs that not only look beautiful but also drive business results.",
     expertiseAreas: [
@@ -208,14 +214,14 @@ export const servicesData: ServiceDetail[] = [
   },
   {
     id: 5,
-    title: "AI Integration",
+    title: "AI/ML",
     slug: "ai-integration",
     description:
-      "Implement smart IoT solutions to connect devices, gather insights, and optimize processes in real time.",
+      "Implement smart AI/ML solutions to connect devices, gather insights, and optimize processes in real time.",
     bgImage: internetThingsBg,
     url: "/services/internet-of-things",
     icon: cloudIcon,
-    videoImage: serviceDetails,
+    videoImage: aiImg,
     detailedDescription:
       "Unlock the power of connected devices with our advanced IoT solutions. We design and implement smart systems that collect, analyze, and act on real-time data from sensors and devices. From smart homes to industrial automation, our IoT expertise helps businesses optimize operations, reduce costs, and create innovative products. We work with cutting-edge technologies including Arduino, Raspberry Pi, AWS IoT, and Azure IoT to build scalable and secure IoT ecosystems.",
     expertiseAreas: [
@@ -262,7 +268,7 @@ export const servicesData: ServiceDetail[] = [
     bgImage: cloudEngineeringBg,
     url: "/services/cloud-engineering",
     icon: internetIcon,
-    videoImage: serviceDetails,
+    videoImage: cloudImg,
     detailedDescription:
       "Modernize your infrastructure with cloud engineering solutions that provide flexibility, scalability, and security. Our cloud experts help you migrate to the cloud, optimize existing cloud environments, and build cloud-native applications. We work with leading cloud platforms including AWS, Azure, and Google Cloud to design architectures that meet your performance, security, and budget requirements. From serverless computing to containerization, we leverage the latest cloud technologies to drive innovation.",
     expertiseAreas: [
