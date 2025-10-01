@@ -7,21 +7,21 @@ const processSteps = [
     number: "01",
     title: "Discovery & Consultation",
     description:
-      "Exploring a problem involves delving into its various aspects to understand the root cause and potential solutions.",
+      "We conduct comprehensive consultations to thoroughly understand your business objectives, and requirements, ensuring a strategic foundation for project success.",
   },
   {
     id: 2,
     number: "02",
     title: "Design & Development",
     description:
-      "Exploring a problem involves delving into its various aspects to understand the root cause and potential solutions.",
+      "Our team crafts tailored solutions through meticulous design and robust development, aligning technical execution with your vision and industry best practices.",
   },
   {
     id: 3,
     number: "03",
     title: "Testing & Launch",
     description:
-      "Exploring a problem involves delving into its various aspects to understand the root cause and potential solutions.",
+      "We rigorously test all deliverables to guarantee quality and reliability, followed by a seamless launch to ensure optimal performance and client satisfaction.",
   },
 ];
 
@@ -29,22 +29,22 @@ const processSteps = [
 const statistics = [
   {
     id: 1,
-    number: "23",
+    number: "2+",
     label: "Years Experience",
   },
   {
     id: 2,
-    number: "50",
+    number: "21",
     label: "Skilled IT-Experts",
   },
   {
     id: 3,
-    number: "14K",
+    number: "70",
     label: "Project Completed",
   },
   {
     id: 4,
-    number: "5K",
+    number: "210",
     label: "Happy Customers",
   },
 ];
@@ -78,21 +78,21 @@ const SuccessProjects = () => {
 
             {processSteps?.map((step) => (
               <div key={step.id} className="relative z-10">
-                <div className="bg-[#E1E8F9]  backdrop-blur-sm   rounded-2xl p-4 lg:p-6 max-w-sm mx-auto shadow-2xl  transition-all duration-300 hover:scale-105">
+                <div className="group bg-[#E1E8F9] backdrop-blur-sm rounded-2xl p-4 lg:p-6 max-w-sm mx-auto shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-[#1042B5]">
                   {/* Number circle */}
-                  <div className="w-20 h-20 bg-[#00A3FF] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg border-8 border-[#9ED3FB]">
-                    <span className="text-white text-xl font-bold">
+                  <div className="w-20 h-20 bg-[#00A3FF]  rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg border-8 border-[#9ED3FB] group-hover:border-[#0B5FCB] transition-all duration-300">
+                    <span className="text-white  text-xl font-bold transition-colors duration-300">
                       {step.number}
                     </span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-normal  text-2xl font-bold text-center mb-4 leading-tight">
+                  <h3 className="text-normal group-hover:text-white text-2xl font-bold text-center mb-4 leading-tight transition-colors duration-300">
                     {step.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-normal/80 text-md text-center leading-relaxed">
+                  <p className="text-normal/80 group-hover:text-white/90 text-md text-center leading-relaxed transition-colors duration-300">
                     {step.description}
                   </p>
                 </div>
