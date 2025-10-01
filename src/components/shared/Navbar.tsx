@@ -3,9 +3,22 @@ import Logo from "@/assets/images/shared/way-wise-logo.svg";
 import profileGuide from "@/assets/images/shared/way-wise-profile.jpg";
 import LogoText from "@/assets/images/shared/way-wise-text.png";
 import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/UserContext";
-import { Menu, Phone } from "lucide-react";
+import { ChevronDown, Menu, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -15,6 +28,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
   const { user } = useAuth();
 
   console.log(user);
@@ -48,6 +62,16 @@ export default function Navbar() {
       label: "Contact",
       href: "/contact-us",
     },
+  ];
+
+  const portfolioLinks = [
+    { label: "Web Portfolio", href: "https://portfolio.waywisetech.com/" },
+    {
+      label: "Marketing Portfolio",
+      href: "https://digitalmarketing.waywisetech.com/",
+    },
+    { label: "Design Portfolio", href: "https://design.waywisetech.com/" },
+    { label: "AI Portfolio", href: "https://showcase.waywisetech.com/" },
   ];
 
   // Function to check if a route is active
@@ -88,7 +112,7 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="flex justify-end  items-center  gap-8">
-          <nav className="hidden lg:flex gap-4 xl:gap-8 mx-auto">
+          <nav className="hidden lg:flex gap-4 xl:gap-8 mx-auto items-center">
             {navigationLinks.map((link) => {
               const isActive = isRouteActive(link.href);
 
@@ -106,6 +130,46 @@ export default function Navbar() {
                 </Link>
               );
             })}
+
+            {/* Portfolio Dropdown */}
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger
+                    className={`text-md transition-colors bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
+                      pathname.startsWith("/portfolio")
+                        ? "text-brand font-semibold"
+                        : "text-[#1B3447] hover:text-brand"
+                    }`}
+                  >
+                    Portfolio
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[200px] gap-3 p-2">
+                      {portfolioLinks.map((item) => (
+                        <li key={item.href}>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              target="_blank"
+                              href={item.href}
+                              className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                pathname === item.href
+                                  ? "bg-accent text-brand font-semibold"
+                                  : ""
+                              }`}
+                            >
+                              <div className="text-sm font-medium leading-none">
+                                {item.label}
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
           </nav>
 
           {/* Desktop Phone Section */}
@@ -124,8 +188,18 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center justify-center gap-2  rounded-md p-2 bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat">
             <Phone className="w-5 h-5 text-white" />
             <div>
-              <p className="text-white text-sm">+1-310-528-6170</p>
-              <p className="text-white text-sm">+880 1748 771945</p>
+              <a
+                href="tel:+13105286170"
+                className="text-white text-sm hover:underline block"
+              >
+                +1-310-528-6170
+              </a>
+              <a
+                href="tel:+8801748771945"
+                className="text-white text-sm hover:underline block"
+              >
+                +880 1748 771945
+              </a>
             </div>
           </div>
         </div>
@@ -138,8 +212,18 @@ export default function Navbar() {
               <div className="hidden sm:flex items-center justify-center gap-2 bg-brand rounded-md p-2">
                 <Phone className="w-4 h-4 text-white" />
                 <div>
-                  <p className="text-white text-xs">+880 1712 345678</p>
-                  <p className="text-white text-xs">+110 5258 461070</p>
+                  <a
+                    href="tel:+8801712345678"
+                    className="text-white text-xs hover:underline block"
+                  >
+                    +1-310-528-6170
+                  </a>
+                  <a
+                    href="tel:+1105258461070"
+                    className="text-white text-xs hover:underline block"
+                  >
+                    +880 1748 771945
+                  </a>
                 </div>
               </div>
 
@@ -181,6 +265,38 @@ export default function Navbar() {
                   );
                 })}
 
+                {/* Mobile Portfolio Section */}
+                <Collapsible
+                  open={isPortfolioOpen}
+                  onOpenChange={setIsPortfolioOpen}
+                >
+                  <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
+                    <span>Portfolio</span>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        isPortfolioOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="pt-3">
+                    <div className="pl-4 space-y-3">
+                      {portfolioLinks.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={`block text-base transition-colors ${
+                            pathname === item.href
+                              ? "text-brand font-semibold"
+                              : "text-gray-600 hover:text-brand"
+                          }`}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+
                 <div
                   className="flex lg:hidden gap-2  rounded-md cursor-pointer"
                   onClick={() => router.push("/book")}
@@ -201,8 +317,18 @@ export default function Navbar() {
                       Contact Us
                     </span>
                   </div>
-                  <p className="text-gray-600">+880 1712 345678</p>
-                  <p className="text-gray-600">+110 5258 461070</p>
+                  <a
+                    href="tel:+8801712345678"
+                    className="text-gray-600 hover:text-brand hover:underline block"
+                  >
+                    +1-310-528-6170
+                  </a>
+                  <a
+                    href="tel:+1105258461070"
+                    className="text-gray-600 hover:text-brand hover:underline block"
+                  >
+                    +880 1748 771945
+                  </a>
                 </div>
               </nav>
             </SheetContent>

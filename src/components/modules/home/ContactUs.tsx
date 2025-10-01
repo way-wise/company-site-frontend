@@ -106,6 +106,7 @@ const ContactUs = () => {
                     alt="Firoz Bari"
                     width={154}
                     height={184}
+                    className="w-[154px] h-full object-cover"
                   />
                 </div>
                 <div className="text-center">
@@ -121,7 +122,7 @@ const ContactUs = () => {
                     alt="Seung Lee"
                     width={180}
                     height={180}
-                    className="w-full h-full object-cover"
+                    className="w-[180px] h-full object-cover"
                   />
                 </div>
                 <div className="text-center">
