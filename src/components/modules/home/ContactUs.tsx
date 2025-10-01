@@ -224,7 +224,11 @@ const ContactUs = () => {
                         Mobile App Development
                       </SelectItem>
                       <SelectItem value="ui-ux-design">UI/UX Design</SelectItem>
-                      <SelectItem value="consulting">Consulting</SelectItem>
+                      <SelectItem value="consulting">AI/ML</SelectItem>
+                      <SelectItem value="other">Digital Marketing</SelectItem>
+                      <SelectItem value="other">Graphics Design</SelectItem>
+                      <SelectItem value="other">Internet of Things</SelectItem>
+                      <SelectItem value="other">Cloud Engineering</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
@@ -249,11 +253,11 @@ const ContactUs = () => {
                       <SelectValue placeholder="Select Your Range" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="under-5k">Under $5,000</SelectItem>
+                      <SelectItem value="under-1k">Under $1,000</SelectItem>
+                      <SelectItem value="1k-5k">$1,000 - $5,000</SelectItem>
                       <SelectItem value="5k-10k">$5,000 - $10,000</SelectItem>
                       <SelectItem value="10k-25k">$10,000 - $25,000</SelectItem>
-                      <SelectItem value="25k-50k">$25,000 - $50,000</SelectItem>
-                      <SelectItem value="50k-plus">$50,000+</SelectItem>
+                      <SelectItem value="25k-plus">$25,000+</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

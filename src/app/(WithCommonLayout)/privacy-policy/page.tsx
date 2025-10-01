@@ -195,11 +195,19 @@ const PrivacyPolicyPage = () => {
             <p className="text-gray-700 leading-relaxed">
               If you have any questions or concerns about this Privacy Policy or
               how we handle your personal information, please contact us at{" "}
+              <br />
               <a
                 href="mailto:privacy@waywise.tech"
                 className="text-blue-600 hover:text-blue-800 font-medium underline"
               >
-                privacy@waywise.tech
+                tech@waywise.pro
+              </a>
+              <br />
+              <a
+                href="mailto:privacy@waywise.tech"
+                className="text-blue-600 hover:text-blue-800 font-medium underline"
+              >
+                info@waywisetech.com
               </a>
             </p>
           </div>
