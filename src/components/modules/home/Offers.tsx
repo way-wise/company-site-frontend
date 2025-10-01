@@ -98,7 +98,7 @@ const Offers = () => {
 
         {/* Desktop: Stack Scroll */}
         <div
-          className="block relative pb-28"
+          className="block relative pb-44 lg:pb-28"
           style={{
             height: `calc(${offers.length} * ${
               typeof window !== "undefined" && window.innerWidth >= 1440

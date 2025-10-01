@@ -1,8 +1,3 @@
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import { categoryData } from "@/datas/category";
 import Image from "next/image";
 
@@ -19,38 +14,44 @@ const CategorySection = () => {
               <br className="hidden lg:block" /> Partners
             </p>
           </div>
-          <div className="flex items-center md:px-4">
-            <Carousel
-              opts={{
-                align: "center",
-                loop: true,
-              }}
-              className="w-full "
-            >
-              <CarouselContent className="flex items-center justify-center gap-2 md:gap-4 lg:gap-12">
+          <div className="flex items-center md:px-4 w-full">
+            <div className="overflow-hidden w-full">
+              <div className="flex items-center gap-4 lg:gap-8 xl:gap-12 auto-scroll">
                 {categories.map((category) => (
-                  <CarouselItem
-                    className="basis-1/3 md:basis-1/5 lg:basis-1/6 xl:basis-1/8"
-                    key={category.id}
+                  <div
+                    key={`first-${category.id}`}
+                    className="flex-shrink-0 flex flex-col transition-all items-center justify-center text-center rounded-xl group duration-200 p-1"
                   >
-                    <div className="flex flex-col transition-all w-full items-center justify-center text-center rounded-xl group duration-200  p-2 mx-2">
-                      <div className="flex items-center justify-center  mb-2">
-                        <Image
-                          src={category.image}
-                          alt={category.name}
-                          width={155}
-                          height={34}
-                          className="w-20 lg:w-64 h-auto rounded-md"
-                        />
-                      </div>
-                      {/* <span className="text-xs font-medium text-gray-600 group-hover:text-[#340049] text-center">
-                      {category.name}
-                    </span> */}
+                    <div className="flex items-center justify-center mb-2 bg-white p-2 rounded-md">
+                      <Image
+                        src={category.image}
+                        alt={category.name}
+                        width={120}
+                        height={60}
+                        className="w-20 h-12 lg:w-32 lg:h-16 rounded-md object-contain"
+                      />
                     </div>
-                  </CarouselItem>
+                  </div>
                 ))}
-              </CarouselContent>
-            </Carousel>
+
+                {categories.map((category) => (
+                  <div
+                    key={`second-${category.id}`}
+                    className="flex-shrink-0 flex flex-col transition-all items-center justify-center text-center rounded-xl group duration-200 p-1"
+                  >
+                    <div className="flex items-center justify-center mb-2 bg-white p-2 rounded-md">
+                      <Image
+                        src={category.image}
+                        alt={category.name}
+                        width={120}
+                        height={60}
+                        className="w-20 h-12 lg:w-32 lg:h-16 rounded-md object-contain"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

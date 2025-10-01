@@ -102,11 +102,11 @@ const SuccessProjects = () => {
         </div>
 
         {/* Statistics Section */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12 py-2 lg:py-20">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12 py-2 lg:py-20 ">
           {statistics.map((stat) => (
             <div key={stat.id} className="text-center relative">
               {/* Large bordered number (text border only, no fill) */}
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center ">
                 <span
                   className="text-transparent text-[120px] lg:text-[150px] font-black select-none"
                   style={{

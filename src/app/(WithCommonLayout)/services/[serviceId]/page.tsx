@@ -1,4 +1,3 @@
-import CategorySection from "@/components/modules/home/CategorySection";
 import ContactUs from "@/components/modules/home/ContactUs";
 import Feadback from "@/components/modules/home/Feadback";
 import ServiceDetails from "@/components/modules/services/ServiceDetails";
@@ -24,22 +23,17 @@ const ServiceDetailsPage = ({ params }: ServiceDetailsPageProps) => {
     notFound();
   }
 
-  // Split title for display
-  const titleWords = service.title.split(" ");
-  const firstPart = titleWords.slice(0, -1).join(" ");
-  const lastWord = titleWords[titleWords.length - 1];
-
   return (
     <main>
       <PageHeader
-        title={firstPart || service.title}
-        description={lastWord || ""}
+        title={service.title}
+        description={""}
         titleClass="text-white text-5xl lg:text-[85px] font-bold"
         descriptionClass="text-brand text-5xl lg:text-[85px]"
       />
       <ServiceDetails service={service} />
       <SuccessProjects />
-      <CategorySection />
+      {/* <CategorySection /> */}
       <ServiceSlider />
       <Feadback />
       <ContactUs />

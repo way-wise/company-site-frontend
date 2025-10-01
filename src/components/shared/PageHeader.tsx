@@ -28,38 +28,6 @@ const PageHeader = ({
         <p className={`font-bold text-center ${descriptionClass}`}>
           {description}
         </p>
-        {/* Breadcrumb */}
-        {/* {breadcrumbs && breadcrumbs.length > 0 && (
-          <div className="flex justify-center my-6 ">
-            <Breadcrumb>
-              <BreadcrumbList className="text-white/80">
-                {breadcrumbs.map((crumb, index) => (
-                  <div key={index} className="flex items-center">
-                    <BreadcrumbItem>
-                      {index === breadcrumbs.length - 1 ? (
-                        <BreadcrumbPage className="text-white font-semibold">
-                          {crumb.label}
-                        </BreadcrumbPage>
-                      ) : (
-                        <BreadcrumbLink asChild>
-                          <Link
-                            href={crumb.href || "/"}
-                            className="text-white/80 hover:text-white"
-                          >
-                            {crumb.label}
-                          </Link>
-                        </BreadcrumbLink>
-                      )}
-                    </BreadcrumbItem>
-                    {index < breadcrumbs.length - 1 && (
-                      <BreadcrumbSeparator className="text-white/60" />
-                    )}
-                  </div>
-                ))}
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        )} */}
       </div>
     </section>
   );

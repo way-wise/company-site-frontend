@@ -3,7 +3,7 @@ import flyArzanImg from "@/assets/images/category/fly-arzan.svg";
 import penWiseImg from "@/assets/images/category/pen-wise.svg";
 import rnImg from "@/assets/images/category/r-n.svg";
 import seatWavesImg from "@/assets/images/category/seat-waves.svg";
-import weOutImg from "@/assets/images/category/weout.png";
+import weOutImg from "@/assets/images/category/weout.svg";
 
 export const categoryData = [
   {

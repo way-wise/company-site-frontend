@@ -11,7 +11,7 @@ import bulletImg from "@/assets/images/category/bullet.svg";
 import fiddenImg from "@/assets/images/category/fidden.svg";
 import searchforceIcon from "@/assets/images/category/searchforce.png";
 import seatWavesImg from "@/assets/images/category/seat-waves.svg";
-import weout from "@/assets/images/category/weout.png";
+import weout from "@/assets/images/category/weout1.png";
 
 import fidden from "@/assets/images/feadback/fidden.jpg";
 import flyArzan from "@/assets/images/feadback/flyarjon.jpg";
