@@ -66,7 +66,7 @@ export default function Navbar() {
 
   const portfolioLinks = [
     { label: "Web Portfolio", href: "https://portfolio.waywisetech.com/" },
-    { label: "AI Portfolio", href: "https://showcase.waywisetech.com/" },
+    { label: "AI/ML Portfolio", href: "https://showcase.waywisetech.com/" },
     {
       label: "Marketing Portfolio",
       href: "https://digitalmarketing.waywisetech.com/",

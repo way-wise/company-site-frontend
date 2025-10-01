@@ -59,7 +59,7 @@ const Projects = () => {
       description:
         "A cutting-edge medical AI platform designed to assist in voice-based health analysis. It leverages advanced AI models to detect patterns and provide early health insights.",
 
-      tags: ["UX/UX Design", "AI Integration", "Web Development", "SEO"],
+      tags: ["UX/UX Design", "Web Development", "AI/ML", "SEO"],
       url: "https://voicehealth.ai/",
       image: voiceImg,
     },
@@ -70,7 +70,7 @@ const Projects = () => {
       description:
         "An advanced AI-powered platform for image transformation and editing. It enables users to enhance, modify, and generate visuals with high precision. ",
 
-      tags: ["UI/UX Design", "AI Integration", "Web Development", "SEO"],
+      tags: ["UI/UX Design", "Web Development", "AI/ML", "SEO"],
       url: "https://www.searchforce.com",
       image: searchImg,
     },
