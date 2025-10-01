@@ -15,7 +15,8 @@ const CategorySection = () => {
         <div className="flex flex-col lg:flex-row justify-start items-center w-full gap-2">
           <div className=" font-semibold text-center">
             <p>
-              Our Featured <br className="hidden lg:block" /> Partners
+              <span className="whitespace-nowrap">Our Featured</span>{" "}
+              <br className="hidden lg:block" /> Partners
             </p>
           </div>
           <div className="flex items-center md:px-4">

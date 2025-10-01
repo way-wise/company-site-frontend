@@ -66,12 +66,12 @@ export default function Navbar() {
 
   const portfolioLinks = [
     { label: "Web Portfolio", href: "https://portfolio.waywisetech.com/" },
+    { label: "AI Portfolio", href: "https://showcase.waywisetech.com/" },
     {
       label: "Marketing Portfolio",
       href: "https://digitalmarketing.waywisetech.com/",
     },
     { label: "Design Portfolio", href: "https://design.waywisetech.com/" },
-    { label: "AI Portfolio", href: "https://showcase.waywisetech.com/" },
   ];
 
   // Function to check if a route is active
