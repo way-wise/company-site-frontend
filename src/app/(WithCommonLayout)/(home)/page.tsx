@@ -5,13 +5,15 @@ import HeroSection from "@/components/modules/home/HeroSection";
 import Offers from "@/components/modules/home/Offers";
 import Projects from "@/components/modules/home/Projects";
 import Services from "@/components/modules/home/Services";
+import { servicesData } from "@/datas/services";
 
 const HomePage = () => {
+  const services = servicesData;
   return (
     <div>
       <HeroSection />
       <CategorySection />
-      <Services />
+      <Services services={services} />
       <Projects />
       <Offers />
       <Feadback />

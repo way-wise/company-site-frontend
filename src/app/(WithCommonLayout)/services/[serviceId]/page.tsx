@@ -5,7 +5,7 @@ import ServiceDetails from "@/components/modules/services/ServiceDetails";
 import ServiceSlider from "@/components/modules/services/ServiceSlider";
 import SuccessProjects from "@/components/modules/services/SuccessProjects";
 import PageHeader from "@/components/shared/PageHeader";
-import { getServiceBySlug } from "@/datas/services";
+import { servicesData } from "@/datas/services";
 import { notFound } from "next/navigation";
 
 interface ServiceDetailsPageProps {
@@ -15,7 +15,9 @@ interface ServiceDetailsPageProps {
 }
 
 const ServiceDetailsPage = ({ params }: ServiceDetailsPageProps) => {
-  const service = getServiceBySlug(params.serviceId);
+  const service = servicesData.find(
+    (service) => service.slug === params.serviceId
+  );
 
   // If service not found, show 404
   if (!service) {

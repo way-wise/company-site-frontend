@@ -1,9 +1,8 @@
 import SectionTitle from "@/components/modules/home/SectionTitle";
-import { getAllServices } from "@/datas/services";
+import { ServiceDetail } from "@/types";
 import ServiceCard from "./ServiceCard";
 
-const Services = () => {
-  const services = getAllServices();
+const Services = ({ services }: { services: ServiceDetail[] }) => {
   return (
     <section className="  bg-[url('@/assets/images/services/service-bg.png')] bg-cover bg-center bg-no-repeat">
       <div className="container mx-auto py-12 lg:py-20 px-2">
@@ -18,7 +17,7 @@ growth, enhance your brand, and streamline your operations."
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-20  ">
-          {services.map((service) => (
+          {services?.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
         </div>

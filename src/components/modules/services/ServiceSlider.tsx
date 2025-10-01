@@ -1,7 +1,6 @@
 "use client";
 
 import SectionTitle from "@/components/modules/home/SectionTitle";
-import { Service } from "@/types";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ServiceCard from "../home/ServiceCard";
@@ -27,9 +26,20 @@ import graphicsIcon from "@/assets/icons/services/graphics.svg";
 import internetIcon from "@/assets/icons/services/internet.svg";
 import mobileIcon from "@/assets/icons/services/mobile.svg";
 import webIcon from "@/assets/icons/services/web.png";
+import { StaticImageData } from "next/image";
+
+type TServiceSlider = {
+  id: number;
+  title: string;
+  description: string;
+  bgImage: StaticImageData;
+  url: string;
+  icon: StaticImageData;
+  slug: string;
+};
 
 const ServiceSlider = () => {
-  const services: Service[] = [
+  const services: TServiceSlider[] = [
     {
       id: 1,
       title: "Web Application",
@@ -38,6 +48,7 @@ const ServiceSlider = () => {
       bgImage: webAppBg,
       url: "#",
       icon: webIcon,
+      slug: "web-application",
     },
     {
       id: 2,
@@ -47,6 +58,7 @@ const ServiceSlider = () => {
       bgImage: mobileAppBg,
       url: "#",
       icon: mobileIcon,
+      slug: "mobile-application",
     },
     {
       id: 3,
@@ -56,6 +68,7 @@ const ServiceSlider = () => {
       bgImage: digitalMarketingBg,
       url: "#",
       icon: digitalIcon,
+      slug: "digital-marketing",
     },
     {
       id: 4,
@@ -65,6 +78,7 @@ const ServiceSlider = () => {
       bgImage: graphicsDesignBg,
       url: "#",
       icon: graphicsIcon,
+      slug: "graphics-design",
     },
     {
       id: 5,
@@ -74,6 +88,7 @@ const ServiceSlider = () => {
       bgImage: internetThingsBg,
       url: "#",
       icon: cloudIcon,
+      slug: "internet-of-things",
     },
     {
       id: 6,
@@ -83,6 +98,7 @@ const ServiceSlider = () => {
       bgImage: cloudEngineeringBg,
       url: "#",
       icon: internetIcon,
+      slug: "cloud-engineering",
     },
   ];
   return (
@@ -132,7 +148,7 @@ const ServiceSlider = () => {
         >
           {services.map((service) => (
             <SwiperSlide key={service.id}>
-              <ServiceCard service={service} />
+              <ServiceCard service={service as TServiceSlider} />
             </SwiperSlide>
           ))}
         </Swiper>

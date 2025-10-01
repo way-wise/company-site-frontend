@@ -301,14 +301,3 @@ export const servicesData: ServiceDetail[] = [
     ],
   },
 ];
-
-// Helper function to get service by slug
-export const getServiceBySlug = (slug: string): ServiceDetail | undefined => {
-  return servicesData.find((service) => service.slug === slug);
-};
-
-// Helper function to get all services
-export const getAllServices = (): ServiceDetail[] => {
-  return servicesData;
-};
-

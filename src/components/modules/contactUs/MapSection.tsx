@@ -1,26 +1,29 @@
+import image1 from "@/assets/images/contact/image1.svg";
+import image2 from "@/assets/images/contact/image2.svg";
+import image3 from "@/assets/images/contact/image3.svg";
+import image4 from "@/assets/images/contact/image4.svg";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-
 const contactCards = [
   {
     icon: "phone",
     title: "Make a Call",
     subtitle: "info@waywisetech.com",
-    image: "https://c.animaapp.com/mg0gx2pzE6gABw/img/rectangle-114.png",
+    image: image1,
     iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-2951053.svg",
   },
   {
     icon: "mail",
     title: "Make a Quote",
     subtitle: "info@waywisetech.com",
-    image: "https://c.animaapp.com/mg0gx2pzE6gABw/img/rectangle-115.png",
+    image: image2,
     iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-3296467.svg",
   },
   {
     icon: "location",
     title: "Street Location",
     subtitle: "Santa Clarita, CA 91351, USA",
-    image: "https://c.animaapp.com/mg0gx2pzE6gABw/img/rectangle-116.png",
+    image: image3,
     iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-3722049.svg",
   },
 ];
@@ -33,7 +36,7 @@ const MapSection = () => {
         <Image
           className="w-full h-full object-cover"
           alt="Map background"
-          src="https://c.animaapp.com/mg0gx2pzE6gABw/img/image-37.png"
+          src={image4.src}
           width={1200}
           height={598}
         />
@@ -51,7 +54,7 @@ const MapSection = () => {
                       <Image
                         className="w-full h-full rounded-[10px] object-cover"
                         alt={`Contact ${card.title}`}
-                        src={card.image}
+                        src={card.image.src}
                         width={100}
                         height={100}
                       />
