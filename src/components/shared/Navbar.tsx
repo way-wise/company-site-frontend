@@ -111,7 +111,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="flex justify-end  items-center  gap-8">
+        <div className="flex justify-end  items-center gap-3 xl:gap-8">
           <nav className="hidden lg:flex gap-4 xl:gap-8 mx-auto items-center">
             {navigationLinks.map((link) => {
               const isActive = isRouteActive(link.href);
@@ -136,7 +136,7 @@ export default function Navbar() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
-                    className={`text-md transition-colors bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
+                    className={`text-md font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
                       pathname.startsWith("/portfolio")
                         ? "text-brand font-semibold"
                         : "text-[#1B3447] hover:text-brand"
