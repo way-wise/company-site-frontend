@@ -8,10 +8,11 @@ import offerLeftImg2 from "@/assets/images/offers/offer2.png";
 import offerLeftImg3 from "@/assets/images/offers/offer3.png";
 import offerLeftImg4 from "@/assets/images/offers/offer4.png";
 
-interface OfferData {
+export interface OfferData {
   id: number;
   title: string;
   description: string;
+  subtitle: string;
   projectCount: string;
   backgroundColor: string;
   buttonColor: string;
@@ -27,7 +28,8 @@ const Offers = () => {
       title: "Experienced Engineers",
       description:
         "Our team of 21 highly skilled engineers brings decades of combined expertise in cutting-edge technologies and software development. With proven track records across diverse industries, we deliver innovative, scalable solutions tailored to your business needs with precision and excellence.",
-      projectCount: "30+",
+      subtitle: " Project Done",
+      projectCount: "70+",
       backgroundColor: "bg-[#C6CFFF]",
       buttonColor: "bg-[#9AABFF]",
       buttonHoverColor: "hover:bg-[#7A8FFF]",
@@ -39,7 +41,8 @@ const Offers = () => {
       title: "Supportive Team",
       description:
         "Our dedicated team of engineers and project managers works seamlessly to deliver exceptional results that exceed expectations. We foster a collaborative environment where communication flows freely, ensuring every team member is aligned with your vision and committed to your success.",
-      projectCount: "25+",
+      subtitle: " Team Members",
+      projectCount: "21+",
       backgroundColor: "bg-[#FFB8B0]",
       buttonColor: "bg-[#FE8F83]",
       buttonHoverColor: "hover:bg-[#FE8F89]",
@@ -51,7 +54,8 @@ const Offers = () => {
       title: "Inclusive Process",
       description:
         "Our inclusive development process ensures that every stakeholder's perspective is valued and integrated into the final product. Through transparent collaboration, regular check-ins, and open communication channels, we keep you informed and engaged throughout the entire journey.",
-      projectCount: "30+",
+      subtitle: " On Going Projects",
+      projectCount: "10+",
       backgroundColor: "bg-[#FBE8A4]",
       buttonColor: "bg-[#F7BB48]",
       buttonHoverColor: "hover:bg-[#E6C200]",
@@ -63,7 +67,8 @@ const Offers = () => {
       title: "Regular Supervision",
       description:
         "Our commitment to continuous supervision and quality assurance ensures the highest standards are maintained throughout every phase of your project. With rigorous testing protocols and performance monitoring, we identify and resolve potential issues before they impact your business.",
-      projectCount: "30+",
+      subtitle: "Project Supervision",
+      projectCount: "23+",
       backgroundColor: "bg-[#ABF5FF]",
       buttonColor: "bg-[#76EBFB]",
       buttonHoverColor: "hover:bg-[#00B8B8]",

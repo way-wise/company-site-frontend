@@ -9,11 +9,15 @@ import FeadBackCard from "./FeadBackCard";
 
 import bulletImg from "@/assets/images/category/bullet.svg";
 import fiddenImg from "@/assets/images/category/fidden.svg";
+import searchforceIcon from "@/assets/images/category/searchforce.png";
 import seatWavesImg from "@/assets/images/category/seat-waves.svg";
+import weout from "@/assets/images/category/weout.png";
 
 import fidden from "@/assets/images/feadback/fidden.jpg";
 import flyArzan from "@/assets/images/feadback/flyarjon.jpg";
 import clientImg from "@/assets/images/feadback/image1.png";
+import searchImg from "@/assets/images/feadback/search.jpg";
+import weoutImg from "@/assets/images/feadback/weout-jad.jpg";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Feadback = () => {
@@ -42,10 +46,26 @@ const Feadback = () => {
     {
       image: flyArzan,
       feedback:
-        "Performance is good and the system runs smoothly without major bugs. However, the initial loading time can be optimized further to improve user experience. Caching and asset optimization may help here.",
+        "Way-Wise Tech delivered a highly professional web app for our business. The development process was smooth, and the team was responsive to our needs. The final product exceeded our expectations in both design and functionality.",
       name: "Brandon",
       designation: "CEO, Seat-Waves",
       companyLogo: seatWavesImg,
+    },
+    {
+      image: weoutImg,
+      feedback:
+        "We were impressed by the professionalism and expertise of the Way-Wise Tech team throughout our web app development. They provided valuable insights, communicated clearly, and delivered a robust solution tailored to our requirements.",
+      name: "Jad Shoueip",
+      designation: "Founder, WeOut",
+      companyLogo: weout,
+    },
+    {
+      image: searchImg,
+      feedback:
+        "Our experience with Way-Wise Tech for web app development was outstanding. The team demonstrated deep technical knowledge and a commitment to quality, resulting in a seamless and reliable application for our group.",
+      name: "Management Team",
+      designation: "Search Force group",
+      companyLogo: searchforceIcon,
     },
   ];
 

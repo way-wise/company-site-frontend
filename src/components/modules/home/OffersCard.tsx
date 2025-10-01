@@ -1,28 +1,19 @@
 import { MoveUpRight } from "lucide-react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
-
-interface OfferCardProps {
-  title: string;
-  description: string;
-  projectCount: string;
-  backgroundColor: string;
-  buttonColor: string;
-  buttonHoverColor: string;
-  imageSrc: StaticImageData;
-  imageAlt: string;
-}
+import { OfferData } from "./Offers";
 
 const OffersCard = ({
   title,
   description,
+  subtitle,
   projectCount,
   backgroundColor,
   buttonColor,
   buttonHoverColor,
   imageSrc,
   imageAlt,
-}: OfferCardProps) => {
+}: OfferData) => {
   return (
     <section
       className={`grid grid-cols-1 lg:grid-cols-2 ${backgroundColor} rounded-xl lg:rounded-2xl gap-4 sm:gap-6 lg:gap-10 p-3 sm:p-4 lg:p-5`}
@@ -38,7 +29,7 @@ const OffersCard = ({
 
         <div className="mb-4 sm:mb-6 lg:mb-8">
           <span className="text-xs sm:text-sm lg:text-sm text-[#444444] block mb-1 sm:mb-2">
-            Project Done
+            {subtitle}
           </span>
           <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#222222]">
             {projectCount}
