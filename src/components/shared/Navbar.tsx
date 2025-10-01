@@ -22,14 +22,16 @@ import { ChevronDown, Menu, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
+  const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   console.log(user);
   useEffect(() => {
@@ -43,6 +45,20 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close mobile menu when pathname changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+    };
   }, []);
 
   const navigationLinks = [
@@ -80,6 +96,22 @@ export default function Navbar() {
       return pathname === "/";
     }
     return pathname.startsWith(href);
+  };
+
+  // Function to handle navigation and close mobile menu
+  const handleNavigation = (href: string) => {
+    // Clear any existing timeout
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+
+    // Close the menu first
+    setIsMobileMenuOpen(false);
+
+    // Use setTimeout to ensure the menu closes before navigation
+    navigationTimeoutRef.current = setTimeout(() => {
+      router.push(href);
+    }, 150);
   };
 
   return (
@@ -206,7 +238,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         <div className="flex justify-end items-center lg:hidden">
-          <Sheet>
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <div className="flex items-center gap-2">
               {/* Mobile Phone Button */}
               <div className="hidden sm:flex items-center justify-center gap-2 bg-brand rounded-md p-2">
@@ -251,17 +283,21 @@ export default function Navbar() {
                   const isActive = isRouteActive(link.href);
 
                   return (
-                    <Link
+                    <button
                       key={link.href}
-                      href={link.href}
-                      className={`text-lg font-medium transition-colors ${
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleNavigation(link.href);
+                      }}
+                      className={`text-lg font-medium transition-colors text-left ${
                         isActive
                           ? "text-brand"
                           : "text-gray-700 hover:text-gray-900"
                       }`}
                     >
                       {link.label}
-                    </Link>
+                    </button>
                   );
                 })}
 
@@ -281,9 +317,22 @@ export default function Navbar() {
                   <CollapsibleContent className="pt-3">
                     <div className="pl-4 space-y-3">
                       {portfolioLinks.map((item) => (
-                        <Link
+                        <a
                           key={item.href}
                           href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsMobileMenuOpen(false);
+                            setTimeout(() => {
+                              window.open(
+                                item.href,
+                                "_blank",
+                                "noopener,noreferrer"
+                              );
+                            }, 100);
+                          }}
                           className={`block text-base transition-colors ${
                             pathname === item.href
                               ? "text-brand font-semibold"
@@ -291,7 +340,7 @@ export default function Navbar() {
                           }`}
                         >
                           {item.label}
-                        </Link>
+                        </a>
                       ))}
                     </div>
                   </CollapsibleContent>
@@ -299,7 +348,11 @@ export default function Navbar() {
 
                 <div
                   className="flex lg:hidden gap-2  rounded-md cursor-pointer"
-                  onClick={() => router.push("/book")}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleNavigation("/book");
+                  }}
                 >
                   <Image
                     src={profileGuide}

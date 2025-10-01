@@ -182,7 +182,7 @@
 }
 
 .auto-scroll {
-  animation: auto-scroll 20s linear infinite;
+  animation: auto-scroll 35s linear infinite;
 }
 
 .auto-scroll:hover {
