@@ -1,6 +1,7 @@
 import { Project } from "@/types";
 import { MoveUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface ProjectsCardProps {
@@ -10,14 +11,14 @@ interface ProjectsCardProps {
 
 const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
   return (
-    <div className="rounded-xl sm:rounded-2xl shadow-lg grid grid-cols-1 sm:grid-cols-2 bg-white overflow-hidden">
+    <div className="rounded-xl  max-h-[500px] sm:rounded-2xl shadow-lg grid grid-cols-1 sm:grid-cols-2 bg-white overflow-hidden">
       {/* Left section - Image or Background Color */}
-      <div className="order-1 sm:order-1 w-full">
+      <div className="order-1 sm:order-1 w-full ">
         {project?.image ? (
           <Image
             src={project?.image}
             alt={project?.title}
-            className="w-full h-48 sm:h-auto object-cover object-top md:object-center rounded-t-xl sm:rounded-l-2xl sm:rounded-r-none"
+            className="w-full h-48 sm:h-auto md:max-h-[500px] object-cover object-top md:object-center rounded-t-xl sm:rounded-l-2xl sm:rounded-r-none"
           />
         ) : (
           <div className="w-full h-48 sm:h-full rounded-t-xl sm:rounded-l-2xl sm:rounded-r-none bg-[#FBE8A4]">
@@ -34,7 +35,7 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
           {project.tags.map((tag, index) => (
             <span
               key={index}
-              className="px-3 py-1 sm:px-4 sm:py-2 bg-gray-100 text-gray-600 text-xs sm:text-sm rounded-full font-medium"
+              className="px-3 py-1 sm:px-4 sm:py-2 bg-gray-100 text-gray-600 text-xs sm:text-sm rounded-md border border-gray-200 font-medium"
             >
               {tag}
             </span>
@@ -54,13 +55,14 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
 
         {/* Know More button */}
         <div className="mt-auto">
-          <a
+          <Link
+            target="_blank"
             href={project.url}
             className="flex items-center gap-2 text-gray-800 font-semibold text-base sm:text-lg group hover:text-blue-600 transition-colors duration-200"
           >
-            Know More
+            View Live
             <MoveUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>

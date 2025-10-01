@@ -208,8 +208,8 @@ export const servicesData: ServiceDetail[] = [
   },
   {
     id: 5,
-    title: "Internet of Things",
-    slug: "internet-of-things",
+    title: "AI Integration",
+    slug: "ai-integration",
     description:
       "Implement smart IoT solutions to connect devices, gather insights, and optimize processes in real time.",
     bgImage: internetThingsBg,

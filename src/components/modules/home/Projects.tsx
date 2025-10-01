@@ -4,9 +4,11 @@ import ProjectsCard from "./ProjectsCard";
 
 // Import project images
 import fiddenImg from "@/assets/images/projects/fidden-io.png";
+import flyArzanImg from "@/assets/images/projects/fly.png";
+import searchImg from "@/assets/images/projects/search.png";
 import seatWavesImg from "@/assets/images/projects/seat-wave.png";
-import weOutImg from "@/assets/images/projects/weout-1.png";
-
+import voiceImg from "@/assets/images/projects/voice.png";
+import weOutImg from "@/assets/images/projects/weout1.png";
 const Projects = () => {
   const projects: Project[] = [
     {
@@ -14,8 +16,8 @@ const Projects = () => {
       title: "SeatWaves Ticket Marketplace",
       description:
         "SeatWaves is an online ticket marketplace that makes finding and buying event tickets simple. Users can browse events, compare prices, and securely purchase tickets all in one place.",
-      tags: ["UI/UX Design", "Development"],
-      url: "#",
+      tags: ["UI/UX Design", "Web Development", "SEO"],
+      url: "https://seatwaves.waywisetech.com",
       image: seatWavesImg,
     },
 
@@ -23,46 +25,54 @@ const Projects = () => {
       id: 2,
       title: "Fidden Website Landing Page",
       description:
-        "In today's digital world, a robust online presence is essential for any business",
-      tags: ["UI/UX Design", "App Development"],
-      url: "#",
+        "A modern landing page design for an online cosmetic shop, built to highlight beauty products with elegance and style. Focused on smooth UI/UX, it ensures a seamless shopping experience. Optimized for showcasing collections, offers, and brand identity.",
+
+      tags: ["UI/UX Design", "App Development", "SEO"],
+      url: "https://fidden.io",
       image: fiddenImg,
     },
     {
       id: 3,
       title: "We Out Project",
       description:
-        "In today's digital world, a robust online presence is essential for any business",
-      tags: ["UX Design", "Development"],
-      url: "#",
+        "We Out is an online ticketing platform for concerts, events, and travel occasions. It offers users a simple way to browse, book, and manage tickets with ease. Designed with smooth UI/UX and powerful backend integration, it ensures a secure and hassle-free booking experience.",
+
+      tags: ["UX/UX Design", "App Development", "Web Development", "SEO"],
+      url: "https://weout.waywisetech.com",
       image: weOutImg,
     },
     {
       id: 4,
-      title: "Digital Transformation Gallery Case",
+      title: "Fly Arzan",
+
       description:
-        "In today's digital world, a robust online presence is essential for any business",
-      tags: ["UX Design", "Development"],
-      url: "#",
-      image: seatWavesImg, // Cyan color
+        "A complete digital platform for global airline ticket booking and management. It provides users with an easy way to search, compare, and purchase flights worldwide. Built with modern UI/UX and strong backend integration, ensuring secure transactions and a smooth travel booking experience.",
+
+      tags: ["UX/UX Design", "Web Development", "SEO"],
+      url: "https://fly-arzan.waywisetech.com",
+      image: flyArzanImg,
     },
     {
       id: 5,
-      title: "Digital Transformation Gallery Case",
+      title: "Voice Health AI",
+
       description:
-        "In today's digital world, a robust online presence is essential for any business",
-      tags: ["UX Design", "Development"],
-      url: "#",
-      image: seatWavesImg, // Pink/Red color
+        "A cutting-edge medical AI platform designed to assist in voice-based health analysis. It leverages advanced AI models to detect patterns and provide early health insights.",
+
+      tags: ["UX/UX Design", "AI Integration", "Web Development", "SEO"],
+      url: "https://voicehealth.ai/",
+      image: voiceImg,
     },
     {
       id: 6,
-      title: "Digital Transformation Gallery Case",
+      title: "Search Force AI",
+
       description:
-        "In today's digital world, a robust online presence is essential for any business",
-      tags: ["UX Design", "Development"],
-      url: "#",
-      image: fiddenImg, // Green color
+        "An advanced AI-powered platform for image transformation and editing. It enables users to enhance, modify, and generate visuals with high precision. ",
+
+      tags: ["UI/UX Design", "AI Integration", "Web Development", "SEO"],
+      url: "https://www.searchforce.com",
+      image: searchImg,
     },
   ];
   return (
