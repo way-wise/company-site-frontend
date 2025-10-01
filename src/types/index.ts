@@ -77,4 +77,18 @@ export type Service = {
   bgImage: StaticImageData;
   url: string;
   icon: StaticImageData;
+  slug: string;
+};
+
+export type ExpertiseArea = {
+  number: string;
+  title: string;
+  description: string;
+};
+
+export type ServiceDetail = Service & {
+  detailedDescription: string;
+  videoImage: StaticImageData;
+  expertiseAreas: ExpertiseArea[];
+  serviceOutcomes: string[];
 };

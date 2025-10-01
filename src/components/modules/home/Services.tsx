@@ -1,80 +1,9 @@
 import SectionTitle from "@/components/modules/home/SectionTitle";
-import { Service } from "@/types";
+import { getAllServices } from "@/datas/services";
 import ServiceCard from "./ServiceCard";
 
-// Import service images
-import cloudEngineeringBg from "@/assets/images/services/cloud-engineering.png";
-import digitalMarketingBg from "@/assets/images/services/digital-marketing.png";
-import graphicsDesignBg from "@/assets/images/services/graphics-design.png";
-import internetThingsBg from "@/assets/images/services/internetthings.png";
-import mobileAppBg from "@/assets/images/services/mobile-application.png";
-import webAppBg from "@/assets/images/services/web-application.png";
-
-// Import service icons
-import cloudIcon from "@/assets/icons/services/cloud.svg";
-import digitalIcon from "@/assets/icons/services/digital.png";
-import graphicsIcon from "@/assets/icons/services/graphics.svg";
-import internetIcon from "@/assets/icons/services/internet.svg";
-import mobileIcon from "@/assets/icons/services/mobile.svg";
-import webIcon from "@/assets/icons/services/web.png";
-
 const Services = () => {
-  const services: Service[] = [
-    {
-      id: 1,
-      title: "Web Application",
-      description:
-        "Build responsive and scalable web applications that improve user engagement and business operations.",
-      bgImage: webAppBg,
-      url: "#",
-      icon: webIcon,
-    },
-    {
-      id: 2,
-      title: "Mobile Application",
-      description:
-        "Develop intuitive mobile apps for iOS and Android to reach customers on the go and boost retention.",
-      bgImage: mobileAppBg,
-      url: "#",
-      icon: mobileIcon,
-    },
-    {
-      id: 3,
-      title: "Digital Marketing",
-      description:
-        "Create targeted marketing campaigns that increase brand awareness and drive measurable conversions.",
-      bgImage: digitalMarketingBg,
-      url: "#",
-      icon: digitalIcon,
-    },
-    {
-      id: 4,
-      title: "Graphics Design",
-      description:
-        "Design visually appealing graphics that communicate your brand message effectively across platforms.",
-      bgImage: graphicsDesignBg,
-      url: "#",
-      icon: graphicsIcon,
-    },
-    {
-      id: 5,
-      title: "Internet of Things",
-      description:
-        "Implement smart IoT solutions to connect devices, gather insights, and optimize processes in real time.",
-      bgImage: internetThingsBg,
-      url: "#",
-      icon: cloudIcon,
-    },
-    {
-      id: 6,
-      title: "Cloud Engineering",
-      description:
-        "Design and maintain secure cloud infrastructure that scales with your business needs efficiently.",
-      bgImage: cloudEngineeringBg,
-      url: "#",
-      icon: internetIcon,
-    },
-  ];
+  const services = getAllServices();
   return (
     <section className="  bg-[url('@/assets/images/services/service-bg.png')] bg-cover bg-center bg-no-repeat">
       <div className="container mx-auto py-12 lg:py-20 px-2">

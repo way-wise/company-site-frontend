@@ -17,7 +17,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
   };
 
   return (
-    <Link href={`/services/${service.id}`}>
+    <Link href={`/services/${service.slug}`}>
       <div
         className={`${getCardColor(
           service.id
@@ -47,7 +47,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
 
             {/* Arrow Button */}
             <Link
-              href={`/services/${service.id}`}
+              href={`/services/${service.slug}`}
               className="self-end w-10 h-10  rounded-xl flex items-center justify-center hover:bg-white/30 transition-colors duration-200 group"
             >
               <svg

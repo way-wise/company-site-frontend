@@ -5,17 +5,37 @@ import ServiceDetails from "@/components/modules/services/ServiceDetails";
 import ServiceSlider from "@/components/modules/services/ServiceSlider";
 import SuccessProjects from "@/components/modules/services/SuccessProjects";
 import PageHeader from "@/components/shared/PageHeader";
+import { getServiceBySlug } from "@/datas/services";
+import { notFound } from "next/navigation";
 
-const ServiceDetailsPage = () => {
+interface ServiceDetailsPageProps {
+  params: {
+    serviceId: string;
+  };
+}
+
+const ServiceDetailsPage = ({ params }: ServiceDetailsPageProps) => {
+  const service = getServiceBySlug(params.serviceId);
+
+  // If service not found, show 404
+  if (!service) {
+    notFound();
+  }
+
+  // Split title for display
+  const titleWords = service.title.split(" ");
+  const firstPart = titleWords.slice(0, -1).join(" ");
+  const lastWord = titleWords[titleWords.length - 1];
+
   return (
     <main>
       <PageHeader
-        title="Web "
-        description="Application"
+        title={firstPart || service.title}
+        description={lastWord || ""}
         titleClass="text-white text-5xl lg:text-[85px] font-bold"
         descriptionClass="text-brand text-5xl lg:text-[85px]"
       />
-      <ServiceDetails />
+      <ServiceDetails service={service} />
       <SuccessProjects />
       <CategorySection />
       <ServiceSlider />
