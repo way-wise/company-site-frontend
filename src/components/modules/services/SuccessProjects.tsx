@@ -108,7 +108,7 @@ const SuccessProjects = () => {
               {/* Large bordered number (text border only, no fill) */}
               <div className="absolute inset-0 flex items-center justify-center ">
                 <span
-                  className="text-transparent text-[120px] lg:text-[150px] font-black select-none"
+                  className="text-transparent text-[100px] lg:text-[150px] font-black select-none"
                   style={{
                     WebkitTextStroke: "1px #616781",
                     stroke: "1px #616781",
