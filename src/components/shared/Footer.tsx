@@ -153,7 +153,7 @@ const Footer = () => {
                 <ul className="list-none m-0 p-0 space-y-2 sm:space-y-3">
                   <li>
                     <Link
-                      href="/contact"
+                      href="/contact-us"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Contact Us

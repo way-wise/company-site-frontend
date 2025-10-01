@@ -197,14 +197,14 @@ const PrivacyPolicyPage = () => {
               how we handle your personal information, please contact us at{" "}
               <br />
               <a
-                href="mailto:privacy@waywise.tech"
+                href="mailto:tech@waywise.pro"
                 className="text-blue-600 hover:text-blue-800 font-medium underline"
               >
                 tech@waywise.pro
               </a>
               <br />
               <a
-                href="mailto:privacy@waywise.tech"
+                href="mailto:info@waywisetech.com"
                 className="text-blue-600 hover:text-blue-800 font-medium underline"
               >
                 info@waywisetech.com

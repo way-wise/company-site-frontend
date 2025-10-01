@@ -198,7 +198,7 @@ const FaqPage = () => {
                 Contact Us
               </a>
               <a
-                href="mailto:info@waywise.tech"
+                href="mailto:info@waywisetech.com"
                 className="inline-flex items-center justify-center px-8 py-3 border-2 border-brand text-brand font-semibold rounded-lg hover:bg-brand hover:text-white transition-colors"
               >
                 Email Us

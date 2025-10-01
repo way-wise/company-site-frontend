@@ -8,8 +8,9 @@ const contactCards = [
   {
     icon: "phone",
     title: "Make a Call",
-    subtitle: "info@waywisetech.com",
+    subtitle: "+1-310-528-6170",
     image: image1,
+    stasue: "tel:+1-310-528-6170",
     iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-2951053.svg",
   },
   {
@@ -17,6 +18,7 @@ const contactCards = [
     title: "Make a Quote",
     subtitle: "info@waywisetech.com",
     image: image2,
+    stasue: "mailto:info@waywisetech.com",
     iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-3296467.svg",
   },
   {
@@ -24,6 +26,7 @@ const contactCards = [
     title: "Street Location",
     subtitle: "Santa Clarita, CA 91351, USA",
     image: image3,
+    stasue: "https://maps.app.goo.gl/EgMwMf5hbxYeJD8t5",
     iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-3722049.svg",
   },
 ];
@@ -73,7 +76,9 @@ const MapSection = () => {
                           {card.title}
                         </div>
                         <div className="font-semibold text-[#1b3447] text-sm sm:text-base xl:text-xl tracking-[0] leading-normal break-words">
-                          {card.subtitle}
+                          <a href={card.stasue} target="_blank">
+                            {card.subtitle}
+                          </a>
                         </div>
                       </div>
                     </div>
