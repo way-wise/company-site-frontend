@@ -6,7 +6,7 @@ import Link from "next/link";
 const HeroSection = () => {
   return (
     <section
-      className="w-full h-full py-10 lg:h-[80vh] bg-left  md:bg-right lg:bg-center"
+      className="w-full h-full py-2 lg:py-10 lg:h-[80vh] bg-left  md:bg-right lg:bg-center relative"
       style={{
         backgroundImage: `url(${mainBackground.src})`,
         backgroundSize: "cover",
@@ -66,11 +66,15 @@ const HeroSection = () => {
             <Image
               src={heroLeftBg.src}
               alt="hero left bg"
-              width={400}
-              height={400}
+              width={350}
+              height={350}
             />
           </div>
         </div>
+      </div>
+
+      <div className="text-center text-white pb-4 md:pb-0 text-[20px] lg:text-[26px]  xl:text-[30px] font-semibold px-2 md:absolute bottom-2 right-8 md:right-8 xl:right-20 2xl:right-40 ">
+        <h2>Inspiring Innovation with AI...</h2>
       </div>
     </section>
   );
