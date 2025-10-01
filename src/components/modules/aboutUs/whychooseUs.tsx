@@ -1,4 +1,4 @@
-import aboutMain from "@/assets/images/about-us/about-main.svg";
+import aboutMainPng from "@/assets/images/about-us/about-main.png";
 import aboutUs from "@/assets/images/about-us/about-us.svg";
 import Image from "next/image";
 
@@ -45,9 +45,10 @@ const ChooseUs = () => {
                   <Image
                     className="w-full h-full object-cover rounded-[10px_10px_10px_100px]"
                     alt="Main content image"
-                    src={aboutMain}
+                    src={aboutMainPng}
                     width={100}
                     height={100}
+                    unoptimized
                   />
                 </div>
               </div>
