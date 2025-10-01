@@ -63,7 +63,7 @@ const Footer = () => {
                 <ul className="list-none m-0 p-0 space-y-2 sm:space-y-3">
                   <li>
                     <Link
-                      href="/web-development"
+                      href="/services/web-application"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Web Development
@@ -79,7 +79,7 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      href="/graphics-design"
+                      href="/services/graphics-design"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Graphics Design
@@ -87,7 +87,7 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      href="/digital-marketing"
+                      href="/services/digital-marketing"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Digital Marketing
@@ -95,26 +95,18 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      href="/internet-of-things"
+                      href="/services/ai-integration"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
-                      Internet of Things (IoT)
+                      AI Integration
                     </Link>
                   </li>
                   <li>
                     <Link
-                      href="/cloud-engineering"
+                      href="/services/cloud-engineering"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Cloud Engineering
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/application-testing-service"
-                      className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
-                    >
-                      Application Testing Service
                     </Link>
                   </li>
                 </ul>
