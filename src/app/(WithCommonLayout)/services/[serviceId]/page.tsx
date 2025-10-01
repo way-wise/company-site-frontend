@@ -13,10 +13,9 @@ interface ServiceDetailsPageProps {
   };
 }
 
-const ServiceDetailsPage = ({ params }: ServiceDetailsPageProps) => {
-  const service = servicesData.find(
-    (service) => service.slug === params.serviceId
-  );
+const ServiceDetailsPage = async ({ params }: ServiceDetailsPageProps) => {
+  const { serviceId } = await params;
+  const service = servicesData.find((service) => service.slug === serviceId);
 
   // If service not found, show 404
   if (!service) {
