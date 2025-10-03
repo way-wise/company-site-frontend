@@ -2,11 +2,10 @@
 
 import {
   BanUserData,
-  CreateUserData,
   userService,
   UsersQueryParams,
 } from "@/services/UserService";
-import { User } from "@/types";
+import { RegisterCredentials, User } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -66,7 +65,8 @@ export const useCreateUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (userData: CreateUserData) => userService.createUser(userData),
+    mutationFn: (userData: RegisterCredentials) =>
+      userService.createUser(userData),
     onSuccess: (data) => {
       if (data.success) {
         toast.success("User created successfully");

@@ -1,6 +1,10 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import {
+  CreateClientFormData,
+  createClientSchema,
+} from "@/components/modules/auth/register/registerValidation";
+import { Badge, BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import {
@@ -25,6 +29,13 @@ import {
   ModalHeader,
   ModalTitle,
 } from "@/components/ui/modal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   useBanUser,
@@ -34,7 +45,18 @@ import {
   useUsers,
 } from "@/hooks/useUserMutations";
 import { User } from "@/types";
-import { Ban, Eye, MoreVertical, Plus, Trash } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Ban,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  MoreVertical,
+  Plus,
+  Trash,
+  User as UserIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -45,20 +67,19 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString();
 };
 
-// Schema for user creation
-const createUserSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
 // Schema for ban reason
 const banReasonSchema = z.object({
   banReason: z.string().min(1, "Ban reason is required"),
 });
 
-type CreateUserFormData = z.infer<typeof createUserSchema>;
 type BanReasonFormData = z.infer<typeof banReasonSchema>;
+
+// Gender options for the form
+const GENDER_OPTIONS = [
+  { value: "MALE", label: "Male" },
+  { value: "FEMALE", label: "Female" },
+  { value: "OTHER", label: "Other" },
+];
 
 export const UsersTable = () => {
   // Modal states
@@ -99,13 +120,20 @@ export const UsersTable = () => {
   });
 
   // Add User Form
-  const addUserForm = useForm({
+  const addUserForm = useForm<CreateClientFormData>({
+    resolver: zodResolver(createClientSchema),
     defaultValues: {
-      name: "",
-      email: "",
       password: "",
+      client: {
+        name: "",
+        email: "",
+        gender: "MALE",
+      },
     },
   });
+
+  // Password visibility state
+  const [showPassword, setShowPassword] = useState(false);
 
   // Ban Reason Form
   const banForm = useForm({
@@ -129,19 +157,24 @@ export const UsersTable = () => {
   const deleteUserMutation = useDeleteUser();
 
   // Handle Add User
-  const handleAddUser = (values: CreateUserFormData) => {
-    // Validate form data
-    try {
-      const validatedData = createUserSchema.parse(values);
-      createUserMutation.mutate(validatedData, {
+  const handleAddClient = (values: CreateClientFormData) => {
+    createUserMutation.mutate(
+      {
+        client: {
+          name: values.client.name,
+          email: values.client.email,
+          gender: values.client.gender,
+        },
+
+        password: values.password,
+      },
+      {
         onSuccess: () => {
           setAddUserModalOpen(false);
           addUserForm.reset();
         },
-      });
-    } catch (error) {
-      console.error("Validation error:", error);
-    }
+      }
+    );
   };
 
   // Handle User Ban
@@ -203,11 +236,30 @@ export const UsersTable = () => {
       header: "Role",
       accessorKey: "role",
       cell: ({ row }: { row: { original: User } }) => {
-        return row.original.role === "ADMIN" ? (
-          <Badge variant="success">Admin</Badge>
-        ) : (
-          <Badge variant="secondary">User</Badge>
-        );
+        const role = row.original.role;
+        let badgeProps = {
+          variant: "" as BadgeProps["variant"],
+          label: "",
+        };
+
+        switch (role) {
+          case "SUPER_ADMIN":
+            badgeProps = { variant: "secondary", label: "Super Admin" };
+            break;
+          case "ADMIN":
+            badgeProps = { variant: "secondary", label: "Admin" };
+            break;
+          case "EMPLOYEE":
+            badgeProps = { variant: "secondary", label: "Employee" };
+            break;
+          case "CLIENT":
+            badgeProps = { variant: "success", label: "Client" };
+            break;
+          default:
+            badgeProps = { variant: "secondary", label: role };
+        }
+
+        return <Badge variant={badgeProps.variant}>{badgeProps.label}</Badge>;
       },
     },
     {
@@ -292,7 +344,7 @@ export const UsersTable = () => {
         <h1 className="text-2xl font-medium">Users</h1>
         <Button onClick={() => setAddUserModalOpen(true)}>
           <Plus />
-          <span>Add User</span>
+          <span>Add Client</span>
         </Button>
       </div>
       <div className="rounded-xl border bg-card p-6">
@@ -370,39 +422,94 @@ export const UsersTable = () => {
 
       {/* User Creation Modal */}
       <Modal open={addUserModalOpen} onOpenChange={setAddUserModalOpen}>
-        <ModalContent>
+        <ModalContent className="max-w-md">
           <ModalHeader>
-            <ModalTitle>Add User</ModalTitle>
+            <ModalTitle>Add Client</ModalTitle>
           </ModalHeader>
           <Form {...addUserForm}>
-            <form onSubmit={addUserForm.handleSubmit(handleAddUser)}>
+            <form
+              onSubmit={addUserForm.handleSubmit(handleAddClient)}
+              className="space-y-6 p-6"
+            >
               <FormFieldset disabled={createUserMutation.isPending}>
+                {/* Full Name Field */}
                 <FormField
                   control={addUserForm.control}
-                  name="name"
+                  name="client.name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>Full Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Name" {...field} />
+                        <div className="relative">
+                          <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            placeholder="Enter full name"
+                            className="pl-10 h-12"
+                            {...field}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Email Field */}
                 <FormField
                   control={addUserForm.control}
-                  name="email"
+                  name="client.email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Email Address</FormLabel>
                       <FormControl>
-                        <Input placeholder="Email" {...field} />
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            type="email"
+                            placeholder="Enter email address"
+                            className="pl-10 h-12"
+                            {...field}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Gender Field */}
+                <FormField
+                  control={addUserForm.control}
+                  name="client.gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Gender</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {GENDER_OPTIONS.map((option) => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Password Field */}
                 <FormField
                   control={addUserForm.control}
                   name="password"
@@ -410,13 +517,33 @@ export const UsersTable = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Password" {...field} />
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Create a strong password"
+                            className="pl-10 pr-10 h-12"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div className="flex justify-end gap-3 py-5">
+
+                <div className="flex justify-end gap-3 pt-4">
                   <Button
                     type="button"
                     onClick={() => {
@@ -430,8 +557,11 @@ export const UsersTable = () => {
                   <Button
                     type="submit"
                     isLoading={createUserMutation.isPending}
+                    className="bg-blue-600 hover:bg-blue-700"
                   >
-                    Add
+                    {createUserMutation.isPending
+                      ? "Creating..."
+                      : "Create Client"}
                   </Button>
                 </div>
               </FormFieldset>

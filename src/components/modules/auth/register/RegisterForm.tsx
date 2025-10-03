@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { useRegister } from "@/hooks/useAuthMutations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Lock, Mail, Phone, User } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CreateClientFormData, createClientSchema } from "./registerValidation";
@@ -39,7 +39,7 @@ export default function RegisterForm() {
       client: {
         name: "",
         email: "",
-        contactNumber: "",
+
         gender: "MALE",
       },
     },
@@ -96,25 +96,6 @@ export default function RegisterForm() {
               {errors.client?.email && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.client.email.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Contact Number
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  {...register("client.contactNumber")}
-                  placeholder="Enter your contact number"
-                  className="pl-10 h-12"
-                />
-              </div>
-              {errors.client?.contactNumber && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.client.contactNumber.message}
                 </p>
               )}
             </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import apiClient from "@/lib/axios";
-import { ApiResponse, User } from "@/types";
+import { ApiResponse, RegisterCredentials, User } from "@/types";
 
 // Types for user management
 export interface PaginatedUsersResponse {
@@ -53,8 +53,11 @@ export const userService = {
   },
 
   // Create new user
-  createUser: async (userData: CreateUserData): Promise<ApiResponse<User>> => {
-    const response = await apiClient.post("/users", userData);
+  createUser: async (
+    userData: RegisterCredentials
+  ): Promise<ApiResponse<User>> => {
+    console.log(userData);
+    const response = await apiClient.post("/user/create-client", userData);
     return response.data;
   },
 

@@ -14,7 +14,7 @@ export interface User {
   name: string;
   contactNumber: string;
   gender: "MALE" | "FEMALE" | "OTHER";
-  role: "CLIENT" | "ADMIN";
+  role: "SUPER_ADMIN" | "ADMIN" | "EMPLOYEE" | "CLIENT";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -56,7 +56,6 @@ export interface RegisterCredentials {
   client: {
     name: string;
     email: string;
-    contactNumber: string;
     gender: "MALE" | "FEMALE" | "OTHER";
   };
 }
