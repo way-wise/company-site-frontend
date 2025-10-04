@@ -1,8 +1,8 @@
-import { Service } from "@/types";
+import { ServiceDisplay } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
-const ServiceCard = ({ service }: { service: Service }) => {
+const ServiceCard = ({ service }: { service: ServiceDisplay }) => {
   // Define background colors for each service card to match the design
   const getCardColor = (id: number) => {
     const colors = [

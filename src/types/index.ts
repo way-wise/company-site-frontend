@@ -69,7 +69,25 @@ export type Project = {
   image: StaticImageData;
 };
 
-export type Service = {
+// Service Types for API (matching backend Prisma model)
+export interface Service {
+  id: string;
+  name: string;
+  image?: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Service Types for forms (with File support)
+export interface ServiceFormData {
+  name: string;
+  image?: File | string;
+  description?: string;
+}
+
+// Service Types for Frontend Display (with images)
+export type ServiceDisplay = {
   id: number;
   title: string;
   description: string;
@@ -85,9 +103,22 @@ export type ExpertiseArea = {
   description: string;
 };
 
-export type ServiceDetail = Service & {
+export type ServiceDetail = ServiceDisplay & {
   detailedDescription: string;
   videoImage: StaticImageData;
   expertiseAreas: ExpertiseArea[];
   serviceOutcomes: string[];
 };
+
+// Service Management Types
+export interface ServiceStats {
+  totalServices: number;
+  activeServices: number;
+  inactiveServices: number;
+}
+
+export interface ServicesQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+}

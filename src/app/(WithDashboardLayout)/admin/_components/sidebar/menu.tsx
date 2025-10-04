@@ -35,9 +35,9 @@ const SidebarMenu = () => {
       url: "/admin/projects",
     },
     {
-      title: "Categories",
+      title: "Services",
       icon: <CassetteTape className="icon" />,
-      url: "/admin/categories",
+      url: "/admin/service",
     },
 
     {
