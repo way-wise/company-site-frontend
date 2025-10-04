@@ -17,6 +17,7 @@ export const useLogin = () => {
       if (data.success && data.data) {
         toast.success("Login successful!");
         queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        // Tokens are automatically stored by authService.login()
         // Don't redirect here - let the component handle it
       } else {
         toast.error(data.message || "Login failed");

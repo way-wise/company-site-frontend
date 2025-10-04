@@ -5,17 +5,24 @@ const protectedRoutes = ["/client", "/profile", "/admin"];
 
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("accessToken")?.value;
+  const accessToken = request.cookies.get("accessToken")?.value;
+  const refreshToken = request.cookies.get("refreshToken")?.value;
 
-  // If no token and trying to access protected route
-  if (!token && protectedRoutes.some((route) => pathname.startsWith(route))) {
+  // Check if user has any valid token (access or refresh)
+  const hasValidToken = !!(accessToken || refreshToken);
+
+  // If no tokens and trying to access protected route
+  if (
+    !hasValidToken &&
+    protectedRoutes.some((route) => pathname.startsWith(route))
+  ) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // If has token and trying to access auth routes
-  if (token && authRoutes.includes(pathname)) {
+  // If has valid tokens and trying to access auth routes
+  if (hasValidToken && authRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

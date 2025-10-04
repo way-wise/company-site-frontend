@@ -3,41 +3,47 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import { cookieManager } from "./cookies";
 
-// Create axios instance with best practices
+// Create axios instance with HTTPOnly cookie support
 export const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API || "http://localhost:5000/api/v1",
   timeout: 20000,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Enable cookies for authentication
+  withCredentials: true, // This sends HTTPOnly cookies automatically
 });
 
-// Request interceptor - add auth token from cookies
-apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = cookieManager.get("accessToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error: AxiosError) => Promise.reject(error)
-);
-
-// Response interceptor - handle auth errors
+// Response interceptor - auto token refresh on 401
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: AxiosError) => {
-    // Handle 401 Unauthorized - clear cookies and redirect
-    if (error.response?.status === 401) {
-      cookieManager.clear();
-      if (typeof window !== "undefined") {
-        window.location.href = "/login";
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
+
+    if (
+      (error.response?.status === 401 || error.response?.status === 500) &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
+      try {
+        // Call refresh endpoint - backend will set new HTTPOnly cookies automatically
+        console.log("Refreshing token");
+        await apiClient.post("/auth/refresh-token");
+
+        // Retry original request with new cookies
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        // Refresh failed - redirect to login
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
+        return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );

@@ -1,7 +1,6 @@
 "use client";
 
 import apiClient from "@/lib/axios";
-import { cookieManager } from "@/lib/cookies";
 import { User } from "@/types";
 import {
   createContext,
@@ -35,8 +34,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const refreshUser = useCallback(async () => {
     try {
       const response = await apiClient.get("/auth/me");
+      console.log("🔍 auth me true");
       if (response.data.success) {
-        console.log(response.data);
         setUser(response.data.data);
       } else {
         setUser(null);
@@ -51,7 +50,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Logout user
   const logout = useCallback(() => {
-    cookieManager.clear();
     setUser(null);
   }, []);
 
