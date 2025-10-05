@@ -57,7 +57,7 @@ export const serviceService = {
         formData.append("image", serviceData.image);
       }
     }
-
+    console.log(formData);
     const response = await apiClient.post("/service", formData, {
       headers: {
         "Content-Type": "multipart/form-data",

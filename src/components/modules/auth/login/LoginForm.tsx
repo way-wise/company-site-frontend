@@ -31,7 +31,7 @@ export default function LoginForm() {
         // Refresh user context after successful login
         refreshUser();
         // Redirect to home page
-        router.push("/");
+        router.push("/admin");
       },
     });
   };
