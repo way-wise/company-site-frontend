@@ -113,6 +113,7 @@ export const ServiceTable = () => {
   // Handle Add Service
   const handleAddService = async (values: CreateServiceFormData) => {
     try {
+      console.log(values);
       await createServiceMutation.mutateAsync(values);
       setAddServiceModalOpen(false);
       addServiceForm.reset();
