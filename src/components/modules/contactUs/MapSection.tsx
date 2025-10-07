@@ -3,6 +3,7 @@ import image2 from "@/assets/images/contact/image2.svg";
 import image3 from "@/assets/images/contact/image3.svg";
 import image4 from "@/assets/images/contact/image4.svg";
 import { Card, CardContent } from "@/components/ui/card";
+import { Headset, MailOpen, MapPinCheck } from "lucide-react";
 import Image from "next/image";
 const contactCards = [
   {
@@ -11,7 +12,7 @@ const contactCards = [
     subtitle: "+1-310-528-6170",
     image: image1,
     stasue: "tel:+1-310-528-6170",
-    iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-2951053.svg",
+    iconSrc: Headset,
   },
   {
     icon: "mail",
@@ -19,7 +20,7 @@ const contactCards = [
     subtitle: "info@waywisetech.com",
     image: image2,
     stasue: "mailto:info@waywisetech.com",
-    iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-3296467.svg",
+    iconSrc: MailOpen,
   },
   {
     icon: "location",
@@ -27,7 +28,7 @@ const contactCards = [
     subtitle: "Santa Clarita, CA 91351, USA",
     image: image3,
     stasue: "https://maps.app.goo.gl/EgMwMf5hbxYeJD8t5",
-    iconSrc: "https://c.animaapp.com/mg0gx2pzE6gABw/img/fi-3722049.svg",
+    iconSrc: MapPinCheck,
   },
 ];
 
@@ -64,13 +65,16 @@ const MapSection = () => {
                     </div>
 
                     <div className="flex items-center gap-3 sm:gap-4">
-                      <Image
+                      {/* <Image
                         className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0"
                         alt={card.title}
                         src={card.iconSrc}
                         width={100}
                         height={100}
-                      />
+                      /> */}
+                      <div>
+                        <card.iconSrc className="w-8 h-8 sm:w-10 sm:h-10 font-normal text-[#1b3447] flex-shrink-0" />
+                      </div>
                       <div className="flex flex-col min-w-0">
                         <div className="font-normal text-[#00a3ff] text-xs sm:text-sm tracking-[0] leading-6">
                           {card.title}
