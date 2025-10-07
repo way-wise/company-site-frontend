@@ -1,6 +1,14 @@
 "use client";
 
 import {
+  CreateAdminFormData,
+  createAdminSchema,
+} from "@/components/modules/auth/register/adminValidation";
+import {
+  CreateEmployeeFormData,
+  createEmployeeSchema,
+} from "@/components/modules/auth/register/employeeValidation";
+import {
   CreateClientFormData,
   createClientSchema,
 } from "@/components/modules/auth/register/registerValidation";
@@ -39,20 +47,26 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import {
   useBanUser,
+  useCreateAdmin,
+  useCreateEmployee,
   useCreateUser,
   useDeleteUser,
   useUnbanUser,
+  useUpdateUser,
   useUsers,
 } from "@/hooks/useUserMutations";
 import { User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Ban,
+  Edit,
   Eye,
   EyeOff,
+  Filter,
   Lock,
   Mail,
   MoreVertical,
+  Phone,
   Plus,
   Trash,
   User as UserIcon,
@@ -74,11 +88,34 @@ const banReasonSchema = z.object({
 
 type BanReasonFormData = z.infer<typeof banReasonSchema>;
 
+// Schema for role update
+const roleUpdateSchema = z.object({
+  role: z.enum(["SUPER_ADMIN", "ADMIN", "EMPLOYEE", "CLIENT"]),
+});
+
+type RoleUpdateFormData = z.infer<typeof roleUpdateSchema>;
+
 // Gender options for the form
 const GENDER_OPTIONS = [
   { value: "MALE", label: "Male" },
   { value: "FEMALE", label: "Female" },
   { value: "OTHER", label: "Other" },
+];
+
+// Role options for filtering and updating
+const ROLE_OPTIONS = [
+  { value: "CLIENT", label: "Client" },
+  { value: "ADMIN", label: "Admin" },
+  { value: "EMPLOYEE", label: "Employee" },
+  { value: "SUPER_ADMIN", label: "Super Admin" },
+];
+
+// Role filter options (excluding SUPER_ADMIN for filtering)
+const ROLE_FILTER_OPTIONS = [
+  { value: "ALL", label: "All Roles" },
+  { value: "CLIENT", label: "Client" },
+  { value: "ADMIN", label: "Admin" },
+  { value: "EMPLOYEE", label: "Employee" },
 ];
 
 export const UsersTable = () => {
@@ -87,6 +124,9 @@ export const UsersTable = () => {
   const [banModalOpen, setBanModalOpen] = useState(false);
   const [unbanModalOpen, setUnbanModalOpen] = useState(false);
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
+  const [addAdminModalOpen, setAddAdminModalOpen] = useState(false);
+  const [addEmployeeModalOpen, setAddEmployeeModalOpen] = useState(false);
+  const [roleUpdateModalOpen, setRoleUpdateModalOpen] = useState(false);
   const [userId, setUserId] = useState<string | undefined>("");
 
   // Pagination and search states
@@ -96,6 +136,7 @@ export const UsersTable = () => {
   });
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("ALL");
 
   // Debounce search input
   useEffect(() => {
@@ -117,6 +158,7 @@ export const UsersTable = () => {
     page: pagination.pageIndex,
     limit: pagination.pageSize,
     search: debouncedSearch,
+    role: roleFilter === "ALL" ? undefined : roleFilter || undefined,
   });
 
   // Add User Form
@@ -132,8 +174,46 @@ export const UsersTable = () => {
     },
   });
 
-  // Password visibility state
+  // Add Admin Form
+  const addAdminForm = useForm<CreateAdminFormData>({
+    resolver: zodResolver(createAdminSchema),
+    defaultValues: {
+      password: "",
+      admin: {
+        name: "",
+        email: "",
+        contactNumber: "",
+      },
+    },
+  });
+
+  // Add Employee Form
+  const addEmployeeForm = useForm<CreateEmployeeFormData>({
+    resolver: zodResolver(createEmployeeSchema),
+    defaultValues: {
+      password: "",
+      employee: {
+        name: "",
+        email: "",
+        gender: "MALE",
+        contactNumber: "",
+        address: "",
+      },
+    },
+  });
+
+  // Role Update Form
+  const roleUpdateForm = useForm<RoleUpdateFormData>({
+    resolver: zodResolver(roleUpdateSchema),
+    defaultValues: {
+      role: "CLIENT",
+    },
+  });
+
+  // Password visibility states
   const [showPassword, setShowPassword] = useState(false);
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
+  const [showEmployeePassword, setShowEmployeePassword] = useState(false);
 
   // Ban Reason Form
   const banForm = useForm({
@@ -152,6 +232,9 @@ export const UsersTable = () => {
 
   // Custom hooks for mutations
   const createUserMutation = useCreateUser();
+  const createAdminMutation = useCreateAdmin();
+  const createEmployeeMutation = useCreateEmployee();
+  const updateUserMutation = useUpdateUser();
   const banUserMutation = useBanUser();
   const unbanUserMutation = useUnbanUser();
   const deleteUserMutation = useDeleteUser();
@@ -165,7 +248,6 @@ export const UsersTable = () => {
           email: values.client.email,
           gender: values.client.gender,
         },
-
         password: values.password,
       },
       {
@@ -175,6 +257,68 @@ export const UsersTable = () => {
         },
       }
     );
+  };
+
+  // Handle Add Admin
+  const handleAddAdmin = (values: CreateAdminFormData) => {
+    createAdminMutation.mutate(
+      {
+        admin: {
+          name: values.admin.name,
+          email: values.admin.email,
+          contactNumber: values.admin.contactNumber,
+        },
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          setAddAdminModalOpen(false);
+          addAdminForm.reset();
+        },
+      }
+    );
+  };
+
+  // Handle Add Employee
+  const handleAddEmployee = (values: CreateEmployeeFormData) => {
+    createEmployeeMutation.mutate(
+      {
+        employee: {
+          name: values.employee.name,
+          email: values.employee.email,
+          gender: values.employee.gender,
+          contactNumber: values.employee.contactNumber,
+          address: values.employee.address,
+        },
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          setAddEmployeeModalOpen(false);
+          addEmployeeForm.reset();
+        },
+      }
+    );
+  };
+
+  // Handle Role Update
+  const handleRoleUpdate = (values: RoleUpdateFormData) => {
+    if (userId) {
+      updateUserMutation.mutate(
+        {
+          userId,
+          userData: { role: values.role },
+        },
+        {
+          onSuccess: () => {
+            setRoleUpdateModalOpen(false);
+            roleUpdateForm.reset();
+            // Manually refetch the users data to show updated role
+            refetch();
+          },
+        }
+      );
+    }
   };
 
   // Handle User Ban
@@ -191,6 +335,7 @@ export const UsersTable = () => {
             onSuccess: () => {
               setBanModalOpen(false);
               banForm.reset();
+              refetch();
             },
           }
         );
@@ -206,6 +351,7 @@ export const UsersTable = () => {
       unbanUserMutation.mutate(userId, {
         onSuccess: () => {
           setUnbanModalOpen(false);
+          refetch();
         },
       });
     }
@@ -217,6 +363,7 @@ export const UsersTable = () => {
       deleteUserMutation.mutate(userId, {
         onSuccess: () => {
           setDeleteModalOpen(false);
+          refetch();
         },
       });
     }
@@ -291,12 +438,22 @@ export const UsersTable = () => {
               <DropdownMenuTrigger>
                 <MoreVertical />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-36">
+              <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem asChild>
                   <Link href={`/admin/users/${id}`}>
                     <Eye />
                     <span>View</span>
                   </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setUserId(id);
+                    roleUpdateForm.setValue("role", row.original.role);
+                    setRoleUpdateModalOpen(true);
+                  }}
+                >
+                  <Edit />
+                  <span>Update Role</span>
                 </DropdownMenuItem>
                 {!isActive ? (
                   <DropdownMenuItem
@@ -342,20 +499,45 @@ export const UsersTable = () => {
     <>
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-medium">Users</h1>
-        <Button onClick={() => setAddUserModalOpen(true)}>
-          <Plus />
-          <span>Add Client</span>
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setAddUserModalOpen(true)} variant="outline">
+            <Plus />
+            <span>Add Client</span>
+          </Button>
+          <Button onClick={() => setAddAdminModalOpen(true)} variant="outline">
+            <Plus />
+            <span>Add Admin</span>
+          </Button>
+          <Button onClick={() => setAddEmployeeModalOpen(true)}>
+            <Plus />
+            <span>Add Employee</span>
+          </Button>
+        </div>
       </div>
       <div className="rounded-xl border bg-card p-6">
         <div className="flex items-center justify-between gap-4 pb-6">
-          <Input
-            type="search"
-            placeholder="Search name, email..."
-            value={search}
-            onChange={handleSearchChange}
-            className="max-w-xs"
-          />
+          <div className="flex items-center gap-4">
+            <Input
+              type="search"
+              placeholder="Search name, email..."
+              value={search}
+              onChange={handleSearchChange}
+              className="max-w-xs"
+            />
+            <Select value={roleFilter} onValueChange={setRoleFilter}>
+              <SelectTrigger className="w-40">
+                <Filter className="h-4 w-4" />
+                <SelectValue placeholder="Filter by role" />
+              </SelectTrigger>
+              <SelectContent>
+                {ROLE_FILTER_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Error State */}
@@ -391,8 +573,16 @@ export const UsersTable = () => {
             data={usersData?.data || []}
             columns={columns}
             isPending={isLoading}
-            pagination={pagination}
-            onPaginationChange={setPagination}
+            pagination={{
+              pageIndex: usersData.pagination.currentPage - 1, // Convert to 0-based index
+              pageSize: pagination.pageSize,
+            }}
+            onPaginationChange={(newPagination) => {
+              setPagination({
+                pageIndex: newPagination.pageIndex + 1, // Convert to 1-based index
+                pageSize: newPagination.pageSize,
+              });
+            }}
           />
         )}
 
@@ -684,6 +874,412 @@ export const UsersTable = () => {
               </div>
             </div>
           </div>
+        </ModalContent>
+      </Modal>
+
+      {/* Add Admin Modal */}
+      <Modal open={addAdminModalOpen} onOpenChange={setAddAdminModalOpen}>
+        <ModalContent className="max-w-md">
+          <ModalHeader>
+            <ModalTitle>Add Admin</ModalTitle>
+          </ModalHeader>
+          <Form {...addAdminForm}>
+            <form
+              onSubmit={addAdminForm.handleSubmit(handleAddAdmin)}
+              className="space-y-6 p-6"
+            >
+              <FormFieldset disabled={createAdminMutation.isPending}>
+                {/* Full Name Field */}
+                <FormField
+                  control={addAdminForm.control}
+                  name="admin.name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            placeholder="Enter full name"
+                            className="pl-10 h-12"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Email Field */}
+                <FormField
+                  control={addAdminForm.control}
+                  name="admin.email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            type="email"
+                            placeholder="Enter email address"
+                            className="pl-10 h-12"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Contact Number Field */}
+                <FormField
+                  control={addAdminForm.control}
+                  name="admin.contactNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Contact Number</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            placeholder="Enter contact number"
+                            className="pl-10 h-12"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Password Field */}
+                <FormField
+                  control={addAdminForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            type={showAdminPassword ? "text" : "password"}
+                            placeholder="Create a strong password"
+                            className="pl-10 pr-10 h-12"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setShowAdminPassword(!showAdminPassword)
+                            }
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          >
+                            {showAdminPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex justify-end gap-3 pt-4">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setAddAdminModalOpen(false);
+                      addAdminForm.reset();
+                    }}
+                    variant="secondary"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    isLoading={createAdminMutation.isPending}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    {createAdminMutation.isPending
+                      ? "Creating..."
+                      : "Create Admin"}
+                  </Button>
+                </div>
+              </FormFieldset>
+            </form>
+          </Form>
+        </ModalContent>
+      </Modal>
+
+      {/* Add Employee Modal */}
+      <Modal open={addEmployeeModalOpen} onOpenChange={setAddEmployeeModalOpen}>
+        <ModalContent className="max-w-md">
+          <ModalHeader>
+            <ModalTitle>Add Employee</ModalTitle>
+          </ModalHeader>
+          <Form {...addEmployeeForm}>
+            <form
+              onSubmit={addEmployeeForm.handleSubmit(handleAddEmployee)}
+              className="space-y-6 p-6"
+            >
+              <FormFieldset disabled={createEmployeeMutation.isPending}>
+                {/* Full Name Field */}
+                <FormField
+                  control={addEmployeeForm.control}
+                  name="employee.name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            placeholder="Enter full name"
+                            className="pl-10 h-12"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Email Field */}
+                <FormField
+                  control={addEmployeeForm.control}
+                  name="employee.email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            type="email"
+                            placeholder="Enter email address"
+                            className="pl-10 h-12"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Gender Field */}
+                <FormField
+                  control={addEmployeeForm.control}
+                  name="employee.gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Gender</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {GENDER_OPTIONS.filter(
+                              (option) => option.value !== "OTHER"
+                            ).map((option) => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Contact Number Field */}
+                <FormField
+                  control={addEmployeeForm.control}
+                  name="employee.contactNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Contact Number</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            placeholder="Enter contact number"
+                            className="pl-10 h-12"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Address Field */}
+                <FormField
+                  control={addEmployeeForm.control}
+                  name="employee.address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Address</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter address"
+                          className="min-h-[80px]"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Password Field */}
+                <FormField
+                  control={addEmployeeForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input
+                            type={showEmployeePassword ? "text" : "password"}
+                            placeholder="Create a strong password"
+                            className="pl-10 pr-10 h-12"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setShowEmployeePassword(!showEmployeePassword)
+                            }
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          >
+                            {showEmployeePassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex justify-end gap-3 pt-4">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setAddEmployeeModalOpen(false);
+                      addEmployeeForm.reset();
+                    }}
+                    variant="secondary"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    isLoading={createEmployeeMutation.isPending}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    {createEmployeeMutation.isPending
+                      ? "Creating..."
+                      : "Create Employee"}
+                  </Button>
+                </div>
+              </FormFieldset>
+            </form>
+          </Form>
+        </ModalContent>
+      </Modal>
+
+      {/* Role Update Modal */}
+      <Modal open={roleUpdateModalOpen} onOpenChange={setRoleUpdateModalOpen}>
+        <ModalContent>
+          <ModalHeader>
+            <ModalTitle>Update User Role</ModalTitle>
+          </ModalHeader>
+          <Form {...roleUpdateForm}>
+            <form onSubmit={roleUpdateForm.handleSubmit(handleRoleUpdate)}>
+              <FormFieldset disabled={updateUserMutation.isPending}>
+                <p className="mb-5 text-muted-foreground">
+                  Select a new role for this user.
+                </p>
+                <FormField
+                  control={roleUpdateForm.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Role</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="Select role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ROLE_OPTIONS.map((option) => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-end gap-3 py-5">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setRoleUpdateModalOpen(false);
+                      roleUpdateForm.reset();
+                    }}
+                    variant="secondary"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    isLoading={updateUserMutation.isPending}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    {updateUserMutation.isPending
+                      ? "Updating..."
+                      : "Update Role"}
+                  </Button>
+                </div>
+              </FormFieldset>
+            </form>
+          </Form>
         </ModalContent>
       </Modal>
     </>

@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Initialize auth on mount
   useEffect(() => {
     refreshUser();
-  }, [refreshUser]);
+  }, []); // Remove refreshUser dependency to prevent infinite loop
 
   const value: AuthContextType = {
     user,

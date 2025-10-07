@@ -2,6 +2,8 @@
 
 import {
   BanUserData,
+  CreateAdminData,
+  CreateEmployeeData,
   userService,
   UsersQueryParams,
 } from "@/services/UserService";
@@ -60,7 +62,7 @@ export const useUserStats = () => {
   });
 };
 
-// Hook to create user
+// Hook to create user (client)
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
 
@@ -89,6 +91,64 @@ export const useCreateUser = () => {
   });
 };
 
+// Hook to create admin
+export const useCreateAdmin = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userData: CreateAdminData) =>
+      userService.createAdmin(userData),
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success("Admin created successfully");
+        // Invalidate and refetch users list
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.lists() });
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.stats() });
+      } else {
+        toast.error(data.message || "Failed to create admin");
+      }
+    },
+    onError: (error: Error) => {
+      console.error("Create admin error:", error);
+      const apiError = error as ApiError;
+      const errorMessage =
+        apiError.response?.data?.message ||
+        error.message ||
+        "Failed to create admin";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+// Hook to create employee
+export const useCreateEmployee = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userData: CreateEmployeeData) =>
+      userService.createEmployee(userData),
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success("Employee created successfully");
+        // Invalidate and refetch users list
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.lists() });
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.stats() });
+      } else {
+        toast.error(data.message || "Failed to create employee");
+      }
+    },
+    onError: (error: Error) => {
+      console.error("Create employee error:", error);
+      const apiError = error as ApiError;
+      const errorMessage =
+        apiError.response?.data?.message ||
+        error.message ||
+        "Failed to create employee";
+      toast.error(errorMessage);
+    },
+  });
+};
+
 // Hook to update user
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
@@ -104,11 +164,10 @@ export const useUpdateUser = () => {
     onSuccess: (data, variables) => {
       if (data.success) {
         toast.success("User updated successfully");
-        // Invalidate specific user and users list
-        queryClient.invalidateQueries({
-          queryKey: userQueryKeys.detail(variables.userId),
-        });
-        queryClient.invalidateQueries({ queryKey: userQueryKeys.lists() });
+        // Invalidate and refetch all user-related queries
+        queryClient.invalidateQueries({ queryKey: userQueryKeys.all });
+        // Also refetch the current users list
+        queryClient.refetchQueries({ queryKey: userQueryKeys.lists() });
       } else {
         toast.error(data.message || "Failed to update user");
       }
