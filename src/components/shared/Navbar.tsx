@@ -224,13 +224,13 @@ export default function Navbar() {
                 href="tel:+13105286170"
                 className="text-white text-sm hover:underline block"
               >
-                +1-310-528-6170
+                +1 (310) 528-6170
               </a>
               <a
                 href="tel:+8801748771945"
                 className="text-white text-sm hover:underline block"
               >
-                +880 1748 771945
+                +1 (310) 756-5533
               </a>
             </div>
           </div>
@@ -248,13 +248,13 @@ export default function Navbar() {
                     href="tel:+8801712345678"
                     className="text-white text-xs hover:underline block"
                   >
-                    +1-310-528-6170
+                    +1 (310) 528-6170
                   </a>
                   <a
                     href="tel:+1105258461070"
                     className="text-white text-xs hover:underline block"
                   >
-                    +880 1748 771945
+                    +1 (310) 756-5533
                   </a>
                 </div>
               </div>
@@ -374,13 +374,13 @@ export default function Navbar() {
                     href="tel:+8801712345678"
                     className="text-gray-600 hover:text-brand hover:underline block"
                   >
-                    +1-310-528-6170
+                    +1 (310) 528-6170
                   </a>
                   <a
                     href="tel:+1105258461070"
                     className="text-gray-600 hover:text-brand hover:underline block"
                   >
-                    +880 1748 771945
+                    +1 (310) 756-5533
                   </a>
                 </div>
               </nav>
