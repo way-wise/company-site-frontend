@@ -27,11 +27,16 @@ export default function LoginForm() {
 
   const onSubmit = (data: LoginFormData) => {
     loginMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (response) => {
         // Refresh user context after successful login
+        console.log("response", response);
         refreshUser();
-        // Redirect to home page
-        router.push("/admin");
+        // Redirect based on user role or default to admin
+        if (response.data?.user?.role === "CLIENT") {
+          router.push("/client");
+        } else {
+          router.push("/admin");
+        }
       },
     });
   };
