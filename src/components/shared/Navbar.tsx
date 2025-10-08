@@ -453,10 +453,7 @@ export default function Navbar() {
                       }`}
                     />
                   </CollapsibleTrigger>
-                  {/* 
-                    To slow down the open/close animation, we increase the transition duration.
-                    We'll use Tailwind's duration-700 (or duration-1000 for even slower) and add transition-all for smoother effect.
-                  */}
+
                   <CollapsibleContent className="pt-3 transition-all duration-700 ease-in-out">
                     <div className="pl-4 space-y-3">
                       {usersPortalLinks.map((item) => (

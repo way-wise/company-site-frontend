@@ -27,20 +27,21 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     loginMutation.mutate(data, {
-      onSuccess: (response) => {
-        // Refresh user context after successful login
-        console.log("response", response);
-        refreshUser();
+      onSuccess: async (response) => {
+        console.log("Login response:", response);
 
-        // Redirect based on user role or default to admin
-        const role = user?.role;
-        console.log("role", role);
+        // Fetch user data after successful login (cookies are already set)
+        const loggedInUser = await refreshUser();
+        console.log("Logged in user:", loggedInUser);
+
+        // Use the role from fetched user for redirect
+        const role = loggedInUser?.role;
+        console.log("User role:", role);
+
         switch (role) {
           case "ADMIN":
-            router.push("/admin");
-            break;
           case "SUPER_ADMIN":
             router.push("/admin");
             break;

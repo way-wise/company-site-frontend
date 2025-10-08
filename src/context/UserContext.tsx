@@ -17,7 +17,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   setUser: (user: User | null) => void;
   logout: () => void;
-  refreshUser: () => Promise<void>;
+  refreshUser: () => Promise<User | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,18 +31,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Refresh user data from server
-  const refreshUser = useCallback(async () => {
+  const refreshUser = useCallback(async (): Promise<User | null> => {
     try {
       const response = await apiClient.get("/auth/me");
-      console.log("🔍 auth me true");
+
       if (response.data.success) {
-        setUser(response.data.data);
+        const userData = response.data.data;
+        setUser(userData);
+        return userData;
       } else {
         setUser(null);
+        return null;
       }
     } catch (error) {
       console.error("Auth check failed:", error);
       setUser(null);
+      return null;
     } finally {
       setIsLoading(false);
     }
