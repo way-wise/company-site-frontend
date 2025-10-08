@@ -1,4 +1,4 @@
-import { UsersTable } from "../_components/user-components/users-table";
+import { UsersTable } from "./users-table";
 
 const UsersPage = async () => {
   return <UsersTable />;

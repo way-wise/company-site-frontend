@@ -1,4 +1,4 @@
-import UserDetails from "../../_components/user-components/user-details";
+import UserDetails from "./user-details";
 
 const UserDetailsPage = async ({
   params,
