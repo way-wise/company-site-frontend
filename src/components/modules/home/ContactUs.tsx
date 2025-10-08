@@ -163,7 +163,7 @@ const ContactUs = () => {
                     htmlFor="email"
                     className="text-sm font-medium text-[#1B3447]"
                   >
-                    Your Email
+                    Email
                   </Label>
                   <Input
                     type="email"
@@ -182,7 +182,7 @@ const ContactUs = () => {
                     htmlFor="whatsappNumber"
                     className="text-sm font-medium text-[#1B3447]"
                   >
-                    WhatsApp Number
+                    Phone Number
                   </Label>
                   <Input
                     type="tel"
