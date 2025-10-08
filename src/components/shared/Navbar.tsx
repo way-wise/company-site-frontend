@@ -68,7 +68,7 @@ export default function Navbar() {
       href: "/",
     },
     {
-      label: `Service We Provide`,
+      label: `Services`,
       href: "/services",
     },
     {
@@ -143,16 +143,38 @@ export default function Navbar() {
         isScrolled ? "shadow-sm" : "border-gray-100"
       }`}
     >
+      <div className="  bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat py-1">
+        <div className="container lg:hidden flex items-center justify-between gap-2  rounded-md ">
+          <div className="flex items-center gap-2">
+            <Phone className="w-5 h-5 text-white" />
+            <a
+              href="tel:+13105286170"
+              className="text-white text-sm hover:underline block text-nowrap"
+            >
+              +1 (310) 528-6170
+            </a>
+          </div>
+          <div className="flex items-center gap-2">
+            <Phone className="w-5 h-5 text-white" />
+            <a
+              href="tel:+8801748771945"
+              className="text-white text-sm hover:underline block text-nowrap "
+            >
+              +1 (310) 756-5533
+            </a>
+          </div>
+        </div>
+      </div>
       <div className="container flex justify-between items-center mx-auto  py-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 sm:gap-3">
+        <Link href="/" className="flex items-center gap-1 ">
           {/* Logo Icon */}
           <Image
             src={Logo}
             alt="Logo"
             width={56}
             height={60}
-            className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14"
+            className="w-8 h-auto  md:w-10 "
           />
 
           {/* Logo Text */}
@@ -161,13 +183,13 @@ export default function Navbar() {
             alt="Logo Text"
             width={214}
             height={51}
-            className="w-20 sm:w-28 md:w-36 xl:w-52 h-auto"
+            className="w-24 md:w-32 xl:w-40 h-auto"
           />
         </Link>
 
         {/* Desktop Navigation */}
         <div className="flex justify-end  items-center gap-2">
-          <nav className="hidden lg:flex gap-4 xl:gap-8 mx-auto items-center">
+          <nav className="hidden lg:flex gap-2 xl:gap-8 mx-auto items-center">
             {navigationLinks.map((link) => {
               const isActive = isRouteActive(link.href);
 
@@ -175,9 +197,9 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-md transition-colors ${
+                  className={`text-md transition-colors text-nowrap ${
                     isActive
-                      ? "text-brand font-semibold"
+                      ? "text-brand font-semibold "
                       : "text-[#1B3447] hover:text-brand"
                   }`}
                 >
@@ -286,20 +308,20 @@ export default function Navbar() {
             <div>
               <a
                 href="tel:+13105286170"
-                className="text-white text-sm hover:underline block"
+                className="text-white text-sm hover:underline block text-nowrap"
               >
                 +1 (310) 528-6170
               </a>
               <a
                 href="tel:+8801748771945"
-                className="text-white text-sm hover:underline block"
+                className="text-white text-sm hover:underline block text-nowrap "
               >
                 +1 (310) 756-5533
               </a>
             </div>
           </div>
-          <Button className="bg-brand hover:bg-brand/90">
-            <Link href="/contact-us">Get a Quote</Link>
+          <Button className="hidden lg:flex bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
+            <Link href="/contact-us">Get a Free Quote</Link>
           </Button>
         </div>
 
@@ -308,23 +330,26 @@ export default function Navbar() {
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <div className="flex items-center gap-2">
               {/* Mobile Phone Button */}
-              <div className="hidden sm:flex items-center justify-center gap-2 bg-brand rounded-md p-2">
+              {/* <div className="hidden sm:flex items-center justify-center gap-2  rounded-md p-2  bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat">
                 <Phone className="w-4 h-4 text-white" />
                 <div>
                   <a
                     href="tel:+8801712345678"
-                    className="text-white text-xs hover:underline block"
+                    className="text-white text-xs hover:underline block text-nowrap"
                   >
                     +1 (310) 528-6170
                   </a>
                   <a
                     href="tel:+1105258461070"
-                    className="text-white text-xs hover:underline block"
+                    className="text-white text-xs hover:underline block text-nowrap"
                   >
                     +1 (310) 756-5533
                   </a>
                 </div>
-              </div>
+              </div> */}
+              <Button className="lg:hidden bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
+                <Link href="/contact-us">Get a Free Quote</Link>
+              </Button>
 
               <SheetTrigger asChild>
                 <Button size="icon" className="bg-brand hover:bg-brand/90">
@@ -338,13 +363,13 @@ export default function Navbar() {
               side="right"
               className="w-[300px] sm:w-[400px] bg-white p-6"
             >
-              <nav className="flex flex-col space-y-6 pt-6">
+              <nav className="flex flex-col space-y-6 ">
                 {/* Mobile Logo */}
                 <Link href="/" className="flex items-center gap-3">
-                  <Image src={Logo} alt="Logo" width={56} height={60} />
-                  <Image src={LogoText} alt="Logo" width={180} height={43} />
+                  <Image src={Logo} alt="Logo" width={36} height={36} />
+                  <Image src={LogoText} alt="Logo" width={120} height={43} />
                 </Link>
-
+                <hr />
                 {/* Mobile Navigation Links */}
                 {navigationLinks.map((link) => {
                   const isActive = isRouteActive(link.href);
