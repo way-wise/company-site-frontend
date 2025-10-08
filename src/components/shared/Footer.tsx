@@ -63,7 +63,8 @@ const Footer = () => {
                 <ul className="list-none m-0 p-0 space-y-2 sm:space-y-3">
                   <li>
                     <Link
-                      href="/services/web-application"
+                      target="_blank"
+                      href="https://portfolio.waywisetech.com"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Web Development
@@ -71,7 +72,8 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      href="/mobile-app-development"
+                      target="_blank"
+                      href="https://portfolio.waywisetech.com"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Mobile App Development
@@ -87,7 +89,8 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      href="/services/digital-marketing"
+                      target="_blank"
+                      href="https://design.waywisetech.com/"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Digital Marketing
@@ -95,7 +98,8 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      href="/services/ai-integration"
+                      target="_blank"
+                      href="https://showcase.waywisetech.com/"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       AI Integration
@@ -103,7 +107,8 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      href="/services/cloud-engineering"
+                      target="_blank"
+                      href="https://portfolio.waywisetech.com"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Cloud Engineering
