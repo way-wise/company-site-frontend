@@ -36,7 +36,7 @@ export default function LoginForm() {
 
         // Redirect based on user role or default to admin
         const role = user?.role;
-
+        console.log("role", role);
         switch (role) {
           case "ADMIN":
             router.push("/admin");

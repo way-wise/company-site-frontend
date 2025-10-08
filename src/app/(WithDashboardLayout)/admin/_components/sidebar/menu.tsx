@@ -1,3 +1,4 @@
+import LogoutButton from "@/components/auth/LogoutButton";
 import {
   CassetteTape,
   Dumbbell,
@@ -77,6 +78,10 @@ const SidebarMenu = () => {
 
         return <MenuItem key={index} {...menu} />;
       })}
+      <br />
+      <hr />
+      <br />
+      <LogoutButton />
     </nav>
   );
 };
