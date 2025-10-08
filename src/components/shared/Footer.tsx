@@ -20,7 +20,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Logo and Description Section */}
           <div className="lg:col-span-5">
-            <div className="mb-12 lg:mb-16">
+            <div className="mb-4 lg:mb-16">
               <Link href="/" className="flex items-center gap-2 sm:gap-3 mb-6">
                 <Image
                   src={Logo}
@@ -38,7 +38,7 @@ const Footer = () => {
                 />
               </Link>
 
-              <p className="mb-9 text-sm sm:text-base leading-relaxed text-black dark:text-white">
+              <p className=" md:mr-6 text-sm sm:text-base leading-relaxed text-gray-600 dark:text-white">
                 As a leading software development firm with a worldwide reach,
                 we specialize in crafting cutting-edge solutions that drive your
                 business forward. Our team of experienced developers and tech
@@ -57,14 +57,13 @@ const Footer = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-6">
               {/* Services Navigation */}
               <nav className="w-full">
-                <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-medium text-black dark:text-white">
+                <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-black dark:text-white">
                   Services
                 </h2>
                 <ul className="list-none m-0 p-0 space-y-2 sm:space-y-3">
                   <li>
                     <Link
-                      target="_blank"
-                      href="https://portfolio.waywisetech.com"
+                      href="/services/web-application"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Web Development
@@ -72,8 +71,7 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      target="_blank"
-                      href="https://portfolio.waywisetech.com"
+                      href="/services/mobile-application"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Mobile App Development
@@ -89,8 +87,7 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      target="_blank"
-                      href="https://design.waywisetech.com/"
+                      href="/services/digital-marketing"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Digital Marketing
@@ -98,8 +95,7 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      target="_blank"
-                      href="https://showcase.waywisetech.com/"
+                      href="/services/ai-integration"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       AI Integration
@@ -107,8 +103,7 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      target="_blank"
-                      href="https://portfolio.waywisetech.com"
+                      href="/services/cloud-engineering"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >
                       Cloud Engineering
@@ -119,7 +114,7 @@ const Footer = () => {
 
               {/* Company Navigation */}
               <nav className="w-full">
-                <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-medium text-black dark:text-white">
+                <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-black dark:text-white">
                   Company
                 </h2>
                 <ul className="list-none m-0 p-0 space-y-2 sm:space-y-3">
@@ -152,7 +147,7 @@ const Footer = () => {
 
               {/* Support & Help Navigation */}
               <nav className="w-full">
-                <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-medium text-black dark:text-white">
+                <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-black dark:text-white">
                   Support & Help
                 </h2>
                 <ul className="list-none m-0 p-0 space-y-2 sm:space-y-3">
