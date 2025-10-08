@@ -143,10 +143,10 @@ export default function Navbar() {
         isScrolled ? "shadow-sm" : "border-gray-100"
       }`}
     >
-      <div className="  bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat py-1">
+      <div className=" lg:hidden bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat py-1">
         <div className="container lg:hidden flex items-center justify-between gap-2  rounded-md ">
           <div className="flex items-center gap-2">
-            <Phone className="w-5 h-5 text-white" />
+            <Phone className="w-4 h-4 text-white" />
             <a
               href="tel:+13105286170"
               className="text-white text-sm hover:underline block text-nowrap"
@@ -155,7 +155,7 @@ export default function Navbar() {
             </a>
           </div>
           <div className="flex items-center gap-2">
-            <Phone className="w-5 h-5 text-white" />
+            <Phone className="w-4 h-4 text-white" />
             <a
               href="tel:+8801748771945"
               className="text-white text-sm hover:underline block text-nowrap "
@@ -188,8 +188,8 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="flex justify-end  items-center gap-2">
-          <nav className="hidden lg:flex gap-2 xl:gap-8 mx-auto items-center">
+        <div className="flex justify-end  items-center gap-2 xl:gap-4">
+          <nav className="hidden lg:flex gap-[10px] xl:gap-4 mx-auto items-center">
             {navigationLinks.map((link) => {
               const isActive = isRouteActive(link.href);
 
@@ -252,6 +252,7 @@ export default function Navbar() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
+                    id="users-portal-trigger"
                     className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
                       pathname.startsWith("/users-portal")
                         ? "text-brand font-semibold"
@@ -347,7 +348,7 @@ export default function Navbar() {
                   </a>
                 </div>
               </div> */}
-              <Button className="lg:hidden bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
+              <Button className="hidden min-[370px]:flex lg:flex bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
                 <Link href="/contact-us">Get a Free Quote</Link>
               </Button>
 
@@ -475,6 +476,9 @@ export default function Navbar() {
                     +1 (310) 756-5533
                   </a>
                 </div>
+                <Button className=" bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
+                  <Link href="/contact-us">Get a Free Quote</Link>
+                </Button>
               </nav>
             </SheetContent>
           </Sheet>

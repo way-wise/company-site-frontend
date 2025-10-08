@@ -194,3 +194,7 @@
 .auto-scroll:hover {
   animation-play-state: paused;
 }
+
+#users-portal-trigger > .lulucide .lucide-chevron-down {
+  display: none;
+}

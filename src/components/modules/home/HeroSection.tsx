@@ -6,7 +6,7 @@ import Link from "next/link";
 const HeroSection = () => {
   return (
     <section
-      className="w-full h-full py-2 lg:py-10 lg:h-[80vh] bg-left  md:bg-right lg:bg-center relative"
+      className="w-full h-full py-8 lg:py-10 lg:h-[80vh] bg-left  md:bg-right lg:bg-center relative"
       style={{
         backgroundImage: `url(${mainBackground.src})`,
         backgroundSize: "cover",
@@ -19,17 +19,17 @@ const HeroSection = () => {
       <div className="container mx-auto  grid grid-cols-1 md:grid-cols-2 h-full">
         <div className="flex flex-col justify-center items-center md:items-start">
           {/* Main heading */}
-          <h1 className="mb-8">
+          <div className="mb-4 md:mb-8">
             <div className="text-4xl lg:text-6xl  font-bold tracking-wide text-center md:text-left">
               <h1 className="text-white ">WAY-WISE</h1>
               <h2 className="text-transparent bg-gradient-to-r from-[#00D4FF] to-[#0099CC] bg-clip-text ">
                 TECHNOLOGY
               </h2>
             </div>
-          </h1>
+          </div>
 
           {/* Description */}
-          <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-12 leading-relaxed text-center  md:text-left ">
+          <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
             We are a global software development firm, delivering innovative,
             customized solutions that empower businesses and set new standards
             in quality and technology.
@@ -61,13 +61,14 @@ const HeroSection = () => {
             </Link>
           </div>
         </div>
-        <div className="flex md:justify-end justify-center items-center">
+        <div className="flex md:justify-end justify-center items-center pt-3">
           <div className="animate-bounce-slow">
             <Image
               src={heroLeftBg.src}
               alt="hero left bg"
               width={350}
               height={350}
+              className="w-full md:w-[250px]  lg:w-[300px] xl:w-[400px] h-full md:h-auto "
             />
           </div>
         </div>
