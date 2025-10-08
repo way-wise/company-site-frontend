@@ -89,38 +89,28 @@ const Offers = () => {
           />
         </div>
 
-        {/* Mobile: Simple vertical stack */}
-        {/* <div className="block lg:hidden space-y-4 sm:space-y-6">
-          {offers.map((offer) => (
-            <OffersCard key={offer.id} {...offer} />
-          ))}
-        </div> */}
-
-        {/* Desktop: Stack Scroll */}
-        <div
-          className="block relative pb-44 lg:pb-28"
-          style={{
-            height: `calc(${offers.length} * ${
-              typeof window !== "undefined" && window.innerWidth >= 1440
-                ? "60vh"
-                : typeof window !== "undefined" && window.innerWidth >= 1024
-                ? "70vh"
-                : "auto"
-            })`,
-          }}
-        >
+        {/* Stack Scroll for All Devices */}
+        <div className="block relative space-y-0">
           {offers.map((offer, index) => (
             <div
               key={offer.id}
-              className="sticky top-40 transition-transform duration-300"
+              className="sticky mb-4 sm:mb-6 lg:mb-0 transition-all duration-300"
               style={{
+                top: `${
+                  typeof window !== "undefined" && window.innerWidth >= 1024
+                    ? 160 + index * 20
+                    : typeof window !== "undefined" && window.innerWidth >= 640
+                    ? 128 + index * 16
+                    : 80 + index * 12
+                }px`,
                 zIndex: index + 1,
-                transform: `translateY(${index * 10}%)`,
               }}
             >
               <OffersCard {...offer} />
             </div>
           ))}
+          {/* Spacer to ensure last card has scroll space */}
+          <div className="h-[60vh] sm:h-[50vh] lg:h-[30vh]" />
         </div>
       </div>
     </section>

@@ -30,7 +30,7 @@ const HeroSection = () => {
 
           {/* Description */}
           <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-12 leading-relaxed text-center  md:text-left ">
-            We are a global software development firm delivering innovative,
+            We are a global software development firm, delivering innovative,
             customized solutions that empower businesses and set new standards
             in quality and technology.
           </p>
