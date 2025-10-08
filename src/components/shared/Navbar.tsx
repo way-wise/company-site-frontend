@@ -30,6 +30,7 @@ export default function Navbar() {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
+  const [isUsersPortalOpen, setIsUsersPortalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -281,9 +282,11 @@ export default function Navbar() {
                           </NavigationMenuLink>
                         </li>
                       ))}
-                      <li>
-                        <LogoutButton />
-                      </li>
+                      {user && (
+                        <li>
+                          <LogoutButton />
+                        </li>
+                      )}
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
@@ -402,12 +405,12 @@ export default function Navbar() {
                   <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
                     <span>Portfolio</span>
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
+                      className={`w-4 h-4 transition-transform duration-500 ${
                         isPortfolioOpen ? "rotate-180" : ""
                       }`}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pt-3">
+                  <CollapsibleContent className="pt-3 ">
                     <div className="pl-4 space-y-3">
                       {portfolioLinks.map((item) => (
                         <a
@@ -427,6 +430,52 @@ export default function Navbar() {
                             }, 100);
                           }}
                           className={`block text-base transition-colors ${
+                            pathname === item.href
+                              ? "text-brand font-semibold"
+                              : "text-gray-600 hover:text-brand"
+                          }`}
+                        >
+                          {item.label}
+                        </a>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+                <Collapsible
+                  open={isUsersPortalOpen}
+                  onOpenChange={setIsUsersPortalOpen}
+                >
+                  <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
+                    <span>Users Portal</span>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-300 ${
+                        isUsersPortalOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </CollapsibleTrigger>
+                  {/* 
+                    To slow down the open/close animation, we increase the transition duration.
+                    We'll use Tailwind's duration-700 (or duration-1000 for even slower) and add transition-all for smoother effect.
+                  */}
+                  <CollapsibleContent className="pt-3 transition-all duration-700 ease-in-out">
+                    <div className="pl-4 space-y-3">
+                      {usersPortalLinks.map((item) => (
+                        <a
+                          key={item.href}
+                          href={item.href}
+                          rel="noopener noreferrer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsMobileMenuOpen(false);
+                            setTimeout(() => {
+                              window.open(
+                                item.href,
+                                "_self",
+                                "noopener,noreferrer"
+                              );
+                            }, 100);
+                          }}
+                          className={`block text-base transition-colors duration-700 ${
                             pathname === item.href
                               ? "text-brand font-semibold"
                               : "text-gray-600 hover:text-brand"
@@ -479,6 +528,11 @@ export default function Navbar() {
                 <Button className=" bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
                   <Link href="/contact-us">Get a Free Quote</Link>
                 </Button>
+                {user && (
+                  <li>
+                    <LogoutButton />
+                  </li>
+                )}
               </nav>
             </SheetContent>
           </Sheet>
