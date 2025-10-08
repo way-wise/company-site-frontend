@@ -184,7 +184,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-xs sm:text-sm lg:text-base text-gray-900 dark:text-gray-300">
             <span className="text-sm sm:text-lg font-light">©</span>2025
-            Copyright Way-Wise Tech. All right reserved.
+            Copyright Way-Wise Tech. All rights reserved.
           </p>
         </div>
       </div>

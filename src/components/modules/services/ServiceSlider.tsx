@@ -25,12 +25,13 @@ const ServiceSlider = () => {
           descriptionClass="text-[#3D4E5C] text-base xl:text-[20px]"
         />
       </div>
-      <div className="relative">
+      <div className="relative   overflow-visible">
         <Swiper
           modules={[Autoplay, Navigation, Pagination]}
           spaceBetween={30}
           slidesPerView={1}
           grabCursor={true}
+          loop={true}
           pagination={{
             clickable: true,
             dynamicBullets: true,
