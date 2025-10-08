@@ -301,7 +301,7 @@ const ContactUs = () => {
                 type="submit"
                 className="w-full bg-brand hover:bg-brand/90 text-white !py-6 sm:py-4 px-4 sm:px-6 rounded-lg font-medium text-sm sm:text-base"
               >
-                Send Inquiry
+                Send An Inquiry
               </Button>
             </form>
           </div>
