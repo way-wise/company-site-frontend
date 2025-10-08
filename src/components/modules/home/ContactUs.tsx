@@ -68,7 +68,7 @@ const ContactUs = () => {
           {/* Left Column - Information Section */}
           <div className="space-y-6 sm:space-y-8 flex flex-col items-center lg:items-start justify-center">
             <div className="space-y-4 sm:space-y-6 text-center lg:text-left">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 leading-tight">
+              <h1 className="text-3xl sm:text-4xl  lg:text-4xl font-bold text-gray-800 leading-tight">
                 Have a Project Idea?
                 <br />
                 Let&apos;s get started

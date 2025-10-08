@@ -34,7 +34,7 @@ const contactCards = [
 
 const MapSection = () => {
   return (
-    <div className="bg-[#f2f6ff] w-full relative" data-model-id="286:917">
+    <div className="bg-[#f2f6ff] w-full relative">
       {/* Map Background Section */}
       <section className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[598px] animate-fade-in opacity-0 [--animation-delay:400ms]">
         <Image
@@ -47,11 +47,11 @@ const MapSection = () => {
       </section>
 
       {/* Contact Information Cards - Responsive Positioning */}
-      <section className="w-full relative md:absolute md:top-1/2 md:left-0 md:right-0 animate-fade-in opacity-0 [--animation-delay:600ms]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-0">
+      <section className="w-full relative lg:absolute lg:top-1/2 lg:left-0 lg:right-0 animate-fade-in opacity-0 [--animation-delay:600ms]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-0">
           <Card className="w-full max-w-6xl mx-auto bg-white rounded-xl shadow-[0px_4px_20px_#7b7b7b1a]">
-            <CardContent className="p-4 sm:p-6 md:p-8 lg:p-10">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            <CardContent className="p-4 sm:p-6 md:p-8 lg:p-4 xl:p-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {contactCards.map((card, index) => (
                   <div key={index} className="flex flex-col">
                     <div className="w-full h-48 sm:h-56 md:h-64 lg:h-[260px] mb-4 sm:mb-6">
@@ -95,7 +95,7 @@ const MapSection = () => {
       </section>
 
       {/* Spacer to prevent content overlap - only on larger screens */}
-      <div className="hidden md:block h-32 lg:h-40 xl:h-80"></div>
+      <div className="hidden lg:block h-48 xl:h-56 2xl:h-80"></div>
     </div>
   );
 };
