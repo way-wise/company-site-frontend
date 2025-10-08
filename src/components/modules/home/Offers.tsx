@@ -79,7 +79,7 @@ const Offers = () => {
 
   return (
     <section className="relative  bg-[url('@/assets/images/offers/offer-bg.png')] bg-cover bg-center bg-no-repeat">
-      <div className="container mx-auto relative z-10 py-10 lg:py-20 px-2">
+      <div className="container relative z-10 py-10 lg:py-20 ">
         <div className="mb-8 lg:mb-16">
           <SectionTitle
             title="What We Offer"

@@ -6,7 +6,7 @@ const CategorySection = () => {
 
   return (
     <section className="w-full py-6 ">
-      <div className=" mx-auto px-4 container">
+      <div className="  container">
         <div className="flex flex-col lg:flex-row justify-start items-center w-full gap-2">
           <div className=" font-semibold text-center">
             <p>
@@ -14,7 +14,7 @@ const CategorySection = () => {
               <br className="hidden lg:block" /> Partners
             </p>
           </div>
-          <div className="flex items-center md:px-4 w-full">
+          <div className="flex items-center md:pl-4 w-full">
             <div className="overflow-hidden w-full">
               <div className="flex items-center gap-4 lg:gap-8 xl:gap-12 auto-scroll">
                 {categories.map((category) => (

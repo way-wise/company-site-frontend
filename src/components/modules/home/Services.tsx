@@ -5,7 +5,7 @@ import ServiceCard from "./ServiceCard";
 const Services = ({ services }: { services: ServiceDisplay[] }) => {
   return (
     <section className="  bg-[url('@/assets/images/services/service-bg.png')] bg-cover bg-center bg-no-repeat">
-      <div className="container mx-auto py-12 lg:py-20 px-2">
+      <div className="container mx-auto py-12 lg:py-20 ">
         <div className="mb-16">
           <SectionTitle
             title="Our Services"

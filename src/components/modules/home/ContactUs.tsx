@@ -63,7 +63,7 @@ const ContactUs = () => {
       {/* Left border accent */}
       <div className="h-full bg-blue-200"></div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="container  py-12 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start">
           {/* Left Column - Information Section */}
           <div className="space-y-6 sm:space-y-8 flex flex-col items-center lg:items-start justify-center">
@@ -89,6 +89,19 @@ const ContactUs = () => {
                   We will respond to you within 24 hrs
                 </span>
               </div>
+              <div className="flex items-center justify-start gap-2">
+                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+                <span className="text-sm sm:text-base text-gray-700">
+                  Our business hours are Monday through Friday.
+                </span>
+              </div>
+              <div className="flex items-center justify-start gap-2">
+                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+                <span className="text-sm sm:text-base text-gray-700">
+                  Office hours are from 9:00 AM to 5:00 PM.
+                </span>
+              </div>
+
               <div className="flex items-center justify-start gap-2">
                 <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                 <span className="text-sm sm:text-base text-gray-700">

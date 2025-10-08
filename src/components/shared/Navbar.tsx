@@ -76,7 +76,7 @@ export default function Navbar() {
       href: "/about-us",
     },
     {
-      label: "Contact",
+      label: "Contact Us",
       href: "/contact-us",
     },
   ];
@@ -143,7 +143,7 @@ export default function Navbar() {
         isScrolled ? "shadow-sm" : "border-gray-100"
       }`}
     >
-      <div className="container flex justify-between items-center mx-auto px-2  py-4">
+      <div className="container flex justify-between items-center mx-auto  py-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
           {/* Logo Icon */}
@@ -166,7 +166,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="flex justify-end  items-center gap-3 xl:gap-8">
+        <div className="flex justify-end  items-center gap-2">
           <nav className="hidden lg:flex gap-4 xl:gap-8 mx-auto items-center">
             {navigationLinks.map((link) => {
               const isActive = isRouteActive(link.href);
@@ -282,7 +282,7 @@ export default function Navbar() {
             />
           </div>
           <div className="hidden lg:flex items-center justify-center gap-2  rounded-md p-2 bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat">
-            <Phone className="w-5 h-5 text-white" />
+            <Phone className="w-5 h-5 text-white hidden xl:block" />
             <div>
               <a
                 href="tel:+13105286170"
@@ -298,6 +298,9 @@ export default function Navbar() {
               </a>
             </div>
           </div>
+          <Button className="bg-brand hover:bg-brand/90">
+            <Link href="/contact-us">Get a Quote</Link>
+          </Button>
         </div>
 
         {/* Mobile Menu */}

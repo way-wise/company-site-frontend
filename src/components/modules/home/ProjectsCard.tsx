@@ -29,13 +29,13 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
       </div>
 
       {/* Right white section */}
-      <div className="p-4 sm:p-6 lg:p-8 flex flex-col justify-between order-2 sm:order-2">
+      <div className="p-4 sm:p-6 lg:p-2 xl:p-4 flex flex-col justify-between order-2 sm:order-2">
         {/* Tags section */}
         <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
           {project.tags.map((tag, index) => (
             <span
               key={index}
-              className="px-3 py-1 sm:px-4 sm:py-2 bg-gray-100 text-gray-600 text-xs sm:text-sm rounded-md border border-gray-200 font-medium"
+              className="px-2 py-1 sm:px-2 sm:py-2 bg-gray-100 text-gray-600 text-xs sm:text-sm rounded-md border border-gray-200 font-medium"
             >
               {tag}
             </span>
@@ -48,7 +48,7 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
             {project.title}
           </h3>
 
-          <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8">
+          <p className="text-gray-600 text-sm line-clamp-6  leading-relaxed mb-6 sm:mb-8">
             {project.description}
           </p>
         </div>

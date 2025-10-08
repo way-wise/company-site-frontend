@@ -16,7 +16,7 @@ const Footer = () => {
     >
       <div className="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-t from-white/10 via-white/90 to-white dark:from-dark/10 dark:via-dark/90 dark:to-dark"></div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container ">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Logo and Description Section */}
           <div className="lg:col-span-5">

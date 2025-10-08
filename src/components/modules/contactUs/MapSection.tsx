@@ -24,7 +24,7 @@ const contactCards = [
   },
   {
     icon: "location",
-    title: "Street Location",
+    title: " Location",
     subtitle: "Santa Clarita, CA 91351, USA",
     image: image3,
     stasue: "https://maps.app.goo.gl/EgMwMf5hbxYeJD8t5",

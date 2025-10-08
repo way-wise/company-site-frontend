@@ -16,7 +16,7 @@ const HeroSection = () => {
     >
       {/* Main content */}
 
-      <div className="container mx-auto px-2 grid grid-cols-1 md:grid-cols-2 h-full">
+      <div className="container mx-auto  grid grid-cols-1 md:grid-cols-2 h-full">
         <div className="flex flex-col justify-center items-center md:items-start">
           {/* Main heading */}
           <h1 className="mb-8">
