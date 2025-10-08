@@ -18,11 +18,12 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/UserContext";
-import { ChevronDown, Menu, Phone } from "lucide-react";
+import { ChevronDown, Menu, Phone, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import LogoutButton from "../auth/LogoutButton";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -79,7 +80,7 @@ export default function Navbar() {
       href: "/contact-us",
     },
   ];
-
+  console.log(user);
   const portfolioLinks = [
     { label: "Web Portfolio", href: "https://portfolio.waywisetech.com/" },
     { label: "AI/ML Portfolio", href: "https://showcase.waywisetech.com/" },
@@ -89,6 +90,28 @@ export default function Navbar() {
     },
     { label: "Design Portfolio", href: "https://design.waywisetech.com/" },
   ];
+  // Logic for user portal links based on user role
+  // Roles: ADMIN, SUPER_ADMIN, CLIENT, EMPLOYEE
+  // ADMIN/SUPER_ADMIN: dashboard link to /admin
+  // CLIENT: dashboard link to /client
+  // EMPLOYEE: dashboard link to /employee
+  // Not logged in: Register
+  const getDashboardLink = () => {
+    if (!user) return { label: "Login", href: "/login" };
+    if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
+      return { label: "Dashboard", href: "/admin" };
+    }
+    if (user.role === "CLIENT") {
+      return { label: "Dashboard", href: "/client" };
+    }
+    if (user.role === "EMPLOYEE") {
+      return { label: "Dashboard", href: "/employee" };
+    }
+    // fallback
+    return { label: "Profile", href: "/profile" };
+  };
+
+  const usersPortalLinks = [getDashboardLink()];
 
   // Function to check if a route is active
   const isRouteActive = (href: string) => {
@@ -168,7 +191,7 @@ export default function Navbar() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
-                    className={`text-md font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
+                    className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
                       pathname.startsWith("/portfolio")
                         ? "text-brand font-semibold"
                         : "text-[#1B3447] hover:text-brand"
@@ -197,6 +220,47 @@ export default function Navbar() {
                           </NavigationMenuLink>
                         </li>
                       ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+            {/* Portfolio Dropdown */}
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger
+                    className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
+                      pathname.startsWith("/users-portal")
+                        ? "text-brand font-semibold"
+                        : "text-[#1B3447] hover:text-brand"
+                    }`}
+                  >
+                    <UserRound />
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[200px] gap-3 p-2">
+                      {usersPortalLinks.map((item) => (
+                        <li key={item.href}>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              href={item.href}
+                              className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                pathname === item.href
+                                  ? "bg-accent text-brand font-semibold"
+                                  : ""
+                              }`}
+                            >
+                              <div className="text-sm font-medium leading-none">
+                                {item.label}
+                              </div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      ))}
+                      <li>
+                        <LogoutButton />
+                      </li>
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>

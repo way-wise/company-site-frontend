@@ -10,15 +10,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { LoginFormData, loginSchema } from "./loginValidation";
+``;
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
-  const { refreshUser } = useAuth();
+  const { refreshUser, user } = useAuth();
   const router = useRouter();
 
   const {
     register,
+
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
@@ -31,11 +33,26 @@ export default function LoginForm() {
         // Refresh user context after successful login
         console.log("response", response);
         refreshUser();
+
         // Redirect based on user role or default to admin
-        if (response.data?.user?.role === "CLIENT") {
-          router.push("/client");
-        } else {
-          router.push("/admin");
+        const role = user?.role;
+
+        switch (role) {
+          case "ADMIN":
+            router.push("/admin");
+            break;
+          case "SUPER_ADMIN":
+            router.push("/admin");
+            break;
+          case "CLIENT":
+            router.push("/client");
+            break;
+          case "EMPLOYEE":
+            router.push("/employee");
+            break;
+          default:
+            router.push("/profile");
+            break;
         }
       },
     });
