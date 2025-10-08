@@ -38,7 +38,7 @@ const HeroSection = () => {
           {/* CTA Button */}
           <div>
             <Link
-              href="/services"
+              href="/contact-us"
               className="bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-white lg:px-8 lg:py-4 px-4 py-3 rounded-lg text-lg font-semibold hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105 flex items-center gap-2 text-left"
             >
               Let&apos;s Get Started
