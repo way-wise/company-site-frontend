@@ -41,10 +41,9 @@ export const useCreatePermission = () => {
       queryClient.invalidateQueries({ queryKey: ["permission-groups"] });
       toast.success(data.message || "Permission created successfully");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message || "Failed to create permission"
-      );
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to create permission");
     },
   });
 };
@@ -66,10 +65,9 @@ export const useUpdatePermission = () => {
       queryClient.invalidateQueries({ queryKey: ["permission-groups"] });
       toast.success(data.message || "Permission updated successfully");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message || "Failed to update permission"
-      );
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to update permission");
     },
   });
 };
@@ -84,10 +82,9 @@ export const useDeletePermission = () => {
       queryClient.invalidateQueries({ queryKey: ["permission-groups"] });
       toast.success(data.message || "Permission deleted successfully");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message || "Failed to delete permission"
-      );
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to delete permission");
     },
   });
 };

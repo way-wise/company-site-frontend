@@ -70,7 +70,7 @@ export const PermissionGuard = ({
               Access Denied
             </h2>
             <p className="text-gray-600">
-              You don't have the required role to access this content.
+              You don&apos;t have the required role to access this content.
             </p>
           </div>
         </div>
@@ -93,7 +93,8 @@ export const PermissionGuard = ({
               Access Denied
             </h2>
             <p className="text-gray-600">
-              You don't have the required permissions to access this content.
+              You don&apos;t have the required permissions to access this
+              content.
             </p>
           </div>
         </div>

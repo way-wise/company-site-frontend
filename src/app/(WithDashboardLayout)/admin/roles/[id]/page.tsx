@@ -100,7 +100,7 @@ export default function RoleDetailsPage() {
   useEffect(() => {
     if (role?.rolePermissions) {
       const initialPermissions = role.rolePermissions.map(
-        (rp: any) => rp.permissionId
+        (rp: { permissionId: string }) => rp.permissionId
       );
       setSelectedPermissions(initialPermissions);
     }
@@ -109,7 +109,9 @@ export default function RoleDetailsPage() {
   useEffect(() => {
     // Check if there are changes
     const initialPermissions =
-      role?.rolePermissions?.map((rp: any) => rp.permissionId) || [];
+      role?.rolePermissions?.map(
+        (rp: { permissionId: string }) => rp.permissionId
+      ) || [];
     const hasPermissionChanges =
       selectedPermissions.length !== initialPermissions.length ||
       selectedPermissions.some((id) => !initialPermissions.includes(id));
@@ -179,7 +181,7 @@ export default function RoleDetailsPage() {
 
   // Group permissions by group
   const groupedPermissions = allPermissions.reduce(
-    (acc: any, permission: Permission) => {
+    (acc: Record<string, Permission[]>, permission: Permission) => {
       if (!acc[permission.group]) {
         acc[permission.group] = [];
       }
@@ -315,7 +317,7 @@ export default function RoleDetailsPage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 {Object.entries(groupedPermissions).map(
-                  ([group, permissions]: [string, any]) => {
+                  ([group, permissions]: [string, Permission[]]) => {
                     const groupPermissionIds = permissions.map(
                       (p: Permission) => p.id
                     );

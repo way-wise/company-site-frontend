@@ -51,8 +51,9 @@ export const useCreateRole = () => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
       toast.success(data.message || "Role created successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to create role");
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to create role");
     },
   });
 };
@@ -68,8 +69,9 @@ export const useUpdateRole = () => {
       queryClient.invalidateQueries({ queryKey: ["role"] });
       toast.success(data.message || "Role updated successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to update role");
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to update role");
     },
   });
 };
@@ -83,8 +85,9 @@ export const useDeleteRole = () => {
       queryClient.invalidateQueries({ queryKey: ["roles"] });
       toast.success(data.message || "Role deleted successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to delete role");
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to delete role");
     },
   });
 };
@@ -105,9 +108,10 @@ export const useAssignPermissionsToRole = () => {
       queryClient.invalidateQueries({ queryKey: ["role"] });
       toast.success(data.message || "Permissions assigned successfully");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error(
-        error.response?.data?.message || "Failed to assign permissions"
+        err.response?.data?.message || "Failed to assign permissions"
       );
     },
   });
@@ -129,10 +133,9 @@ export const useRemovePermissionFromRole = () => {
       queryClient.invalidateQueries({ queryKey: ["role"] });
       toast.success(data.message || "Permission removed successfully");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message || "Failed to remove permission"
-      );
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "Failed to remove permission");
     },
   });
 };
@@ -148,9 +151,10 @@ export const useAssignRoleToUser = () => {
       queryClient.invalidateQueries({ queryKey: ["user-roles"] });
       toast.success(data.message || "Role assigned to user successfully");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error(
-        error.response?.data?.message || "Failed to assign role to user"
+        err.response?.data?.message || "Failed to assign role to user"
       );
     },
   });
@@ -167,9 +171,10 @@ export const useRemoveRoleFromUser = () => {
       queryClient.invalidateQueries({ queryKey: ["user-roles"] });
       toast.success(data.message || "Role removed from user successfully");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      const err = error as { response?: { data?: { message?: string } } };
       toast.error(
-        error.response?.data?.message || "Failed to remove role from user"
+        err.response?.data?.message || "Failed to remove role from user"
       );
     },
   });

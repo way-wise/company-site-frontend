@@ -93,7 +93,9 @@ const UserDetails = ({ id }: { id: string }) => {
               <div className="flex items-center gap-2 py-3">
                 <div className="flex items-center gap-1.5 rounded-full bg-muted py-1.5 pr-2.5 pl-2 text-muted-foreground">
                   <ShieldUser className="size-6 stroke-[1.5]" />
-                  <span className="capitalize">{user?.role}</span>
+                  <span className="capitalize">
+                    {user?.roles?.map((r) => r.name).join(", ") || "No Role"}
+                  </span>
                 </div>
                 {!user?.isActive ? (
                   <div className="flex items-center gap-1.5 rounded-full bg-destructive/70 py-1.5 pr-2.5 pl-2 text-white">
