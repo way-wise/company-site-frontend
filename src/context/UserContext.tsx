@@ -1,7 +1,7 @@
 "use client";
 
 import apiClient from "@/lib/axios";
-import { User } from "@/types";
+import { Permission, Role, User } from "@/types";
 import {
   createContext,
   ReactNode,
@@ -15,9 +15,15 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  permissions: Permission[];
   setUser: (user: User | null) => void;
   logout: () => void;
   refreshUser: () => Promise<User | null>;
+  hasPermission: (permissionName: string) => boolean;
+  hasAnyPermission: (permissionNames: string[]) => boolean;
+  hasAllPermissions: (permissionNames: string[]) => boolean;
+  hasRole: (roleName: string) => boolean;
+  hasAnyRole: (roleNames: string[]) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,6 +35,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
 
   // Refresh user data from server
   const refreshUser = useCallback(async (): Promise<User | null> => {
@@ -38,14 +45,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (response.data.success) {
         const userData = response.data.data;
         setUser(userData);
+
+        // Fetch user permissions if user exists
+        if (userData?.id) {
+          try {
+            const permissionsResponse = await apiClient.get(
+              `/roles/user/${userData.id}/permissions`
+            );
+            if (permissionsResponse.data.success) {
+              setPermissions(permissionsResponse.data.data || []);
+            }
+          } catch (error) {
+            console.error("Failed to fetch user permissions:", error);
+            setPermissions([]);
+          }
+        }
+
         return userData;
       } else {
         setUser(null);
+        setPermissions([]);
         return null;
       }
     } catch (error) {
       console.error("Auth check failed:", error);
       setUser(null);
+      setPermissions([]);
       return null;
     } finally {
       setIsLoading(false);
@@ -55,7 +80,52 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Logout user
   const logout = useCallback(() => {
     setUser(null);
+    setPermissions([]);
   }, []);
+
+  // Check if user has a specific permission
+  const hasPermission = useCallback(
+    (permissionName: string): boolean => {
+      return permissions.some((p) => p.name === permissionName);
+    },
+    [permissions]
+  );
+
+  // Check if user has any of the specified permissions
+  const hasAnyPermission = useCallback(
+    (permissionNames: string[]): boolean => {
+      return permissions.some((p) => permissionNames.includes(p.name));
+    },
+    [permissions]
+  );
+
+  // Check if user has all of the specified permissions
+  const hasAllPermissions = useCallback(
+    (permissionNames: string[]): boolean => {
+      return permissionNames.every((name) =>
+        permissions.some((p) => p.name === name)
+      );
+    },
+    [permissions]
+  );
+
+  // Check if user has a specific role
+  const hasRole = useCallback(
+    (roleName: string): boolean => {
+      return user?.roles?.some((r: Role) => r.name === roleName) || false;
+    },
+    [user]
+  );
+
+  // Check if user has any of the specified roles
+  const hasAnyRole = useCallback(
+    (roleNames: string[]): boolean => {
+      return (
+        user?.roles?.some((r: Role) => roleNames.includes(r.name)) || false
+      );
+    },
+    [user]
+  );
 
   // Initialize auth on mount
   useEffect(() => {
@@ -66,9 +136,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user,
     isLoading,
     isAuthenticated: !!user,
+    permissions,
     setUser,
     logout,
     refreshUser,
+    hasPermission,
+    hasAnyPermission,
+    hasAllPermissions,
+    hasRole,
+    hasAnyRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

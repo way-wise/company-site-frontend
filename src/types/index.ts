@@ -7,6 +7,45 @@ export interface ApiResponse<T = unknown> {
   data?: T;
 }
 
+// Permission Types
+export interface Permission {
+  id: string;
+  name: string;
+  group: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Role Types
+export interface Role {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  rolePermissions?: RolePermission[];
+  _count?: {
+    userRoles: number;
+    rolePermissions: number;
+  };
+}
+
+export interface RolePermission {
+  id: string;
+  roleId: string;
+  permissionId: string;
+  permission: Permission;
+}
+
+export interface UserRoleAssignment {
+  id: string;
+  userId: string;
+  roleId: string;
+  role: Role;
+  assignedAt: string;
+}
+
 // User Types
 export interface User {
   id: string;
@@ -14,7 +53,7 @@ export interface User {
   name: string;
   contactNumber: string;
   gender: "MALE" | "FEMALE" | "OTHER";
-  role: "SUPER_ADMIN" | "ADMIN" | "EMPLOYEE" | "CLIENT";
+  roles: Role[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -121,4 +160,50 @@ export interface ServicesQueryParams {
   page: number;
   limit: number;
   search?: string;
+}
+
+// Permission Management Types
+export interface PermissionFormData {
+  name: string;
+  group: string;
+  description?: string;
+}
+
+export interface PermissionStats {
+  totalPermissions: number;
+  totalGroups: number;
+}
+
+export interface PermissionsQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  group?: string;
+}
+
+// Role Management Types
+export interface RoleFormData {
+  name: string;
+  description?: string;
+  permissionIds?: string[];
+}
+
+export interface RoleStats {
+  totalRoles: number;
+  totalAssignments: number;
+}
+
+export interface RolesQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface AssignRoleToUserData {
+  userId: string;
+  roleId: string;
+}
+
+export interface AssignPermissionsToRoleData {
+  permissionIds: string[];
 }
