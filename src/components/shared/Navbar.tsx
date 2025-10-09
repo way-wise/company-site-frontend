@@ -214,9 +214,9 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`text-md transition-colors text-nowrap ${
+                    className={`text-md transition-colors text-nowrap font-semibold ${
                       isActive
-                        ? "text-brand font-semibold "
+                        ? "text-brand  "
                         : "text-[#1B3447] hover:text-brand"
                     }`}
                   >
@@ -230,9 +230,9 @@ export default function Navbar() {
                 <NavigationMenuList>
                   <NavigationMenuItem>
                     <NavigationMenuTrigger
-                      className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
+                      className={`text-md px-0    bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${
                         pathname.startsWith("/portfolio")
-                          ? "text-brand font-semibold"
+                          ? "text-brand "
                           : "text-[#1B3447] hover:text-brand"
                       }`}
                     >

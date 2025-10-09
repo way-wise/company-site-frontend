@@ -10,7 +10,7 @@ const HeroSection = () => {
       style={{
         backgroundImage: `url(${mainBackground.src})`,
         backgroundSize: "cover",
-        // backgroundPosition: "right",
+
         backgroundRepeat: "no-repeat",
       }}
     >
