@@ -38,6 +38,7 @@ export const useCreatePermission = () => {
       PermissionService.createPermission(data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["permissions"] });
+      queryClient.invalidateQueries({ queryKey: ["permission-groups"] });
       toast.success(data.message || "Permission created successfully");
     },
     onError: (error: any) => {
@@ -62,6 +63,7 @@ export const useUpdatePermission = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["permissions"] });
       queryClient.invalidateQueries({ queryKey: ["permission"] });
+      queryClient.invalidateQueries({ queryKey: ["permission-groups"] });
       toast.success(data.message || "Permission updated successfully");
     },
     onError: (error: any) => {
@@ -79,6 +81,7 @@ export const useDeletePermission = () => {
     mutationFn: (id: string) => PermissionService.deletePermission(id),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["permissions"] });
+      queryClient.invalidateQueries({ queryKey: ["permission-groups"] });
       toast.success(data.message || "Permission deleted successfully");
     },
     onError: (error: any) => {

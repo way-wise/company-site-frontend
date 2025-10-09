@@ -61,6 +61,9 @@ export default function PermissionsPage() {
   const [editingPermission, setEditingPermission] = useState<Permission | null>(
     null
   );
+  const [formGroup, setFormGroup] = useState("");
+  const [formName, setFormName] = useState("");
+  const [formDescription, setFormDescription] = useState("");
 
   const { data: permissionsData, isLoading } = usePermissions({
     search,
@@ -83,11 +86,10 @@ export default function PermissionsPage() {
 
   const handleCreatePermission = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
     const data = {
-      name: formData.get("name") as string,
-      group: formData.get("group") as string,
-      description: formData.get("description") as string,
+      name: formName,
+      group: formGroup,
+      description: formDescription,
     };
 
     if (editingPermission) {
@@ -97,6 +99,9 @@ export default function PermissionsPage() {
           onSuccess: () => {
             setEditingPermission(null);
             setIsCreateModalOpen(false);
+            setFormGroup("");
+            setFormName("");
+            setFormDescription("");
           },
         }
       );
@@ -104,6 +109,9 @@ export default function PermissionsPage() {
       createMutation.mutate(data, {
         onSuccess: () => {
           setIsCreateModalOpen(false);
+          setFormGroup("");
+          setFormName("");
+          setFormDescription("");
         },
       });
     }
@@ -138,6 +146,9 @@ export default function PermissionsPage() {
           <Button
             onClick={() => {
               setEditingPermission(null);
+              setFormGroup("");
+              setFormName("");
+              setFormDescription("");
               setIsCreateModalOpen(true);
             }}
             size="lg"
@@ -214,9 +225,9 @@ export default function PermissionsPage() {
                   className="w-64"
                 />
                 <Select
-                  value={selectedGroup}
+                  value={selectedGroup || "all"}
                   onValueChange={(value) => {
-                    setSelectedGroup(value);
+                    setSelectedGroup(value === "all" ? "" : value);
                     setPage(1);
                   }}
                 >
@@ -224,7 +235,7 @@ export default function PermissionsPage() {
                     <SelectValue placeholder="Filter by group" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Groups</SelectItem>
+                    <SelectItem value="all">All Groups</SelectItem>
                     {groups.map((group: string) => (
                       <SelectItem key={group} value={group}>
                         {group.replace(/_/g, " ").toUpperCase()}
@@ -259,6 +270,9 @@ export default function PermissionsPage() {
                     <Button
                       onClick={() => {
                         setEditingPermission(null);
+                        setFormGroup("");
+                        setFormName("");
+                        setFormDescription("");
                         setIsCreateModalOpen(true);
                       }}
                     >
@@ -311,6 +325,11 @@ export default function PermissionsPage() {
                               size="sm"
                               onClick={() => {
                                 setEditingPermission(permission);
+                                setFormGroup(permission.group);
+                                setFormName(permission.name);
+                                setFormDescription(
+                                  permission.description || ""
+                                );
                                 setIsCreateModalOpen(true);
                               }}
                             >
@@ -417,8 +436,8 @@ export default function PermissionsPage() {
                   Permission Name <span className="text-red-500">*</span>
                 </label>
                 <Input
-                  name="name"
-                  defaultValue={editingPermission?.name}
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
                   required
                   placeholder="e.g., create_user, read_service"
                   className="w-full font-mono"
@@ -431,36 +450,34 @@ export default function PermissionsPage() {
                 <label className="block text-sm font-medium mb-2">
                   Group <span className="text-red-500">*</span>
                 </label>
-                <Select
-                  name="group"
-                  defaultValue={editingPermission?.group}
-                  onValueChange={(value) => {
-                    const input = document.querySelector(
-                      'input[name="group"]'
-                    ) as HTMLInputElement;
-                    if (input) input.value = value;
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select or type a group" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {groups.map((group: string) => (
-                      <SelectItem key={group} value={group}>
-                        {group.replace(/_/g, " ").toUpperCase()}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
                 <Input
-                  name="group"
-                  defaultValue={editingPermission?.group}
+                  value={formGroup}
+                  onChange={(e) => setFormGroup(e.target.value)}
                   required
                   placeholder="e.g., user_management, service_management"
-                  className="w-full mt-2 font-mono"
+                  className="w-full font-mono"
                 />
+                {groups.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500 mb-2">
+                      Existing groups (click to use):
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {groups.map((group: string) => (
+                        <Badge
+                          key={group}
+                          variant="outline"
+                          className="cursor-pointer hover:bg-blue-50"
+                          onClick={() => setFormGroup(group)}
+                        >
+                          {group.replace(/_/g, " ").toUpperCase()}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <p className="text-xs text-gray-500 mt-1">
-                  Select existing or create new group
+                  Type a new group or click an existing one above
                 </p>
               </div>
               <div>
@@ -468,8 +485,8 @@ export default function PermissionsPage() {
                   Description
                 </label>
                 <Input
-                  name="description"
-                  defaultValue={editingPermission?.description}
+                  value={formDescription}
+                  onChange={(e) => setFormDescription(e.target.value)}
                   placeholder="What this permission allows"
                   className="w-full"
                 />
@@ -481,6 +498,9 @@ export default function PermissionsPage() {
                   onClick={() => {
                     setIsCreateModalOpen(false);
                     setEditingPermission(null);
+                    setFormGroup("");
+                    setFormName("");
+                    setFormDescription("");
                   }}
                 >
                   Cancel
