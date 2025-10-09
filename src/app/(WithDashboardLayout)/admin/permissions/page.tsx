@@ -223,7 +223,7 @@ export default function PermissionsPage() {
                     setPage(1);
                   }}
                   className="w-64"
-                />
+                />-
                 <Select
                   value={selectedGroup || "all"}
                   onValueChange={(value) => {

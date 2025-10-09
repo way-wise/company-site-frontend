@@ -59,7 +59,7 @@ export default function RoleDetailsPage() {
 
   const { data: roleData, isLoading: isLoadingRole } = useRole(roleId);
   const { data: permissionsData, isLoading: isLoadingPermissions } =
-    usePermissions();
+    usePermissions({ page: 1, limit: 100 });
   const { data: usersData } = useUsers({ page: 1, limit: 100 });
   const assignPermissionsMutation = useAssignPermissionsToRole();
   const assignRoleMutation = useAssignRoleToUser();

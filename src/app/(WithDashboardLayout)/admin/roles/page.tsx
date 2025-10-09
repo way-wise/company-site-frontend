@@ -168,7 +168,7 @@ export default function RolesPage() {
 
           <Card>
             <CardHeader>
-              <CardDescription>Total Permissions</CardDescription>
+              <CardDescription>Total Assigned Permissions</CardDescription>
               <CardTitle className="text-3xl">{totalPermissions}</CardTitle>
             </CardHeader>
             <CardContent>
