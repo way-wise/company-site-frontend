@@ -73,17 +73,19 @@ export const userService = {
 
     // Transform the response to match frontend expectations
     const transformedResponse = {
-      data: response.data.data,
+      data: response.data.data.result,
       pagination: {
-        currentPage: response.data.meta.page,
+        currentPage: response.data.data.meta.page,
         totalPages: Math.ceil(
-          response.data.meta.total / response.data.meta.limit
+          response.data.data.meta.total / response.data.data.meta.limit
         ),
-        totalUsers: response.data.meta.total,
+        totalUsers: response.data.data.meta.total,
         hasNextPage:
-          response.data.meta.page <
-          Math.ceil(response.data.meta.total / response.data.meta.limit),
-        hasPrevPage: response.data.meta.page > 1,
+          response.data.data.meta.page <
+          Math.ceil(
+            response.data.data.meta.total / response.data.data.meta.limit
+          ),
+        hasPrevPage: response.data.data.meta.page > 1,
       },
     };
 

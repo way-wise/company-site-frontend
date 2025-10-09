@@ -323,8 +323,7 @@ export default function RolesPage() {
                   <div className="flex items-center justify-between mt-4 pt-4 border-t">
                     <div className="text-sm text-gray-600">
                       Showing {(page - 1) * limit + 1} to{" "}
-                      {Math.min(page * limit, totalRoles)} of {totalRoles}{" "}
-                      roles
+                      {Math.min(page * limit, totalRoles)} of {totalRoles} roles
                     </div>
                     <div className="flex gap-2">
                       <Button
