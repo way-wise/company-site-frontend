@@ -46,13 +46,56 @@ export interface UserRoleAssignment {
   assignedAt: string;
 }
 
+// Admin, Client, Employee Types
+export interface Admin {
+  id: string;
+  userId: string;
+  profilePhoto?: string;
+  contactNumber?: string;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Client {
+  id: string;
+  userId: string;
+  profilePhoto?: string;
+  contactNumber?: string;
+  address?: string;
+  gender: "MALE" | "FEMALE";
+  isDeleted: boolean;
+  bio?: string;
+  website?: string;
+  twitter?: string;
+  linkedIn?: string;
+  facebook?: string;
+  language?: string;
+  education?: string;
+  experience?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Employee {
+  id: string;
+  userId: string;
+  profilePhoto?: string;
+  contactNumber?: string;
+  address?: string;
+  gender: "MALE" | "FEMALE";
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // User Types
 export interface User {
   id: string;
   email: string;
   name: string;
   contactNumber: string;
-  gender: "MALE" | "FEMALE" | "OTHER";
+  gender: "MALE" | "FEMALE";
   roles: Role[];
   isActive: boolean;
   createdAt: string;
@@ -60,6 +103,10 @@ export interface User {
   image?: string;
   emailVerified?: boolean;
   totalPoints?: number;
+  // User relationships from backend
+  admin?: Admin | null;
+  client?: Client | null;
+  employee?: Employee | null;
 }
 
 // Pagination Types
@@ -95,7 +142,7 @@ export interface RegisterCredentials {
   client: {
     name: string;
     email: string;
-    gender: "MALE" | "FEMALE" | "OTHER";
+    gender: "MALE" | "FEMALE";
   };
 }
 

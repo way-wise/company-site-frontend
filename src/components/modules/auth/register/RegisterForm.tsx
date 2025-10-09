@@ -19,7 +19,6 @@ import { CreateClientFormData, createClientSchema } from "./registerValidation";
 const GENDER_OPTIONS = [
   { value: "MALE", label: "Male" },
   { value: "FEMALE", label: "Female" },
-  { value: "OTHER", label: "Other" },
 ];
 
 export default function RegisterForm() {
@@ -106,10 +105,7 @@ export default function RegisterForm() {
               </label>
               <Select
                 onValueChange={(value) =>
-                  setValue(
-                    "client.gender",
-                    value as "MALE" | "FEMALE" | "OTHER"
-                  )
+                  setValue("client.gender", value as "MALE" | "FEMALE")
                 }
                 defaultValue={watch("client.gender")}
               >

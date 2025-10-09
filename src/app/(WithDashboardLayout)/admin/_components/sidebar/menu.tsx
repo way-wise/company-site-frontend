@@ -3,9 +3,11 @@ import {
   CassetteTape,
   Dumbbell,
   Home,
+  Key,
   LayoutGrid,
   Play,
   Rows3,
+  Shield,
   UsersRound,
 } from "lucide-react";
 import MenuCollapsible from "./menu-collapsible";
@@ -29,7 +31,16 @@ const SidebarMenu = () => {
       icon: <UsersRound className="icon" />,
       url: "/admin/users",
     },
-
+    {
+      title: "Roles",
+      icon: <Shield className="icon" />,
+      url: "/admin/roles",
+    },
+    {
+      title: "Permissions",
+      icon: <Key className="icon" />,
+      url: "/admin/permissions",
+    },
     {
       title: "Projects",
       icon: <Dumbbell className="icon" />,
@@ -40,7 +51,6 @@ const SidebarMenu = () => {
       icon: <CassetteTape className="icon" />,
       url: "/admin/service",
     },
-
     {
       title: "Products",
       icon: <Rows3 className="icon" />,

@@ -36,24 +36,22 @@ export default function LoginForm() {
         const loggedInUser = await refreshUser();
         console.log("Logged in user:", loggedInUser);
 
-        // Use the role from fetched user for redirect
-        const role = loggedInUser?.role;
-        console.log("User role:", role);
+        // Determine user type from the backend response structure
+        // Backend returns user with admin, client, or employee relationships
+        if (!loggedInUser) {
+          router.push("/login");
+          return;
+        }
 
-        switch (role) {
-          case "ADMIN":
-          case "SUPER_ADMIN":
-            router.push("/admin");
-            break;
-          case "CLIENT":
-            router.push("/client");
-            break;
-          case "EMPLOYEE":
-            router.push("/employee");
-            break;
-          default:
-            router.push("/profile");
-            break;
+        // Check which user type based on the relationships
+        if (loggedInUser.admin) {
+          router.push("/admin");
+        } else if (loggedInUser.client) {
+          router.push("/client");
+        } else if (loggedInUser.employee) {
+          router.push("/employee");
+        } else {
+          router.push("/profile");
         }
       },
     });
