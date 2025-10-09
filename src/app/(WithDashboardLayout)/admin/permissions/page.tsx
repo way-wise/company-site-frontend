@@ -1,6 +1,7 @@
 "use client";
 
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { DeleteModal } from "@/components/shared/DeleteModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -64,6 +65,11 @@ export default function PermissionsPage() {
   const [formGroup, setFormGroup] = useState("");
   const [formName, setFormName] = useState("");
   const [formDescription, setFormDescription] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [permissionToDelete, setPermissionToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const { data: permissionsData, isLoading } = usePermissions({
     search,
@@ -118,12 +124,18 @@ export default function PermissionsPage() {
   };
 
   const handleDeletePermission = (id: string, name: string) => {
-    if (
-      confirm(
-        `Are you sure you want to delete the permission "${name}"? This action cannot be undone.`
-      )
-    ) {
-      deleteMutation.mutate(id);
+    setPermissionToDelete({ id, name });
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (permissionToDelete) {
+      deleteMutation.mutate(permissionToDelete.id, {
+        onSuccess: () => {
+          setDeleteModalOpen(false);
+          setPermissionToDelete(null);
+        },
+      });
     }
   };
 
@@ -223,7 +235,8 @@ export default function PermissionsPage() {
                     setPage(1);
                   }}
                   className="w-64"
-                />-
+                />
+                -
                 <Select
                   value={selectedGroup || "all"}
                   onValueChange={(value) => {
@@ -528,6 +541,19 @@ export default function PermissionsPage() {
             </form>
           </DialogContent>
         </Dialog>
+
+        {/* Delete Confirmation Modal */}
+        <DeleteModal
+          isOpen={deleteModalOpen}
+          onClose={() => {
+            setDeleteModalOpen(false);
+            setPermissionToDelete(null);
+          }}
+          onConfirm={confirmDelete}
+          title="Delete Permission"
+          itemName={permissionToDelete?.name}
+          isLoading={deleteMutation.isPending}
+        />
       </div>
     </PermissionGuard>
   );

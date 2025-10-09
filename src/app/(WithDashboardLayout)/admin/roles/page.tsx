@@ -1,6 +1,7 @@
 "use client";
 
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { DeleteModal } from "@/components/shared/DeleteModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,6 +54,11 @@ export default function RolesPage() {
   const [limit] = useState(10);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingRole, setEditingRole] = useState<Role | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [roleToDelete, setRoleToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const { data: rolesData, isLoading } = useRoles({ search, page, limit });
   const createMutation = useCreateRole();
@@ -101,12 +107,18 @@ export default function RolesPage() {
   };
 
   const handleDeleteRole = (id: string, name: string) => {
-    if (
-      confirm(
-        `Are you sure you want to delete the role "${name}"? This action cannot be undone.`
-      )
-    ) {
-      deleteMutation.mutate(id);
+    setRoleToDelete({ id, name });
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (roleToDelete) {
+      deleteMutation.mutate(roleToDelete.id, {
+        onSuccess: () => {
+          setDeleteModalOpen(false);
+          setRoleToDelete(null);
+        },
+      });
     }
   };
 
@@ -441,6 +453,19 @@ export default function RolesPage() {
             </form>
           </DialogContent>
         </Dialog>
+
+        {/* Delete Confirmation Modal */}
+        <DeleteModal
+          isOpen={deleteModalOpen}
+          onClose={() => {
+            setDeleteModalOpen(false);
+            setRoleToDelete(null);
+          }}
+          onConfirm={confirmDelete}
+          title="Delete Role"
+          itemName={roleToDelete?.name}
+          isLoading={deleteMutation.isPending}
+        />
       </div>
     </PermissionGuard>
   );

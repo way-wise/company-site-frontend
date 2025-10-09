@@ -1,6 +1,7 @@
 "use client";
 
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import { DeleteModal } from "@/components/shared/DeleteModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -69,6 +70,11 @@ export default function RoleDetailsPage() {
   const [isAssignUserModalOpen, setIsAssignUserModalOpen] = useState(false);
   const [searchUser, setSearchUser] = useState("");
   const [hasChanges, setHasChanges] = useState(false);
+  const [removeUserModalOpen, setRemoveUserModalOpen] = useState(false);
+  const [userToRemove, setUserToRemove] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const role = roleData?.data;
   const allPermissions = permissionsData?.data?.result || [];
@@ -152,9 +158,22 @@ export default function RoleDetailsPage() {
     );
   };
 
-  const handleRemoveUser = (userId: string) => {
-    if (confirm("Are you sure you want to remove this role from the user?")) {
-      removeRoleMutation.mutate({ userId, roleId });
+  const handleRemoveUser = (userId: string, userName: string) => {
+    setUserToRemove({ id: userId, name: userName });
+    setRemoveUserModalOpen(true);
+  };
+
+  const confirmRemoveUser = () => {
+    if (userToRemove) {
+      removeRoleMutation.mutate(
+        { userId: userToRemove.id, roleId },
+        {
+          onSuccess: () => {
+            setRemoveUserModalOpen(false);
+            setUserToRemove(null);
+          },
+        }
+      );
     }
   };
 
@@ -439,17 +458,13 @@ export default function RoleDetailsPage() {
                             <Button
                               variant="destructive"
                               size="sm"
-                              onClick={() => handleRemoveUser(user.id)}
+                              onClick={() =>
+                                handleRemoveUser(user.id, user.name)
+                              }
                               disabled={removeRoleMutation.isPending}
                             >
-                              {removeRoleMutation.isPending ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <>
-                                  <UserMinus className="h-4 w-4 mr-1" />
-                                  Remove
-                                </>
-                              )}
+                              <UserMinus className="h-4 w-4 mr-1" />
+                              Remove
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -525,6 +540,20 @@ export default function RoleDetailsPage() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Remove User Confirmation Modal */}
+        <DeleteModal
+          isOpen={removeUserModalOpen}
+          onClose={() => {
+            setRemoveUserModalOpen(false);
+            setUserToRemove(null);
+          }}
+          onConfirm={confirmRemoveUser}
+          title="Remove Role from User"
+          description={`Are you sure you want to remove the "${role?.name}" role from ${userToRemove?.name}? This will revoke all permissions associated with this role.`}
+          isLoading={removeRoleMutation.isPending}
+          confirmText="Yes, Remove"
+        />
       </div>
     </PermissionGuard>
   );
