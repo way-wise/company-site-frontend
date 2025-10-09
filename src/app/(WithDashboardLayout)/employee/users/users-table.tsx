@@ -381,15 +381,19 @@ export const UsersTable = () => {
     },
     {
       header: "Role",
-      accessorKey: "role",
+      accessorKey: "roles",
       cell: ({ row }: { row: { original: User } }) => {
-        const role = row.original.role;
+        const roles = row.original.roles || [];
+
+        // Display the primary role (first role or highest priority)
+        const primaryRole = roles[0]?.name || "No Role";
+
         let badgeProps = {
           variant: "" as BadgeProps["variant"],
           label: "",
         };
 
-        switch (role) {
+        switch (primaryRole) {
           case "SUPER_ADMIN":
             badgeProps = { variant: "secondary", label: "Super Admin" };
             break;
@@ -403,10 +407,17 @@ export const UsersTable = () => {
             badgeProps = { variant: "success", label: "Client" };
             break;
           default:
-            badgeProps = { variant: "secondary", label: role };
+            badgeProps = { variant: "secondary", label: primaryRole };
         }
 
-        return <Badge variant={badgeProps.variant}>{badgeProps.label}</Badge>;
+        return (
+          <div className="flex gap-1">
+            <Badge variant={badgeProps.variant}>{badgeProps.label}</Badge>
+            {roles.length > 1 && (
+              <Badge variant="outline">+{roles.length - 1}</Badge>
+            )}
+          </div>
+        );
       },
     },
     {

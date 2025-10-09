@@ -59,10 +59,8 @@ import { User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Ban,
-  Edit,
   Eye,
   EyeOff,
-  Filter,
   Lock,
   Mail,
   MoreVertical,
@@ -158,7 +156,8 @@ export const UsersTable = () => {
     page: pagination.pageIndex,
     limit: pagination.pageSize,
     search: debouncedSearch,
-    role: roleFilter === "ALL" ? undefined : roleFilter || undefined,
+    // Note: Role filtering removed as backend now uses UserRoleAssignment
+    // Will need backend support for filtering by role name
   });
 
   // Add User Form
@@ -301,24 +300,28 @@ export const UsersTable = () => {
     );
   };
 
-  // Handle Role Update
+  // Handle Role Update - Temporarily disabled (needs backend UserRoleAssignment support)
   const handleRoleUpdate = (values: RoleUpdateFormData) => {
-    if (userId) {
-      updateUserMutation.mutate(
-        {
-          userId,
-          userData: { role: values.role },
-        },
-        {
-          onSuccess: () => {
-            setRoleUpdateModalOpen(false);
-            roleUpdateForm.reset();
-            // Manually refetch the users data to show updated role
-            refetch();
-          },
-        }
-      );
-    }
+    // TODO: Implement role update with UserRoleAssignment API
+    // This will require a new backend endpoint to manage user role assignments
+    console.log("Role update not yet implemented", values);
+    setRoleUpdateModalOpen(false);
+
+    // if (userId) {
+    //   updateUserMutation.mutate(
+    //     {
+    //       userId,
+    //       userData: { roles: [values.role] }, // This needs proper implementation
+    //     },
+    //     {
+    //       onSuccess: () => {
+    //         setRoleUpdateModalOpen(false);
+    //         roleUpdateForm.reset();
+    //         refetch();
+    //       },
+    //     }
+    //   );
+    // }
   };
 
   // Handle User Ban
@@ -381,15 +384,19 @@ export const UsersTable = () => {
     },
     {
       header: "Role",
-      accessorKey: "role",
+      accessorKey: "roles",
       cell: ({ row }: { row: { original: User } }) => {
-        const role = row.original.role;
+        const roles = row.original.roles || [];
+
+        // Display the primary role (first role or highest priority)
+        const primaryRole = roles[0]?.name || "No Role";
+
         let badgeProps = {
           variant: "" as BadgeProps["variant"],
           label: "",
         };
 
-        switch (role) {
+        switch (primaryRole) {
           case "SUPER_ADMIN":
             badgeProps = { variant: "secondary", label: "Super Admin" };
             break;
@@ -403,10 +410,17 @@ export const UsersTable = () => {
             badgeProps = { variant: "success", label: "Client" };
             break;
           default:
-            badgeProps = { variant: "secondary", label: role };
+            badgeProps = { variant: "secondary", label: primaryRole };
         }
 
-        return <Badge variant={badgeProps.variant}>{badgeProps.label}</Badge>;
+        return (
+          <div className="flex gap-1">
+            <Badge variant={badgeProps.variant}>{badgeProps.label}</Badge>
+            {roles.length > 1 && (
+              <Badge variant="outline">+{roles.length - 1}</Badge>
+            )}
+          </div>
+        );
       },
     },
     {
@@ -445,16 +459,17 @@ export const UsersTable = () => {
                     <span>View</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
+                {/* Role update temporarily disabled - needs backend UserRoleAssignment support */}
+                {/* <DropdownMenuItem
                   onClick={() => {
                     setUserId(id);
-                    roleUpdateForm.setValue("role", row.original.role);
+                    roleUpdateForm.setValue("role", row.original.roles[0]?.name || "CLIENT");
                     setRoleUpdateModalOpen(true);
                   }}
                 >
                   <Edit />
                   <span>Update Role</span>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 {!isActive ? (
                   <DropdownMenuItem
                     onClick={() => {
@@ -524,7 +539,8 @@ export const UsersTable = () => {
               onChange={handleSearchChange}
               className="max-w-xs"
             />
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
+            {/* Role filter temporarily disabled - needs backend support for filtering by UserRoleAssignment */}
+            {/* <Select value={roleFilter} onValueChange={setRoleFilter}>
               <SelectTrigger className="w-40">
                 <Filter className="h-4 w-4" />
                 <SelectValue placeholder="Filter by role" />
@@ -536,7 +552,7 @@ export const UsersTable = () => {
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
         </div>
 

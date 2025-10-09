@@ -99,13 +99,17 @@ export default function Navbar() {
   // Not logged in: Register
   const getDashboardLink = () => {
     if (!user) return { label: "Login", href: "/login" };
-    if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
+
+    // Get primary role (first role in the roles array)
+    const primaryRole = user.roles?.[0]?.name;
+
+    if (primaryRole === "ADMIN" || primaryRole === "SUPER_ADMIN") {
       return { label: "Dashboard", href: "/admin" };
     }
-    if (user.role === "CLIENT") {
+    if (primaryRole === "CLIENT") {
       return { label: "Dashboard", href: "/client" };
     }
-    if (user.role === "EMPLOYEE") {
+    if (primaryRole === "EMPLOYEE") {
       return { label: "Dashboard", href: "/employee" };
     }
     // fallback

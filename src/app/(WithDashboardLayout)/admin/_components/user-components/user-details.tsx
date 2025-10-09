@@ -91,10 +91,24 @@ const UserDetails = ({ id }: { id: string }) => {
                 Since {user?.createdAt && formatDate(user?.createdAt)}
               </p>
               <div className="flex items-center gap-2 py-3">
-                <div className="flex items-center gap-1.5 rounded-full bg-muted py-1.5 pr-2.5 pl-2 text-muted-foreground">
-                  <ShieldUser className="size-6 stroke-[1.5]" />
-                  <span className="capitalize">{user?.role}</span>
-                </div>
+                {user?.roles && user.roles.length > 0 ? (
+                  user.roles.map((roleAssignment) => (
+                    <div
+                      key={roleAssignment.id}
+                      className="flex items-center gap-1.5 rounded-full bg-muted py-1.5 pr-2.5 pl-2 text-muted-foreground"
+                    >
+                      <ShieldUser className="size-6 stroke-[1.5]" />
+                      <span className="capitalize">
+                        {roleAssignment.name.replace(/_/g, " ")}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex items-center gap-1.5 rounded-full bg-muted py-1.5 pr-2.5 pl-2 text-muted-foreground">
+                    <ShieldUser className="size-6 stroke-[1.5]" />
+                    <span>No Role</span>
+                  </div>
+                )}
                 {!user?.isActive ? (
                   <div className="flex items-center gap-1.5 rounded-full bg-destructive/70 py-1.5 pr-2.5 pl-2 text-white">
                     <CircleX className="size-6 stroke-[1.5]" />
