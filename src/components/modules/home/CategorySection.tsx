@@ -5,7 +5,17 @@ const CategorySection = () => {
   const categories = categoryData;
 
   return (
-    <section className="w-full py-6 ">
+    <section
+      className="w-full py-6 relative z-10 bg-white  dark:bg-gray-dark "
+      style={{
+        backgroundImage: 'url("/footer-bg.jpg")',
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundColor: "#ddd",
+      }}
+    >
+      <div className="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-t from-white/10 via-white/50 to-white dark:from-dark/10 dark:via-dark/90 dark:to-dark"></div>
+
       <div className="  container">
         <div className="flex flex-col lg:flex-row justify-start items-center w-full gap-2">
           <div className=" font-semibold text-center">

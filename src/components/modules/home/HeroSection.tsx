@@ -74,7 +74,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <div className="text-center text-white pb-4 md:pb-0 text-[20px] lg:text-[26px]  xl:text-[30px] font-semibold px-2 md:absolute bottom-2 right-8 md:right-8 xl:right-20 2xl:right-40 ">
+      <div className="text-center text-white pb-4 md:pb-0 text-[20px] lg:text-[26px]  xl:text-[30px] font-semibold px-2 md:absolute bottom-2 right-8 md:right-6 xl:right-20 2xl:right-40 ">
         <h2>Inspiring Innovation with AI...</h2>
       </div>
     </section>
