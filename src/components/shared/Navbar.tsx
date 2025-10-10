@@ -90,33 +90,37 @@ export default function Navbar() {
     },
     { label: "Design Portfolio", href: "https://design.waywisetech.com/" },
   ];
-  // Logic for user portal links based on user role
-  // Roles: ADMIN, SUPER_ADMIN, CLIENT, EMPLOYEE
-  // ADMIN/SUPER_ADMIN: dashboard link to /admin
-  // CLIENT: dashboard link to /client
-  // EMPLOYEE: dashboard link to /employee
-  // Not logged in: Register
-  const getDashboardLink = () => {
-    if (!user) return { label: "Login", href: "/login" };
 
-    // Get primary role (first role in the roles array)
-    // Note: Backend returns Role[] (transformed from UserRoleAssignment)
-    const primaryRole = user.roles?.[0]?.name;
+  const getDashboardLinks = () => {
+    if (!user) return [{ label: "Login", href: "/login" }];
 
-    if (primaryRole === "ADMIN" || primaryRole === "SUPER_ADMIN") {
-      return { label: "Dashboard", href: "/admin" };
+    const dashboardLinks: { label: string; href: string }[] = [];
+    const userRoles = user.roles?.map((userRole) => userRole.role.name) || [];
+
+    // Check for ADMIN or SUPER_ADMIN role
+    if (userRoles.includes("ADMIN") || userRoles.includes("SUPER_ADMIN")) {
+      dashboardLinks.push({ label: "Admin Dashboard", href: "/admin" });
     }
-    if (primaryRole === "CLIENT") {
-      return { label: "Dashboard", href: "/client" };
+
+    // Check for EMPLOYEE role
+    if (userRoles.includes("EMPLOYEE")) {
+      dashboardLinks.push({ label: "Employee Dashboard", href: "/employee" });
     }
-    if (primaryRole === "EMPLOYEE") {
-      return { label: "Dashboard", href: "/employee" };
+
+    // Check for CLIENT role
+    if (userRoles.includes("CLIENT")) {
+      dashboardLinks.push({ label: "Client Dashboard", href: "/client" });
     }
-    // fallback
-    return { label: "Profile", href: "/profile" };
+
+    // If user has no recognized roles, show profile link
+    if (dashboardLinks.length === 0) {
+      dashboardLinks.push({ label: "Profile", href: "/profile" });
+    }
+
+    return dashboardLinks;
   };
 
-  const usersPortalLinks = [getDashboardLink()];
+  const usersPortalLinks = getDashboardLinks();
 
   // Function to check if a route is active
   const isRouteActive = (href: string) => {
@@ -481,6 +485,11 @@ export default function Navbar() {
                             {item.label}
                           </a>
                         ))}
+                        {user && (
+                          <div className="pt-2">
+                            <LogoutButton />
+                          </div>
+                        )}
                       </div>
                     </CollapsibleContent>
                   </Collapsible>
@@ -525,11 +534,6 @@ export default function Navbar() {
                   <Button className=" bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
                     <Link href="/contact-us">Get a Free Quote</Link>
                   </Button>
-                  {user && (
-                    <li>
-                      <LogoutButton />
-                    </li>
-                  )}
                 </nav>
               </SheetContent>
             </Sheet>
