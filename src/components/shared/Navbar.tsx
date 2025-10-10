@@ -100,8 +100,8 @@ export default function Navbar() {
     if (!user) return { label: "Login", href: "/login" };
 
     // Get primary role (first role in the roles array)
-    // Note: Backend returns UserRoleAssignment[], so we need to access role.name
-    const primaryRole = user.roles?.[0]?.role?.name;
+    // Note: Backend returns Role[] (transformed from UserRoleAssignment)
+    const primaryRole = user.roles?.[0]?.name;
 
     if (primaryRole === "ADMIN" || primaryRole === "SUPER_ADMIN") {
       return { label: "Dashboard", href: "/admin" };

@@ -45,6 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useRoles } from "@/hooks/useRoleMutations";
 import {
   useBanUser,
   useCreateAdmin,
@@ -156,8 +157,7 @@ export const UsersTable = () => {
     page: pagination.pageIndex,
     limit: pagination.pageSize,
     search: debouncedSearch,
-    // Note: Role filtering removed as backend now uses UserRoleAssignment
-    // Will need backend support for filtering by role name
+    role: roleFilter === "ALL" ? undefined : roleFilter,
   });
 
   // Add User Form
@@ -228,6 +228,18 @@ export const UsersTable = () => {
       pageSize: 10,
     });
   };
+
+  const handleRoleFilterChange = (value: string) => {
+    setRoleFilter(value);
+    setPagination({
+      pageIndex: 1,
+      pageSize: 10,
+    });
+  };
+
+  // Fetch all roles for filter dropdown
+  const { data: rolesData } = useRoles({ limit: 100 });
+  const allRoles = rolesData?.data?.result || [];
 
   // Custom hooks for mutations
   const createUserMutation = useCreateUser();
@@ -389,7 +401,7 @@ export const UsersTable = () => {
         const roles = row.original.roles || [];
 
         // Display the primary role (first role or highest priority)
-        const primaryRole = roles[0]?.role?.name || "No Role";
+        const primaryRole = roles[0]?.name || "No Role";
 
         let badgeProps = {
           variant: "" as BadgeProps["variant"],
@@ -463,7 +475,7 @@ export const UsersTable = () => {
                 {/* <DropdownMenuItem
                   onClick={() => {
                     setUserId(id);
-                    roleUpdateForm.setValue("role", row.original.roles[0]?.role?.name || "CLIENT");
+                    roleUpdateForm.setValue("role", row.original.roles[0]?.name || "CLIENT");
                     setRoleUpdateModalOpen(true);
                   }}
                 >
@@ -539,20 +551,19 @@ export const UsersTable = () => {
               onChange={handleSearchChange}
               className="max-w-xs"
             />
-            {/* Role filter temporarily disabled - needs backend support for filtering by UserRoleAssignment */}
-            {/* <Select value={roleFilter} onValueChange={setRoleFilter}>
+            <Select value={roleFilter} onValueChange={handleRoleFilterChange}>
               <SelectTrigger className="w-40">
-                <Filter className="h-4 w-4" />
                 <SelectValue placeholder="Filter by role" />
               </SelectTrigger>
               <SelectContent>
-                {ROLE_FILTER_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                <SelectItem value="ALL">All Roles</SelectItem>
+                {allRoles.map((role) => (
+                  <SelectItem key={role.id} value={role.name}>
+                    {role.name.replace("_", " ")}
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select> */}
+            </Select>
           </div>
         </div>
 

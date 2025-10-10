@@ -33,6 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDebounce } from "@/hooks/useDebounce";
 import {
   useCreatePermission,
   useDeletePermission,
@@ -55,6 +56,7 @@ import { useState } from "react";
 
 export default function PermissionsPage() {
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
   const [selectedGroup, setSelectedGroup] = useState<string>("");
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
@@ -72,7 +74,7 @@ export default function PermissionsPage() {
   } | null>(null);
 
   const { data: permissionsData, isLoading } = usePermissions({
-    search,
+    search: debouncedSearch,
     group: selectedGroup || undefined,
     page,
     limit,
@@ -236,7 +238,6 @@ export default function PermissionsPage() {
                   }}
                   className="w-64"
                 />
-                -
                 <Select
                   value={selectedGroup || "all"}
                   onValueChange={(value) => {
@@ -274,11 +275,11 @@ export default function PermissionsPage() {
                   No permissions found
                 </h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  {search || selectedGroup
+                  {debouncedSearch || selectedGroup
                     ? "Try adjusting your filters"
                     : "Get started by creating a new permission"}
                 </p>
-                {!search && !selectedGroup && (
+                {!debouncedSearch && !selectedGroup && (
                   <div className="mt-6">
                     <Button
                       onClick={() => {
@@ -399,21 +400,18 @@ export default function PermissionsPage() {
                               (p >= page - 1 && p <= page + 1)
                           )
                           .map((p, idx, arr) => (
-                            <>
+                            <div key={p} className="flex items-center gap-1">
                               {idx > 0 && arr[idx - 1] !== p - 1 && (
-                                <span key={`ellipsis-${p}`} className="px-2">
-                                  ...
-                                </span>
+                                <span className="px-2">...</span>
                               )}
                               <Button
-                                key={p}
                                 variant={p === page ? "default" : "outline"}
                                 size="sm"
                                 onClick={() => setPage(p)}
                               >
                                 {p}
                               </Button>
-                            </>
+                            </div>
                           ))}
                       </div>
                       <Button

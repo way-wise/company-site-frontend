@@ -96,7 +96,7 @@ export interface User {
   name: string;
   contactNumber: string;
   gender: "MALE" | "FEMALE";
-  roles: UserRoleAssignment[]; // Fixed: Backend returns UserRoleAssignment[], not Role[]
+  roles: Role[]; // Backend transforms UserRoleAssignment to Role[] in response
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

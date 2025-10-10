@@ -90,7 +90,7 @@ export default function RoleDetailsPage() {
   // Get all users for filtering available users (users without this role)
   const allUsers = allUsersData?.data || [];
   const availableUsers = allUsers.filter(
-    (user: User) => !user.roles?.some((r) => r.roleId === roleId)
+    (user: User) => !user.roles?.some((r) => r.id === roleId)
   );
 
   // Filter available users based on search

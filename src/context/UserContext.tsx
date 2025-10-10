@@ -112,7 +112,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Check if user has a specific role
   const hasRole = useCallback(
     (roleName: string): boolean => {
-      return user?.roles?.some((r) => r.role.name === roleName) || false;
+      return user?.roles?.some((r) => r.name === roleName) || false;
     },
     [user]
   );
@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Check if user has any of the specified roles
   const hasAnyRole = useCallback(
     (roleNames: string[]): boolean => {
-      return user?.roles?.some((r) => roleNames.includes(r.role.name)) || false;
+      return user?.roles?.some((r) => roleNames.includes(r.name)) || false;
     },
     [user]
   );

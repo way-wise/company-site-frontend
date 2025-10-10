@@ -26,6 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDebounce } from "@/hooks/useDebounce";
 import {
   useCreateRole,
   useDeleteRole,
@@ -50,6 +51,7 @@ import { useState } from "react";
 export default function RolesPage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -60,7 +62,11 @@ export default function RolesPage() {
     name: string;
   } | null>(null);
 
-  const { data: rolesData, isLoading } = useRoles({ search, page, limit });
+  const { data: rolesData, isLoading } = useRoles({
+    search: debouncedSearch,
+    page,
+    limit,
+  });
   const createMutation = useCreateRole();
   const updateMutation = useUpdateRole();
   const deleteMutation = useDeleteRole();
@@ -227,11 +233,11 @@ export default function RolesPage() {
                   No roles found
                 </h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  {search
+                  {debouncedSearch
                     ? "Try adjusting your search"
                     : "Get started by creating a new role"}
                 </p>
-                {!search && (
+                {!debouncedSearch && (
                   <div className="mt-6">
                     <Button
                       onClick={() => {
@@ -356,19 +362,18 @@ export default function RolesPage() {
                               (p >= page - 1 && p <= page + 1)
                           )
                           .map((p, idx, arr) => (
-                            <>
+                            <div key={p} className="flex items-center gap-1">
                               {idx > 0 && arr[idx - 1] !== p - 1 && (
                                 <span className="px-2">...</span>
                               )}
                               <Button
-                                key={p}
                                 variant={p === page ? "default" : "outline"}
                                 size="sm"
                                 onClick={() => setPage(p)}
                               >
                                 {p}
                               </Button>
-                            </>
+                            </div>
                           ))}
                       </div>
                       <Button
