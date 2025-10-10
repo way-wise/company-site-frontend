@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/UserContext";
-import { ChevronDown, Menu, Phone } from "lucide-react";
+import { ChevronDown, Menu, Phone, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -35,7 +35,6 @@ export default function Navbar() {
   const { user } = useAuth();
   const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  console.log(user);
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -81,7 +80,7 @@ export default function Navbar() {
       href: "/contact-us",
     },
   ];
-  console.log(user);
+
   const portfolioLinks = [
     { label: "Web Portfolio", href: "https://portfolio.waywisetech.com/" },
     { label: "AI/ML Portfolio", href: "https://showcase.waywisetech.com/" },
@@ -101,7 +100,8 @@ export default function Navbar() {
     if (!user) return { label: "Login", href: "/login" };
 
     // Get primary role (first role in the roles array)
-    const primaryRole = user.roles?.[0]?.name;
+    // Note: Backend returns UserRoleAssignment[], so we need to access role.name
+    const primaryRole = user.roles?.[0]?.role?.name;
 
     if (primaryRole === "ADMIN" || primaryRole === "SUPER_ADMIN") {
       return { label: "Dashboard", href: "/admin" };
@@ -265,49 +265,49 @@ export default function Navbar() {
                 </NavigationMenuList>
               </NavigationMenu>
               {/* Portfolio Dropdown */}
-              {/* <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger
-                    id="users-portal-trigger"
-                    className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
-                      pathname.startsWith("/users-portal")
-                        ? "text-brand font-semibold"
-                        : "text-[#1B3447] hover:text-brand"
-                    }`}
-                  >
-                    <UserRound />
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[200px] gap-3 p-2">
-                      {usersPortalLinks.map((item) => (
-                        <li key={item.href}>
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href={item.href}
-                              className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
-                                pathname === item.href
-                                  ? "bg-accent text-brand font-semibold"
-                                  : ""
-                              }`}
-                            >
-                              <div className="text-sm font-medium leading-none">
-                                {item.label}
-                              </div>
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                      ))}
-                      {user && (
-                        <li>
-                          <LogoutButton />
-                        </li>
-                      )}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu> */}
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger
+                      id="users-portal-trigger"
+                      className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
+                        pathname.startsWith("/users-portal")
+                          ? "text-brand font-semibold"
+                          : "text-[#1B3447] hover:text-brand"
+                      }`}
+                    >
+                      <UserRound />
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[200px] gap-3 p-2">
+                        {usersPortalLinks.map((item) => (
+                          <li key={item.href}>
+                            <NavigationMenuLink asChild>
+                              <Link
+                                href={item.href}
+                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                  pathname === item.href
+                                    ? "bg-accent text-brand font-semibold"
+                                    : ""
+                                }`}
+                              >
+                                <div className="text-sm font-medium leading-none">
+                                  {item.label}
+                                </div>
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                        {user && (
+                          <li>
+                            <LogoutButton />
+                          </li>
+                        )}
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </nav>
 
             {/* Desktop Phone Section */}
@@ -441,49 +441,49 @@ export default function Navbar() {
                       </div>
                     </CollapsibleContent>
                   </Collapsible>
-                  {/* <Collapsible
-                  open={isUsersPortalOpen}
-                  onOpenChange={setIsUsersPortalOpen}
-                >
-                  <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
-                    <span>Users Portal</span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-300 ${
-                        isUsersPortalOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </CollapsibleTrigger>
+                  <Collapsible
+                    open={isUsersPortalOpen}
+                    onOpenChange={setIsUsersPortalOpen}
+                  >
+                    <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
+                      <span>Users Portal</span>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-300 ${
+                          isUsersPortalOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </CollapsibleTrigger>
 
-                  <CollapsibleContent className="pt-3 transition-all duration-700 ease-in-out">
-                    <div className="pl-4 space-y-3">
-                      {usersPortalLinks.map((item) => (
-                        <a
-                          key={item.href}
-                          href={item.href}
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setIsMobileMenuOpen(false);
-                            setTimeout(() => {
-                              window.open(
-                                item.href,
-                                "_self",
-                                "noopener,noreferrer"
-                              );
-                            }, 100);
-                          }}
-                          className={`block text-base transition-colors duration-700 ${
-                            pathname === item.href
-                              ? "text-brand font-semibold"
-                              : "text-gray-600 hover:text-brand"
-                          }`}
-                        >
-                          {item.label}
-                        </a>
-                      ))}
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible> */}
+                    <CollapsibleContent className="pt-3 transition-all duration-700 ease-in-out">
+                      <div className="pl-4 space-y-3">
+                        {usersPortalLinks.map((item) => (
+                          <a
+                            key={item.href}
+                            href={item.href}
+                            rel="noopener noreferrer"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setIsMobileMenuOpen(false);
+                              setTimeout(() => {
+                                window.open(
+                                  item.href,
+                                  "_self",
+                                  "noopener,noreferrer"
+                                );
+                              }, 100);
+                            }}
+                            className={`block text-base transition-colors duration-700 ${
+                              pathname === item.href
+                                ? "text-brand font-semibold"
+                                : "text-gray-600 hover:text-brand"
+                            }`}
+                          >
+                            {item.label}
+                          </a>
+                        ))}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
 
                   <div
                     className="flex lg:hidden gap-2  rounded-md cursor-pointer"

@@ -26,6 +26,8 @@ export const userQueryKeys = {
   lists: () => [...userQueryKeys.all, "list"] as const,
   list: (params: UsersQueryParams) =>
     [...userQueryKeys.lists(), params] as const,
+  byRole: (roleId: string, params: Omit<UsersQueryParams, "role">) =>
+    [...userQueryKeys.all, "by-role", roleId, params] as const,
   details: () => [...userQueryKeys.all, "detail"] as const,
   detail: (id: string) => [...userQueryKeys.details(), id] as const,
   stats: () => [...userQueryKeys.all, "stats"] as const,
@@ -36,6 +38,22 @@ export const useUsers = (params: UsersQueryParams) => {
   return useQuery({
     queryKey: userQueryKeys.list(params),
     queryFn: () => userService.getAllUsers(params),
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// Hook to fetch users by role
+export const useUsersByRole = (
+  roleId: string,
+  params: Omit<UsersQueryParams, "role">,
+  enabled = true
+) => {
+  return useQuery({
+    queryKey: userQueryKeys.byRole(roleId, params),
+    queryFn: () => userService.getUsersByRole(roleId, params),
+    enabled: enabled && !!roleId,
     staleTime: 5 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,

@@ -35,7 +35,7 @@ import {
   useRemoveRoleFromUser,
   useRole,
 } from "@/hooks/useRoleMutations";
-import { useUsers } from "@/hooks/useUserMutations";
+import { useUsers, useUsersByRole } from "@/hooks/useUserMutations";
 import { Permission, User } from "@/types";
 import {
   ArrowLeft,
@@ -61,7 +61,13 @@ export default function RoleDetailsPage() {
   const { data: roleData, isLoading: isLoadingRole } = useRole(roleId);
   const { data: permissionsData, isLoading: isLoadingPermissions } =
     usePermissions({ page: 1, limit: 100 });
-  const { data: usersData } = useUsers({ page: 1, limit: 100 });
+  // Fetch users with this specific role using the new API
+  const { data: usersWithRoleData } = useUsersByRole(roleId, {
+    page: 1,
+    limit: 100,
+  });
+  // Fetch all users for assignment modal (users without this role)
+  const { data: allUsersData } = useUsers({ page: 1, limit: 100 });
   const assignPermissionsMutation = useAssignPermissionsToRole();
   const assignRoleMutation = useAssignRoleToUser();
   const removeRoleMutation = useRemoveRoleFromUser();
@@ -78,16 +84,13 @@ export default function RoleDetailsPage() {
 
   const role = roleData?.data;
   const allPermissions = permissionsData?.data?.result || [];
-  const allUsers = usersData?.data || [];
+  // Users with this specific role (from dedicated API)
+  const usersWithRole = usersWithRoleData?.data || [];
 
-  // Get users with this role
-  const usersWithRole =
-    allUsers.filter((user: User) => user.roles?.some((r) => r.id === roleId)) ||
-    [];
-
-  // Get users without this role (for assignment)
+  // Get all users for filtering available users (users without this role)
+  const allUsers = allUsersData?.data || [];
   const availableUsers = allUsers.filter(
-    (user: User) => !user.roles?.some((r) => r.id === roleId)
+    (user: User) => !user.roles?.some((r) => r.roleId === roleId)
   );
 
   // Filter available users based on search

@@ -15,6 +15,25 @@ export interface PaginatedUsersResponse {
   };
 }
 
+// Helper function to transform API response to PaginatedUsersResponse
+const transformUsersPaginationResponse = (
+  response: any
+): PaginatedUsersResponse => {
+  const { result, meta } = response.data.data;
+  const totalPages = Math.ceil(meta.total / meta.limit);
+
+  return {
+    data: result,
+    pagination: {
+      currentPage: meta.page,
+      totalPages,
+      totalUsers: meta.total,
+      hasNextPage: meta.page < totalPages,
+      hasPrevPage: meta.page > 1,
+    },
+  };
+};
+
 export interface CreateUserData {
   name: string;
   email: string;
@@ -59,37 +78,21 @@ export const userService = {
     params: UsersQueryParams
   ): Promise<PaginatedUsersResponse> => {
     const { page, limit, search, role } = params;
-    let url = `/user/all-users?page=${page}&limit=${limit}`;
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
 
     if (search?.trim()) {
-      url += `&q=${encodeURIComponent(search.trim())}`;
+      queryParams.append("q", search.trim());
     }
 
     if (role) {
-      url += `&role=${encodeURIComponent(role)}`;
+      queryParams.append("role", role);
     }
 
-    const response = await apiClient.get(url);
-
-    // Transform the response to match frontend expectations
-    const transformedResponse = {
-      data: response.data.data.result,
-      pagination: {
-        currentPage: response.data.data.meta.page,
-        totalPages: Math.ceil(
-          response.data.data.meta.total / response.data.data.meta.limit
-        ),
-        totalUsers: response.data.data.meta.total,
-        hasNextPage:
-          response.data.data.meta.page <
-          Math.ceil(
-            response.data.data.meta.total / response.data.data.meta.limit
-          ),
-        hasPrevPage: response.data.data.meta.page > 1,
-      },
-    };
-
-    return transformedResponse;
+    const response = await apiClient.get(`/user/all-users?${queryParams}`);
+    return transformUsersPaginationResponse(response);
   },
 
   // Get single user by ID
@@ -164,5 +167,26 @@ export const userService = {
   > => {
     const response = await apiClient.get("/user/stats");
     return response.data;
+  },
+
+  // Get users by role ID
+  getUsersByRole: async (
+    roleId: string,
+    params: Omit<UsersQueryParams, "role">
+  ): Promise<PaginatedUsersResponse> => {
+    const { page, limit, search } = params;
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (search?.trim()) {
+      queryParams.append("q", search.trim());
+    }
+
+    const response = await apiClient.get(
+      `/user/by-role/${roleId}?${queryParams}`
+    );
+    return transformUsersPaginationResponse(response);
   },
 };
