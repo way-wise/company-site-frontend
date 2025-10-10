@@ -25,7 +25,10 @@ export const ProtectedRoute = ({
         return;
       }
 
-      if (requiredRole && !user?.roles?.some((r) => r.name === requiredRole)) {
+      if (
+        requiredRole &&
+        !user?.roles?.some((r) => r.role.name === requiredRole)
+      ) {
         router.push("/");
         return;
       }
@@ -44,7 +47,7 @@ export const ProtectedRoute = ({
     return fallback;
   }
 
-  if (requiredRole && !user?.roles?.some((r) => r.name === requiredRole)) {
+  if (requiredRole && !user?.roles?.some((r) => r.role.name === requiredRole)) {
     return fallback;
   }
 

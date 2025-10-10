@@ -379,7 +379,7 @@ export const UsersTable = () => {
         const roles = row.original.roles || [];
 
         // Display the primary role (first role or highest priority)
-        const primaryRole = roles[0]?.name || "No Role";
+        const primaryRole = roles[0]?.role.name || "No Role";
 
         let badgeProps = {
           variant: "" as BadgeProps["variant"],
