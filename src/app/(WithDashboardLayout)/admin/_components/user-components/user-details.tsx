@@ -99,7 +99,7 @@ const UserDetails = ({ id }: { id: string }) => {
                     >
                       <ShieldUser className="size-6 stroke-[1.5]" />
                       <span className="capitalize">
-                        {role.name.replace(/_/g, " ")}
+                        {role.role.name.replace(/_/g, " ")}
                       </span>
                     </div>
                   ))

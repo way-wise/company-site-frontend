@@ -2,6 +2,7 @@
 
 import apiClient from "@/lib/axios";
 import { ApiResponse, RegisterCredentials, User } from "@/types";
+import { AxiosResponse } from "axios";
 
 // Types for user management
 export interface PaginatedUsersResponse {
@@ -15,9 +16,27 @@ export interface PaginatedUsersResponse {
   };
 }
 
+// API Response structure for paginated users
+interface UsersPaginationApiMeta {
+  total: number;
+  limit: number;
+  page: number;
+}
+
+interface UsersPaginationApiData {
+  result: User[];
+  meta: UsersPaginationApiMeta;
+}
+
+interface UsersPaginationApiResponse {
+  success: boolean;
+  message: string;
+  data: UsersPaginationApiData;
+}
+
 // Helper function to transform API response to PaginatedUsersResponse
 const transformUsersPaginationResponse = (
-  response: any
+  response: AxiosResponse<UsersPaginationApiResponse>
 ): PaginatedUsersResponse => {
   const { result, meta } = response.data.data;
   const totalPages = Math.ceil(meta.total / meta.limit);
