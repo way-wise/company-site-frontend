@@ -146,7 +146,7 @@ export interface RegisterCredentials {
   };
 }
 
-export type Project = {
+export type PortfolioProject = {
   id: number;
   title: string;
   description: string;
@@ -253,4 +253,246 @@ export interface AssignRoleToUserData {
 
 export interface AssignPermissionsToRoleData {
   permissionIds: string[];
+}
+
+// Project Types
+export interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  status: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED";
+  userProfileId: string;
+  createdAt: string;
+  updatedAt: string;
+  userProfile?: {
+    id: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+  milestones?: Milestone[];
+  _count?: {
+    milestones: number;
+  };
+}
+
+export interface ProjectFormData {
+  name: string;
+  description?: string;
+  status?: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED";
+  userProfileId: string;
+}
+
+export interface ProjectStats {
+  totalProjects: number;
+  activeProjects: number;
+  completedProjects: number;
+  pendingProjects: number;
+}
+
+export interface ProjectsQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  status?: string;
+  userProfileId?: string;
+}
+
+// Milestone Types
+export interface Milestone {
+  id: string;
+  name: string;
+  description?: string;
+  status:
+    | "PENDING"
+    | "ONGOING"
+    | "COMPLETED"
+    | "REVIEW"
+    | "APPROVED"
+    | "REJECTED";
+  projectId: string;
+  createdAt: string;
+  updatedAt: string;
+  project?: {
+    id: string;
+    name: string;
+    status: string;
+  };
+  employeeMilestones?: EmployeeMilestone[];
+  serviceMilestones?: ServiceMilestone[];
+  Task?: Task[];
+  _count?: {
+    employeeMilestones: number;
+    serviceMilestones: number;
+    Task: number;
+  };
+}
+
+export interface EmployeeMilestone {
+  id: string;
+  userProfileId: string;
+  milestoneId: string;
+  status: "ASSIGNED" | "ONGOING" | "COMPLETED" | "RELEASED";
+  createdAt: string;
+  updatedAt: string;
+  userProfile?: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface ServiceMilestone {
+  id: string;
+  serviceId: string;
+  milestoneId: string;
+  createdAt: string;
+  updatedAt: string;
+  service?: {
+    id: string;
+    name: string;
+    image?: string;
+    description?: string;
+  };
+}
+
+export interface MilestoneFormData {
+  name: string;
+  description?: string;
+  status?:
+    | "PENDING"
+    | "ONGOING"
+    | "COMPLETED"
+    | "REVIEW"
+    | "APPROVED"
+    | "REJECTED";
+  projectId: string;
+}
+
+export interface MilestoneStats {
+  totalMilestones: number;
+  pendingMilestones: number;
+  ongoingMilestones: number;
+  completedMilestones: number;
+}
+
+export interface MilestonesQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  status?: string;
+  projectId?: string;
+}
+
+// Task Types
+export type TaskStatus = "TODO" | "IN_PROGRESS" | "BLOCKED" | "REVIEW" | "DONE";
+export type Priority = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  milestoneId: string;
+  creatorId?: string;
+  status: "TODO" | "IN_PROGRESS" | "BLOCKED" | "REVIEW" | "DONE";
+  priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  progress: number;
+  estimatedHours?: number;
+  spentHours?: number;
+  startedAt?: string;
+  completedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  milestone?: {
+    id: string;
+    name: string;
+    status: string;
+    project?: {
+      id: string;
+      name: string;
+    };
+  };
+  creator?: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+  assignments?: TaskAssignment[];
+  comments?: TaskComment[];
+  _count?: {
+    comments: number;
+    assignments: number;
+  };
+}
+
+export interface TaskAssignment {
+  id: string;
+  taskId: string;
+  userProfileId: string;
+  assignedAt: string;
+  role?: string;
+  userProfile?: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface TaskComment {
+  id: string;
+  taskId: string;
+  content: string;
+  userProfileId: string;
+  createdAt: string;
+  userProfile?: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface TaskFormData {
+  title: string;
+  description?: string;
+  milestoneId: string;
+  creatorId?: string;
+  status?: "TODO" | "IN_PROGRESS" | "BLOCKED" | "REVIEW" | "DONE";
+  priority?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  progress?: number;
+  estimatedHours?: number;
+  spentHours?: number;
+}
+
+export interface TaskStats {
+  totalTasks: number;
+  todoTasks: number;
+  inProgressTasks: number;
+  blockedTasks: number;
+  reviewTasks: number;
+  doneTasks: number;
+}
+
+export interface TasksQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  status?: string;
+  priority?: string;
+  milestoneId?: string;
+  creatorId?: string;
 }

@@ -1,14 +1,15 @@
 import {
+  CalendarDays,
   CassetteTape,
+  CheckSquare,
   Dumbbell,
   Home,
   Key,
   LayoutGrid,
+  Milestone,
+  Settings,
   Shield,
   UsersRound,
-  Settings,
-  Briefcase,
-  CalendarDays,
 } from "lucide-react";
 
 export interface MenuItem {
@@ -71,6 +72,18 @@ export const menuConfig: MenuItem[] = [
     permission: "read_project",
   },
   {
+    title: "Milestones",
+    icon: Milestone,
+    url: "/dashboard/milestones",
+    permission: "read_milestone",
+  },
+  {
+    title: "Tasks",
+    icon: CheckSquare,
+    url: "/dashboard/tasks",
+    permission: "read_task",
+  },
+  {
     title: "Leave Management",
     icon: CalendarDays,
     url: "/dashboard/leave",
@@ -83,4 +96,3 @@ export const menuConfig: MenuItem[] = [
     // Always visible to authenticated users
   },
 ];
-

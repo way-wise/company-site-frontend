@@ -1,5 +1,5 @@
 import SectionTitle from "@/components/modules/home/SectionTitle";
-import { Project } from "@/types";
+import { PortfolioProject } from "@/types";
 import ProjectsCard from "./ProjectsCard";
 
 // Import project images
@@ -10,7 +10,7 @@ import seatWavesImg from "@/assets/images/projects/seat-wave.png";
 import voiceImg from "@/assets/images/projects/voice.png";
 import weOutImg from "@/assets/images/projects/weout1.png";
 const Projects = () => {
-  const projects: Project[] = [
+  const projects: PortfolioProject[] = [
     {
       id: 1,
       title: "SeatWaves Ticket Marketplace",

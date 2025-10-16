@@ -1,11 +1,11 @@
-import { Project } from "@/types";
+import { PortfolioProject } from "@/types";
 import { MoveUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 interface ProjectsCardProps {
-  project: Project;
+  project: PortfolioProject;
   className?: string;
 }
 
