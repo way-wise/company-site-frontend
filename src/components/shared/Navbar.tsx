@@ -91,36 +91,10 @@ export default function Navbar() {
     { label: "Design Portfolio", href: "https://design.waywisetech.com/" },
   ];
 
-  const getDashboardLinks = () => {
-    if (!user) return [{ label: "Login", href: "/login" }];
-
-    const dashboardLinks: { label: string; href: string }[] = [];
-    const userRoles = user.roles?.map((userRole) => userRole.role.name) || [];
-
-    // Check for ADMIN or SUPER_ADMIN role
-    if (userRoles.includes("ADMIN") || userRoles.includes("SUPER_ADMIN")) {
-      dashboardLinks.push({ label: "Admin Dashboard", href: "/admin" });
-    }
-
-    // Check for EMPLOYEE role
-    if (userRoles.includes("EMPLOYEE")) {
-      dashboardLinks.push({ label: "Employee Dashboard", href: "/employee" });
-    }
-
-    // Check for CLIENT role
-    if (userRoles.includes("CLIENT")) {
-      dashboardLinks.push({ label: "Client Dashboard", href: "/client" });
-    }
-
-    // If user has no recognized roles, show profile link
-    if (dashboardLinks.length === 0) {
-      dashboardLinks.push({ label: "Profile", href: "/profile" });
-    }
-
-    return dashboardLinks;
-  };
-
-  const usersPortalLinks = getDashboardLinks();
+  const usersPortalLinks = [
+    { label: "Profile", href: "/profile" },
+    { label: "Dashboard", href: "/dashboard" },
+  ];
 
   // Function to check if a route is active
   const isRouteActive = (href: string) => {
