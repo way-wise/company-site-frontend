@@ -15,7 +15,7 @@ export const projectService = {
   // Get all projects with pagination and search
   getAllProjects: async (
     params: ProjectsQueryParams
-  ): Promise<PaginatedResponse<Project>> => {
+  ): Promise<ApiResponse<PaginatedResponse<Project>>> => {
     const { page, limit, search, status, userProfileId } = params;
     let url = `/projects?page=${page}&limit=${limit}`;
 
@@ -74,6 +74,3 @@ export const projectService = {
     return response.data;
   },
 };
-
-
-

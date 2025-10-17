@@ -5,6 +5,7 @@ import {
   createProjectSchema,
 } from "@/components/modules/admin/projectValidation";
 import { Button } from "@/components/ui/button";
+import { Combobox, ComboboxOption } from "@/components/ui/combobox";
 import { DataTable } from "@/components/ui/data-table";
 import {
   DropdownMenu,
@@ -41,7 +42,8 @@ import {
   useDeleteProject,
   useProjects,
 } from "@/hooks/useProjectMutations";
-import { Project } from "@/types";
+import { useUsers } from "@/hooks/useUserMutations";
+import { Project, User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MoreVertical, Pencil, Plus, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -84,6 +86,10 @@ export const ProjectTable = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
+  // User search state
+  const [userSearch, setUserSearch] = useState("");
+  const [debouncedUserSearch, setDebouncedUserSearch] = useState("");
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -91,6 +97,14 @@ export const ProjectTable = () => {
 
     return () => clearTimeout(timer);
   }, [search]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedUserSearch(userSearch);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [userSearch]);
 
   const {
     data: projectsData,
@@ -102,8 +116,17 @@ export const ProjectTable = () => {
     search: debouncedSearch,
   });
 
+  // Fetch users for owner selection (only clients)
+  const { data: usersData, isLoading: isUsersLoading } = useUsers({
+    page: 1,
+    limit: 50,
+    search: debouncedUserSearch,
+    role: "CLIENT",
+  });
+
   const addProjectForm = useForm<CreateProjectFormData>({
     resolver: zodResolver(createProjectSchema),
+    mode: "onSubmit",
     defaultValues: {
       name: "",
       description: "",
@@ -125,11 +148,27 @@ export const ProjectTable = () => {
   const createProjectMutation = useCreateProject();
   const deleteProjectMutation = useDeleteProject();
 
+  // Create user options for combobox
+  const userOptions: ComboboxOption[] =
+    usersData?.data
+      ?.filter((user: User) => user.userProfile?.id) // Only include users with userProfile
+      ?.map((user: User) => ({
+        value: user.userProfile!.id,
+        label: `${user.name} (${user.email})`,
+        searchText: `${user.name} ${user.email}`,
+      })) || [];
+
   const handleAddProject = async (values: CreateProjectFormData) => {
     try {
       await createProjectMutation.mutateAsync(values);
       setAddProjectModalOpen(false);
       addProjectForm.reset();
+      setUserSearch(""); // Reset user search
+      // Reset pagination to page 1 to show the new project
+      setPagination({
+        pageIndex: 1,
+        pageSize: 10,
+      });
     } catch (error) {
       // Error is handled by the mutation hook
     }
@@ -244,7 +283,7 @@ export const ProjectTable = () => {
           />
         </div>
         <DataTable
-          data={projectsData?.data || []}
+          data={projectsData?.data?.result || []}
           columns={columns}
           isPending={isLoading}
           pagination={{
@@ -260,7 +299,22 @@ export const ProjectTable = () => {
         />
       </div>
 
-      <Modal open={addProjectModalOpen} onOpenChange={setAddProjectModalOpen}>
+      <Modal
+        open={addProjectModalOpen}
+        onOpenChange={(open) => {
+          setAddProjectModalOpen(open);
+          if (open) {
+            // Reset form when modal opens
+            addProjectForm.reset({
+              name: "",
+              description: "",
+              status: "PENDING",
+              userProfileId: "",
+            });
+            setUserSearch("");
+          }
+        }}
+      >
         <ModalContent>
           <ModalHeader>
             <ModalTitle>Add Project</ModalTitle>
@@ -334,7 +388,17 @@ export const ProjectTable = () => {
                     <FormItem>
                       <FormLabel>Owner</FormLabel>
                       <FormControl>
-                        <Input placeholder="User Profile ID" {...field} />
+                        <Combobox
+                          options={userOptions}
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          onSearchChange={setUserSearch}
+                          placeholder="Search for a client..."
+                          searchPlaceholder="Search by name or email..."
+                          emptyText="No clients found."
+                          isLoading={isUsersLoading}
+                          disabled={createProjectMutation.isPending}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -347,6 +411,7 @@ export const ProjectTable = () => {
                     onClick={() => {
                       setAddProjectModalOpen(false);
                       addProjectForm.reset();
+                      setUserSearch(""); // Reset user search
                     }}
                     variant="secondary"
                   >

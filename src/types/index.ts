@@ -91,8 +91,8 @@ export interface PaginationMeta {
 }
 
 export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: PaginationMeta;
+  meta: PaginationMeta;
+  result: T[];
 }
 
 // User Management Types
