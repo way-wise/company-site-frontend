@@ -70,23 +70,6 @@ export const menuConfig: MenuItem[] = [
     icon: FolderKanban,
     url: "/dashboard/projects",
     permission: "read_project",
-    submenu: [
-      {
-        title: "All Projects",
-        url: "/dashboard/projects",
-        permission: "read_project",
-      },
-      {
-        title: "My Tasks",
-        url: "/dashboard/tasks?filter=my-tasks",
-        permission: "read_task",
-      },
-      {
-        title: "My Milestones",
-        url: "/dashboard/milestones?filter=my-milestones",
-        permission: "read_milestone",
-      },
-    ],
   },
   {
     title: "Milestones",
