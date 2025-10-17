@@ -5,7 +5,6 @@ import {
   updateServiceSchema,
 } from "@/components/modules/admin/serviceValidation";
 import { Button } from "@/components/ui/button";
-import { FileUpload } from "@/components/ui/file-upload";
 import {
   Form,
   FormControl,
@@ -42,7 +41,6 @@ const UpdateService = ({ isOpen, onClose, service }: UpdateServiceProps) => {
     resolver: zodResolver(updateServiceSchema),
     defaultValues: {
       name: "",
-      image: "",
       description: "",
     },
   });
@@ -52,7 +50,6 @@ const UpdateService = ({ isOpen, onClose, service }: UpdateServiceProps) => {
     if (service) {
       form.reset({
         name: service.name,
-        image: service.image || "",
         description: service.description || "",
       });
     }
@@ -64,7 +61,7 @@ const UpdateService = ({ isOpen, onClose, service }: UpdateServiceProps) => {
     try {
       await updateServiceMutation.mutateAsync({
         serviceId: service.id,
-        serviceData: values as Partial<Service & { image?: File | string }>,
+        serviceData: values as Partial<Service>,
       });
       onClose();
     } catch (error) {
@@ -94,24 +91,6 @@ const UpdateService = ({ isOpen, onClose, service }: UpdateServiceProps) => {
                     <FormLabel>Service Name</FormLabel>
                     <FormControl>
                       <Input placeholder="Service Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FileUpload
-                        value={field.value}
-                        onChange={field.onChange}
-                        label="Service Image"
-                        placeholder="Drag & drop an image here, or click to select"
-                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

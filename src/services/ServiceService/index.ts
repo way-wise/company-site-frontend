@@ -11,11 +11,6 @@ import {
 
 export type { ServicesQueryParams };
 
-// Type guard function to check if value is a File
-const isFile = (value: File | string): value is File => {
-  return value instanceof File;
-};
-
 // Service management service
 export const serviceService = {
   // Get all services with pagination and search
@@ -28,7 +23,20 @@ export const serviceService = {
     }`;
 
     const response = await apiClient.get(url);
-    return response.data;
+
+    // Transform backend response to match frontend expectations
+    const { result, meta } = response.data.data;
+    const totalPages = Math.ceil(meta.total / meta.limit);
+
+    return {
+      data: result,
+      pagination: {
+        currentPage: meta.page,
+        totalPages,
+        totalItems: meta.total,
+        itemsPerPage: meta.limit,
+      },
+    };
   },
 
   // Get single service by ID
@@ -40,60 +48,18 @@ export const serviceService = {
   // Create new service
   createService: async (serviceData: {
     name: string;
-    image?: File | string;
     description?: string;
   }): Promise<ApiResponse<Service>> => {
-    const formData = new FormData();
-    formData.append("name", serviceData.name);
-
-    if (serviceData.description) {
-      formData.append("description", serviceData.description);
-    }
-
-    if (serviceData.image) {
-      if (isFile(serviceData.image)) {
-        formData.append("image", serviceData.image);
-      } else {
-        formData.append("image", serviceData.image);
-      }
-    }
-    console.log(formData);
-    const response = await apiClient.post("/service", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await apiClient.post("/service", serviceData);
     return response.data;
   },
 
   // Update service
   updateService: async (
     serviceId: string,
-    serviceData: Partial<Service & { image?: File | string }>
+    serviceData: Partial<Service>
   ): Promise<ApiResponse<Service>> => {
-    const formData = new FormData();
-
-    if (serviceData.name) {
-      formData.append("name", serviceData.name);
-    }
-
-    if (serviceData.description) {
-      formData.append("description", serviceData.description);
-    }
-
-    if (serviceData.image) {
-      if (isFile(serviceData.image)) {
-        formData.append("image", serviceData.image);
-      } else {
-        formData.append("image", serviceData.image);
-      }
-    }
-
-    const response = await apiClient.put(`/service/${serviceId}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await apiClient.put(`/service/${serviceId}`, serviceData);
     return response.data;
   },
 

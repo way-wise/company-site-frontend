@@ -61,11 +61,8 @@ export const useCreateService = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (serviceData: {
-      name: string;
-      image?: File | string;
-      description?: string;
-    }) => serviceService.createService(serviceData),
+    mutationFn: (serviceData: { name: string; description?: string }) =>
+      serviceService.createService(serviceData),
     onSuccess: (data) => {
       if (data.success) {
         toast.success("Service created successfully");

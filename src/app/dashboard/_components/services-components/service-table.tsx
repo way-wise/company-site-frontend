@@ -12,7 +12,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FileUpload } from "@/components/ui/file-upload";
 import {
   Form,
   FormControl,
@@ -90,7 +89,6 @@ export const ServiceTable = () => {
     resolver: zodResolver(createServiceSchema),
     defaultValues: {
       name: "",
-      image: "",
       description: "",
     },
   });
@@ -113,7 +111,6 @@ export const ServiceTable = () => {
   // Handle Add Service
   const handleAddService = async (values: CreateServiceFormData) => {
     try {
-      console.log(values);
       await createServiceMutation.mutateAsync(values);
       setAddServiceModalOpen(false);
       addServiceForm.reset();
@@ -148,22 +145,6 @@ export const ServiceTable = () => {
         return description && description.length > 50
           ? `${description.substring(0, 50)}...`
           : description || "-";
-      },
-    },
-    {
-      header: "Image",
-      accessorKey: "image",
-      cell: ({ row }: { row: { original: Service } }) => {
-        const image = row.original.image;
-        return image ? (
-          <img
-            src={image}
-            alt="Service"
-            className="w-10 h-10 rounded object-cover"
-          />
-        ) : (
-          "-"
-        );
       },
     },
     {
@@ -264,24 +245,6 @@ export const ServiceTable = () => {
                       <FormLabel>Service Name</FormLabel>
                       <FormControl>
                         <Input placeholder="Service Name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={addServiceForm.control}
-                  name="image"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <FileUpload
-                          value={field.value}
-                          onChange={field.onChange}
-                          label="Service Image"
-                          placeholder="Drag & drop an image here, or click to select"
-                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

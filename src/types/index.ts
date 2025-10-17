@@ -130,7 +130,6 @@ export type PortfolioProject = {
 export interface Service {
   id: string;
   name: string;
-  image?: string;
   description?: string;
   createdAt: string;
   updatedAt: string;
@@ -139,7 +138,6 @@ export interface Service {
 // Service Types for forms (with File support)
 export interface ServiceFormData {
   name: string;
-  image?: File | string;
   description?: string;
 }
 
