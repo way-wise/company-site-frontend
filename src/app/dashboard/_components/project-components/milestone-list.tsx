@@ -43,11 +43,7 @@ import {
   useCreateMilestone,
   useMilestones,
 } from "@/hooks/useMilestoneMutations";
-import {
-  formatStatusText,
-  getMilestoneStatusColor,
-  getTaskStatusColor,
-} from "@/lib/status-utils";
+import { formatStatusText, getMilestoneStatusColor } from "@/lib/status-utils";
 import { Milestone, Task } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -55,7 +51,6 @@ import {
   CheckSquare,
   ChevronDown,
   ChevronRight,
-  Clock,
   Edit,
   Eye,
   Plus,
@@ -67,6 +62,7 @@ import {
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import CreateTaskModal from "../task-components/create-task-modal";
+import SingleTask from "./single-task";
 
 interface MilestoneListProps {
   projectId: string;
@@ -169,17 +165,6 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
     return Math.round((completedTasks / tasks.length) * 100);
   };
 
-  const getTaskStatusBadge = (status: string) => {
-    const colors = getTaskStatusColor(status);
-    return (
-      <span
-        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${colors}`}
-      >
-        {formatStatusText(status)}
-      </span>
-    );
-  };
-  console.log(milestones);
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
@@ -381,40 +366,14 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                       {tasks.length > 0 ? (
                         <div className="space-y-2">
                           {tasks.map((task: Task) => (
-                            <div
+                            <SingleTask
                               key={task.id}
-                              className="p-3 bg-gray-50 rounded-lg border"
-                            >
-                              <div className="flex items-start justify-between mb-2">
-                                <h5 className="font-medium text-sm">
-                                  {task.title}
-                                </h5>
-                                <div className="flex gap-2">
-                                  {getTaskStatusBadge(task.status)}
-                                </div>
-                              </div>
-
-                              {task.description && (
-                                <p className="text-xs text-gray-600 mb-2 line-clamp-2">
-                                  {task.description}
-                                </p>
-                              )}
-
-                              <div className="flex items-center justify-between text-xs text-gray-500">
-                                <div className="flex items-center gap-4">
-                                  <span>Progress: {task.progress}%</span>
-                                  {task.estimatedHours && (
-                                    <span>Est: {task.estimatedHours}h</span>
-                                  )}
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Clock className="h-3 w-3" />
-                                  {new Date(
-                                    task.createdAt
-                                  ).toLocaleDateString()}
-                                </div>
-                              </div>
-                            </div>
+                              task={task}
+                              onTaskUpdate={() => {
+                                // This will trigger a refetch of milestones
+                                // The mutation hooks already handle cache invalidation
+                              }}
+                            />
                           ))}
                         </div>
                       ) : (
