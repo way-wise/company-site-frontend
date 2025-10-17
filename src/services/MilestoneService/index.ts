@@ -1,12 +1,7 @@
 "use client";
 
 import apiClient from "@/lib/axios";
-import {
-  ApiResponse,
-  Milestone,
-  MilestoneStats,
-  MilestonesQueryParams,
-} from "@/types";
+import { ApiResponse, Milestone, MilestonesQueryParams } from "@/types";
 
 export type { MilestonesQueryParams };
 
@@ -34,14 +29,6 @@ export const milestoneService = {
     }
 
     const response = await apiClient.get(url);
-    return response.data;
-  },
-
-  // Get single milestone by ID
-  getMilestoneById: async (
-    milestoneId: string
-  ): Promise<ApiResponse<Milestone>> => {
-    const response = await apiClient.get(`/milestones/${milestoneId}`);
     return response.data;
   },
 
@@ -95,12 +82,6 @@ export const milestoneService = {
       `/milestones/${milestoneId}/assign-services`,
       { serviceIds }
     );
-    return response.data;
-  },
-
-  // Get milestone statistics
-  getMilestoneStats: async (): Promise<ApiResponse<MilestoneStats>> => {
-    const response = await apiClient.get("/milestones/stats");
     return response.data;
   },
 };

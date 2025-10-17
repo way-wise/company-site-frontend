@@ -23,32 +23,12 @@ export const milestoneQueryKeys = {
     [...milestoneQueryKeys.lists(), params] as const,
   details: () => [...milestoneQueryKeys.all, "detail"] as const,
   detail: (id: string) => [...milestoneQueryKeys.details(), id] as const,
-  stats: () => [...milestoneQueryKeys.all, "stats"] as const,
 };
 
 export const useMilestones = (params: MilestonesQueryParams) => {
   return useQuery({
     queryKey: milestoneQueryKeys.list(params),
     queryFn: () => milestoneService.getAllMilestones(params),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-};
-
-export const useMilestone = (milestoneId: string) => {
-  return useQuery({
-    queryKey: milestoneQueryKeys.detail(milestoneId),
-    queryFn: () => milestoneService.getMilestoneById(milestoneId),
-    enabled: !!milestoneId,
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-};
-
-export const useMilestoneStats = () => {
-  return useQuery({
-    queryKey: milestoneQueryKeys.stats(),
-    queryFn: () => milestoneService.getMilestoneStats(),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -68,7 +48,6 @@ export const useCreateMilestone = () => {
       if (data.success) {
         toast.success("Milestone created successfully");
         queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.lists() });
-        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.stats() });
       } else {
         toast.error(data.message || "Failed to create milestone");
       }
@@ -102,7 +81,6 @@ export const useUpdateMilestone = () => {
         queryClient.invalidateQueries({
           queryKey: milestoneQueryKeys.detail(variables.milestoneId),
         });
-        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.stats() });
       } else {
         toast.error(data.message || "Failed to update milestone");
       }
@@ -128,7 +106,6 @@ export const useDeleteMilestone = () => {
       if (data.success) {
         toast.success("Milestone deleted successfully");
         queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.lists() });
-        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.stats() });
       } else {
         toast.error(data.message || "Failed to delete milestone");
       }
@@ -158,10 +135,14 @@ export const useAssignEmployeesToMilestone = () => {
     onSuccess: (data, variables) => {
       if (data.success) {
         toast.success("Employees assigned successfully");
-        queryClient.invalidateQueries({
+        // Invalidate all milestone queries
+        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.all });
+        // Refetch the specific milestone detail
+        queryClient.refetchQueries({
           queryKey: milestoneQueryKeys.detail(variables.milestoneId),
         });
-        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.lists() });
+        // Refetch the milestones list
+        queryClient.refetchQueries({ queryKey: milestoneQueryKeys.lists() });
       } else {
         toast.error(data.message || "Failed to assign employees");
       }
@@ -191,10 +172,14 @@ export const useAssignServicesToMilestone = () => {
     onSuccess: (data, variables) => {
       if (data.success) {
         toast.success("Services assigned successfully");
-        queryClient.invalidateQueries({
+        // Invalidate all milestone queries
+        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.all });
+        // Refetch the specific milestone detail
+        queryClient.refetchQueries({
           queryKey: milestoneQueryKeys.detail(variables.milestoneId),
         });
-        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.lists() });
+        // Refetch the milestones list
+        queryClient.refetchQueries({ queryKey: milestoneQueryKeys.lists() });
       } else {
         toast.error(data.message || "Failed to assign services");
       }
@@ -209,6 +194,3 @@ export const useAssignServicesToMilestone = () => {
     },
   });
 };
-
-
-

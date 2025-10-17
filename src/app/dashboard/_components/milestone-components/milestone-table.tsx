@@ -46,6 +46,7 @@ import { formatStatusText, getMilestoneStatusColor } from "@/lib/status-utils";
 import { Milestone } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Eye,
   MoreVertical,
   Pencil,
   Plus,
@@ -58,6 +59,7 @@ import { useForm } from "react-hook-form";
 import UpdateMilestone from "./UpdateMilestone";
 import AssignEmployeeModal from "./assign-employee-modal";
 import AssignServiceModal from "./assign-service-modal";
+import MilestoneDetailModal from "./milestone-detail-modal";
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString();
@@ -81,6 +83,7 @@ export const MilestoneTable = () => {
     useState(false);
   const [assignEmployeeModalOpen, setAssignEmployeeModalOpen] = useState(false);
   const [assignServiceModalOpen, setAssignServiceModalOpen] = useState(false);
+  const [viewMilestoneModalOpen, setViewMilestoneModalOpen] = useState(false);
   const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(
     null
   );
@@ -109,11 +112,7 @@ export const MilestoneTable = () => {
     limit: 100,
   });
 
-  const {
-    data: milestonesData,
-    isLoading,
-    refetch,
-  } = useMilestones({
+  const { data: milestonesData, isLoading } = useMilestones({
     page: pagination.pageIndex,
     limit: pagination.pageSize,
     search: debouncedSearch,
@@ -194,15 +193,53 @@ export const MilestoneTable = () => {
     },
     {
       header: "Employees",
-      accessorKey: "employeeCount",
-      cell: ({ row }: { row: { original: Milestone } }) =>
-        row.original._count?.employeeMilestones || 0,
+      accessorKey: "employees",
+      cell: ({ row }: { row: { original: Milestone } }) => {
+        const employees = row.original.employeeMilestones || [];
+        if (employees.length === 0) return "No employees";
+
+        const employeeNames = employees
+          .map((em) => em.userProfile?.user?.name)
+          .filter(Boolean)
+          .slice(0, 2); // Show max 2 names
+
+        const displayText = employeeNames.join(", ");
+        const hasMore = employees.length > 2;
+
+        return (
+          <div className="max-w-[200px]">
+            <div className="truncate" title={displayText}>
+              {displayText}
+              {hasMore && ` +${employees.length - 2} more`}
+            </div>
+          </div>
+        );
+      },
     },
     {
       header: "Services",
-      accessorKey: "serviceCount",
-      cell: ({ row }: { row: { original: Milestone } }) =>
-        row.original._count?.serviceMilestones || 0,
+      accessorKey: "services",
+      cell: ({ row }: { row: { original: Milestone } }) => {
+        const services = row.original.serviceMilestones || [];
+        if (services.length === 0) return "No services";
+
+        const serviceNames = services
+          .map((sm) => sm.service?.name)
+          .filter(Boolean)
+          .slice(0, 2); // Show max 2 names
+
+        const displayText = serviceNames.join(", ");
+        const hasMore = services.length > 2;
+
+        return (
+          <div className="max-w-[200px]">
+            <div className="truncate" title={displayText}>
+              {displayText}
+              {hasMore && ` +${services.length - 2} more`}
+            </div>
+          </div>
+        );
+      },
     },
     {
       header: "Tasks",
@@ -228,6 +265,16 @@ export const MilestoneTable = () => {
               <MoreVertical />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedMilestone(row.original);
+                  setViewMilestoneModalOpen(true);
+                }}
+              >
+                <Eye />
+                <span>View Details</span>
+              </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => {
                   setUpdateMilestoneModalOpen(true);
@@ -340,6 +387,7 @@ export const MilestoneTable = () => {
         </div>
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <DataTable
+          key={`milestones-${milestonesData?.data?.result?.length || 0}`}
           data={(milestonesData as any)?.data?.result || []}
           columns={columns}
           isPending={isLoading}
@@ -547,6 +595,16 @@ export const MilestoneTable = () => {
         isOpen={assignServiceModalOpen}
         onClose={() => {
           setAssignServiceModalOpen(false);
+          setSelectedMilestone(null);
+        }}
+        milestone={selectedMilestone}
+      />
+
+      {/* Milestone Detail Modal */}
+      <MilestoneDetailModal
+        isOpen={viewMilestoneModalOpen}
+        onClose={() => {
+          setViewMilestoneModalOpen(false);
           setSelectedMilestone(null);
         }}
         milestone={selectedMilestone}
