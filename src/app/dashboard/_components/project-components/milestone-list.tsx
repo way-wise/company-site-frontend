@@ -316,6 +316,9 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                 <div className="bg-white rounded-lg p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
+                      <h3 className="mb-1">
+                        Milestone {milestones.indexOf(milestone) + 1}
+                      </h3>
                       <div className="flex items-center gap-3 mb-2">
                         <div
                           className={`p-2 rounded-lg ${
@@ -344,11 +347,6 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                           <h3 className="text-lg font-bold text-gray-900 mb-1">
                             {milestone.name}
                           </h3>
-                          <Badge
-                            className={`${statusColors} font-medium px-2 py-1 text-xs`}
-                          >
-                            {formatStatusText(milestone.status)}
-                          </Badge>
                         </div>
                       </div>
                       {milestone.description && (
@@ -360,6 +358,11 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
 
                     {/* View and Actions Buttons - Top Right */}
                     <div className="flex items-center gap-2 ml-4">
+                      <Badge
+                        className={`${statusColors} font-medium px-3 py-2 text-xs capitalize hover:bg-${statusColors}/80`}
+                      >
+                        {formatStatusText(milestone.status)}
+                      </Badge>
                       <Button
                         variant="outline"
                         size="sm"
@@ -524,7 +527,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
 
                       {milestone.serviceMilestones &&
                         milestone.serviceMilestones.length > 0 && (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-1">
                             <Settings className="h-4 w-4 text-purple-600" />
                             <span className="font-medium text-gray-700">
                               Services:
@@ -552,45 +555,9 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                             </div>
                           </div>
                         )}
-                    </div>
-                  )}
-                </div>
 
-                {/* Toggle Tasks Button */}
-                <div className="bg-gray-50 border-t border-gray-200 px-4 py-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => toggleMilestoneExpansion(milestone.id)}
-                    className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-200"
-                  >
-                    {isExpanded ? (
-                      <ChevronDown className="h-4 w-4" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4" />
-                    )}
-                    {isExpanded ? "Hide Tasks" : `Show ${tasks.length} Tasks`}
-                  </Button>
-                </div>
-
-                {/* Expandable Task List */}
-                {isExpanded && (
-                  <div className="bg-gray-50 border-t">
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-blue-100 rounded-lg">
-                            <CheckSquare className="h-5 w-5 text-blue-600" />
-                          </div>
-                          <div>
-                            <h4 className="text-lg font-semibold text-gray-900">
-                              Tasks
-                            </h4>
-                            <p className="text-sm text-gray-500">
-                              {tasks.length} tasks in this milestone
-                            </p>
-                          </div>
-                        </div>
+                      {/* Toggle Tasks Button */}
+                      <div className=" flex items-center gap-2 px-4  ">
                         <Button
                           size="sm"
                           onClick={() =>
@@ -601,7 +568,31 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                           <Plus className="h-4 w-4 mr-2" />
                           Add Task
                         </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => toggleMilestoneExpansion(milestone.id)}
+                          className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-200"
+                        >
+                          {isExpanded ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                          {isExpanded
+                            ? "Hide Tasks"
+                            : `Show ${tasks.length} Tasks`}
+                        </Button>
                       </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Expandable Task List */}
+                {isExpanded && (
+                  <div className="bg-gray-50 border-t">
+                    <div className="px-4 pb-4">
+                      <div className="flex items-center justify-between mb-4"></div>
 
                       {tasks.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
