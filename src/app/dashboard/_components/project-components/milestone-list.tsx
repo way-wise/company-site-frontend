@@ -69,9 +69,10 @@ import { useForm } from "react-hook-form";
 
 interface MilestoneListProps {
   projectId: string;
+  name: string;
 }
 
-export default function MilestoneList({ projectId }: MilestoneListProps) {
+export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   const [addMilestoneOpen, setAddMilestoneOpen] = useState(false);
   const [expandedMilestones, setExpandedMilestones] = useState<Set<string>>(
     new Set()
@@ -453,12 +454,9 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
 
                 {/* Project Context Display */}
                 <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-sm font-medium text-gray-700 mb-1">
-                    Project
-                  </div>
                   <div className="text-sm text-gray-900">
                     {projectId
-                      ? `Project ID: ${projectId}`
+                      ? `Project Name: ${name}`
                       : "No project selected"}
                   </div>
                 </div>

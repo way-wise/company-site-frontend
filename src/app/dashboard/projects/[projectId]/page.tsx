@@ -36,7 +36,7 @@ export default function ProjectDetailsPage() {
     <PermissionGuard permissions={["read_project"]}>
       <div className="space-y-6">
         <ProjectDetails project={projectData.data} />
-        <MilestoneList projectId={projectId} />
+        <MilestoneList projectId={projectId} name={projectData.data.name} />
       </div>
     </PermissionGuard>
   );
