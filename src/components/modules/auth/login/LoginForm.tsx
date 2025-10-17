@@ -9,11 +9,13 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { LoginFormData, loginSchema } from "./loginValidation";
 ``;
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const loginMutation = useLogin();
   const { refreshUser, user } = useAuth();
   const router = useRouter();
@@ -22,12 +24,13 @@ export default function LoginForm() {
     register,
 
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (data: LoginFormData) => {
+    setIsSubmitting(true);
     loginMutation.mutate(data, {
       onSuccess: async (response) => {
         console.log("Login response:", response);
@@ -37,22 +40,21 @@ export default function LoginForm() {
         console.log("Logged in user:", loggedInUser);
 
         // Determine user type from the backend response structure
-        // Backend returns user with admin, client, or employee relationships
-        if (!loggedInUser) {
+        // Backend returns user with roles array
+        if (loggedInUser) {
+          toast.success("Login successful.");
+          router.push("/profile");
+        } else {
           router.push("/login");
           return;
         }
-
-        // Check which user type based on the relationships
-        if (loggedInUser.admin) {
-          router.push("/admin");
-        } else if (loggedInUser.client) {
-          router.push("/client");
-        } else if (loggedInUser.employee) {
-          router.push("/employee");
-        } else {
-          router.push("/profile");
-        }
+      },
+      onError: (error) => {
+        toast.error("Login failed. Please try again.");
+        setIsSubmitting(false);
+      },
+      onSettled: () => {
+        setIsSubmitting(false);
       },
     });
   };

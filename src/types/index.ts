@@ -46,24 +46,14 @@ export interface UserRoleAssignment {
   assignedAt: string;
 }
 
-// Admin, Client, Employee Types
-export interface Admin {
-  id: string;
-  userId: string;
-  profilePhoto?: string;
-  contactNumber?: string;
-  isDeleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Client {
+// User Profile Types (matches Prisma schema)
+export interface UserProfile {
   id: string;
   userId: string;
   profilePhoto?: string;
   contactNumber?: string;
   address?: string;
-  gender: "MALE" | "FEMALE";
+  gender?: "MALE" | "FEMALE";
   isDeleted: boolean;
   bio?: string;
   website?: string;
@@ -77,36 +67,17 @@ export interface Client {
   updatedAt: string;
 }
 
-export interface Employee {
-  id: string;
-  userId: string;
-  profilePhoto?: string;
-  contactNumber?: string;
-  address?: string;
-  gender: "MALE" | "FEMALE";
-  isDeleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
 // User Types
 export interface User {
   id: string;
   email: string;
   name: string;
-  contactNumber: string;
-  gender: "MALE" | "FEMALE";
+  status: "ACTIVE" | "BLOCKED" | "DELETED";
   roles: UserRoleAssignment[]; // Backend returns UserRoleAssignment[] from /auth/me
-  isActive: boolean;
+  userProfile?: UserProfile | null;
   createdAt: string;
   updatedAt: string;
-  image?: string;
-  emailVerified?: boolean;
-  totalPoints?: number;
-  // User relationships from backend
-  admin?: Admin | null;
-  client?: Client | null;
-  employee?: Employee | null;
+  isPasswordChangeRequired?: boolean;
 }
 
 // Pagination Types
