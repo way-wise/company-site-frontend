@@ -18,9 +18,6 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-navigation-menu",
     ],
   },
-  compiler: {
-    styledComponents: true,
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },

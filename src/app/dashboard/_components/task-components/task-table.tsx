@@ -96,9 +96,9 @@ export const TaskTable = () => {
   });
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [priorityFilter, setPriorityFilter] = useState("");
-  const [milestoneFilter, setMilestoneFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [milestoneFilter, setMilestoneFilter] = useState("all");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -122,9 +122,9 @@ export const TaskTable = () => {
     page: pagination.pageIndex,
     limit: pagination.pageSize,
     search: debouncedSearch,
-    status: statusFilter,
-    priority: priorityFilter,
-    milestoneId: milestoneFilter,
+    status: statusFilter === "all" ? "" : statusFilter,
+    priority: priorityFilter === "all" ? "" : priorityFilter,
+    milestoneId: milestoneFilter === "all" ? "" : milestoneFilter,
   });
 
   const addTaskForm = useForm<CreateTaskFormData>({
@@ -341,7 +341,7 @@ export const TaskTable = () => {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Status</SelectItem>
+                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="TODO">Todo</SelectItem>
                 <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
                 <SelectItem value="BLOCKED">Blocked</SelectItem>
@@ -360,7 +360,7 @@ export const TaskTable = () => {
                 <SelectValue placeholder="Filter by priority" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Priority</SelectItem>
+                <SelectItem value="all">All Priority</SelectItem>
                 <SelectItem value="LOW">Low</SelectItem>
                 <SelectItem value="MEDIUM">Medium</SelectItem>
                 <SelectItem value="HIGH">High</SelectItem>
@@ -378,12 +378,14 @@ export const TaskTable = () => {
                 <SelectValue placeholder="Filter by milestone" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Milestones</SelectItem>
-                {(milestonesData as any)?.data?.map((milestone: Milestone) => (
-                  <SelectItem key={milestone.id} value={milestone.id}>
-                    {milestone.name}
-                  </SelectItem>
-                ))}
+                <SelectItem value="all">All Milestones</SelectItem>
+                {milestonesData?.data &&
+                  Array.isArray(milestonesData.data) &&
+                  milestonesData.data.map((milestone: Milestone) => (
+                    <SelectItem key={milestone.id} value={milestone.id}>
+                      {milestone.name}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>
@@ -462,16 +464,16 @@ export const TaskTable = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {(milestonesData as any)?.data?.map(
-                            (milestone: Milestone) => (
+                          {milestonesData?.data &&
+                            Array.isArray(milestonesData.data) &&
+                            milestonesData.data.map((milestone: Milestone) => (
                               <SelectItem
                                 key={milestone.id}
                                 value={milestone.id}
                               >
                                 {milestone.name}
                               </SelectItem>
-                            )
-                          )}
+                            ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />

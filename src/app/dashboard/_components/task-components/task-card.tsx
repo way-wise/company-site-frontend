@@ -21,18 +21,17 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
   const priorityColors = getTaskPriorityColor(task.priority);
   const statusColors = getTaskStatusColor(task.status);
 
+  // Get border color class based on priority
+  const getBorderColorClass = () => {
+    if (priorityColors.includes("red")) return "border-l-red-500";
+    if (priorityColors.includes("orange")) return "border-l-orange-500";
+    if (priorityColors.includes("blue")) return "border-l-blue-500";
+    return "border-l-gray-500";
+  };
+
   return (
     <Card
-      className="p-4 cursor-pointer hover:shadow-md transition-shadow bg-white border-l-4"
-      style={{
-        borderLeftColor: priorityColors.includes("red")
-          ? "#ef4444"
-          : priorityColors.includes("orange")
-          ? "#f97316"
-          : priorityColors.includes("blue")
-          ? "#3b82f6"
-          : "#6b7280",
-      }}
+      className={`p-4 cursor-pointer hover:shadow-md transition-shadow bg-white border-l-4 ${getBorderColorClass()}`}
       onClick={onClick}
     >
       <div className="space-y-3">
