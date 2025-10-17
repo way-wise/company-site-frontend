@@ -19,7 +19,6 @@ import {
   XCircle,
 } from "lucide-react";
 import TaskCommentSection from "./task-comment-section";
-import TaskTimeTracker from "./task-time-tracker";
 
 interface TaskDetailsModalProps {
   task: Task | null;
@@ -115,7 +114,6 @@ export default function TaskDetailsModal({
           </div>
 
           {/* Time Tracking */}
-          <TaskTimeTracker task={task} />
 
           {/* Assigned Users */}
           {task.assignments && task.assignments.length > 0 && (

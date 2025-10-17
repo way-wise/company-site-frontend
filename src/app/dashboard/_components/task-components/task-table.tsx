@@ -137,7 +137,6 @@ export const TaskTable = () => {
       priority: "MEDIUM",
       progress: 0,
       estimatedHours: 0,
-      spentHours: 0,
     },
   });
 
@@ -239,9 +238,7 @@ export const TaskTable = () => {
         const task = row.original;
         return (
           <div className="text-sm">
-            <div>
-              {task.spentHours || 0}h / {task.estimatedHours || 0}h
-            </div>
+            <div>{task.estimatedHours || 0}h estimated</div>
           </div>
         );
       },
@@ -547,27 +544,6 @@ export const TaskTable = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Estimated Hours</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={addTaskForm.control}
-                    name="spentHours"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Spent Hours</FormLabel>
                         <FormControl>
                           <Input
                             type="number"

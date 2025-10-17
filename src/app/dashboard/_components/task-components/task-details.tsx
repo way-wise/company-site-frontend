@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import TaskCommentSection from "./task-comment-section";
-import TaskTimeTracker from "./task-time-tracker";
 
 interface TaskDetailsProps {
   taskId: string;
@@ -62,7 +61,6 @@ export default function TaskDetails({ taskId, onClose }: TaskDetailsProps) {
       priority: task.priority,
       progress: task.progress,
       estimatedHours: task.estimatedHours,
-      spentHours: task.spentHours,
     });
     setIsEditing(true);
   };
@@ -346,7 +344,6 @@ export default function TaskDetails({ taskId, onClose }: TaskDetailsProps) {
               <Clock className="h-4 w-4" />
               Time Tracking
             </h3>
-            <TaskTimeTracker task={task} />
           </Card>
 
           {/* Assignees */}

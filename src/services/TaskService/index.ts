@@ -61,7 +61,6 @@ export const taskService = {
     priority?: string;
     progress?: number;
     estimatedHours?: number;
-    spentHours?: number;
   }): Promise<ApiResponse<Task>> => {
     const response = await apiClient.post("/tasks", taskData);
     return response.data;
@@ -113,17 +112,6 @@ export const taskService = {
   ): Promise<ApiResponse<Task>> => {
     const response = await apiClient.patch(`/tasks/${taskId}/progress`, {
       progress,
-    });
-    return response.data;
-  },
-
-  // Update time tracking
-  updateTimeTracking: async (
-    taskId: string,
-    spentHours: number
-  ): Promise<ApiResponse<Task>> => {
-    const response = await apiClient.patch(`/tasks/${taskId}/time-tracking`, {
-      spentHours,
     });
     return response.data;
   },

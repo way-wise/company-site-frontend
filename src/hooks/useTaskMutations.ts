@@ -64,7 +64,6 @@ export const useCreateTask = () => {
       priority?: string;
       progress?: number;
       estimatedHours?: number;
-      spentHours?: number;
     }) => taskService.createTask(taskData),
     onSuccess: (data) => {
       if (data.success) {
@@ -234,39 +233,3 @@ export const useUpdateTaskProgress = () => {
     },
   });
 };
-
-export const useUpdateTaskTimeTracking = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      taskId,
-      spentHours,
-    }: {
-      taskId: string;
-      spentHours: number;
-    }) => taskService.updateTimeTracking(taskId, spentHours),
-    onSuccess: (data, variables) => {
-      if (data.success) {
-        toast.success("Time tracking updated successfully");
-        queryClient.invalidateQueries({
-          queryKey: taskQueryKeys.detail(variables.taskId),
-        });
-        queryClient.invalidateQueries({ queryKey: taskQueryKeys.lists() });
-      } else {
-        toast.error(data.message || "Failed to update time tracking");
-      }
-    },
-    onError: (error: Error) => {
-      const apiError = error as ApiError;
-      const errorMessage =
-        apiError.response?.data?.message ||
-        error.message ||
-        "Failed to update time tracking";
-      toast.error(errorMessage);
-    },
-  });
-};
-
-
-

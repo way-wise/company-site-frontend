@@ -62,12 +62,10 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
         </div>
 
         {/* Time tracking */}
-        {(task.estimatedHours || task.spentHours) && (
+        {task.estimatedHours && (
           <div className="flex items-center gap-1 text-xs text-gray-500">
             <Clock className="h-3 w-3" />
-            <span>
-              {task.spentHours || 0}h / {task.estimatedHours || 0}h
-            </span>
+            <span>{task.estimatedHours}h estimated</span>
           </div>
         )}
 

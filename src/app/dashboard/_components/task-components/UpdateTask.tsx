@@ -53,7 +53,6 @@ export default function UpdateTask({ isOpen, onClose, task }: UpdateTaskProps) {
       priority: "MEDIUM",
       progress: 0,
       estimatedHours: 0,
-      spentHours: 0,
     },
   });
 
@@ -66,7 +65,6 @@ export default function UpdateTask({ isOpen, onClose, task }: UpdateTaskProps) {
         priority: task.priority,
         progress: task.progress,
         estimatedHours: task.estimatedHours || 0,
-        spentHours: task.spentHours || 0,
       });
     }
   }, [task, isOpen, form]);
@@ -213,27 +211,6 @@ export default function UpdateTask({ isOpen, onClose, task }: UpdateTaskProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Estimated Hours</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(Number(e.target.value))
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="spentHours"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Spent Hours</FormLabel>
                       <FormControl>
                         <Input
                           type="number"

@@ -269,9 +269,6 @@ export default function MilestoneDetailModal({
                         {task.estimatedHours && (
                           <span>Est: {task.estimatedHours}h</span>
                         )}
-                        {task.spentHours && (
-                          <span>Spent: {task.spentHours}h</span>
-                        )}
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />

@@ -373,7 +373,6 @@ export interface Task {
   priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   progress: number;
   estimatedHours?: number;
-  spentHours?: number;
   startedAt?: string;
   completedAt?: string;
   createdAt: string;
@@ -444,7 +443,6 @@ export interface TaskFormData {
   priority?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   progress?: number;
   estimatedHours?: number;
-  spentHours?: number;
 }
 
 export interface TaskStats {

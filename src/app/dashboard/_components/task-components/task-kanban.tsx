@@ -50,7 +50,7 @@ export default function TaskKanban({
 
   const tasksByStatus = KANBAN_COLUMNS.reduce((acc, column) => {
     acc[column.id] =
-      (tasksData as any)?.data?.filter(
+      (tasksData as any)?.data?.result?.filter(
         (task: Task) => task.status === column.id
       ) || [];
     return acc;
@@ -62,15 +62,10 @@ export default function TaskKanban({
       (sum, task) => sum + (task.estimatedHours || 0),
       0
     );
-    const totalSpentHours = tasks.reduce(
-      (sum, task) => sum + (task.spentHours || 0),
-      0
-    );
 
     return {
       count: tasks.length,
       totalEstimatedHours,
-      totalSpentHours,
     };
   };
 
@@ -138,11 +133,9 @@ export default function TaskKanban({
                 </div>
 
                 {/* Column Stats */}
-                {(stats.totalEstimatedHours > 0 ||
-                  stats.totalSpentHours > 0) && (
+                {stats.totalEstimatedHours > 0 && (
                   <div className="mt-2 text-xs text-gray-600">
                     <div>Est: {stats.totalEstimatedHours}h</div>
-                    <div>Spent: {stats.totalSpentHours}h</div>
                   </div>
                 )}
               </div>

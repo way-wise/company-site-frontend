@@ -50,7 +50,6 @@ export const createTaskSchema = z.object({
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
   progress: z.number().min(0).max(100).optional(),
   estimatedHours: z.number().positive().optional(),
-  spentHours: z.number().min(0).optional(),
 });
 
 export const updateTaskSchema = z.object({
@@ -62,7 +61,6 @@ export const updateTaskSchema = z.object({
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
   progress: z.number().min(0).max(100).optional(),
   estimatedHours: z.number().positive().optional(),
-  spentHours: z.number().min(0).optional(),
 });
 
 export const addCommentSchema = z.object({
@@ -72,6 +70,3 @@ export const addCommentSchema = z.object({
 export type CreateTaskFormData = z.infer<typeof createTaskSchema>;
 export type UpdateTaskFormData = z.infer<typeof updateTaskSchema>;
 export type AddCommentFormData = z.infer<typeof addCommentSchema>;
-
-
-
