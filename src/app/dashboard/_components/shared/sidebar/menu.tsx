@@ -5,8 +5,8 @@ import {
   Home,
   Key,
   LayoutGrid,
+  ListCheck,
   Play,
-  Rows3,
   Shield,
   UsersRound,
 } from "lucide-react";
@@ -52,9 +52,9 @@ const SidebarMenu = () => {
       url: "/admin/service",
     },
     {
-      title: "Products",
-      icon: <Rows3 className="icon" />,
-      url: "/admin/products",
+      title: "Tasks",
+      icon: <ListCheck className="icon" />,
+      url: "/admin/tasks",
     },
     {
       title: "Demo",

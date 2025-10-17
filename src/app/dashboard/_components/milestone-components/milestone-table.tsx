@@ -85,7 +85,7 @@ export const MilestoneTable = () => {
     null
   );
   const [milestoneId, setMilestoneId] = useState<string | undefined>("");
-  const [selectedProjectId, setSelectedProjectId] = useState<string>("");
+  const [selectedProjectId, setSelectedProjectId] = useState<string>("all");
 
   const [pagination, setPagination] = useState({
     pageIndex: 1,
@@ -93,7 +93,7 @@ export const MilestoneTable = () => {
   });
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -117,8 +117,8 @@ export const MilestoneTable = () => {
     page: pagination.pageIndex,
     limit: pagination.pageSize,
     search: debouncedSearch,
-    status: statusFilter,
-    projectId: selectedProjectId,
+    status: statusFilter === "all" ? undefined : statusFilter,
+    projectId: selectedProjectId === "all" ? undefined : selectedProjectId,
   });
 
   const addMilestoneForm = useForm<CreateMilestoneFormData>({
@@ -194,19 +194,19 @@ export const MilestoneTable = () => {
     },
     {
       header: "Employees",
-      accessorKey: "_count",
+      accessorKey: "employeeCount",
       cell: ({ row }: { row: { original: Milestone } }) =>
         row.original._count?.employeeMilestones || 0,
     },
     {
       header: "Services",
-      accessorKey: "_count",
+      accessorKey: "serviceCount",
       cell: ({ row }: { row: { original: Milestone } }) =>
         row.original._count?.serviceMilestones || 0,
     },
     {
       header: "Tasks",
-      accessorKey: "_count",
+      accessorKey: "taskCount",
       cell: ({ row }: { row: { original: Milestone } }) =>
         row.original._count?.Task || 0,
     },
@@ -305,7 +305,7 @@ export const MilestoneTable = () => {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Status</SelectItem>
+                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="PENDING">Pending</SelectItem>
                 <SelectItem value="ONGOING">Ongoing</SelectItem>
                 <SelectItem value="COMPLETED">Completed</SelectItem>
@@ -325,9 +325,9 @@ export const MilestoneTable = () => {
                 <SelectValue placeholder="Filter by project" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Projects</SelectItem>
+                <SelectItem value="all">All Projects</SelectItem>
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {(projectsData?.data as any[] | undefined)?.map(
+                {(projectsData?.data?.result as any[] | undefined)?.map(
                   (project: any) => (
                     <SelectItem key={project.id} value={project.id.toString()}>
                       {project.name}
@@ -446,16 +446,16 @@ export const MilestoneTable = () => {
                         </FormControl>
                         <SelectContent>
                           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                          {(projectsData?.data as any[] | undefined)?.map(
-                            (project: any) => (
-                              <SelectItem
-                                key={project.id}
-                                value={project.id.toString()}
-                              >
-                                {project.name}
-                              </SelectItem>
-                            )
-                          )}
+                          {(
+                            projectsData?.data?.result as any[] | undefined
+                          )?.map((project: any) => (
+                            <SelectItem
+                              key={project.id}
+                              value={project.id.toString()}
+                            >
+                              {project.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
