@@ -4,6 +4,7 @@ import { taskService, TasksQueryParams } from "@/services/TaskService";
 import { Task } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { milestoneQueryKeys } from "./useMilestoneMutations";
 
 interface ApiError extends Error {
   response?: {
@@ -70,6 +71,8 @@ export const useCreateTask = () => {
         toast.success("Task created successfully");
         queryClient.invalidateQueries({ queryKey: taskQueryKeys.lists() });
         queryClient.invalidateQueries({ queryKey: taskQueryKeys.stats() });
+        // Also invalidate milestone queries to refresh milestone list
+        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.lists() });
       } else {
         toast.error(data.message || "Failed to create task");
       }
@@ -104,6 +107,8 @@ export const useUpdateTask = () => {
           queryKey: taskQueryKeys.detail(variables.taskId),
         });
         queryClient.invalidateQueries({ queryKey: taskQueryKeys.stats() });
+        // Also invalidate milestone queries to refresh milestone list
+        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.lists() });
       } else {
         toast.error(data.message || "Failed to update task");
       }
@@ -129,6 +134,8 @@ export const useDeleteTask = () => {
         toast.success("Task deleted successfully");
         queryClient.invalidateQueries({ queryKey: taskQueryKeys.lists() });
         queryClient.invalidateQueries({ queryKey: taskQueryKeys.stats() });
+        // Also invalidate milestone queries to refresh milestone list
+        queryClient.invalidateQueries({ queryKey: milestoneQueryKeys.lists() });
       } else {
         toast.error(data.message || "Failed to delete task");
       }

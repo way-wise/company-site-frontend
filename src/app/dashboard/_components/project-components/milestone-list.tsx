@@ -66,6 +66,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import CreateTaskModal from "../task-components/create-task-modal";
 
 interface MilestoneListProps {
   projectId: string;
@@ -80,6 +81,10 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(
     null
   );
+  const [createTaskModalOpen, setCreateTaskModalOpen] = useState(false);
+  const [selectedMilestoneForTask, setSelectedMilestoneForTask] = useState<
+    string | null
+  >(null);
 
   const { data: milestonesData, isLoading } = useMilestones({
     page: 1,
@@ -120,6 +125,16 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       newExpanded.add(milestoneId);
     }
     setExpandedMilestones(newExpanded);
+  };
+
+  const handleOpenCreateTaskModal = (milestoneId: string) => {
+    setSelectedMilestoneForTask(milestoneId);
+    setCreateTaskModalOpen(true);
+  };
+
+  const handleCloseCreateTaskModal = () => {
+    setCreateTaskModalOpen(false);
+    setSelectedMilestoneForTask(null);
   };
 
   if (isLoading) {
@@ -164,7 +179,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       </span>
     );
   };
-
+  console.log(milestones);
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
@@ -351,7 +366,13 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                           <CheckSquare className="h-4 w-4" />
                           Tasks ({tasks.length})
                         </h4>
-                        <Button size="sm" variant="outline">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            handleOpenCreateTaskModal(milestone.id)
+                          }
+                        >
                           <Plus className="h-3 w-3 mr-1" />
                           Add Task
                         </Button>
@@ -530,6 +551,14 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
           </Form>
         </ModalContent>
       </Modal>
+
+      {/* Create Task Modal */}
+      <CreateTaskModal
+        isOpen={createTaskModalOpen}
+        onClose={handleCloseCreateTaskModal}
+        projectId={projectId}
+        milestoneId={selectedMilestoneForTask || undefined}
+      />
     </Card>
   );
 }
