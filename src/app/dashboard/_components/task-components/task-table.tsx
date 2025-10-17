@@ -1,9 +1,5 @@
 "use client";
 
-import {
-  CreateTaskFormData,
-  createTaskSchema,
-} from "@/components/modules/admin/projectValidation";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import {
@@ -12,15 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormFieldset,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormFieldset } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Modal,
@@ -36,21 +24,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useMilestones } from "@/hooks/useMilestoneMutations";
 import { useProjects } from "@/hooks/useProjectMutations";
-import {
-  useCreateTask,
-  useDeleteTask,
-  useTasks,
-} from "@/hooks/useTaskMutations";
+import { useDeleteTask, useTasks } from "@/hooks/useTaskMutations";
 import {
   formatStatusText,
   getTaskPriorityColor,
   getTaskStatusColor,
 } from "@/lib/status-utils";
 import { Milestone, Task } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ExternalLink,
   Eye,
@@ -65,6 +47,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UpdateTask from "./UpdateTask";
 import AssignTaskModal from "./assign-task-modal";
+import CreateTaskModal from "./create-task-modal";
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString();
@@ -149,19 +132,6 @@ export const TaskTable = () => {
     // For now, we'll filter on the frontend
   });
 
-  const addTaskForm = useForm<CreateTaskFormData>({
-    resolver: zodResolver(createTaskSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      milestoneId: "",
-      status: "TODO",
-      priority: "MEDIUM",
-      progress: 0,
-      estimatedHours: 0,
-    },
-  });
-
   const deleteForm = useForm();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -195,18 +165,7 @@ export const TaskTable = () => {
       })
     : [];
 
-  const createTaskMutation = useCreateTask();
   const deleteTaskMutation = useDeleteTask();
-
-  const handleAddTask = async (values: CreateTaskFormData) => {
-    try {
-      await createTaskMutation.mutateAsync(values);
-      setAddTaskModalOpen(false);
-      addTaskForm.reset();
-    } catch (error) {
-      // Error is handled by the mutation hook
-    }
-  };
 
   const handleDeleteTask = async () => {
     if (!taskId) return;
@@ -555,185 +514,11 @@ export const TaskTable = () => {
         />
       </div>
 
-      {/* Add Task Modal */}
-      <Modal open={addTaskModalOpen} onOpenChange={setAddTaskModalOpen}>
-        <ModalContent>
-          <ModalHeader>
-            <ModalTitle>Add Task</ModalTitle>
-          </ModalHeader>
-          <Form {...addTaskForm}>
-            <form onSubmit={addTaskForm.handleSubmit(handleAddTask)}>
-              <FormFieldset disabled={createTaskMutation.isPending}>
-                <FormField
-                  control={addTaskForm.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Task Title</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Task Title" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={addTaskForm.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Task Description"
-                          rows={3}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={addTaskForm.control}
-                  name="milestoneId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Milestone</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select milestone" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {milestonesData?.data &&
-                            Array.isArray(milestonesData.data) &&
-                            milestonesData.data.map((milestone: Milestone) => (
-                              <SelectItem
-                                key={milestone.id}
-                                value={milestone.id}
-                              >
-                                {milestone.name}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={addTaskForm.control}
-                    name="status"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Status</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select status" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="TODO">Todo</SelectItem>
-                            <SelectItem value="IN_PROGRESS">
-                              In Progress
-                            </SelectItem>
-                            <SelectItem value="BLOCKED">Blocked</SelectItem>
-                            <SelectItem value="REVIEW">Review</SelectItem>
-                            <SelectItem value="DONE">Done</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={addTaskForm.control}
-                    name="priority"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Priority</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select priority" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="LOW">Low</SelectItem>
-                            <SelectItem value="MEDIUM">Medium</SelectItem>
-                            <SelectItem value="HIGH">High</SelectItem>
-                            <SelectItem value="CRITICAL">Critical</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={addTaskForm.control}
-                    name="estimatedHours"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Estimated Hours</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="flex justify-end gap-3 py-5">
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      setAddTaskModalOpen(false);
-                      addTaskForm.reset();
-                    }}
-                    variant="secondary"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    isLoading={createTaskMutation.isPending}
-                  >
-                    Add Task
-                  </Button>
-                </div>
-              </FormFieldset>
-            </form>
-          </Form>
-        </ModalContent>
-      </Modal>
+      {/* Create Task Modal */}
+      <CreateTaskModal
+        isOpen={addTaskModalOpen}
+        onClose={() => setAddTaskModalOpen(false)}
+      />
 
       {/* Delete Task Modal */}
       <Modal open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>

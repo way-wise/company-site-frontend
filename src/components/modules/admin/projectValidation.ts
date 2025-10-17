@@ -46,10 +46,10 @@ export const createTaskSchema = z.object({
   creatorId: z.string().optional(),
   status: z
     .enum(["TODO", "IN_PROGRESS", "BLOCKED", "REVIEW", "DONE"])
-    .optional(),
-  priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
-  progress: z.number().min(0).max(100).optional(),
-  estimatedHours: z.number().positive().optional(),
+    .default("TODO"),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).default("MEDIUM"),
+  progress: z.number().min(0).max(100).default(0),
+  estimatedHours: z.number().min(0).optional(),
 });
 
 export const updateTaskSchema = z.object({
