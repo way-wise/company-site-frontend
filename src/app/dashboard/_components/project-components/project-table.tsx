@@ -45,7 +45,9 @@ import {
 import { useUsers } from "@/hooks/useUserMutations";
 import { Project, User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MoreVertical, Pencil, Plus, Trash } from "lucide-react";
+import { Eye, MoreVertical, Pencil, Plus, Trash } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UpdateProject from "./UpdateProject";
@@ -73,6 +75,7 @@ const getStatusBadge = (status: string) => {
 };
 
 export const ProjectTable = () => {
+  const router = useRouter();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addProjectModalOpen, setAddProjectModalOpen] = useState(false);
   const [updateProjectModalOpen, setUpdateProjectModalOpen] = useState(false);
@@ -236,6 +239,16 @@ export const ProjectTable = () => {
               <MoreVertical />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-36">
+              <DropdownMenuItem>
+                <Link
+                  href={`/dashboard/projects/${id}`}
+                  className="flex items-center gap-2"
+                >
+                  <Eye />
+                  <span>View Details</span>
+                </Link>
+              </DropdownMenuItem>
+
               <DropdownMenuItem
                 onClick={() => {
                   setUpdateProjectModalOpen(true);
