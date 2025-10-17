@@ -23,7 +23,7 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
     projectId: projectId,
   });
 
-  const milestones = milestonesData?.data || [];
+  const milestones = milestonesData?.data?.result || [];
 
   if (isLoading) {
     return (
@@ -52,7 +52,7 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold flex items-center gap-2">
           <Target className="h-5 w-5" />
-          Project Milestones ({(milestones as any)?.data?.length || 0})
+          Project Milestones ({(milestones as any)?.length || 0})
         </h2>
         <Button onClick={() => setAddMilestoneOpen(true)}>
           <Plus className="h-4 w-4 mr-1" />
@@ -60,9 +60,9 @@ export default function MilestoneList({ projectId }: MilestoneListProps) {
         </Button>
       </div>
 
-      {(milestones as any)?.data?.length > 0 ? (
+      {(milestones as any)?.length > 0 ? (
         <div className="space-y-4">
-          {(milestones as any)?.data?.map((milestone: any) => {
+          {(milestones as any)?.map((milestone: any) => {
             const stats = getMilestoneStats(milestone);
             const statusColors = getMilestoneStatusColor(milestone.status);
 

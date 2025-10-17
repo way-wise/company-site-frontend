@@ -340,7 +340,7 @@ export const MilestoneTable = () => {
         </div>
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <DataTable
-          data={(milestonesData as any)?.data || []}
+          data={(milestonesData as any)?.data?.result || []}
           columns={columns}
           isPending={isLoading}
           pagination={{

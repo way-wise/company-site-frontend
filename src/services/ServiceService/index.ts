@@ -3,11 +3,21 @@
 import apiClient from "@/lib/axios";
 import {
   ApiResponse,
-  PaginatedResponse,
   Service,
   ServiceStats,
   ServicesQueryParams,
 } from "@/types";
+
+// Custom type for service pagination response
+interface ServicePaginatedResponse {
+  data: Service[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    itemsPerPage: number;
+  };
+}
 
 export type { ServicesQueryParams };
 
@@ -16,7 +26,7 @@ export const serviceService = {
   // Get all services with pagination and search
   getAllServices: async (
     params: ServicesQueryParams
-  ): Promise<PaginatedResponse<Service>> => {
+  ): Promise<ServicePaginatedResponse> => {
     const { page, limit, search } = params;
     const url = `/service?page=${page}&limit=${limit}${
       search?.trim() ? `&search=${encodeURIComponent(search.trim())}` : ""

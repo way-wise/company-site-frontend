@@ -93,7 +93,7 @@ export default function AssignServiceModal({
   const handleSelectAll = () => {
     if (!servicesData?.data) return;
 
-    const allServiceIds = servicesData.data.map((service) => service.id);
+    const allServiceIds = servicesData.data.map((service: any) => service.id);
     setSelectedServices(allServiceIds);
     form.setValue("serviceIds", allServiceIds);
   };
@@ -133,7 +133,7 @@ export default function AssignServiceModal({
                 </div>
 
                 <div className="max-h-96 overflow-y-auto space-y-2">
-                  {servicesData?.data?.map((service) => {
+                  {servicesData?.data?.map((service: any) => {
                     const isAssigned = milestone?.serviceMilestones?.some(
                       (sm) => sm.serviceId === service.id
                     );
@@ -152,17 +152,9 @@ export default function AssignServiceModal({
                           }
                         />
                         <div className="h-8 w-8 bg-gray-100 rounded flex items-center justify-center">
-                          {service.image ? (
-                            <img
-                              src={service.image}
-                              alt={service.name}
-                              className="h-6 w-6 object-cover rounded"
-                            />
-                          ) : (
-                            <span className="text-xs font-medium text-gray-500">
-                              {service.name.charAt(0).toUpperCase()}
-                            </span>
-                          )}
+                          <span className="text-xs font-medium text-gray-500">
+                            {service.name.charAt(0).toUpperCase()}
+                          </span>
                         </div>
                         <div className="flex-1">
                           <div className="font-medium">{service.name}</div>

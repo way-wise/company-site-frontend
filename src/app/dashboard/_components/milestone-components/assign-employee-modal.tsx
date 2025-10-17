@@ -94,7 +94,9 @@ export default function AssignEmployeeModal({
   const handleSelectAll = () => {
     if (!usersData?.data) return;
 
-    const allUserProfileIds = usersData.data.map((user) => user.id);
+    const allUserProfileIds = usersData.data
+      .filter((user) => user.userProfile?.id)
+      .map((user) => user.userProfile!.id);
     setSelectedEmployees(allUserProfileIds);
     form.setValue("userProfileIds", allUserProfileIds);
   };
@@ -134,43 +136,50 @@ export default function AssignEmployeeModal({
                 </div>
 
                 <div className="max-h-96 overflow-y-auto space-y-2">
-                  {usersData?.data?.map((user) => {
-                    const isAssigned = milestone?.employeeMilestones?.some(
-                      (em) => em.userProfileId === user.id
-                    );
-                    const isSelected = selectedEmployees.includes(user.id);
+                  {usersData?.data
+                    ?.filter((user) => user.userProfile?.id)
+                    .map((user) => {
+                      const userProfileId = user.userProfile!.id;
+                      const isAssigned = milestone?.employeeMilestones?.some(
+                        (em) => em.userProfileId === userProfileId
+                      );
+                      const isSelected =
+                        selectedEmployees.includes(userProfileId);
 
-                    return (
-                      <div
-                        key={user.id}
-                        className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50"
-                      >
-                        <Checkbox
-                          id={user.id}
-                          checked={isSelected}
-                          onCheckedChange={(checked) =>
-                            handleEmployeeToggle(user.id, checked as boolean)
-                          }
-                        />
-                        <Avatar className="h-8 w-8">
-                          <div className="bg-primary text-primary-foreground text-xs font-medium">
-                            {user.name.charAt(0).toUpperCase()}
+                      return (
+                        <div
+                          key={user.id}
+                          className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50"
+                        >
+                          <Checkbox
+                            id={user.id}
+                            checked={isSelected}
+                            onCheckedChange={(checked) =>
+                              handleEmployeeToggle(
+                                userProfileId,
+                                checked as boolean
+                              )
+                            }
+                          />
+                          <Avatar className="h-8 w-8">
+                            <div className="bg-primary text-primary-foreground text-xs font-medium">
+                              {user.name.charAt(0).toUpperCase()}
+                            </div>
+                          </Avatar>
+                          <div className="flex-1">
+                            <div className="font-medium">{user.name}</div>
+                            <div className="text-sm text-gray-500">
+                              {user.email}
+                            </div>
                           </div>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="font-medium">{user.name}</div>
-                          <div className="text-sm text-gray-500">
-                            {user.email}
-                          </div>
+                          {isAssigned && (
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                              Currently Assigned
+                            </span>
+                          )}
                         </div>
-                        {isAssigned && (
-                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                            Currently Assigned
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
 
                 <FormField
