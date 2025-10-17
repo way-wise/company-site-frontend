@@ -32,7 +32,7 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
         <Card className="py-4 px-6 hover:shadow-lg transition-shadow">
           <div className="flex flex-col h-full">
             {/* Header with Back Button */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-2">
               <Button
                 variant="ghost"
                 size="sm"
@@ -45,7 +45,7 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col lg:flex-row gap-8">
+            <div className="flex-1  gap-8">
               {/* Left Column - Project Info */}
               <div className="flex-1 flex flex-col gap-6">
                 {/* Project Name */}
@@ -65,32 +65,21 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
                   </p>
                 </div>
               </div>
-
+              <hr className="my-4" />
               {/* Right Column - Status & Meta Info */}
-              <div className="flex flex-col lg:flex-col gap-6 lg:w-80">
-                {/* Status */}
-                <div className="flex flex-col gap-3">
-                  <h4 className="text-sm font-medium text-gray-600 uppercase tracking-wide">
-                    Status
-                  </h4>
-                  <div className="flex justify-start">
-                    <Badge className={`${statusColors} text-sm px-4 py-2`}>
-                      {formatStatusText(project.status)}
-                    </Badge>
-                  </div>
-                </div>
-
+              <div className="flex items-center justify-between gap-6 ">
                 {/* Created Date */}
-                <div className="flex flex-col gap-3">
-                  <h4 className="text-sm font-medium text-gray-600 uppercase tracking-wide">
-                    Created
-                  </h4>
-                  <div className="flex items-center gap-3 text-lg">
-                    <Calendar className="h-5 w-5 text-gray-400 flex-shrink-0" />
-                    <span className="font-medium">
-                      {new Date(project.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
+                <div className="flex items-center gap-3 text-lg">
+                  <Calendar className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                  <span className="font-medium">
+                    {new Date(project.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                {/* Status */}
+                <div className="flex justify-start">
+                  <Badge className={`${statusColors} text-sm px-4 py-2`}>
+                    {formatStatusText(project.status)}
+                  </Badge>
                 </div>
               </div>
             </div>

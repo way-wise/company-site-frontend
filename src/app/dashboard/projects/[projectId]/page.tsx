@@ -34,9 +34,13 @@ export default function ProjectDetailsPage() {
 
   return (
     <PermissionGuard permissions={["read_project"]}>
-      <div className="space-y-6">
-        <ProjectDetails project={projectData.data} />
-        <MilestoneList projectId={projectId} name={projectData.data.name} />
+      <div className="space-y-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="col-span-1">
+          <ProjectDetails project={projectData.data} />
+        </div>
+        <div className="col-span-1 md:col-span-2">
+          <MilestoneList projectId={projectId} name={projectData.data.name} />
+        </div>
       </div>
     </PermissionGuard>
   );
