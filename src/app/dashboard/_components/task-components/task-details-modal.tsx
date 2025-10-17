@@ -1,5 +1,6 @@
 "use client";
 
+import Breadcrumb from "@/components/shared/Breadcrumb";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -64,6 +65,29 @@ export default function TaskDetailsModal({
             {task.description || "No description provided"}
           </DialogDescription>
         </DialogHeader>
+
+        {/* Breadcrumb Navigation */}
+        {task.milestone && (
+          <Breadcrumb
+            items={[
+              { label: "Projects", href: "/dashboard/projects" },
+              {
+                label: task.milestone.project?.name || "Project",
+                href: task.milestone.project?.id
+                  ? `/dashboard/projects/${task.milestone.project.id}`
+                  : undefined,
+              },
+              {
+                label: task.milestone.name,
+                href: task.milestone.project?.id
+                  ? `/dashboard/projects/${task.milestone.project.id}/milestones/${task.milestone.id}`
+                  : undefined,
+              },
+              { label: `Task: ${task.title}`, current: true },
+            ]}
+            className="mb-4"
+          />
+        )}
 
         <div className="space-y-6 mt-4">
           {/* Status and Priority */}

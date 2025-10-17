@@ -4,6 +4,7 @@ import { useAuth } from "@/context/UserContext";
 import AdminWidgets from "./_components/widgets/AdminWidgets";
 import ClientWidgets from "./_components/widgets/ClientWidgets";
 import EmployeeWidgets from "./_components/widgets/EmployeeWidgets";
+import MyWorkWidget from "./_components/widgets/MyWorkWidget";
 
 const DashboardPage = () => {
   const { user, isLoading, hasAnyRole } = useAuth();
@@ -36,16 +37,50 @@ const DashboardPage = () => {
         </p>
       </div>
 
+      {/* My Work Widget - Universal for all users */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <MyWorkWidget />
+        <div className="space-y-4">
+          {/* Quick Actions */}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="p-4 border rounded-lg">
+              <h3 className="font-semibold mb-2">Quick Actions</h3>
+              <div className="space-y-2">
+                <a
+                  href="/dashboard/projects"
+                  className="block text-sm text-blue-600 hover:underline"
+                >
+                  View All Projects
+                </a>
+                <a
+                  href="/dashboard/tasks"
+                  className="block text-sm text-blue-600 hover:underline"
+                >
+                  View All Tasks
+                </a>
+                <a
+                  href="/dashboard/milestones"
+                  className="block text-sm text-blue-600 hover:underline"
+                >
+                  View All Milestones
+                </a>
+              </div>
+            </div>
+            <div className="p-4 border rounded-lg">
+              <h3 className="font-semibold mb-2">Recent Updates</h3>
+              <div className="text-sm text-gray-600">
+                <p>No recent updates</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Role-based Widgets */}
       <div>
         {isAdmin && <AdminWidgets />}
         {isClient && <ClientWidgets />}
         {isEmployee && <EmployeeWidgets />}
-      </div>
-
-      {/* Additional Info */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {/* Placeholder for future widgets */}
       </div>
     </div>
   );

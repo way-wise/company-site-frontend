@@ -11,6 +11,7 @@ import {
 } from "@/lib/status-utils";
 import { Task } from "@/types";
 import { Clock, Users } from "lucide-react";
+import Link from "next/link";
 
 interface TaskCardProps {
   task: Task;
@@ -35,6 +36,29 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
       onClick={onClick}
     >
       <div className="space-y-3">
+        {/* Breadcrumb trail */}
+        {task.milestone?.project && task.milestone && (
+          <div className="text-xs text-gray-500 pb-2 border-b border-gray-100">
+            <div className="flex items-center gap-1">
+              <Link
+                href={`/dashboard/projects/${task.milestone.project.id}`}
+                className="hover:text-blue-600 hover:underline transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {task.milestone.project.name}
+              </Link>
+              <span className="text-gray-400">/</span>
+              <Link
+                href={`/dashboard/projects/${task.milestone.project.id}/milestones/${task.milestone.id}`}
+                className="hover:text-blue-600 hover:underline transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {task.milestone.name}
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Header with priority badge */}
         <div className="flex items-start justify-between">
           <h3 className="font-medium text-sm text-gray-900 line-clamp-2">

@@ -32,6 +32,14 @@ export const milestoneService = {
     return response.data;
   },
 
+  // Get single milestone by ID
+  getMilestoneById: async (
+    milestoneId: string
+  ): Promise<ApiResponse<Milestone>> => {
+    const response = await apiClient.get(`/milestones/${milestoneId}`);
+    return response.data;
+  },
+
   // Create new milestone
   createMilestone: async (milestoneData: {
     name: string;

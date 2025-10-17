@@ -8,7 +8,7 @@ import ProjectDetails from "../../_components/project-components/project-details
 
 export default function ProjectDetailsPage() {
   const params = useParams();
-  const projectId = params.id as string;
+  const projectId = params.projectId as string;
 
   const { data: projectData, isLoading } = useProject(projectId);
 

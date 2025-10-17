@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useMilestones } from "@/hooks/useMilestoneMutations";
+import { useProjects } from "@/hooks/useProjectMutations";
 import {
   useCreateTask,
   useDeleteTask,
@@ -50,7 +51,16 @@ import {
 } from "@/lib/status-utils";
 import { Milestone, Task } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, MoreVertical, Pencil, Plus, Trash, Users } from "lucide-react";
+import {
+  ExternalLink,
+  Eye,
+  MoreVertical,
+  Pencil,
+  Plus,
+  Trash,
+  Users,
+} from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UpdateTask from "./UpdateTask";
@@ -99,6 +109,9 @@ export const TaskTable = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [milestoneFilter, setMilestoneFilter] = useState("all");
+  const [projectFilter, setProjectFilter] = useState("all");
+  const [assigneeFilter, setAssigneeFilter] = useState("all");
+  const [myTasksFilter, setMyTasksFilter] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -108,10 +121,17 @@ export const TaskTable = () => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // Get milestones for the milestone filter dropdown
+  // Get projects for the project filter dropdown
+  const { data: projectsData } = useProjects({
+    page: 1,
+    limit: 100,
+  });
+
+  // Get milestones for the milestone filter dropdown (filtered by project if selected)
   const { data: milestonesData } = useMilestones({
     page: 1,
     limit: 100,
+    projectId: projectFilter === "all" ? undefined : projectFilter,
   });
 
   const {
@@ -125,6 +145,8 @@ export const TaskTable = () => {
     status: statusFilter === "all" ? "" : statusFilter,
     priority: priorityFilter === "all" ? "" : priorityFilter,
     milestoneId: milestoneFilter === "all" ? "" : milestoneFilter,
+    // Note: projectId filter would need to be added to the backend API
+    // For now, we'll filter on the frontend
   });
 
   const addTaskForm = useForm<CreateTaskFormData>({
@@ -149,6 +171,29 @@ export const TaskTable = () => {
       pageSize: 10,
     });
   };
+
+  // Get raw tasks data and apply client-side filters
+  const rawTasks = (tasksData as any)?.data?.result || [];
+
+  const filteredTasks = Array.isArray(rawTasks)
+    ? rawTasks.filter((task: Task) => {
+        // Project filter
+        if (projectFilter !== "all") {
+          if (task.milestone?.project?.id !== projectFilter) {
+            return false;
+          }
+        }
+
+        // My Tasks filter (this would need to be implemented with current user context)
+        if (myTasksFilter) {
+          // For now, we'll show all tasks as we don't have current user context
+          // This would need to be implemented with proper user authentication
+          return true;
+        }
+
+        return true;
+      })
+    : [];
 
   const createTaskMutation = useCreateTask();
   const deleteTaskMutation = useDeleteTask();
@@ -214,10 +259,41 @@ export const TaskTable = () => {
       ),
     },
     {
+      header: "Project",
+      accessorKey: "project",
+      cell: ({ row }: { row: { original: Task } }) => {
+        const project = row.original.milestone?.project;
+        return project ? (
+          <Link
+            href={`/dashboard/projects/${project.id}`}
+            className="text-sm hover:text-blue-600 hover:underline transition-colors"
+          >
+            <div className="font-medium text-gray-900">{project.name}</div>
+            <div className="text-xs text-gray-500">ID: {project.id}</div>
+          </Link>
+        ) : (
+          "-"
+        );
+      },
+    },
+    {
       header: "Milestone",
       accessorKey: "milestone",
-      cell: ({ row }: { row: { original: Task } }) =>
-        row.original.milestone?.name || "-",
+      cell: ({ row }: { row: { original: Task } }) => {
+        const milestone = row.original.milestone;
+        const project = row.original.milestone?.project;
+        return milestone && project ? (
+          <Link
+            href={`/dashboard/projects/${project.id}/milestones/${milestone.id}`}
+            className="text-sm hover:text-blue-600 hover:underline transition-colors"
+          >
+            <div className="font-medium text-gray-900">{milestone.name}</div>
+            <div className="text-xs text-gray-500">ID: {milestone.id}</div>
+          </Link>
+        ) : (
+          "-"
+        );
+      },
     },
     {
       header: "Creator",
@@ -239,6 +315,37 @@ export const TaskTable = () => {
         return (
           <div className="text-sm">
             <div>{task.estimatedHours || 0}h estimated</div>
+          </div>
+        );
+      },
+    },
+    {
+      header: "Context",
+      accessorKey: "context",
+      cell: ({ row }: { row: { original: Task } }) => {
+        const task = row.original;
+        const project = task.milestone?.project;
+        const milestone = task.milestone;
+
+        if (!project || !milestone) return "-";
+
+        return (
+          <div className="text-xs text-gray-600">
+            <div className="flex items-center gap-1">
+              <Link
+                href={`/dashboard/projects/${project.id}`}
+                className="hover:text-blue-600 hover:underline transition-colors"
+              >
+                {project.name}
+              </Link>
+              <span className="text-gray-400">/</span>
+              <Link
+                href={`/dashboard/projects/${project.id}/milestones/${milestone.id}`}
+                className="hover:text-blue-600 hover:underline transition-colors"
+              >
+                {milestone.name}
+              </Link>
+            </div>
           </div>
         );
       },
@@ -270,6 +377,18 @@ export const TaskTable = () => {
                 <Pencil />
                 <span>Edit</span>
               </DropdownMenuItem>
+
+              {row.original.milestone?.project && (
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/dashboard/projects/${row.original.milestone.project.id}`}
+                    className="flex items-center gap-2"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    <span>View in Project</span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuItem
                 onClick={() => {
@@ -327,6 +446,16 @@ export const TaskTable = () => {
               value={search}
               onChange={handleSearchChange}
             />
+            <Button
+              variant={myTasksFilter ? "default" : "outline"}
+              size="sm"
+              onClick={() => {
+                setMyTasksFilter(!myTasksFilter);
+                setPagination({ pageIndex: 1, pageSize: 10 });
+              }}
+            >
+              My Tasks
+            </Button>
             <Select
               value={statusFilter}
               onValueChange={(value) => {
@@ -365,6 +494,28 @@ export const TaskTable = () => {
               </SelectContent>
             </Select>
             <Select
+              value={projectFilter}
+              onValueChange={(value) => {
+                setProjectFilter(value);
+                setMilestoneFilter("all"); // Reset milestone filter when project changes
+                setPagination({ pageIndex: 1, pageSize: 10 });
+              }}
+            >
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Filter by project" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Projects</SelectItem>
+                {projectsData?.data?.result &&
+                  Array.isArray(projectsData.data.result) &&
+                  projectsData.data.result.map((project: any) => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+            <Select
               value={milestoneFilter}
               onValueChange={(value) => {
                 setMilestoneFilter(value);
@@ -376,9 +527,9 @@ export const TaskTable = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Milestones</SelectItem>
-                {milestonesData?.data &&
-                  Array.isArray(milestonesData.data) &&
-                  milestonesData.data.map((milestone: Milestone) => (
+                {milestonesData?.data?.result &&
+                  Array.isArray(milestonesData.data.result) &&
+                  milestonesData.data.result.map((milestone: Milestone) => (
                     <SelectItem key={milestone.id} value={milestone.id}>
                       {milestone.name}
                     </SelectItem>
@@ -388,7 +539,7 @@ export const TaskTable = () => {
           </div>
         </div>
         <DataTable
-          data={(tasksData as any)?.data || []}
+          data={filteredTasks}
           columns={columns}
           isPending={isLoading}
           pagination={{

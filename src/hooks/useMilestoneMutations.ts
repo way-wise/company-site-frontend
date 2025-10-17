@@ -34,6 +34,16 @@ export const useMilestones = (params: MilestonesQueryParams) => {
   });
 };
 
+export const useMilestone = (milestoneId: string) => {
+  return useQuery({
+    queryKey: milestoneQueryKeys.detail(milestoneId),
+    queryFn: () => milestoneService.getMilestoneById(milestoneId),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    enabled: !!milestoneId,
+  });
+};
+
 export const useCreateMilestone = () => {
   const queryClient = useQueryClient();
 

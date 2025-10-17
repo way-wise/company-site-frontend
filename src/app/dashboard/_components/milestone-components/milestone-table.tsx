@@ -46,6 +46,7 @@ import { formatStatusText, getMilestoneStatusColor } from "@/lib/status-utils";
 import { Milestone } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  ExternalLink,
   Eye,
   MoreVertical,
   Pencil,
@@ -54,6 +55,8 @@ import {
   Trash,
   Users,
 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UpdateMilestone from "./UpdateMilestone";
@@ -77,6 +80,7 @@ const getStatusBadge = (status: string) => {
 };
 
 export const MilestoneTable = () => {
+  const router = useRouter();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addMilestoneModalOpen, setAddMilestoneModalOpen] = useState(false);
   const [updateMilestoneModalOpen, setUpdateMilestoneModalOpen] =
@@ -168,6 +172,29 @@ export const MilestoneTable = () => {
     {
       header: "Name",
       accessorKey: "name",
+      cell: ({ row }: { row: { original: Milestone } }) => {
+        const milestone = row.original;
+        const handleClick = () => {
+          if (milestone.project?.id) {
+            router.push(
+              `/dashboard/projects/${milestone.project.id}/milestones/${milestone.id}`
+            );
+          }
+        };
+
+        return (
+          <button
+            onClick={handleClick}
+            className="text-left hover:text-blue-600 hover:underline transition-colors"
+            disabled={!milestone.project?.id}
+          >
+            <div className="font-medium text-gray-900">{milestone.name}</div>
+            {milestone.project?.id && (
+              <div className="text-xs text-gray-500">Click to view details</div>
+            )}
+          </button>
+        );
+      },
     },
     {
       header: "Description",
@@ -188,8 +215,17 @@ export const MilestoneTable = () => {
     {
       header: "Project",
       accessorKey: "project",
-      cell: ({ row }: { row: { original: Milestone } }) =>
-        row.original.project?.name || "-",
+      cell: ({ row }: { row: { original: Milestone } }) => {
+        const project = row.original.project;
+        return project ? (
+          <div className="text-sm">
+            <div className="font-medium text-gray-900">{project.name}</div>
+            <div className="text-xs text-gray-500">ID: {project.id}</div>
+          </div>
+        ) : (
+          "-"
+        );
+      },
     },
     {
       header: "Employees",
@@ -244,8 +280,22 @@ export const MilestoneTable = () => {
     {
       header: "Tasks",
       accessorKey: "taskCount",
-      cell: ({ row }: { row: { original: Milestone } }) =>
-        row.original._count?.Task || 0,
+      cell: ({ row }: { row: { original: Milestone } }) => {
+        const taskCount = row.original._count?.Task || 0;
+        const tasks = row.original.Task || [];
+        const completedTasks = tasks.filter(
+          (task) => task.status === "COMPLETED"
+        ).length;
+
+        return (
+          <div className="text-sm">
+            <div className="font-medium text-gray-900">{taskCount} total</div>
+            <div className="text-xs text-gray-500">
+              {completedTasks} completed
+            </div>
+          </div>
+        );
+      },
     },
     {
       header: "Created At",
@@ -274,6 +324,18 @@ export const MilestoneTable = () => {
                 <Eye />
                 <span>View Details</span>
               </DropdownMenuItem>
+
+              {row.original.project && (
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/dashboard/projects/${row.original.project.id}`}
+                    className="flex items-center gap-2"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    <span>View in Project</span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuItem
                 onClick={() => {

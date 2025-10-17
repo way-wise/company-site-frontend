@@ -1,6 +1,7 @@
 "use client";
 
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import Breadcrumb from "@/components/shared/Breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Task } from "@/types";
 import { useState } from "react";
@@ -14,6 +15,12 @@ export default function TasksPage() {
   return (
     <PermissionGuard permissions={["read_task"]}>
       <div className="space-y-6">
+        <Breadcrumb
+          items={[
+            { label: "Projects", href: "/dashboard/projects" },
+            { label: "All Tasks", current: true },
+          ]}
+        />
         <Tabs defaultValue="table" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="table">Table View</TabsTrigger>

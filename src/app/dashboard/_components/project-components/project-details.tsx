@@ -1,5 +1,6 @@
 "use client";
 
+import Breadcrumb from "@/components/shared/Breadcrumb";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,15 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
 
   return (
     <div className="space-y-6">
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb
+        items={[
+          { label: "Projects", href: "/dashboard/projects" },
+          { label: project.name, current: true },
+        ]}
+        className="mb-4"
+      />
+
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="space-y-2">
