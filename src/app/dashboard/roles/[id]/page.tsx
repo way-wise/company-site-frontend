@@ -453,10 +453,12 @@ export default function RoleDetailsPage() {
                           <TableCell>
                             <Badge
                               variant={
-                                user.isActive ? "success" : "destructive"
+                                user.status === "ACTIVE"
+                                  ? "success"
+                                  : "destructive"
                               }
                             >
-                              {user.isActive ? "Active" : "Inactive"}
+                              {user.status === "ACTIVE" ? "Active" : "Inactive"}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right">

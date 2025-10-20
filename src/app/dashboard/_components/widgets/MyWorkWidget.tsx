@@ -301,7 +301,6 @@ export default function MyWorkWidget() {
                           <span>
                             Milestones: {project._count?.milestones || 0}
                           </span>
-                          <span>Tasks: {project._count?.tasks || 0}</span>
                           <span>Created: {formatDate(project.createdAt)}</span>
                         </div>
                       </div>

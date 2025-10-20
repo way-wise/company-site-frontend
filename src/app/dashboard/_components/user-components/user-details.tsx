@@ -54,9 +54,9 @@ const UserDetails = ({ id }: { id: string }) => {
           </div>
         ) : user ? (
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-start sm:text-left">
-            {user?.image ? (
+            {user?.userProfile?.profilePhoto ? (
               <Image
-                src={user?.image}
+                src={user?.userProfile?.profilePhoto}
                 alt="Profile Image"
                 width={150}
                 height={150}
@@ -71,7 +71,7 @@ const UserDetails = ({ id }: { id: string }) => {
               <h1 className="flex items-center justify-center gap-2 text-2xl font-medium sm:justify-start">
                 <span>{user?.name}</span>
 
-                {user?.emailVerified ? (
+                {user?.status === "ACTIVE" ? (
                   <Badge variant="success" size="icon">
                     <Check className="size-4" />
                   </Badge>
@@ -109,10 +109,12 @@ const UserDetails = ({ id }: { id: string }) => {
                     <span>No Role</span>
                   </div>
                 )}
-                {!user?.isActive ? (
+                {user?.status !== "ACTIVE" ? (
                   <div className="flex items-center gap-1.5 rounded-full bg-destructive/70 py-1.5 pr-2.5 pl-2 text-white">
                     <CircleX className="size-6 stroke-[1.5]" />
-                    <span className="capitalize">Banned</span>
+                    <span className="capitalize">
+                      {user?.status?.toLowerCase()}
+                    </span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-1.5 rounded-full bg-muted py-1.5 pr-2.5 pl-2 text-muted-foreground">

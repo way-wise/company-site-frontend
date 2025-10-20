@@ -21,13 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Providers>
-      <html lang="en">
-        <body className={`${inter.variable} font-sans antialiased`}>
+    <html lang="en">
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <Providers>
           <Toaster richColors position="top-center" />
           {children}
-        </body>
-      </html>
-    </Providers>
+        </Providers>
+      </body>
+    </html>
   );
 }

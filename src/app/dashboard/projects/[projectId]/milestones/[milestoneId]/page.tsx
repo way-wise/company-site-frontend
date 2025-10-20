@@ -1,11 +1,11 @@
 "use client";
 
+import MilestoneDetails from "@/app/dashboard/_components/milestone-components/milestone-details";
+import MilestoneTasksView from "@/app/dashboard/_components/milestone-components/milestone-tasks-view";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { useMilestone } from "@/hooks/useMilestoneMutations";
 import { useProject } from "@/hooks/useProjectMutations";
 import { useParams } from "next/navigation";
-import MilestoneDetails from "../../_components/milestone-components/milestone-details";
-import MilestoneTasksView from "../../_components/milestone-components/milestone-tasks-view";
 
 export default function MilestoneDetailPage() {
   const params = useParams();

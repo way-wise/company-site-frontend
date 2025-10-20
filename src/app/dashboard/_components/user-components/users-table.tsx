@@ -437,9 +437,9 @@ export const UsersTable = () => {
     },
     {
       header: "Status",
-      accessorKey: "isActive",
+      accessorKey: "status",
       cell: ({ row }: { row: { original: User } }) => {
-        return row.original.isActive ? (
+        return row.original.status === "ACTIVE" ? (
           <Badge variant="success">Active</Badge>
         ) : (
           <Badge variant="destructive">Inactive</Badge>
@@ -456,7 +456,7 @@ export const UsersTable = () => {
       id: "actions",
       header: "Actions",
       cell: ({ row }: { row: { original: User } }) => {
-        const { id, isActive } = row.original;
+        const { id, status } = row.original;
 
         return (
           <>
@@ -482,7 +482,7 @@ export const UsersTable = () => {
                   <Edit />
                   <span>Update Role</span>
                 </DropdownMenuItem> */}
-                {!isActive ? (
+                {status !== "ACTIVE" ? (
                   <DropdownMenuItem
                     onClick={() => {
                       setUserId(id);

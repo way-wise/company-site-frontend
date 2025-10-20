@@ -284,7 +284,7 @@ export const MilestoneTable = () => {
         const taskCount = row.original._count?.Task || 0;
         const tasks = row.original.Task || [];
         const completedTasks = tasks.filter(
-          (task) => task.status === "COMPLETED"
+          (task) => task.status === "DONE"
         ).length;
 
         return (

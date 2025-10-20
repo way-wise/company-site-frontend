@@ -50,7 +50,7 @@ export default function MilestoneDetails({
     if (tasks.length === 0) return 0;
 
     const completedTasks = tasks.filter(
-      (task) => task.status === "COMPLETED"
+      (task) => task.status === "DONE"
     ).length;
     return Math.round((completedTasks / tasks.length) * 100);
   };
@@ -85,7 +85,7 @@ export default function MilestoneDetails({
                 </p>
               )}
             </div>
-            <Badge className={statusColors} size="lg">
+            <Badge className={statusColors}>
               {formatStatusText(milestone.status)}
             </Badge>
           </div>
