@@ -196,7 +196,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       console.error("Failed to update task status:", error);
     }
   };
-
+  console.log("Milestones data");
   if (isLoading) {
     return (
       <Card className="p-6">
