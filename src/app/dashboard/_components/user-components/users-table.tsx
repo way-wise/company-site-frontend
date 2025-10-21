@@ -467,22 +467,12 @@ export const UsersTable = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/users/${id}`}>
+                  <Link href={`/dashboard/users/${id}`}>
                     <Eye />
                     <span>View</span>
                   </Link>
                 </DropdownMenuItem>
-                {/* Role update temporarily disabled - needs backend UserRoleAssignment support */}
-                {/* <DropdownMenuItem
-                  onClick={() => {
-                    setUserId(id);
-                    roleUpdateForm.setValue("role", row.original.roles[0]?.role?.name || "CLIENT");
-                    setRoleUpdateModalOpen(true);
-                  }}
-                >
-                  <Edit />
-                  <span>Update Role</span>
-                </DropdownMenuItem> */}
+
                 {status !== "ACTIVE" ? (
                   <DropdownMenuItem
                     onClick={() => {

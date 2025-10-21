@@ -93,15 +93,13 @@ const UserDetails = ({ id }: { id: string }) => {
               <div className="flex items-center gap-2 py-3">
                 {user?.roles && user.roles.length > 0 ? (
                   user.roles.map((role) => (
-                    <div
+                    <Badge
                       key={role.id}
                       className="flex items-center gap-1.5 rounded-full bg-muted py-1.5 pr-2.5 pl-2 text-muted-foreground"
                     >
                       <ShieldUser className="size-6 stroke-[1.5]" />
-                      <span className="capitalize">
-                        {role.role.name.replace(/_/g, " ")}
-                      </span>
-                    </div>
+                      <span>{role.name}</span>
+                    </Badge>
                   ))
                 ) : (
                   <div className="flex items-center gap-1.5 rounded-full bg-muted py-1.5 pr-2.5 pl-2 text-muted-foreground">
