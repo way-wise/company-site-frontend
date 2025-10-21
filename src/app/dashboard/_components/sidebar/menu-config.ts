@@ -16,7 +16,8 @@ export interface MenuItem {
   title: string;
   icon: React.ComponentType<{ className?: string }>;
   url: string;
-  permission?: string;
+  permission?: string; // Keep for backwards compatibility
+  permissions?: string[]; // New array format
   roles?: string[];
   submenu?: SubMenuItem[];
   baseUrl?: string;
@@ -45,49 +46,49 @@ export const menuConfig: MenuItem[] = [
     title: "Users",
     icon: UsersRound,
     url: "/dashboard/users",
-    permission: "read_user",
+    permissions: ["read_user", "create_user"],
   },
   {
     title: "Roles",
     icon: Shield,
     url: "/dashboard/roles",
-    permission: "read_role",
+    permissions: ["read_role", "create_role"],
   },
   {
     title: "Permissions",
     icon: Key,
     url: "/dashboard/permissions",
-    permission: "read_permission",
+    permissions: ["read_permission", "create_permission"],
   },
   {
     title: "Services",
     icon: CassetteTape,
     url: "/dashboard/services",
-    permission: "read_service",
+    permissions: ["read_service", "create_service"],
   },
   {
     title: "Projects",
     icon: FolderKanban,
     url: "/dashboard/projects",
-    permission: "read_project",
+    permissions: ["read_project", "create_project"],
   },
   {
     title: "Milestones",
     icon: Milestone,
     url: "/dashboard/milestones",
-    permission: "read_milestone",
+    permissions: ["read_milestone", "create_milestone"],
   },
   {
     title: "Tasks",
     icon: CheckSquare,
     url: "/dashboard/tasks",
-    permission: "read_task",
+    permissions: ["read_task", "create_task"],
   },
   {
     title: "Leave Management",
     icon: CalendarDays,
     url: "/dashboard/leave",
-    permission: "read_leave",
+    permissions: ["read_leave", "create_leave"],
   },
   {
     title: "Settings",
