@@ -179,7 +179,7 @@ export const useUpdateUser = () => {
       userId: string;
       userData: Partial<User>;
     }) => userService.updateUser(userId, userData),
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       if (data.success) {
         toast.success("User updated successfully");
         // Invalidate and refetch all user-related queries

@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateProject } from "@/hooks/useProjectMutations";
+import { Project } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -37,7 +38,7 @@ import { useForm } from "react-hook-form";
 interface UpdateProjectProps {
   isOpen: boolean;
   onClose: () => void;
-  project: any | null;
+  project: Project | null;
 }
 
 const UpdateProject = ({ isOpen, onClose, project }: UpdateProjectProps) => {
@@ -71,7 +72,7 @@ const UpdateProject = ({ isOpen, onClose, project }: UpdateProjectProps) => {
         projectData: values,
       });
       onClose();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };

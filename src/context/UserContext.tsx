@@ -128,6 +128,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Initialize auth on mount
   useEffect(() => {
     refreshUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Remove refreshUser dependency to prevent infinite loop
 
   const value: AuthContextType = {

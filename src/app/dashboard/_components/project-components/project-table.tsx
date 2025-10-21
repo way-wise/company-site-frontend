@@ -47,7 +47,7 @@ import { Project, User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, MoreVertical, Pencil, Plus, Trash } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UpdateProject from "./UpdateProject";
@@ -75,7 +75,7 @@ const getStatusBadge = (status: string) => {
 };
 
 export const ProjectTable = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addProjectModalOpen, setAddProjectModalOpen] = useState(false);
   const [updateProjectModalOpen, setUpdateProjectModalOpen] = useState(false);
@@ -112,7 +112,7 @@ export const ProjectTable = () => {
   const {
     data: projectsData,
     isLoading,
-    refetch,
+    // refetch,
   } = useProjects({
     page: pagination.pageIndex,
     limit: pagination.pageSize,
@@ -172,7 +172,7 @@ export const ProjectTable = () => {
         pageIndex: 1,
         pageSize: 10,
       });
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };
@@ -183,7 +183,7 @@ export const ProjectTable = () => {
     try {
       await deleteProjectMutation.mutateAsync(projectId);
       setDeleteModalOpen(false);
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };
@@ -196,7 +196,7 @@ export const ProjectTable = () => {
     {
       header: "Description",
       accessorKey: "description",
-      cell: ({ row }: { row: { original: any } }) => {
+      cell: ({ row }: { row: { original: Project } }) => {
         const description = row.original.description;
         return description && description.length > 50
           ? `${description.substring(0, 50)}...`
@@ -206,31 +206,31 @@ export const ProjectTable = () => {
     {
       header: "Status",
       accessorKey: "status",
-      cell: ({ row }: { row: { original: any } }) =>
+      cell: ({ row }: { row: { original: Project } }) =>
         getStatusBadge(row.original.status),
     },
     {
       header: "Owner",
       accessorKey: "userProfile",
-      cell: ({ row }: { row: { original: any } }) =>
+      cell: ({ row }: { row: { original: Project } }) =>
         row.original.userProfile?.user?.name || "-",
     },
     {
       header: "Milestones",
       accessorKey: "_count",
-      cell: ({ row }: { row: { original: any } }) =>
+      cell: ({ row }: { row: { original: Project } }) =>
         row.original._count?.milestones || 0,
     },
     {
       header: "Created At",
       accessorKey: "createdAt",
-      cell: ({ row }: { row: { original: any } }) =>
+      cell: ({ row }: { row: { original: Project } }) =>
         formatDate(row.original.createdAt),
     },
     {
       id: "actions",
       header: "Actions",
-      cell: ({ row }: { row: { original: any } }) => {
+      cell: ({ row }: { row: { original: Project } }) => {
         const { id } = row.original;
 
         return (

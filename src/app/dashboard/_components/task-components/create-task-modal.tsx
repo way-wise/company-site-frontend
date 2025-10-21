@@ -31,7 +31,7 @@ import { useMilestones } from "@/hooks/useMilestoneMutations";
 import { useProjects } from "@/hooks/useProjectMutations";
 import { useCreateTask } from "@/hooks/useTaskMutations";
 import { useUsers } from "@/hooks/useUserMutations";
-import { Milestone, Project, User } from "@/types";
+import { Milestone, Project, TaskFormData, User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -152,7 +152,7 @@ export default function CreateTaskModal({
     }
   }, [selectedMilestoneId, form]);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: TaskFormData) => {
     console.log("Form data being submitted:", data);
     console.log("Form values:", form.getValues());
     console.log("Selected milestone ID:", selectedMilestoneId);

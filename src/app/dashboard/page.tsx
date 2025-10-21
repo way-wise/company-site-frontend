@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/UserContext";
+import Link from "next/link";
 import AdminWidgets from "./_components/widgets/AdminWidgets";
 import ClientWidgets from "./_components/widgets/ClientWidgets";
 import EmployeeWidgets from "./_components/widgets/EmployeeWidgets";
@@ -46,24 +47,24 @@ const DashboardPage = () => {
             <div className="p-4 border rounded-lg">
               <h3 className="font-semibold mb-2">Quick Actions</h3>
               <div className="space-y-2">
-                <a
+                <Link
                   href="/dashboard/projects"
                   className="block text-sm text-blue-600 hover:underline"
                 >
                   View All Projects
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/dashboard/tasks"
                   className="block text-sm text-blue-600 hover:underline"
                 >
                   View All Tasks
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/dashboard/milestones"
                   className="block text-sm text-blue-600 hover:underline"
                 >
                   View All Milestones
-                </a>
+                </Link>
               </div>
             </div>
             <div className="p-4 border rounded-lg">

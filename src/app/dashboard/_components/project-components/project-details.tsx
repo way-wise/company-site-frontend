@@ -5,11 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatStatusText, getProjectStatusColor } from "@/lib/status-utils";
+import { Project } from "@/types";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface ProjectDetailsProps {
-  project: any;
+  project: Project;
 }
 
 export default function ProjectDetails({ project }: ProjectDetailsProps) {

@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useTasks, useUpdateTask } from "@/hooks/useTaskMutations";
-import { Task, TaskStatus } from "@/types";
+import { useTasks } from "@/hooks/useTaskMutations";
+import { Task } from "@/types";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import TaskCard from "./task-card";
@@ -35,22 +35,22 @@ export default function TaskKanban({
     milestoneId: milestoneId,
   });
 
-  const updateTaskMutation = useUpdateTask();
+  // const updateTaskMutation = useUpdateTask();
 
-  const handleStatusChange = async (taskId: string, newStatus: string) => {
-    try {
-      await updateTaskMutation.mutateAsync({
-        taskId,
-        taskData: { status: newStatus as TaskStatus },
-      });
-    } catch (error) {
-      console.error("Failed to update task status:", error);
-    }
-  };
+  // const handleStatusChange = async (taskId: string, newStatus: string) => {
+  //   try {
+  //     await updateTaskMutation.mutateAsync({
+  //       taskId,
+  //       taskData: { status: newStatus as TaskStatus },
+  //     });
+  //   } catch (error) {
+  //     console.error("Failed to update task status:", error);
+  //   }
+  // };
 
   const tasksByStatus = KANBAN_COLUMNS.reduce((acc, column) => {
     acc[column.id] =
-      (tasksData as any)?.data?.result?.filter(
+      (tasksData as { data?: { result?: Task[] } })?.data?.result?.filter(
         (task: Task) => task.status === column.id
       ) || [];
     return acc;

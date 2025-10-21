@@ -32,7 +32,7 @@ import {
   getTaskPriorityColor,
   getTaskStatusColor,
 } from "@/lib/status-utils";
-import { Milestone, Task } from "@/types";
+import { Milestone, Project, Task } from "@/types";
 import {
   ExternalLink,
   Eye,
@@ -93,7 +93,7 @@ export const TaskTable = () => {
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [milestoneFilter, setMilestoneFilter] = useState("all");
   const [projectFilter, setProjectFilter] = useState("all");
-  const [assigneeFilter, setAssigneeFilter] = useState("all");
+  // const [assigneeFilter] = useState("all");
   const [myTasksFilter, setMyTasksFilter] = useState(false);
 
   useEffect(() => {
@@ -120,7 +120,7 @@ export const TaskTable = () => {
   const {
     data: tasksData,
     isLoading,
-    refetch,
+    // refetch,
   } = useTasks({
     page: pagination.pageIndex,
     limit: pagination.pageSize,
@@ -143,7 +143,8 @@ export const TaskTable = () => {
   };
 
   // Get raw tasks data and apply client-side filters
-  const rawTasks = (tasksData as any)?.data?.result || [];
+  const rawTasks =
+    (tasksData as { data?: { result?: Task[] } })?.data?.result || [];
 
   const filteredTasks = Array.isArray(rawTasks)
     ? rawTasks.filter((task: Task) => {
@@ -173,7 +174,7 @@ export const TaskTable = () => {
     try {
       await deleteTaskMutation.mutateAsync(taskId);
       setDeleteModalOpen(false);
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };
@@ -467,7 +468,7 @@ export const TaskTable = () => {
                 <SelectItem value="all">All Projects</SelectItem>
                 {projectsData?.data?.result &&
                   Array.isArray(projectsData.data.result) &&
-                  projectsData.data.result.map((project: any) => (
+                  projectsData.data.result.map((project: Project) => (
                     <SelectItem key={project.id} value={project.id}>
                       {project.name}
                     </SelectItem>

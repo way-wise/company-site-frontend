@@ -4,11 +4,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import {
-  formatStatusText,
-  getTaskPriorityColor,
-  getTaskStatusColor,
-} from "@/lib/status-utils";
+import { formatStatusText, getTaskPriorityColor } from "@/lib/status-utils";
 import { Task } from "@/types";
 import { Clock, Users } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +16,7 @@ interface TaskCardProps {
 
 export default function TaskCard({ task, onClick }: TaskCardProps) {
   const priorityColors = getTaskPriorityColor(task.priority);
-  const statusColors = getTaskStatusColor(task.status);
+  // const statusColors = getTaskStatusColor(task.status);
 
   // Get border color class based on priority
   const getBorderColorClass = () => {

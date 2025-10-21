@@ -26,7 +26,7 @@ export const PermissionGuard = ({
   const {
     isLoading,
     isAuthenticated,
-    hasPermission,
+    // hasPermission,
     hasAnyPermission,
     hasAllPermissions,
     hasRole,

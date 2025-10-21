@@ -110,12 +110,12 @@ const ROLE_OPTIONS = [
 ];
 
 // Role filter options (excluding SUPER_ADMIN for filtering)
-const ROLE_FILTER_OPTIONS = [
-  { value: "ALL", label: "All Roles" },
-  { value: "CLIENT", label: "Client" },
-  { value: "ADMIN", label: "Admin" },
-  { value: "EMPLOYEE", label: "Employee" },
-];
+// const ROLE_FILTER_OPTIONS = [
+//   { value: "ALL", label: "All Roles" },
+//   { value: "CLIENT", label: "Client" },
+//   { value: "ADMIN", label: "Admin" },
+//   { value: "EMPLOYEE", label: "Employee" },
+// ];
 
 export const UsersTable = () => {
   // Modal states

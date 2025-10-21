@@ -13,7 +13,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { formatStatusText, getMilestoneStatusColor } from "@/lib/status-utils";
-import { Milestone, Project } from "@/types";
+import {
+  EmployeeMilestone,
+  Milestone,
+  Project,
+  ServiceMilestone,
+} from "@/types";
 import {
   Calendar,
   Edit,
@@ -190,27 +195,29 @@ export default function MilestoneDetails({
               Team Members
             </h3>
             <div className="flex flex-wrap gap-3">
-              {milestone.employeeMilestones.map((em: any, index: number) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2"
-                >
-                  <Avatar className="h-8 w-8">
-                    <div className="bg-primary text-primary-foreground text-sm font-medium">
-                      {em.userProfile?.user?.name?.charAt(0).toUpperCase() ||
-                        "?"}
-                    </div>
-                  </Avatar>
-                  <div>
-                    <div className="text-sm font-medium text-gray-900">
-                      {em.userProfile?.user?.name || "Unknown User"}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {em.userProfile?.user?.email || ""}
+              {milestone.employeeMilestones.map(
+                (em: EmployeeMilestone, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2"
+                  >
+                    <Avatar className="h-8 w-8">
+                      <div className="bg-primary text-primary-foreground text-sm font-medium">
+                        {em.userProfile?.user?.name?.charAt(0).toUpperCase() ||
+                          "?"}
+                      </div>
+                    </Avatar>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {em.userProfile?.user?.name || "Unknown User"}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {em.userProfile?.user?.email || ""}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
         )}
@@ -223,15 +230,17 @@ export default function MilestoneDetails({
               Assigned Services
             </h3>
             <div className="flex flex-wrap gap-2">
-              {milestone.serviceMilestones.map((sm: any, index: number) => (
-                <Badge
-                  key={index}
-                  variant="outline"
-                  className="px-3 py-1 text-sm"
-                >
-                  {sm.service?.name || "Unknown Service"}
-                </Badge>
-              ))}
+              {milestone.serviceMilestones.map(
+                (sm: ServiceMilestone, index: number) => (
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className="px-3 py-1 text-sm"
+                  >
+                    {sm.service?.name || "Unknown Service"}
+                  </Badge>
+                )
+              )}
             </div>
           </div>
         )}

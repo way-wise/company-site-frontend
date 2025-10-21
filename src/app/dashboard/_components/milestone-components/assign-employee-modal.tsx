@@ -86,7 +86,7 @@ export default function AssignEmployeeModal({
         userProfileIds: values.userProfileIds,
       });
       onClose();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };

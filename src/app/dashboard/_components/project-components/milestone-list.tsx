@@ -43,9 +43,9 @@ import {
   useDeleteMilestone,
   useMilestones,
 } from "@/hooks/useMilestoneMutations";
-import { useDeleteTask, useUpdateTask } from "@/hooks/useTaskMutations";
+import { useDeleteTask } from "@/hooks/useTaskMutations";
 import { formatStatusText, getMilestoneStatusColor } from "@/lib/status-utils";
-import { Milestone, Task } from "@/types";
+import { EmployeeMilestone, Milestone, ServiceMilestone, Task } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Calendar,
@@ -127,7 +127,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   const createMilestoneMutation = useCreateMilestone();
   const deleteMilestoneMutation = useDeleteMilestone();
   const deleteTaskMutation = useDeleteTask();
-  const updateTaskMutation = useUpdateTask();
+  // const updateTaskMutation = useUpdateTask();
 
   const handleCreateMilestone = async (data: CreateMilestoneFormData) => {
     try {
@@ -183,19 +183,19 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
     }
   };
 
-  const handleTaskStatusChange = async (
-    task: Task,
-    newStatus: "TODO" | "IN_PROGRESS" | "REVIEW" | "BLOCKED" | "DONE"
-  ) => {
-    try {
-      await updateTaskMutation.mutateAsync({
-        taskId: task.id,
-        taskData: { status: newStatus },
-      });
-    } catch (error) {
-      console.error("Failed to update task status:", error);
-    }
-  };
+  // const handleTaskStatusChange = async (
+  //   task: Task,
+  //   newStatus: "TODO" | "IN_PROGRESS" | "REVIEW" | "BLOCKED" | "DONE"
+  // ) => {
+  //   try {
+  //     await updateTaskMutation.mutateAsync({
+  //       taskId: task.id,
+  //       taskData: { status: newStatus },
+  //     });
+  //   } catch (error) {
+  //     console.error("Failed to update task status:", error);
+  //   }
+  // };
   console.log("Milestones data");
   if (isLoading) {
     return (
@@ -275,8 +275,8 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                 Project Milestones
               </h2>
               <p className="text-blue-600 font-medium">
-                {(milestones as any)?.length || 0} milestones • Track your
-                project progress
+                {(milestones as Milestone[])?.length || 0} milestones • Track
+                your project progress
               </p>
             </div>
           </div>
@@ -290,9 +290,9 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
         </div>
       </div>
 
-      {(milestones as any)?.length > 0 ? (
+      {(milestones as Milestone[])?.length > 0 ? (
         <div className="grid gap-8">
-          {(milestones as any)?.map((milestone: any) => {
+          {(milestones as Milestone[])?.map((milestone: Milestone) => {
             const stats = getMilestoneStats(milestone);
             const statusColors = getMilestoneStatusColor(milestone.status);
             const progress = getMilestoneProgress(milestone);
@@ -305,7 +305,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                 className={`bg-white  rounded-xl border-2 shadow-lg transition-all duration-200 overflow-hidden ${
                   milestone.status === "COMPLETED"
                     ? "border-green-200 hover:border-green-300"
-                    : milestone.status === "IN_PROGRESS"
+                    : milestone.status === "ONGOING"
                     ? "border-blue-200 hover:border-blue-300"
                     : milestone.status === "PENDING"
                     ? "border-yellow-200 hover:border-yellow-300"
@@ -324,7 +324,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                           className={`p-2 rounded-lg ${
                             milestone.status === "COMPLETED"
                               ? "bg-green-100"
-                              : milestone.status === "IN_PROGRESS"
+                              : milestone.status === "ONGOING"
                               ? "bg-blue-100"
                               : milestone.status === "PENDING"
                               ? "bg-yellow-100"
@@ -335,7 +335,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                             className={`h-4 w-4 ${
                               milestone.status === "COMPLETED"
                                 ? "text-green-600"
-                                : milestone.status === "IN_PROGRESS"
+                                : milestone.status === "ONGOING"
                                 ? "text-blue-600"
                                 : milestone.status === "PENDING"
                                 ? "text-yellow-600"
@@ -490,8 +490,8 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                   </div>
 
                   {/* Team Members & Services */}
-                  {(milestone.employeeMilestones?.length > 0 ||
-                    milestone.serviceMilestones?.length > 0) && (
+                  {((milestone.employeeMilestones?.length || 0) > 0 ||
+                    (milestone.serviceMilestones?.length || 0) > 0) && (
                     <div className="flex flex-wrap items-center gap-4 text-sm">
                       {milestone.employeeMilestones &&
                         milestone.employeeMilestones.length > 0 && (
@@ -503,21 +503,24 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                             <div className="flex items-center gap-1">
                               {milestone.employeeMilestones
                                 .slice(0, 3)
-                                .map((em: any, index: number) => (
+                                .map((em: EmployeeMilestone, index: number) => (
                                   <span
                                     key={index}
                                     className="text-green-600 font-medium"
                                   >
                                     {em.userProfile?.user?.name || "Unknown"}
                                     {index <
-                                      milestone.employeeMilestones.slice(0, 3)
-                                        .length -
+                                      (milestone.employeeMilestones?.slice(0, 3)
+                                        .length || 0) -
                                         1 && ", "}
                                   </span>
                                 ))}
-                              {milestone.employeeMilestones.length > 3 && (
+                              {(milestone.employeeMilestones?.length || 0) >
+                                3 && (
                                 <span className="text-gray-500">
-                                  +{milestone.employeeMilestones.length - 3}{" "}
+                                  +
+                                  {(milestone.employeeMilestones?.length || 0) -
+                                    3}{" "}
                                   more
                                 </span>
                               )}
@@ -535,21 +538,25 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                             <div className="flex items-center gap-1">
                               {milestone.serviceMilestones
                                 .slice(0, 3)
-                                .map((sm: any, index: number) => (
+                                .map((sm: ServiceMilestone, index: number) => (
                                   <span
                                     key={index}
                                     className="text-purple-600 font-medium"
                                   >
                                     {sm.service?.name || "Unknown"}
                                     {index <
-                                      milestone.serviceMilestones.slice(0, 3)
-                                        .length -
+                                      (milestone.serviceMilestones?.slice(0, 3)
+                                        .length || 0) -
                                         1 && ", "}
                                   </span>
                                 ))}
-                              {milestone.serviceMilestones.length > 3 && (
+                              {(milestone.serviceMilestones?.length || 0) >
+                                3 && (
                                 <span className="text-gray-500">
-                                  +{milestone.serviceMilestones.length - 3} more
+                                  +
+                                  {(milestone.serviceMilestones?.length || 0) -
+                                    3}{" "}
+                                  more
                                 </span>
                               )}
                             </div>

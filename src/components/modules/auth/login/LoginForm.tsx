@@ -11,13 +11,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { LoginFormData, loginSchema } from "./loginValidation";
-``;
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const loginMutation = useLogin();
-  const { refreshUser, user } = useAuth();
+  const { refreshUser } = useAuth();
   const router = useRouter();
 
   const {
@@ -49,7 +48,7 @@ export default function LoginForm() {
           return;
         }
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Login failed. Please try again.");
         setIsSubmitting(false);
       },

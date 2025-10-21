@@ -75,9 +75,9 @@ export const ServiceTable = () => {
   const {
     data: servicesData,
     isLoading,
-    error,
-    isError,
-    refetch,
+    // error,
+    // isError,
+    // refetch,
   } = useServices({
     page: pagination.pageIndex,
     limit: pagination.pageSize,
@@ -114,7 +114,7 @@ export const ServiceTable = () => {
       await createServiceMutation.mutateAsync(values);
       setAddServiceModalOpen(false);
       addServiceForm.reset();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };
@@ -126,7 +126,7 @@ export const ServiceTable = () => {
     try {
       await deleteServiceMutation.mutateAsync(serviceId);
       setDeleteModalOpen(false);
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };

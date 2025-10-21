@@ -18,8 +18,8 @@ const PageHeader = ({
   description,
   titleClass,
   descriptionClass,
-  breadcrumbs = [{ label: "Home", href: "/" }],
-}: PageHeaderProps) => {
+}: // breadcrumbs = [{ label: "Home", href: "/" }],
+PageHeaderProps) => {
   return (
     <section className="py-20 px-4 bg-cover bg-center bg-no-repeat bg-[url('@/assets/images/services/services-bg.png')]">
       <div className="relative container mx-auto px-2 z-10 py-10">

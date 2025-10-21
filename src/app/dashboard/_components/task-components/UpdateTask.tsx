@@ -78,7 +78,7 @@ export default function UpdateTask({ isOpen, onClose, task }: UpdateTaskProps) {
         taskData: values,
       });
       onClose();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };

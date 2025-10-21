@@ -99,7 +99,7 @@ export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
     });
   };
 
-  const handleQuickSave = async (data: any) => {
+  const handleQuickSave = async (data: Partial<Task>) => {
     try {
       await updateTaskMutation.mutateAsync({
         taskId: task.id,

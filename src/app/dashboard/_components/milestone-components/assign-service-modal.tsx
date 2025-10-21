@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/modal";
 import { useAssignServicesToMilestone } from "@/hooks/useMilestoneMutations";
 import { useServices } from "@/hooks/useServiceMutations";
-import { Milestone } from "@/types";
+import { Milestone, Service } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -85,7 +85,7 @@ export default function AssignServiceModal({
         serviceIds: values.serviceIds,
       });
       onClose();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };
@@ -93,7 +93,9 @@ export default function AssignServiceModal({
   const handleSelectAll = () => {
     if (!servicesData?.data) return;
 
-    const allServiceIds = servicesData.data.map((service: any) => service.id);
+    const allServiceIds = servicesData.data.map(
+      (service: Service) => service.id
+    );
     setSelectedServices(allServiceIds);
     form.setValue("serviceIds", allServiceIds);
   };
@@ -133,7 +135,7 @@ export default function AssignServiceModal({
                 </div>
 
                 <div className="max-h-96 overflow-y-auto space-y-2">
-                  {servicesData?.data?.map((service: any) => {
+                  {servicesData?.data?.map((service: Service) => {
                     const isAssigned = milestone?.serviceMilestones?.some(
                       (sm) => sm.serviceId === service.id
                     );

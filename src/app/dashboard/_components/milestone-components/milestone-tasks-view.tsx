@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useMilestone } from "@/hooks/useMilestoneMutations";
+// import { useMilestone } from "@/hooks/useMilestoneMutations";
 import { useTasks } from "@/hooks/useTaskMutations";
 import { Task } from "@/types";
 import { CheckSquare, LayoutGrid, Plus, Table } from "lucide-react";
@@ -30,8 +30,8 @@ export default function MilestoneTasksView({
     milestoneId: milestoneId,
   });
 
-  const { data: milestoneData } = useMilestone(milestoneId);
-  const milestone = milestoneData?.data;
+  // const { data: milestoneData } = useMilestone(milestoneId);
+  // const milestone = milestoneData?.data;
 
   const tasks = tasksData?.data?.result || [];
 

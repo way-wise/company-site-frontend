@@ -72,13 +72,13 @@ export default function MyWorkWidget() {
 
   // Calculate stats
   const myTasksCount = tasks.length;
-  const completedTasksCount = tasks.filter(
-    (task) => task.status === "DONE"
-  ).length;
+  // const completedTasksCount = tasks.filter(
+  //   (task) => task.status === "DONE"
+  // ).length;
   const myMilestonesCount = milestones.length;
-  const completedMilestonesCount = milestones.filter(
-    (milestone) => milestone.status === "COMPLETED"
-  ).length;
+  // const completedMilestonesCount = milestones.filter(
+  //   (milestone) => milestone.status === "COMPLETED"
+  // ).length;
   const myProjectsCount = projects.length;
 
   const tabs = [
@@ -114,7 +114,9 @@ export default function MyWorkWidget() {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() =>
+                  setActiveTab(tab.id as "tasks" | "milestones" | "projects")
+                }
                 className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   activeTab === tab.id
                     ? "bg-white text-gray-900 shadow-sm"

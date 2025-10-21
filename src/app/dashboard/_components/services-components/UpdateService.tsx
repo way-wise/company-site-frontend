@@ -64,7 +64,7 @@ const UpdateService = ({ isOpen, onClose, service }: UpdateServiceProps) => {
         serviceData: values as Partial<Service>,
       });
       onClose();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };

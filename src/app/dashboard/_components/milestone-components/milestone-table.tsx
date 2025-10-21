@@ -43,7 +43,7 @@ import {
 } from "@/hooks/useMilestoneMutations";
 import { useProjects } from "@/hooks/useProjectMutations";
 import { formatStatusText, getMilestoneStatusColor } from "@/lib/status-utils";
-import { Milestone } from "@/types";
+import { Milestone, Project } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ExternalLink,
@@ -152,7 +152,7 @@ export const MilestoneTable = () => {
       await createMilestoneMutation.mutateAsync(values);
       setAddMilestoneModalOpen(false);
       addMilestoneForm.reset();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };
@@ -163,7 +163,7 @@ export const MilestoneTable = () => {
     try {
       await deleteMilestoneMutation.mutateAsync(milestoneId);
       setDeleteModalOpen(false);
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };
@@ -435,9 +435,8 @@ export const MilestoneTable = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Projects</SelectItem>
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                {(projectsData?.data?.result as any[] | undefined)?.map(
-                  (project: any) => (
+                {(projectsData?.data?.result as Project[] | undefined)?.map(
+                  (project: Project) => (
                     <SelectItem key={project.id} value={project.id.toString()}>
                       {project.name}
                     </SelectItem>
@@ -447,10 +446,12 @@ export const MilestoneTable = () => {
             </Select>
           </div>
         </div>
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <DataTable
           key={`milestones-${milestonesData?.data?.result?.length || 0}`}
-          data={(milestonesData as any)?.data?.result || []}
+          data={
+            (milestonesData as { data?: { result?: Milestone[] } })?.data
+              ?.result || []
+          }
           columns={columns}
           isPending={isLoading}
           pagination={{
@@ -555,10 +556,9 @@ export const MilestoneTable = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                           {(
-                            projectsData?.data?.result as any[] | undefined
-                          )?.map((project: any) => (
+                            projectsData?.data?.result as Project[] | undefined
+                          )?.map((project: Project) => (
                             <SelectItem
                               key={project.id}
                               value={project.id.toString()}
