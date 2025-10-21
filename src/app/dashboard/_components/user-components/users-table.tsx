@@ -159,7 +159,7 @@ export const UsersTable = () => {
     search: debouncedSearch,
     role: roleFilter === "ALL" ? undefined : roleFilter,
   });
-
+  console.log(usersData);
   // Add User Form
   const addUserForm = useForm<CreateClientFormData>({
     resolver: zodResolver(createClientSchema),
@@ -427,10 +427,11 @@ export const UsersTable = () => {
 
         return (
           <div className="flex gap-1">
-            <Badge variant={badgeProps.variant}>{badgeProps.label}</Badge>
-            {roles.length > 1 && (
-              <Badge variant="outline">+{roles.length - 1}</Badge>
-            )}
+            {roles?.map((role) => (
+              <Badge key={role.id} variant={badgeProps.variant}>
+                {role.name}{" "}
+              </Badge>
+            ))}
           </div>
         );
       },

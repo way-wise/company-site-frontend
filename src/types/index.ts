@@ -43,6 +43,7 @@ export interface UserRoleAssignment {
   userId: string;
   roleId: string;
   role: Role;
+  name: string; // Direct access to role name
   assignedAt: string;
 }
 
