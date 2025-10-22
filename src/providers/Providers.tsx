@@ -1,5 +1,6 @@
 "use client";
 
+import { SocketProvider } from "@/context/SocketContext";
 import { AuthProvider } from "@/context/UserContext";
 import { ProgressProvider } from "@/providers/progress-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -15,7 +16,9 @@ export default function Providers({ children }: ProvidersProps) {
   return (
     <ProgressProvider>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <SocketProvider>{children}</SocketProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </ProgressProvider>
   );

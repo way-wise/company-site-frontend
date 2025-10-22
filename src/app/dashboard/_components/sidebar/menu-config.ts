@@ -6,6 +6,7 @@ import {
   Home,
   Key,
   LayoutGrid,
+  MessageCircle,
   Milestone,
   Settings,
   Shield,
@@ -83,6 +84,12 @@ export const menuConfig: MenuItem[] = [
     icon: CheckSquare,
     url: "/dashboard/tasks",
     permissions: ["read_task", "create_task"],
+  },
+  {
+    title: "Chat",
+    icon: MessageCircle,
+    url: "/dashboard/chat",
+    // Always visible to authenticated users
   },
   {
     title: "Leave Management",

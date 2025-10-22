@@ -464,3 +464,81 @@ export interface TasksQueryParams {
   milestoneId?: string;
   creatorId?: string;
 }
+
+// Chat Types
+export type ConversationType = "DIRECT" | "GROUP" | "PROJECT";
+
+export interface ConversationParticipant {
+  id: string;
+  conversationId: string;
+  userProfileId: string;
+  joinedAt: string;
+  lastReadAt: string;
+  isAdmin: boolean;
+  userProfile: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    profilePhoto?: string;
+  };
+}
+
+export interface ChatMessage {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  content: string;
+  attachments?: unknown[];
+  isEdited: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  sender: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    profilePhoto?: string;
+  };
+}
+
+export interface Conversation {
+  id: string;
+  name?: string;
+  type: ConversationType;
+  projectId?: string;
+  createdAt: string;
+  updatedAt: string;
+  participants: ConversationParticipant[];
+  messages?: ChatMessage[];
+  lastMessage?: ChatMessage | null;
+  unreadCount?: number;
+  project?: {
+    id: string;
+    name: string;
+    description?: string;
+  };
+  _count?: {
+    messages: number;
+  };
+}
+
+export interface CreateConversationData {
+  type: ConversationType;
+  name?: string;
+  projectId?: string;
+  participantIds: string[];
+}
+
+export interface ConversationsQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  type?: ConversationType;
+  projectId?: string;
+}
