@@ -61,7 +61,7 @@ export default function ChatPage() {
   }, [socket, isConnected, queryClient, selectedConversation]);
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-background">
+    <div className="flex h-[calc(100vh-7rem)] bg-background">
       {/* Sidebar - Conversation List */}
       <div className="w-80 border-r border-border flex flex-col">
         <ConversationList
