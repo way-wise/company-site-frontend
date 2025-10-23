@@ -4,13 +4,15 @@ import ChatWindow from "@/components/modules/chat/ChatWindow";
 import ConversationList from "@/components/modules/chat/ConversationList";
 import { useSocket } from "@/context/SocketContext";
 import { useAuth } from "@/context/UserContext";
-import { useConversations } from "@/hooks/useChatMutations";
+import { chatQueryKeys, useConversations } from "@/hooks/useChatMutations";
 import { Conversation } from "@/types";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 export default function ChatPage() {
-  const { isConnected, connect } = useSocket();
+  const { socket, isConnected, connect } = useSocket();
   const { user, isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
   const [selectedConversation, setSelectedConversation] =
     useState<Conversation | null>(null);
 
@@ -25,6 +27,38 @@ export default function ChatPage() {
       connect();
     }
   }, [isAuthenticated, isConnected, connect]);
+
+  // Listen for conversation updates via socket
+  useEffect(() => {
+    if (!socket || !isConnected) return;
+
+    const handleConversationUpdate = () => {
+      queryClient.invalidateQueries({
+        queryKey: chatQueryKeys.conversations(),
+      });
+    };
+
+    const handleConversationRemoved = (data: { conversationId: string }) => {
+      // Clear selection if removed from current conversation
+      if (selectedConversation?.id === data.conversationId) {
+        setSelectedConversation(null);
+      }
+      // Refresh conversation list
+      queryClient.invalidateQueries({
+        queryKey: chatQueryKeys.conversations(),
+      });
+    };
+
+    socket.on("conversation:new", handleConversationUpdate);
+    socket.on("conversation:updated", handleConversationUpdate);
+    socket.on("conversation:removed", handleConversationRemoved);
+
+    return () => {
+      socket.off("conversation:new", handleConversationUpdate);
+      socket.off("conversation:updated", handleConversationUpdate);
+      socket.off("conversation:removed", handleConversationRemoved);
+    };
+  }, [socket, isConnected, queryClient, selectedConversation]);
 
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-background">
@@ -42,7 +76,7 @@ export default function ChatPage() {
       <div className="flex-1 flex flex-col">
         {selectedConversation ? (
           <ChatWindow
-            conversation={selectedConversation}
+            conversationId={selectedConversation.id}
             currentUserProfileId={user?.userProfile?.id || ""}
           />
         ) : (

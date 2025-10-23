@@ -81,6 +81,16 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         }
       );
 
+      // Listen for new conversations
+      newSocket.on("conversation:new", () => {
+        // Will be handled by page-level query invalidation
+      });
+
+      // Listen for conversation updates (new messages, etc.)
+      newSocket.on("conversation:updated", () => {
+        // Will be handled by page-level query invalidation
+      });
+
       newSocket.connect();
       setSocket(newSocket);
     } else if (!socket.connected) {

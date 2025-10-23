@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSocket } from "@/context/SocketContext";
 import { useAuth } from "@/context/UserContext";
+import { useRemoveParticipant } from "@/hooks/useChatMutations";
 import { Conversation } from "@/types";
 import { MoreVertical, Users } from "lucide-react";
 import { useState } from "react";
@@ -24,7 +25,34 @@ export default function ConversationHeader({
 }: ConversationHeaderProps) {
   const { user } = useAuth();
   const { isUserOnline } = useSocket();
+  const removeParticipantMutation = useRemoveParticipant();
   const [showParticipants, setShowParticipants] = useState(false);
+
+  const currentUserParticipant = conversation.participants.find(
+    (p) => p.userProfileId === user?.userProfile?.id
+  );
+
+  const isOnlyAdmin = () => {
+    const adminCount = conversation.participants.filter(
+      (p) => p.isAdmin
+    ).length;
+    return currentUserParticipant?.isAdmin && adminCount === 1;
+  };
+
+  const handleLeaveConversation = () => {
+    if (isOnlyAdmin()) {
+      alert(
+        "You cannot leave as you are the only admin. Please assign another admin first."
+      );
+      return;
+    }
+    if (confirm("Are you sure you want to leave this conversation?")) {
+      removeParticipantMutation.mutate({
+        conversationId: conversation.id,
+        userProfileId: user?.userProfile?.id || "",
+      });
+    }
+  };
 
   // Get conversation display name
   const getConversationName = () => {
@@ -148,7 +176,11 @@ export default function ConversationHeader({
                 </DropdownMenuItem>
                 {conversation.type !== "DIRECT" &&
                   conversation.type !== "PROJECT" && (
-                    <DropdownMenuItem className="text-destructive">
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={handleLeaveConversation}
+                      disabled={removeParticipantMutation.isPending}
+                    >
                       Leave Conversation
                     </DropdownMenuItem>
                   )}
