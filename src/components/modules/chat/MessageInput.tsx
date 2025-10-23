@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useSocket } from "@/context/SocketContext";
 import { Send } from "lucide-react";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 interface MessageInputProps {
   conversationId: string;
@@ -17,7 +18,7 @@ export default function MessageInput({ conversationId }: MessageInputProps) {
 
   const handleSend = () => {
     if (!socket || !isConnected) {
-      alert("Not connected to chat server");
+      toast.error("Not connected to chat server");
       return;
     }
 

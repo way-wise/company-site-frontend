@@ -14,6 +14,7 @@ import { useRemoveParticipant } from "@/hooks/useChatMutations";
 import { Conversation } from "@/types";
 import { MoreVertical, Users } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import ParticipantList from "./ParticipantList";
 
 interface ConversationHeaderProps {
@@ -41,7 +42,7 @@ export default function ConversationHeader({
 
   const handleLeaveConversation = () => {
     if (isOnlyAdmin()) {
-      alert(
+      toast.warning(
         "You cannot leave as you are the only admin. Please assign another admin first."
       );
       return;

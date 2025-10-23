@@ -21,6 +21,7 @@ import apiClient from "@/lib/axios";
 import { ConversationType } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface CreateConversationModalProps {
   open: boolean;
@@ -63,40 +64,47 @@ export default function CreateConversationModal({
     e.preventDefault();
 
     if (type === "DIRECT" && selectedUsers.length !== 1) {
-      alert("Please select exactly one user for direct message");
+      toast.error("Please select exactly one user for direct message");
       return;
     }
 
     if (type === "GROUP" && selectedUsers.length === 0) {
-      alert("Please select at least one user for group chat");
+      toast.error("Please select at least one user for group chat");
       return;
     }
 
     if (type === "PROJECT" && !selectedProject) {
-      alert("Please select a project");
+      toast.error("Please select a project");
       return;
     }
 
-    // Get userProfileIds from selected users
-    const participantIds = selectedUsers
-      .map((userId) => {
-        const user = usersData?.data?.result?.find(
-          (u: { id: string; userProfile?: { id: string } }) => u.id === userId
+    // For PROJECT type, send empty array (backend will auto-populate)
+    let participantIds: string[] = [];
+
+    if (type !== "PROJECT") {
+      // Get userProfileIds from selected users for DIRECT and GROUP
+      participantIds = selectedUsers
+        .map((userId) => {
+          const user = usersData?.data?.result?.find(
+            (u: { id: string; userProfile?: { id: string } }) => u.id === userId
+          );
+          return user?.userProfile?.id;
+        })
+        .filter(Boolean) as string[];
+
+      // Validate that all selected users have userProfiles
+      if (participantIds.length !== selectedUsers.length) {
+        toast.error(
+          "Some selected users do not have profiles. Please try again."
         );
-        return user?.userProfile?.id;
-      })
-      .filter(Boolean) as string[];
+        return;
+      }
 
-    // Validate that all selected users have userProfiles
-    if (participantIds.length !== selectedUsers.length) {
-      alert("Some selected users do not have profiles. Please try again.");
-      return;
-    }
-
-    // Ensure participantIds is not empty
-    if (participantIds.length === 0) {
-      alert("No valid participants selected. Please try again.");
-      return;
+      // Ensure participantIds is not empty for non-PROJECT types
+      if (participantIds.length === 0) {
+        toast.error("No valid participants selected. Please try again.");
+        return;
+      }
     }
 
     createConversationMutation.mutate(
@@ -205,26 +213,35 @@ export default function CreateConversationModal({
 
           {/* Project Selection (only for PROJECT type) */}
           {type === "PROJECT" && (
-            <div className="space-y-2">
-              <Label>Select Project</Label>
-              <Select
-                value={selectedProject}
-                onValueChange={setSelectedProject}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a project" />
-                </SelectTrigger>
-                <SelectContent>
-                  {projectsData?.data?.result?.map(
-                    (project: { id: string; name: string }) => (
-                      <SelectItem key={project.id} value={project.id}>
-                        {project.name}
-                      </SelectItem>
-                    )
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
+            <>
+              <div className="space-y-2">
+                <Label>Select Project</Label>
+                <Select
+                  value={selectedProject}
+                  onValueChange={setSelectedProject}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a project" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projectsData?.data?.result?.map(
+                      (project: { id: string; name: string }) => (
+                        <SelectItem key={project.id} value={project.id}>
+                          {project.name}
+                        </SelectItem>
+                      )
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="rounded-lg bg-blue-50 border border-blue-200 p-3">
+                <p className="text-sm text-blue-800">
+                  <strong>Auto-participants:</strong> All admins, project
+                  client, and employees assigned to project milestones will be
+                  automatically added to this conversation.
+                </p>
+              </div>
+            </>
           )}
 
           {/* User Selection (for DIRECT and GROUP) */}

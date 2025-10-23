@@ -19,6 +19,7 @@ import { ConversationParticipant } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface AddParticipantsModalProps {
   open: boolean;
@@ -78,7 +79,7 @@ export default function AddParticipantsModal({
     e.preventDefault();
 
     if (selectedUsers.length === 0) {
-      alert("Please select at least one user to add");
+      toast.error("Please select at least one user to add");
       return;
     }
 
@@ -93,7 +94,7 @@ export default function AddParticipantsModal({
       .filter(Boolean) as string[];
 
     if (userProfileIds.length === 0) {
-      alert("No valid participants selected. Please try again.");
+      toast.error("No valid participants selected. Please try again.");
       return;
     }
 
