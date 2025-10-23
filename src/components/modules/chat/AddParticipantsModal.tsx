@@ -33,16 +33,10 @@ export default function AddParticipantsModal({
   conversationId,
   existingParticipants,
 }: AddParticipantsModalProps) {
-  const [mounted, setMounted] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [userSearchQuery, setUserSearchQuery] = useState("");
 
   const addParticipantsMutation = useAddParticipants();
-
-  // Client-side only rendering to avoid hydration errors
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Fetch users for participant selection
   const { data: usersData } = useQuery({
@@ -128,11 +122,6 @@ export default function AddParticipantsModal({
     }
   }, [open]);
 
-  // Don't render until mounted on client
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
@@ -186,6 +175,7 @@ export default function AddParticipantsModal({
                       >
                         <Checkbox
                           checked={selectedUsers.includes(user.id)}
+                          onClick={(e) => e.stopPropagation()}
                           onCheckedChange={() => handleToggleUser(user.id)}
                         />
                         <Avatar className="h-8 w-8">

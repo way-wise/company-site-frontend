@@ -13,7 +13,7 @@ import { useAuth } from "@/context/UserContext";
 import { useRemoveParticipant } from "@/hooks/useChatMutations";
 import { Conversation } from "@/types";
 import { Crown, UserMinus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddParticipantsModal from "./AddParticipantsModal";
 
 interface ParticipantListProps {
@@ -29,13 +29,7 @@ export default function ParticipantList({
 }: ParticipantListProps) {
   const { user } = useAuth();
   const removeParticipantMutation = useRemoveParticipant();
-  const [mounted, setMounted] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-
-  // Client-side only rendering to avoid hydration errors
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const currentUserParticipant = conversation.participants.find(
     (p) => p.userProfileId === user?.userProfile?.id
@@ -56,11 +50,6 @@ export default function ParticipantList({
     onOpenChange(false); // Close participant list dialog
     setShowAddModal(true); // Open add participants modal
   };
-
-  // Don't render until mounted on client
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <>
