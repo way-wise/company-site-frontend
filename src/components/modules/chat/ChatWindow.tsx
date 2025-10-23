@@ -4,7 +4,7 @@ import { useSocket } from "@/context/SocketContext";
 import { chatQueryKeys, useMessages } from "@/hooks/useChatMutations";
 import { ChatMessage, Conversation } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import ConversationHeader from "./ConversationHeader";
 import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
@@ -21,7 +21,6 @@ export default function ChatWindow({
   const { socket, isConnected } = useSocket();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
 
   const { data: messagesData, isLoading } = useMessages(conversation.id);
   const messages = useMemo(
@@ -74,38 +73,14 @@ export default function ChatWindow({
       }
     };
 
-    // Listen for typing indicators
-    const handleTyping = (data: {
-      conversationId: string;
-      userProfileId: string;
-      isTyping: boolean;
-    }) => {
-      if (
-        data.conversationId === conversation.id &&
-        data.userProfileId !== currentUserProfileId
-      ) {
-        setTypingUsers((prev) => {
-          const newSet = new Set(prev);
-          if (data.isTyping) {
-            newSet.add(data.userProfileId);
-          } else {
-            newSet.delete(data.userProfileId);
-          }
-          return newSet;
-        });
-      }
-    };
-
     socket.on("message:new", handleNewMessage);
     socket.on("message:updated", handleMessageUpdated);
     socket.on("message:deleted", handleMessageDeleted);
-    socket.on("typing", handleTyping);
 
     return () => {
       socket.off("message:new", handleNewMessage);
       socket.off("message:updated", handleMessageUpdated);
       socket.off("message:deleted", handleMessageDeleted);
-      socket.off("typing", handleTyping);
 
       // Leave conversation room
       socket.emit("conversation:leave", { conversationId: conversation.id });
@@ -118,24 +93,6 @@ export default function ChatWindow({
       socket.emit("message:read", { conversationId: conversation.id });
     }
   }, [socket, isConnected, conversation.id, messages]);
-
-  const getTypingIndicatorText = () => {
-    if (typingUsers.size === 0) return null;
-
-    const typingParticipants = conversation.participants.filter((p) =>
-      typingUsers.has(p.userProfileId)
-    );
-
-    if (typingParticipants.length === 1) {
-      return `${typingParticipants[0].userProfile.user.name} is typing...`;
-    } else if (typingParticipants.length === 2) {
-      return `${typingParticipants[0].userProfile.user.name} and ${typingParticipants[1].userProfile.user.name} are typing...`;
-    } else if (typingParticipants.length > 2) {
-      return "Several people are typing...";
-    }
-
-    return null;
-  };
 
   return (
     <div className="flex flex-col h-full">
@@ -161,13 +118,6 @@ export default function ChatWindow({
               currentUserProfileId={currentUserProfileId}
             />
           ))
-        )}
-
-        {/* Typing Indicator */}
-        {getTypingIndicatorText() && (
-          <div className="text-sm text-muted-foreground italic px-4">
-            {getTypingIndicatorText()}
-          </div>
         )}
 
         <div ref={messagesEndRef} />

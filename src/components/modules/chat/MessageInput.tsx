@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useSocket } from "@/context/SocketContext";
 import { Send } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 interface MessageInputProps {
   conversationId: string;
@@ -12,42 +12,8 @@ interface MessageInputProps {
 
 export default function MessageInput({ conversationId }: MessageInputProps) {
   const [message, setMessage] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
   const { socket, isConnected } = useSocket();
-  const typingTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Handle typing indicator
-  useEffect(() => {
-    if (!socket || !isConnected) return;
-
-    if (message.trim()) {
-      if (!isTyping) {
-        setIsTyping(true);
-        socket.emit("typing:start", { conversationId });
-      }
-
-      // Clear existing timeout
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-
-      // Set new timeout to stop typing after 2 seconds of inactivity
-      typingTimeoutRef.current = setTimeout(() => {
-        setIsTyping(false);
-        socket.emit("typing:stop", { conversationId });
-      }, 2000);
-    } else if (isTyping) {
-      setIsTyping(false);
-      socket.emit("typing:stop", { conversationId });
-    }
-
-    return () => {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-    };
-  }, [message, conversationId, socket, isConnected, isTyping]);
 
   const handleSend = () => {
     if (!socket || !isConnected) {
@@ -65,8 +31,6 @@ export default function MessageInput({ conversationId }: MessageInputProps) {
 
     // Clear input
     setMessage("");
-    setIsTyping(false);
-    socket.emit("typing:stop", { conversationId });
 
     // Focus back on textarea
     textareaRef.current?.focus();

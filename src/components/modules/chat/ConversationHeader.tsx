@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSocket } from "@/context/SocketContext";
 import { useAuth } from "@/context/UserContext";
 import { Conversation } from "@/types";
 import { MoreVertical, Users } from "lucide-react";
@@ -22,6 +23,7 @@ export default function ConversationHeader({
   conversation,
 }: ConversationHeaderProps) {
   const { user } = useAuth();
+  const { isUserOnline } = useSocket();
   const [showParticipants, setShowParticipants] = useState(false);
 
   // Get conversation display name
@@ -63,6 +65,30 @@ export default function ConversationHeader({
   const avatar = getAvatar();
   const displayName = getConversationName();
 
+  // Get status text to display below conversation name
+  const getStatusText = () => {
+    // For DIRECT chats - show online/offline status
+    if (conversation.type === "DIRECT") {
+      const otherParticipant = conversation.participants.find(
+        (p) => p.userProfileId !== user?.userProfile?.id
+      );
+
+      if (!otherParticipant) return null;
+
+      // Check online status
+      const isOnline = isUserOnline(otherParticipant.userProfileId);
+      return { text: isOnline ? "online" : "offline", isOnline };
+    }
+
+    // For GROUP/PROJECT chats - show member count
+    return {
+      text: `${conversation.participants.length} members`,
+      isOnline: false,
+    };
+  };
+
+  const statusInfo = getStatusText();
+
   return (
     <>
       <div className="border-b border-border p-4">
@@ -79,13 +105,20 @@ export default function ConversationHeader({
             {/* Info */}
             <div>
               <h3 className="font-semibold">{displayName}</h3>
-              {conversation.type !== "DIRECT" && (
-                <p className="text-xs text-muted-foreground">
-                  {conversation.participants.length} members
+              {statusInfo && (
+                <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  {/* Show online/offline indicator dot for DIRECT chats */}
+                  {conversation.type === "DIRECT" && (
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        statusInfo.text === "online"
+                          ? "bg-green-500"
+                          : "bg-gray-400"
+                      }`}
+                    />
+                  )}
+                  <span>{statusInfo.text}</span>
                 </p>
-              )}
-              {conversation.type === "PROJECT" && conversation.project && (
-                <p className="text-xs text-muted-foreground">Project Chat</p>
               )}
             </div>
           </div>
