@@ -69,7 +69,10 @@ export default function ParticipantList({
               const isCurrentUser =
                 participant.userProfileId === user?.userProfile?.id;
               const canRemove =
-                isAdmin && !isCurrentUser && conversation.type !== "DIRECT";
+                isAdmin &&
+                !isCurrentUser &&
+                conversation.type !== "DIRECT" &&
+                conversation.type !== "PROJECT";
 
               return (
                 <div

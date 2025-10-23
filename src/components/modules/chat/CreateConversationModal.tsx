@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuth } from "@/context/UserContext";
 import { useCreateConversation } from "@/hooks/useChatMutations";
 import apiClient from "@/lib/axios";
 import { ConversationType } from "@/types";
@@ -32,6 +33,7 @@ export default function CreateConversationModal({
   open,
   onOpenChange,
 }: CreateConversationModalProps) {
+  const { user } = useAuth();
   const [type, setType] = useState<ConversationType>("DIRECT");
   const [name, setName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -140,15 +142,19 @@ export default function CreateConversationModal({
     }
   };
 
-  // Filter users based on search query
+  // Filter users based on search query and exclude current user
   const filteredUsers =
     usersData?.data?.result?.filter(
-      (user: { id: string; name: string; email: string }) => {
+      (u: { id: string; name: string; email: string }) => {
+        // Exclude current logged-in user
+        if (u.id === user?.id) return false;
+
+        // Apply search filter
         if (!userSearchQuery) return true;
         const searchLower = userSearchQuery.toLowerCase();
         return (
-          user.name.toLowerCase().includes(searchLower) ||
-          user.email.toLowerCase().includes(searchLower)
+          u.name.toLowerCase().includes(searchLower) ||
+          u.email.toLowerCase().includes(searchLower)
         );
       }
     ) || [];
