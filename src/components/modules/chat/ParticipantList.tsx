@@ -37,7 +37,7 @@ export default function ParticipantList({
     if (confirm("Are you sure you want to remove this participant?")) {
       removeParticipantMutation.mutate({
         conversationId: conversation.id,
-        userId: userProfileId,
+        userProfileId: userProfileId,
       });
     }
   };

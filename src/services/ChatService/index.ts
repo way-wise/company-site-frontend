@@ -86,10 +86,10 @@ export const chatService = {
   // Remove participant from conversation
   removeParticipant: async (
     conversationId: string,
-    userId: string
+    userProfileId: string
   ): Promise<ApiResponse<void>> => {
     const response = await apiClient.delete(
-      `/chat/conversations/${conversationId}/participants/${userId}`
+      `/chat/conversations/${conversationId}/participants/${userProfileId}`
     );
     return response.data;
   },

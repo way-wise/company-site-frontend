@@ -128,11 +128,11 @@ export const useRemoveParticipant = () => {
   return useMutation({
     mutationFn: ({
       conversationId,
-      userId,
+      userProfileId,
     }: {
       conversationId: string;
-      userId: string;
-    }) => chatService.removeParticipant(conversationId, userId),
+      userProfileId: string;
+    }) => chatService.removeParticipant(conversationId, userProfileId),
     onSuccess: (response, variables) => {
       if (response.success) {
         toast.success("Participant removed successfully");

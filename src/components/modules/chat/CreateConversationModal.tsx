@@ -20,7 +20,7 @@ import { useCreateConversation } from "@/hooks/useChatMutations";
 import apiClient from "@/lib/axios";
 import { ConversationType } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface CreateConversationModalProps {
   open: boolean;
@@ -35,6 +35,7 @@ export default function CreateConversationModal({
   const [name, setName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [selectedProject, setSelectedProject] = useState("");
+  const [userSearchQuery, setUserSearchQuery] = useState("");
 
   const createConversationMutation = useCreateConversation();
 
@@ -42,7 +43,7 @@ export default function CreateConversationModal({
   const { data: usersData } = useQuery({
     queryKey: ["users", "all"],
     queryFn: async () => {
-      const response = await apiClient.get("/user?limit=100");
+      const response = await apiClient.get("/user/all-users?limit=100");
       return response.data;
     },
     enabled: open,
@@ -84,7 +85,19 @@ export default function CreateConversationModal({
         );
         return user?.userProfile?.id;
       })
-      .filter(Boolean);
+      .filter(Boolean) as string[];
+
+    // Validate that all selected users have userProfiles
+    if (participantIds.length !== selectedUsers.length) {
+      alert("Some selected users do not have profiles. Please try again.");
+      return;
+    }
+
+    // Ensure participantIds is not empty
+    if (participantIds.length === 0) {
+      alert("No valid participants selected. Please try again.");
+      return;
+    }
 
     createConversationMutation.mutate(
       {
@@ -100,6 +113,7 @@ export default function CreateConversationModal({
           setName("");
           setSelectedUsers([]);
           setSelectedProject("");
+          setUserSearchQuery("");
           onOpenChange(false);
         },
       }
@@ -117,6 +131,37 @@ export default function CreateConversationModal({
       );
     }
   };
+
+  // Filter users based on search query
+  const filteredUsers =
+    usersData?.data?.result?.filter(
+      (user: { id: string; name: string; email: string }) => {
+        if (!userSearchQuery) return true;
+        const searchLower = userSearchQuery.toLowerCase();
+        return (
+          user.name.toLowerCase().includes(searchLower) ||
+          user.email.toLowerCase().includes(searchLower)
+        );
+      }
+    ) || [];
+
+  // Reset form when modal closes
+  useEffect(() => {
+    if (!open) {
+      setType("DIRECT");
+      setName("");
+      setSelectedUsers([]);
+      setSelectedProject("");
+      setUserSearchQuery("");
+    }
+  }, [open]);
+
+  // Reset selections when type changes
+  useEffect(() => {
+    setSelectedUsers([]);
+    setSelectedProject("");
+    setUserSearchQuery("");
+  }, [type]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -188,29 +233,61 @@ export default function CreateConversationModal({
               <Label>
                 {type === "DIRECT" ? "Select User" : "Select Users"}
               </Label>
+
+              {/* User Search Input */}
+              <Input
+                placeholder="Search users by name or email..."
+                value={userSearchQuery}
+                onChange={(e) => setUserSearchQuery(e.target.value)}
+                className="mb-2"
+              />
+
               <div className="border rounded-md max-h-48 overflow-y-auto">
-                {usersData?.data?.result?.map(
-                  (user: { id: string; name: string }) => (
-                    <div
-                      key={user.id}
-                      onClick={() => toggleUser(user.id)}
-                      className={`p-2 cursor-pointer hover:bg-accent transition-colors ${
-                        selectedUsers.includes(user.id) ? "bg-accent" : ""
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <input
-                          type={type === "DIRECT" ? "radio" : "checkbox"}
-                          checked={selectedUsers.includes(user.id)}
-                          onChange={() => {}}
-                          className="pointer-events-none"
-                        />
-                        <span className="text-sm">{user.name}</span>
+                {!usersData ? (
+                  <div className="p-4 text-center text-sm text-muted-foreground">
+                    Loading users...
+                  </div>
+                ) : filteredUsers.length === 0 ? (
+                  <div className="p-4 text-center text-sm text-muted-foreground">
+                    {userSearchQuery ? "No users found" : "No users available"}
+                  </div>
+                ) : (
+                  filteredUsers.map(
+                    (user: { id: string; name: string; email: string }) => (
+                      <div
+                        key={user.id}
+                        onClick={() => toggleUser(user.id)}
+                        className={`p-3 cursor-pointer hover:bg-accent transition-colors ${
+                          selectedUsers.includes(user.id) ? "bg-accent" : ""
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <input
+                            type={type === "DIRECT" ? "radio" : "checkbox"}
+                            checked={selectedUsers.includes(user.id)}
+                            onChange={() => {}}
+                            className="pointer-events-none"
+                          />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{user.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {user.email}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    )
                   )
                 )}
               </div>
+
+              {/* Selected Users Count */}
+              {selectedUsers.length > 0 && (
+                <p className="text-xs text-muted-foreground">
+                  {selectedUsers.length} user
+                  {selectedUsers.length > 1 ? "s" : ""} selected
+                </p>
+              )}
             </div>
           )}
 
