@@ -60,7 +60,6 @@ export default function ChatWindow({
       }
     };
 
-    // Listen for message updates
     const handleMessageUpdated = (message: ChatMessage) => {
       if (message.conversationId === conversationId) {
         queryClient.invalidateQueries({
