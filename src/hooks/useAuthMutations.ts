@@ -13,8 +13,9 @@ export const useLogin = () => {
     mutationFn: (credentials: LoginCredentials) =>
       authService.login(credentials),
     onSuccess: (data) => {
-      if (data.success && data.data) {
+      if (data.success && data.data?.user) {
         toast.success("Login successful!");
+        queryClient.setQueryData(["currentUser"], data.data.user);
         queryClient.invalidateQueries({ queryKey: ["currentUser"] });
       } else {
         toast.error(data.message || "Login failed");

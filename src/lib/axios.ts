@@ -17,6 +17,19 @@ export const apiClient = axios.create({
   withCredentials: true, // Enables HTTPOnly cookie support
 });
 
+// Add request interceptor for debugging
+apiClient.interceptors.request.use(
+  (config) => {
+    console.log(
+      `Making ${config.method?.toUpperCase()} request to: ${config.url}`
+    );
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // Handle token refresh on 401 errors
 const handleTokenRefresh = async (
   originalRequest: InternalAxiosRequestConfig

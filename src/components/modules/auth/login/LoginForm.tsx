@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/context/UserContext";
 import { useLogin } from "@/hooks/useAuthMutations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
@@ -14,7 +13,6 @@ import { LoginFormData, loginSchema } from "./loginValidation";
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
-  const { refreshUser } = useAuth();
   const router = useRouter();
 
   const {
@@ -28,11 +26,8 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     loginMutation.mutate(data, {
-      onSuccess: async () => {
-        const loggedInUser = await refreshUser();
-        if (loggedInUser) {
-          router.push("/profile");
-        }
+      onSuccess: () => {
+        router.push("/profile");
       },
     });
   };
