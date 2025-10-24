@@ -6,7 +6,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-// Login mutation
 export const useLogin = () => {
   const queryClient = useQueryClient();
 
@@ -17,8 +16,6 @@ export const useLogin = () => {
       if (data.success && data.data) {
         toast.success("Login successful!");
         queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-        // Tokens are automatically stored by authService.login()
-        // Don't redirect here - let the component handle it
       } else {
         toast.error(data.message || "Login failed");
       }
@@ -30,7 +27,6 @@ export const useLogin = () => {
   });
 };
 
-// Register mutation
 export const useRegister = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -54,7 +50,6 @@ export const useRegister = () => {
   });
 };
 
-// Logout mutation
 export const useLogout = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -68,7 +63,6 @@ export const useLogout = () => {
     },
     onError: (error: Error) => {
       console.error("Logout error:", error);
-      // Even if logout fails on server, clear local state
       queryClient.clear();
       router.push("/login");
     },

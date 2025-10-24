@@ -11,7 +11,6 @@ import {
   useState,
 } from "react";
 
-// Types
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
@@ -31,10 +30,8 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Constants
 const PUBLIC_ROUTES = [
   "/",
   "/login",
@@ -44,7 +41,6 @@ const PUBLIC_ROUTES = [
   "/services",
 ];
 
-// Helper functions
 const fetchUserPermissions = async (userId: string): Promise<Permission[]> => {
   try {
     const response = await apiClient.get(`/roles/user/${userId}/permissions`);
@@ -60,13 +56,11 @@ const isPublicRoute = (pathname: string): boolean => {
   );
 };
 
-// Provider component
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [permissions, setPermissions] = useState<Permission[]>([]);
 
-  // Fetch user data and permissions
   const refreshUser = useCallback(async (): Promise<User | null> => {
     try {
       const response = await apiClient.get("/auth/me");
@@ -80,7 +74,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const userData = response.data.data;
       setUser(userData);
 
-      // Fetch permissions if user exists
       if (userData?.id) {
         const userPermissions = await fetchUserPermissions(userData.id);
         setPermissions(userPermissions);
@@ -97,13 +90,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  // Clear user data
   const logout = useCallback(() => {
     setUser(null);
     setPermissions([]);
   }, []);
 
-  // Permission checks
   const hasPermission = useCallback(
     (permissionName: string): boolean =>
       permissions.some((p) => p.name === permissionName),
@@ -122,7 +113,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     [permissions]
   );
 
-  // Role checks
   const hasRole = useCallback(
     (roleName: string): boolean =>
       user?.roles?.some((r) => r.role.name === roleName) || false,
@@ -135,7 +125,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     [user]
   );
 
-  // Initialize auth
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -147,7 +136,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [refreshUser]);
 
-  // Context value
   const value: AuthContextType = {
     user,
     isLoading,
@@ -166,7 +154,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

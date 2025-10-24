@@ -9,12 +9,10 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { LoginFormData, loginSchema } from "./loginValidation";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const loginMutation = useLogin();
   const { refreshUser } = useAuth();
   const router = useRouter();
@@ -29,40 +27,12 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    if (isSubmitting) return; // Prevent multiple submissions
-
-    setIsSubmitting(true);
     loginMutation.mutate(data, {
-      onSuccess: async (response) => {
-        console.log("Login response:", response);
-
-        // Fetch user data after successful login (cookies are already set)
+      onSuccess: async () => {
         const loggedInUser = await refreshUser();
-        console.log("Logged in user:", loggedInUser);
-
-        // Determine user type from the backend response structure
-        // Backend returns user with roles array
         if (loggedInUser) {
-          toast.success("Login successful.");
           router.push("/profile");
-        } else {
-          toast.error("Failed to fetch user data. Please try again.");
-          router.push("/login");
-          return;
         }
-      },
-      onError: (error: Error) => {
-        console.error("Login error:", error);
-        const errorMessage =
-          (error as { response?: { data?: { message?: string } } })?.response
-            ?.data?.message ||
-          error?.message ||
-          "Login failed. Please check your credentials and try again.";
-        toast.error(errorMessage);
-        setIsSubmitting(false);
-      },
-      onSettled: () => {
-        setIsSubmitting(false);
       },
     });
   };
@@ -142,12 +112,10 @@ export default function LoginForm() {
 
             <Button
               type="submit"
-              disabled={isSubmitting || loginMutation.isPending}
+              disabled={loginMutation.isPending}
               className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg"
             >
-              {isSubmitting || loginMutation.isPending
-                ? "Signing In..."
-                : "Sign In"}
+              {loginMutation.isPending ? "Signing In..." : "Sign In"}
             </Button>
           </form>
 
