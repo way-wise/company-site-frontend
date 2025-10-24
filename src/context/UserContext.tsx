@@ -67,10 +67,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setPermissions([]);
         return null;
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Auth check failed:", error);
-      setUser(null);
-      setPermissions([]);
+
+      // Only clear user state if it's an authentication error (401/403)
+      // Don't clear on network errors or other issues
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        setUser(null);
+        setPermissions([]);
+      }
+
       return null;
     } finally {
       setIsLoading(false);
@@ -127,7 +133,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Initialize auth on mount
   useEffect(() => {
-    refreshUser();
+    // Skip refreshUser on auth pages to prevent unnecessary API calls
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname;
+      const authPages = ["/login", "/register"];
+
+      if (!authPages.includes(currentPath)) {
+        refreshUser();
+      } else {
+        console.log("Skipping refreshUser on auth page:", currentPath);
+        setIsLoading(false);
+      }
+    } else {
+      // Server-side rendering - always call refreshUser
+      refreshUser();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Remove refreshUser dependency to prevent infinite loop
 

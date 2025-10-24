@@ -29,6 +29,8 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
+    if (isSubmitting) return; // Prevent multiple submissions
+
     setIsSubmitting(true);
     loginMutation.mutate(data, {
       onSuccess: async (response) => {
@@ -44,12 +46,18 @@ export default function LoginForm() {
           toast.success("Login successful.");
           router.push("/profile");
         } else {
+          toast.error("Failed to fetch user data. Please try again.");
           router.push("/login");
           return;
         }
       },
-      onError: () => {
-        toast.error("Login failed. Please try again.");
+      onError: (error: any) => {
+        console.error("Login error:", error);
+        const errorMessage =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Login failed. Please check your credentials and try again.";
+        toast.error(errorMessage);
         setIsSubmitting(false);
       },
       onSettled: () => {
