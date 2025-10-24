@@ -6,7 +6,7 @@ import {
   useConversation,
   useMessages,
 } from "@/hooks/useChatMutations";
-import { ChatMessage } from "@/types";
+import { ChatMessage, Conversation } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef } from "react";
 import ConversationHeader from "./ConversationHeader";
@@ -82,7 +82,7 @@ export default function ChatWindow({
     };
 
     // Listen for conversation updates (participant changes, etc.)
-    const handleConversationUpdated = (data: any) => {
+    const handleConversationUpdated = (data: Conversation) => {
       if (data.id === conversationId) {
         queryClient.invalidateQueries({
           queryKey: chatQueryKeys.conversationDetail(conversationId),
