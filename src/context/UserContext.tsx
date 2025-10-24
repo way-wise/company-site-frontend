@@ -11,6 +11,7 @@ import {
   useState,
 } from "react";
 
+// Types
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
@@ -26,142 +27,127 @@ interface AuthContextType {
   hasAnyRole: (roleNames: string[]) => boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Context
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Constants
+const PUBLIC_ROUTES = [
+  "/",
+  "/login",
+  "/register",
+  "/about",
+  "/contact",
+  "/services",
+];
+
+// Helper functions
+const fetchUserPermissions = async (userId: string): Promise<Permission[]> => {
+  try {
+    const response = await apiClient.get(`/roles/user/${userId}/permissions`);
+    return response.data.success ? response.data.data || [] : [];
+  } catch {
+    return [];
+  }
+};
+
+const isPublicRoute = (pathname: string): boolean => {
+  return PUBLIC_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+};
+
+// Provider component
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [permissions, setPermissions] = useState<Permission[]>([]);
 
-  // Refresh user data from server
+  // Fetch user data and permissions
   const refreshUser = useCallback(async (): Promise<User | null> => {
     try {
       const response = await apiClient.get("/auth/me");
 
-      if (response.data.success) {
-        const userData = response.data.data;
-        setUser(userData);
-
-        // Fetch user permissions if user exists
-        if (userData?.id) {
-          try {
-            const permissionsResponse = await apiClient.get(
-              `/roles/user/${userData.id}/permissions`
-            );
-            if (permissionsResponse.data.success) {
-              setPermissions(permissionsResponse.data.data || []);
-            }
-          } catch (error) {
-            console.error("Failed to fetch user permissions:", error);
-            setPermissions([]);
-          }
-        }
-
-        return userData;
-      } else {
+      if (!response.data.success) {
         setUser(null);
         setPermissions([]);
         return null;
       }
-    } catch (error: unknown) {
-      console.error("Auth check failed:", error);
 
-      // Only clear user state if it's an authentication error (401/403)
-      // Don't clear on network errors or other issues
-      const errorWithResponse = error as { response?: { status?: number } };
-      if (
-        errorWithResponse?.response?.status === 401 ||
-        errorWithResponse?.response?.status === 403
-      ) {
-        setUser(null);
-        setPermissions([]);
+      const userData = response.data.data;
+      setUser(userData);
+
+      // Fetch permissions if user exists
+      if (userData?.id) {
+        const userPermissions = await fetchUserPermissions(userData.id);
+        setPermissions(userPermissions);
       }
 
+      return userData;
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      setUser(null);
+      setPermissions([]);
       return null;
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  // Logout user
+  // Clear user data
   const logout = useCallback(() => {
     setUser(null);
     setPermissions([]);
   }, []);
 
-  // Check if user has a specific permission
+  // Permission checks
   const hasPermission = useCallback(
-    (permissionName: string): boolean => {
-      return permissions.some((p) => p.name === permissionName);
-    },
+    (permissionName: string): boolean =>
+      permissions.some((p) => p.name === permissionName),
     [permissions]
   );
 
-  // Check if user has any of the specified permissions
   const hasAnyPermission = useCallback(
-    (permissionNames: string[]): boolean => {
-      return permissions.some((p) => permissionNames.includes(p.name));
-    },
+    (permissionNames: string[]): boolean =>
+      permissions.some((p) => permissionNames.includes(p.name)),
     [permissions]
   );
 
-  // Check if user has all of the specified permissions
   const hasAllPermissions = useCallback(
-    (permissionNames: string[]): boolean => {
-      return permissionNames.every((name) =>
-        permissions.some((p) => p.name === name)
-      );
-    },
+    (permissionNames: string[]): boolean =>
+      permissionNames.every((name) => permissions.some((p) => p.name === name)),
     [permissions]
   );
 
-  // Check if user has a specific role
+  // Role checks
   const hasRole = useCallback(
-    (roleName: string): boolean => {
-      return user?.roles?.some((r) => r.role.name === roleName) || false;
-    },
+    (roleName: string): boolean =>
+      user?.roles?.some((r) => r.role.name === roleName) || false,
     [user]
   );
 
-  // Check if user has any of the specified roles
   const hasAnyRole = useCallback(
-    (roleNames: string[]): boolean => {
-      return user?.roles?.some((r) => roleNames.includes(r.role.name)) || false;
-    },
+    (roleNames: string[]): boolean =>
+      user?.roles?.some((r) => roleNames.includes(r.role.name)) || false,
     [user]
   );
 
-  // Initialize auth on mount
+  // Initialize auth
   useEffect(() => {
-    // List of routes that don't require auth check
-    const publicRoutes = [
-      "/",
-      "/login",
-      "/register",
-      "/about",
-      "/contact",
-      "/services",
-    ];
+    if (typeof window === "undefined") return;
 
-    if (typeof window !== "undefined") {
-      const currentPath = window.location.pathname;
-      const isPublicRoute = publicRoutes.some(
-        (route) => currentPath === route || currentPath.startsWith(route + "/")
-      );
-
-      if (!isPublicRoute) {
-        refreshUser();
-      } else {
-        setIsLoading(false);
-      }
+    const currentPath = window.location.pathname;
+    if (isPublicRoute(currentPath)) {
+      setIsLoading(false);
+    } else {
+      refreshUser();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run once on mount
+  }, [refreshUser]);
 
+  // Context value
   const value: AuthContextType = {
     user,
     isLoading,
@@ -180,9 +166,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// Hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;

@@ -4,50 +4,55 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 
-// Create axios instance with HTTPOnly cookie support
+// Base API configuration
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_API || "http://localhost:5000/api/v1";
+const REQUEST_TIMEOUT = 20000;
+
+// Create axios instance
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_API || "http://localhost:5000/api/v1",
-  timeout: 20000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true, // This sends HTTPOnly cookies automatically
+  baseURL: API_BASE_URL,
+  timeout: REQUEST_TIMEOUT,
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true, // Enables HTTPOnly cookie support
 });
 
-// Response interceptor - auto token refresh on 401
+// Handle token refresh on 401 errors
+const handleTokenRefresh = async (
+  originalRequest: InternalAxiosRequestConfig
+) => {
+  try {
+    await apiClient.post("/auth/refresh-token");
+    return apiClient(originalRequest);
+  } catch {
+    // Redirect to login if not on auth pages
+    if (typeof window !== "undefined") {
+      const isAuthPage = ["/login", "/register"].includes(
+        window.location.pathname
+      );
+      if (!isAuthPage) window.location.href = "/login";
+    }
+    throw new Error("Token refresh failed");
+  }
+};
+
+// Response interceptor for automatic token refresh
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & {
+    const config = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
 
-    // Prevent infinite loops on refresh token endpoint
-    if (originalRequest.url?.includes("/auth/refresh-token")) {
+    // Skip refresh for refresh endpoint to prevent loops
+    if (config.url?.includes("/auth/refresh-token")) {
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        // Call refresh endpoint - backend validates refresh token and sets new HTTPOnly cookies
-        await apiClient.post("/auth/refresh-token");
-
-        // Retry original request with new cookies
-        return apiClient(originalRequest);
-      } catch (refreshError) {
-        // Refresh failed - redirect to login only if not already on auth pages
-        if (typeof window !== "undefined") {
-          const currentPath = window.location.pathname;
-          const authPages = ["/login", "/register"];
-
-          if (!authPages.includes(currentPath)) {
-            window.location.href = "/login";
-          }
-        }
-        return Promise.reject(refreshError);
-      }
+    // Attempt token refresh on 401 errors
+    if (error.response?.status === 401 && !config._retry) {
+      config._retry = true;
+      return handleTokenRefresh(config);
     }
 
     return Promise.reject(error);
