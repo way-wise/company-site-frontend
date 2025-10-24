@@ -22,7 +22,7 @@ export const authService = {
   register: async (
     credentials: RegisterCredentials
   ): Promise<ApiResponse<{ user: User }>> => {
-    const response = await apiClient.post("/user/create-client", credentials);
+    const response = await apiClient.post("/auth/register", credentials);
     return response.data;
   },
 

@@ -137,23 +137,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Initialize auth on mount
   useEffect(() => {
-    // Skip refreshUser on auth pages to prevent unnecessary API calls
+    // List of routes that don't require auth check
+    const publicRoutes = [
+      "/",
+      "/login",
+      "/register",
+      "/about",
+      "/contact",
+      "/services",
+    ];
+
     if (typeof window !== "undefined") {
       const currentPath = window.location.pathname;
-      const authPages = ["/login", "/register"];
+      const isPublicRoute = publicRoutes.some(
+        (route) => currentPath === route || currentPath.startsWith(route + "/")
+      );
 
-      if (!authPages.includes(currentPath)) {
+      if (!isPublicRoute) {
         refreshUser();
       } else {
-        console.log("Skipping refreshUser on auth page:", currentPath);
         setIsLoading(false);
       }
-    } else {
-      // Server-side rendering - always call refreshUser
-      refreshUser();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Remove refreshUser dependency to prevent infinite loop
+  }, []); // Run once on mount
 
   const value: AuthContextType = {
     user,

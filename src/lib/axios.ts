@@ -31,57 +31,19 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // Check if we have a refresh token cookie before attempting refresh
-        const refreshTokenExists = document.cookie
-          .split(";")
-          .some((cookie) => cookie.trim().startsWith("refreshToken="));
-
-        if (!refreshTokenExists) {
-          // No refresh token, redirect to login only if not already on auth pages
-          if (typeof window !== "undefined") {
-            const currentPath = window.location.pathname;
-            const authPages = ["/login", "/register"];
-
-            if (!authPages.includes(currentPath)) {
-              console.log(
-                "No refresh token found, redirecting to login from:",
-                currentPath
-              );
-              window.location.href = "/login";
-            } else {
-              console.log(
-                "Already on auth page, skipping redirect:",
-                currentPath
-              );
-            }
-          }
-          return Promise.reject(error);
-        }
-
-        // Call refresh endpoint - backend will set new HTTPOnly cookies automatically
-        console.log("Refreshing token");
+        // Call refresh endpoint - backend validates refresh token and sets new HTTPOnly cookies
         await apiClient.post("/auth/refresh-token");
 
         // Retry original request with new cookies
         return apiClient(originalRequest);
       } catch (refreshError) {
         // Refresh failed - redirect to login only if not already on auth pages
-        console.error("Token refresh failed:", refreshError);
         if (typeof window !== "undefined") {
           const currentPath = window.location.pathname;
           const authPages = ["/login", "/register"];
 
           if (!authPages.includes(currentPath)) {
-            console.log(
-              "Token refresh failed, redirecting to login from:",
-              currentPath
-            );
             window.location.href = "/login";
-          } else {
-            console.log(
-              "Already on auth page, skipping redirect after refresh failure:",
-              currentPath
-            );
           }
         }
         return Promise.reject(refreshError);
