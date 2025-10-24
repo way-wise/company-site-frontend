@@ -67,12 +67,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setPermissions([]);
         return null;
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Auth check failed:", error);
 
       // Only clear user state if it's an authentication error (401/403)
       // Don't clear on network errors or other issues
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
+      const errorWithResponse = error as { response?: { status?: number } };
+      if (
+        errorWithResponse?.response?.status === 401 ||
+        errorWithResponse?.response?.status === 403
+      ) {
         setUser(null);
         setPermissions([]);
       }

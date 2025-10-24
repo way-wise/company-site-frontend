@@ -51,10 +51,11 @@ export default function LoginForm() {
           return;
         }
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         console.error("Login error:", error);
         const errorMessage =
-          error?.response?.data?.message ||
+          (error as { response?: { data?: { message?: string } } })?.response
+            ?.data?.message ||
           error?.message ||
           "Login failed. Please check your credentials and try again.";
         toast.error(errorMessage);
