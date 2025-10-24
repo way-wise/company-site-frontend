@@ -13,7 +13,10 @@ const REQUEST_TIMEOUT = 20000;
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: REQUEST_TIMEOUT,
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+    "X-Requested-With": "XMLHttpRequest",
+  },
   withCredentials: true, // Enables HTTPOnly cookie support
 });
 

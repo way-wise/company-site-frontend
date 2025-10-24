@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 // Route configurations
 const AUTH_ROUTES = ["/login", "/register"];
-const PROTECTED_ROUTES = ["/profile", "/admin"];
+const PROTECTED_ROUTES = ["/profile", "/dashboard"];
 
 // Helper functions
 const hasValidToken = (request: NextRequest): boolean => {
@@ -36,6 +36,10 @@ const redirectToHome = (request: NextRequest): NextResponse => {
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const hasToken = hasValidToken(request);
+
+  console.log(
+    `Middleware: Checking access for ${pathname}, hasToken: ${hasToken}`
+  );
 
   // Redirect to login if accessing protected route without token
   if (!hasToken && isProtectedRoute(pathname)) {
