@@ -15,12 +15,10 @@ export const apiClient = axios.create({
   timeout: REQUEST_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
-    "X-Requested-With": "XMLHttpRequest",
   },
-  withCredentials: true, // Enables HTTPOnly cookie support
+  withCredentials: true,
 });
 
-// Add request interceptor for debugging
 apiClient.interceptors.request.use(
   (config) => {
     console.log(
