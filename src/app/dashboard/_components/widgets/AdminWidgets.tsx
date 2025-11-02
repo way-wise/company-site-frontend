@@ -2,7 +2,8 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import apiClient from "@/lib/axios";
-import { Activity, Key, Shield, Users } from "lucide-react";
+import { useLeaveStats } from "@/hooks/useLeaveMutations";
+import { Activity, Clock, Key, Shield, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Stats {
@@ -16,6 +17,7 @@ interface Stats {
 const AdminWidgets = () => {
   const [stats, setStats] = useState<Stats>({});
   const [loading, setLoading] = useState(true);
+  const { data: leaveStatsData } = useLeaveStats();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -51,6 +53,8 @@ const AdminWidgets = () => {
       </div>
     );
   }
+
+  const leaveStats = leaveStatsData?.data;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

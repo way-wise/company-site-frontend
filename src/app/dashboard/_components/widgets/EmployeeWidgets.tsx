@@ -1,9 +1,23 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useUserLeaveBalances } from "@/hooks/useLeaveBalanceMutations";
+import { useAuth } from "@/context/UserContext";
 import { CalendarDays, CheckSquare, Clock, Umbrella } from "lucide-react";
 
 const EmployeeWidgets = () => {
+  const { user } = useAuth();
+  const { data: balancesData } = useUserLeaveBalances(
+    user?.userProfile?.id || "",
+    new Date().getFullYear()
+  );
+
+  const balances = balancesData?.data || [];
+  const totalRemainingDays = balances.reduce(
+    (sum, balance) => sum + balance.remainingDays,
+    0
+  );
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
@@ -34,7 +48,7 @@ const EmployeeWidgets = () => {
           <Umbrella className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">0</div>
+          <div className="text-2xl font-bold">{totalRemainingDays}</div>
           <p className="text-xs text-muted-foreground">Days remaining</p>
         </CardContent>
       </Card>

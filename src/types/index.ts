@@ -542,3 +542,120 @@ export interface ConversationsQueryParams {
   type?: ConversationType;
   projectId?: string;
 }
+
+// Leave Management Types
+export interface LeaveType {
+  id: string;
+  name: string;
+  description?: string;
+  defaultDaysPerYear: number;
+  requiresDocument: boolean;
+  color?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeaveBalance {
+  id: string;
+  userProfileId: string;
+  leaveTypeId: string;
+  year: number;
+  totalDays: number;
+  usedDays: number;
+  remainingDays: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeaveBalanceWithRelations extends LeaveBalance {
+  userProfile: {
+    id: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+  leaveType: {
+    id: string;
+    name: string;
+    description: string | null;
+    color: string | null;
+  };
+}
+
+export interface LeaveApplication {
+  id: string;
+  userProfileId: string;
+  leaveTypeId: string;
+  startDate: string;
+  endDate: string;
+  reason: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+  approvedBy?: string | null;
+  totalDays: number;
+  attachmentUrl?: string | null;
+  cancelledAt?: string | null;
+  rejectionReason?: string | null;
+  comments?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeaveApplicationWithRelations extends LeaveApplication {
+  userProfile: {
+    id: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+  leaveType: {
+    id: string;
+    name: string;
+    description: string | null;
+    color: string | null;
+  };
+  approver?: {
+    id: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  } | null;
+}
+
+export interface LeaveStats {
+  total: number;
+  pending: number;
+  approved: number;
+  rejected: number;
+  cancelled: number;
+  byType: Array<{
+    type: string;
+    count: number;
+    color: string | null;
+  }>;
+}
+
+export interface LeaveCalendarEvent {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  user: {
+    name: string;
+    email: string;
+  };
+  type: {
+    name: string;
+    color: string | null;
+  };
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+}
