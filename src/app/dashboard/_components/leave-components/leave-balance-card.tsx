@@ -82,7 +82,7 @@ export const LeaveBalanceCard = ({ userProfileId, year }: LeaveBalanceCardProps)
               <div className="text-right">
                 <div className="text-2xl font-bold">{balance.remainingDays}</div>
                 <div className="text-xs text-muted-foreground">
-                  of {balance.totalDays} days
+                  {balance.usedDays} used / {balance.totalDays} total
                 </div>
               </div>
             </div>

@@ -29,6 +29,7 @@ import {
 import { LeaveApplicationWithRelations } from "@/types";
 import { Calendar, Edit, MoreVertical, Trash, X } from "lucide-react";
 import { useState } from "react";
+import { LeaveDetailsModal } from "./leave-details-modal";
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString("en-US", {
@@ -74,6 +75,7 @@ const getTypeBadge = (type: { name: string; color: string | null }) => {
 export const LeaveTable = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] =
     useState<LeaveApplicationWithRelations | null>(null);
 
@@ -156,6 +158,12 @@ export const LeaveTable = () => {
       ),
     },
     {
+      accessorKey: "createdAt",
+      header: "Created",
+      cell: ({ row }: { row: { original: LeaveApplicationWithRelations } }) =>
+        formatDate(row.original.createdAt),
+    },
+    {
       id: "actions",
       header: "Actions",
       cell: ({ row }: { row: { original: LeaveApplicationWithRelations } }) => {
@@ -174,6 +182,7 @@ export const LeaveTable = () => {
                   className="w-full justify-start"
                   onClick={() => {
                     setSelectedLeave(leave);
+                    setDetailsModalOpen(true);
                   }}
                 >
                   <Edit className="mr-2 h-4 w-4" />
@@ -254,6 +263,7 @@ export const LeaveTable = () => {
         pagination={{
           pageIndex: pagination.pageIndex,
           pageSize: pagination.pageSize,
+          total: meta.total,
         }}
         onPaginationChange={(newPagination) => {
           setPagination({
@@ -261,6 +271,16 @@ export const LeaveTable = () => {
             pageSize: newPagination.pageSize,
           });
         }}
+      />
+
+      {/* Leave Details Modal */}
+      <LeaveDetailsModal
+        isOpen={detailsModalOpen}
+        onClose={() => {
+          setDetailsModalOpen(false);
+          setSelectedLeave(null);
+        }}
+        leave={selectedLeave}
       />
 
       {/* Delete Modal */}

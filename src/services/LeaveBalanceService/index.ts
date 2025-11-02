@@ -1,7 +1,7 @@
 "use client";
 
 import apiClient from "@/lib/axios";
-import { ApiResponse, LeaveBalanceWithRelations } from "@/types";
+import { ApiResponse, LeaveBalance, LeaveBalanceWithRelations } from "@/types";
 
 export interface CreateLeaveBalanceData {
   userProfileId: string;
@@ -78,7 +78,7 @@ export const leaveBalanceService = {
   // Create leave balance
   createLeaveBalance: async (
     balanceData: CreateLeaveBalanceData
-  ): Promise<ApiResponse<any>> => {
+  ): Promise<ApiResponse<LeaveBalance>> => {
     const response = await apiClient.post("/leave-balance", balanceData);
     return response.data;
   },
@@ -87,7 +87,7 @@ export const leaveBalanceService = {
   updateLeaveBalance: async (
     balanceId: string,
     balanceData: UpdateLeaveBalanceData
-  ): Promise<ApiResponse<any>> => {
+  ): Promise<ApiResponse<LeaveBalance>> => {
     const response = await apiClient.patch(`/leave-balance/${balanceId}`, balanceData);
     return response.data;
   },
@@ -95,7 +95,7 @@ export const leaveBalanceService = {
   // Delete leave balance
   deleteLeaveBalance: async (
     balanceId: string
-  ): Promise<ApiResponse<any>> => {
+  ): Promise<ApiResponse<LeaveBalance>> => {
     const response = await apiClient.delete(`/leave-balance/${balanceId}`);
     return response.data;
   },
@@ -104,7 +104,7 @@ export const leaveBalanceService = {
   allocateAnnualBalance: async (
     userProfileId: string,
     data?: AllocateBalanceData
-  ): Promise<ApiResponse<any>> => {
+  ): Promise<ApiResponse<LeaveBalance>> => {
     const response = await apiClient.post(
       `/leave-balance/allocate/${userProfileId}`,
       data || {}

@@ -34,18 +34,53 @@ import { z } from "zod";
 const applyLeaveSchema = z
   .object({
     leaveTypeId: z.string().min(1, "Leave type is required"),
-    startDate: z.string().min(1, "Start date is required"),
-    endDate: z.string().min(1, "End date is required"),
+    startDate: z
+      .string()
+      .min(1, "Start date is required")
+      .refine(
+        (date) => {
+          const parsedDate = new Date(date);
+          return !isNaN(parsedDate.getTime());
+        },
+        {
+          message: "Start date must be a valid date",
+        }
+      ),
+    endDate: z
+      .string()
+      .min(1, "End date is required")
+      .refine(
+        (date) => {
+          const parsedDate = new Date(date);
+          return !isNaN(parsedDate.getTime());
+        },
+        {
+          message: "End date must be a valid date",
+        }
+      ),
     reason: z
       .string()
       .min(10, "Reason must be at least 10 characters")
       .max(500, "Reason cannot exceed 500 characters"),
-    attachmentUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+    attachmentUrl: z
+      .union([
+        z.string().url("Invalid attachment URL"),
+        z.literal(""),
+        z.undefined(),
+      ])
+      .optional(),
   })
-  .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
-    message: "End date must be after or equal to start date",
-    path: ["endDate"],
-  });
+  .refine(
+    (data) => {
+      const startDate = new Date(data.startDate);
+      const endDate = new Date(data.endDate);
+      return endDate >= startDate;
+    },
+    {
+      message: "End date must be greater than or equal to start date",
+      path: ["endDate"],
+    }
+  );
 
 type ApplyLeaveFormData = z.infer<typeof applyLeaveSchema>;
 
@@ -89,10 +124,15 @@ export default function ApplyLeaveModal({
 
   const onSubmit = async (data: ApplyLeaveFormData) => {
     try {
-      await applyLeaveMutation.mutateAsync(data);
+      // Convert empty string to undefined for optional fields
+      const submitData = {
+        ...data,
+        attachmentUrl: data.attachmentUrl || undefined,
+      };
+      await applyLeaveMutation.mutateAsync(submitData);
       onClose();
     } catch (error) {
-      console.error("Error applying for leave:", error);
+      // Error is handled by the mutation hook
     }
   };
 
@@ -196,11 +236,7 @@ export default function ApplyLeaveModal({
                 <FormItem>
                   <FormLabel>Attachment URL (Optional)</FormLabel>
                   <FormControl>
-                    <Input
-                      type="url"
-                      placeholder="https://..."
-                      {...field}
-                    />
+                    <Input type="url" placeholder="https://..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -221,7 +257,9 @@ export default function ApplyLeaveModal({
                 disabled={applyLeaveMutation.isPending}
                 isLoading={applyLeaveMutation.isPending}
               >
-                {applyLeaveMutation.isPending ? "Applying..." : "Apply for Leave"}
+                {applyLeaveMutation.isPending
+                  ? "Applying..."
+                  : "Apply for Leave"}
               </Button>
             </div>
           </form>
@@ -230,4 +268,3 @@ export default function ApplyLeaveModal({
     </Modal>
   );
 }
-

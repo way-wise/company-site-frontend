@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   pagination?: {
     pageIndex: number;
     pageSize: number;
+    total?: number;
   };
   onPaginationChange?: (pagination: {
     pageIndex: number;
@@ -41,19 +42,27 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   isPending,
-}: // pagination,
-// onPaginationChange,
-DataTableProps<TData, TValue>) {
+  pagination,
+  onPaginationChange,
+}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
 
+  const pageIndex = pagination?.pageIndex ?? 1;
+  const pageSize = pagination?.pageSize ?? 10;
+  const total = pagination?.total ?? data.length;
+
+  const isServerSide = pagination?.total !== undefined;
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: isServerSide ? undefined : getPaginationRowModel(),
+    manualPagination: isServerSide,
+    pageCount: isServerSide ? Math.ceil(total / pageSize) : undefined,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -61,6 +70,22 @@ DataTableProps<TData, TValue>) {
     state: {
       sorting,
       columnFilters,
+      pagination: {
+        pageIndex: pageIndex - 1, // tanstack table uses 0-based index
+        pageSize,
+      },
+    },
+    onPaginationChange: (updater) => {
+      if (onPaginationChange && isServerSide) {
+        const newPagination =
+          typeof updater === "function"
+            ? updater({ pageIndex: pageIndex - 1, pageSize })
+            : updater;
+        onPaginationChange({
+          pageIndex: newPagination.pageIndex + 1, // Convert back to 1-based
+          pageSize: newPagination.pageSize,
+        });
+      }
     },
   });
 
@@ -125,23 +150,37 @@ DataTableProps<TData, TValue>) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className="flex items-center justify-between py-4">
+        <div className="text-sm text-muted-foreground">
+          {isServerSide ? (
+            <>
+              Showing {(pageIndex - 1) * pageSize + 1} to{" "}
+              {Math.min(pageIndex * pageSize, total)} of {total} entries
+            </>
+          ) : (
+            <>
+              Showing {table.getRowModel().rows.length} of {data.length} entries
+            </>
+          )}
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

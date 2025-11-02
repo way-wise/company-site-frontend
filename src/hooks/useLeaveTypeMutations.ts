@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  leaveTypeService,
   CreateLeaveTypeData,
-  UpdateLeaveTypeData,
   LeaveTypeQueryParams,
+  leaveTypeService,
+  UpdateLeaveTypeData,
 } from "@/services/LeaveTypeService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -65,7 +65,9 @@ export const useCreateLeaveType = () => {
       if (data.success) {
         toast.success("Leave type created successfully");
         queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.lists() });
-        queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.active() });
+        queryClient.invalidateQueries({
+          queryKey: leaveTypeQueryKeys.active(),
+        });
       } else {
         toast.error(data.message || "Failed to create leave type");
       }
@@ -94,8 +96,12 @@ export const useUpdateLeaveType = () => {
       if (data.success) {
         toast.success("Leave type updated successfully");
         queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.lists() });
-        queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.detail(variables.leaveTypeId) });
-        queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.active() });
+        queryClient.invalidateQueries({
+          queryKey: leaveTypeQueryKeys.detail(variables.leaveTypeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: leaveTypeQueryKeys.active(),
+        });
       } else {
         toast.error(data.message || "Failed to update leave type");
       }
@@ -119,7 +125,9 @@ export const useDeleteLeaveType = () => {
       if (data.success) {
         toast.success("Leave type deleted successfully");
         queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.lists() });
-        queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.active() });
+        queryClient.invalidateQueries({
+          queryKey: leaveTypeQueryKeys.active(),
+        });
       } else {
         toast.error(data.message || "Failed to delete leave type");
       }
@@ -142,11 +150,17 @@ export const useToggleLeaveTypeStatus = () => {
     onSuccess: (data, leaveTypeId) => {
       if (data.success) {
         toast.success(
-          `Leave type ${data.data.isActive ? "activated" : "deactivated"} successfully`
+          `Leave type ${
+            data.data?.isActive ? "activated" : "deactivated"
+          } successfully`
         );
         queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.lists() });
-        queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.detail(leaveTypeId) });
-        queryClient.invalidateQueries({ queryKey: leaveTypeQueryKeys.active() });
+        queryClient.invalidateQueries({
+          queryKey: leaveTypeQueryKeys.detail(leaveTypeId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: leaveTypeQueryKeys.active(),
+        });
       } else {
         toast.error(data.message || "Failed to toggle leave type status");
       }
@@ -154,9 +168,9 @@ export const useToggleLeaveTypeStatus = () => {
     onError: (error: Error) => {
       const apiError = error as ApiError;
       toast.error(
-        apiError?.response?.data?.message || "Failed to toggle leave type status"
+        apiError?.response?.data?.message ||
+          "Failed to toggle leave type status"
       );
     },
   });
 };
-
