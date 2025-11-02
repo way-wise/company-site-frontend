@@ -1,12 +1,12 @@
 "use client";
 
 import {
-  leaveService,
   ApplyLeaveData,
   ApproveLeaveData,
-  RejectLeaveData,
-  LeaveQueryParams,
   LeaveCalendarParams,
+  LeaveQueryParams,
+  leaveService,
+  RejectLeaveData,
 } from "@/services/LeaveService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -34,19 +34,27 @@ export const leaveQueryKeys = {
     [...leaveQueryKeys.all, "calendar", params] as const,
 };
 
-export const useMyLeaves = (params: LeaveQueryParams) => {
+export const useMyLeaves = (
+  params: LeaveQueryParams & { enabled?: boolean }
+) => {
+  const { enabled = true, ...queryParams } = params;
   return useQuery({
-    queryKey: leaveQueryKeys.mine(params),
-    queryFn: () => leaveService.getMyLeaves(params),
+    queryKey: leaveQueryKeys.mine(queryParams),
+    queryFn: () => leaveService.getMyLeaves(queryParams),
+    enabled,
     staleTime: 3 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 };
 
-export const useAllLeaves = (params: LeaveQueryParams) => {
+export const useAllLeaves = (
+  params: LeaveQueryParams & { enabled?: boolean }
+) => {
+  const { enabled = true, ...queryParams } = params;
   return useQuery({
-    queryKey: leaveQueryKeys.list(params),
-    queryFn: () => leaveService.getAllLeaves(params),
+    queryKey: leaveQueryKeys.list(queryParams),
+    queryFn: () => leaveService.getAllLeaves(queryParams),
+    enabled,
     staleTime: 3 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
@@ -62,7 +70,10 @@ export const useLeave = (leaveId: string) => {
   });
 };
 
-export const useLeaveStats = (params?: { year?: number; userProfileId?: string }) => {
+export const useLeaveStats = (params?: {
+  year?: number;
+  userProfileId?: string;
+}) => {
   return useQuery({
     queryKey: leaveQueryKeys.stats(params),
     queryFn: () => leaveService.getLeaveStats(params),
@@ -89,7 +100,9 @@ export const useApplyLeave = () => {
     onSuccess: (data) => {
       if (data.success) {
         toast.success("Leave application submitted successfully");
-        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.mine({ page: 1, limit: 10 }) });
+        queryClient.invalidateQueries({
+          queryKey: leaveQueryKeys.mine({ page: 1, limit: 10 }),
+        });
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.stats() });
       } else {
         toast.error(data.message || "Failed to apply for leave");
@@ -112,8 +125,12 @@ export const useCancelLeave = () => {
     onSuccess: (data, leaveId) => {
       if (data.success) {
         toast.success("Leave cancelled successfully");
-        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.mine({ page: 1, limit: 10 }) });
-        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.detail(leaveId) });
+        queryClient.invalidateQueries({
+          queryKey: leaveQueryKeys.mine({ page: 1, limit: 10 }),
+        });
+        queryClient.invalidateQueries({
+          queryKey: leaveQueryKeys.detail(leaveId),
+        });
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.stats() });
       } else {
         toast.error(data.message || "Failed to cancel leave");
@@ -136,7 +153,9 @@ export const useDeleteLeave = () => {
     onSuccess: (data) => {
       if (data.success) {
         toast.success("Leave deleted successfully");
-        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.mine({ page: 1, limit: 10 }) });
+        queryClient.invalidateQueries({
+          queryKey: leaveQueryKeys.mine({ page: 1, limit: 10 }),
+        });
       } else {
         toast.error(data.message || "Failed to delete leave");
       }
@@ -165,7 +184,9 @@ export const useApproveLeave = () => {
       if (data.success) {
         toast.success("Leave approved successfully");
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.all });
-        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.detail(variables.leaveId) });
+        queryClient.invalidateQueries({
+          queryKey: leaveQueryKeys.detail(variables.leaveId),
+        });
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.stats() });
       } else {
         toast.error(data.message || "Failed to approve leave");
@@ -195,7 +216,9 @@ export const useRejectLeave = () => {
       if (data.success) {
         toast.success("Leave rejected successfully");
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.all });
-        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.detail(variables.leaveId) });
+        queryClient.invalidateQueries({
+          queryKey: leaveQueryKeys.detail(variables.leaveId),
+        });
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.stats() });
       } else {
         toast.error(data.message || "Failed to reject leave");
@@ -209,4 +232,3 @@ export const useRejectLeave = () => {
     },
   });
 };
-

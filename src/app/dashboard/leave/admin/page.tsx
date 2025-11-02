@@ -3,7 +3,7 @@
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAllLeaves, useLeaveStats } from "@/hooks/useLeaveMutations";
+import { useLeaveStats } from "@/hooks/useLeaveMutations";
 import {
   BarChart3,
   CalendarCheck,
@@ -11,23 +11,15 @@ import {
   Clock,
   TrendingUp,
 } from "lucide-react";
-import { useState } from "react";
+import { LeaveTable } from "../../_components/leave-components/leave-table";
 
 export default function AdminLeavePage() {
-  const [statusFilter, setStatusFilter] = useState("all");
-
   const { data: statsData, isLoading: isStatsLoading } = useLeaveStats();
-  const { data: leavesData, isLoading: isLeavesLoading } = useAllLeaves({
-    page: 1,
-    limit: 50,
-    status: statusFilter === "all" ? "" : statusFilter,
-  });
 
   const stats = statsData?.data;
-  const leaves = leavesData?.data?.result || [];
 
   return (
-    <PermissionGuard permissions={["read_leave", "approve_leave"]}>
+    <PermissionGuard permissions={["view_team_leaves"]}>
       <div className="space-y-6">
         <Breadcrumb
           items={[
@@ -106,10 +98,7 @@ export default function AdminLeavePage() {
 
         {/* Leave Applications Table */}
         <div className="mt-6">
-          <p className="text-sm text-muted-foreground mb-4">
-            Showing all leave applications across the organization
-          </p>
-          {/* TODO: Add admin leave table with approve/reject functionality */}
+          <LeaveTable />
         </div>
       </div>
     </PermissionGuard>

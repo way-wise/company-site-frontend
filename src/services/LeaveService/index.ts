@@ -47,10 +47,9 @@ export const leaveService = {
   getMyLeaves: async (
     params: LeaveQueryParams
   ): Promise<
-    ApiResponse<{
+    ApiResponse<LeaveApplicationWithRelations[]> & {
       meta: { page: number; limit: number; total: number };
-      result: LeaveApplicationWithRelations[];
-    }>
+    }
   > => {
     const { page = 1, limit = 10, status, leaveTypeId, startDate, endDate } =
       params;
@@ -77,10 +76,9 @@ export const leaveService = {
   getAllLeaves: async (
     params: LeaveQueryParams
   ): Promise<
-    ApiResponse<{
+    ApiResponse<LeaveApplicationWithRelations[]> & {
       meta: { page: number; limit: number; total: number };
-      result: LeaveApplicationWithRelations[];
-    }>
+    }
   > => {
     const { page = 1, limit = 10, status, leaveTypeId, userProfileId, startDate, endDate } =
       params;
