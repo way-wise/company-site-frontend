@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import ApplyLeaveModal from "../_components/leave-components/apply-leave-modal";
 import { LeaveBalanceCard } from "../_components/leave-components/leave-balance-card";
+import LeaveStats from "../_components/leave-components/leave-stats";
 import { LeaveTable } from "../_components/leave-components/leave-table";
 
 export default function LeavePage() {
@@ -23,7 +24,7 @@ export default function LeavePage() {
             { label: "Leave Management", current: true },
           ]}
         />
-
+        <LeaveStats />
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Leave Management</h1>
           <PermissionGuard permissions={["create_leave"]}>
