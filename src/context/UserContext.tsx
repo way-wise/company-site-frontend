@@ -41,15 +41,6 @@ const PUBLIC_ROUTES = [
   "/services",
 ];
 
-const fetchUserPermissions = async (userId: string): Promise<Permission[]> => {
-  try {
-    const response = await apiClient.get(`/roles/user/${userId}/permissions`);
-    return response.data.success ? response.data.data || [] : [];
-  } catch {
-    return [];
-  }
-};
-
 const isPublicRoute = (pathname: string): boolean => {
   return PUBLIC_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
@@ -74,9 +65,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const userData = response.data.data;
       setUser(userData);
 
-      if (userData?.id) {
-        const userPermissions = await fetchUserPermissions(userData.id);
-        setPermissions(userPermissions);
+      // Extract permissions from user data (already included in /auth/me response)
+      if (userData?.permissions && Array.isArray(userData.permissions)) {
+        setPermissions(userData.permissions);
+      } else {
+        setPermissions([]);
       }
 
       return userData;
