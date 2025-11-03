@@ -109,14 +109,6 @@ const ROLE_OPTIONS = [
   { value: "SUPER_ADMIN", label: "Super Admin" },
 ];
 
-// Role filter options (excluding SUPER_ADMIN for filtering)
-// const ROLE_FILTER_OPTIONS = [
-//   { value: "ALL", label: "All Roles" },
-//   { value: "CLIENT", label: "Client" },
-//   { value: "ADMIN", label: "Admin" },
-//   { value: "EMPLOYEE", label: "Employee" },
-// ];
-
 export const UsersTable = () => {
   // Modal states
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -159,7 +151,6 @@ export const UsersTable = () => {
     search: debouncedSearch,
     role: roleFilter === "ALL" ? undefined : roleFilter,
   });
-  console.log(usersData);
   // Add User Form
   const addUserForm = useForm<CreateClientFormData>({
     resolver: zodResolver(createClientSchema),
@@ -594,6 +585,7 @@ export const UsersTable = () => {
             pagination={{
               pageIndex: usersData.pagination.currentPage - 1, // Convert to 0-based index
               pageSize: pagination.pageSize,
+              total: usersData.pagination.totalUsers,
             }}
             onPaginationChange={(newPagination) => {
               setPagination({
