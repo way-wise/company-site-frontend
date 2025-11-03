@@ -32,17 +32,18 @@ export interface SubMenuItem {
 
 export const menuConfig: MenuItem[] = [
   {
-    title: "Dashboard",
-    icon: LayoutGrid,
-    url: "/dashboard",
-    // Always visible to authenticated users
-  },
-  {
     title: "Back to Home",
     icon: Home,
     url: "/",
     // Always visible
   },
+  {
+    title: "Dashboard",
+    icon: LayoutGrid,
+    url: "/dashboard",
+    // Always visible to authenticated users
+  },
+
   {
     title: "Users",
     icon: UsersRound,
