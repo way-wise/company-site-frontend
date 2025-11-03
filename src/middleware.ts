@@ -37,9 +37,11 @@ export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const hasToken = hasValidToken(request);
 
-  console.log(
-    `Middleware: Checking access for ${pathname}, hasToken: ${hasToken}`
-  );
+  if (process.env.NODE_ENV !== "production") {
+    console.log(
+      `Middleware: Checking access for ${pathname}, hasToken: ${hasToken}`
+    );
+  }
 
   // Redirect to login if accessing protected route without token
   if (!hasToken && isProtectedRoute(pathname)) {
@@ -61,6 +63,7 @@ export const config = {
     "/register",
     "/client/:path*",
     "/profile/:path*",
+    "/dashboard/:path*",
     "/admin/:path*",
   ],
 };

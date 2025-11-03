@@ -21,9 +21,11 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    console.log(
-      `Making ${config.method?.toUpperCase()} request to: ${config.url}`
-    );
+    if (process.env.NODE_ENV !== "production") {
+      console.log(
+        `Making ${config.method?.toUpperCase()} request to: ${config.url}`
+      );
+    }
     return config;
   },
   (error) => {
