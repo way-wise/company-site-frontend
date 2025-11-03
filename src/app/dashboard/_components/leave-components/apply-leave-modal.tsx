@@ -131,7 +131,7 @@ export default function ApplyLeaveModal({
       };
       await applyLeaveMutation.mutateAsync(submitData);
       onClose();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };

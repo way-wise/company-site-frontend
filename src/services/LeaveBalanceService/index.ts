@@ -27,6 +27,23 @@ export interface LeaveBalanceQueryParams {
   year?: number;
 }
 
+export interface EmployeeLeaveSummary {
+  userProfileId: string;
+  employeeName: string;
+  employeeEmail: string;
+  totalUsedDays: number;
+  totalRemainingDays: number;
+  totalDays: number;
+  leaveBreakdown: Array<{
+    leaveTypeId: string;
+    leaveTypeName: string;
+    leaveTypeColor: string | null;
+    usedDays: number;
+    remainingDays: number;
+    totalDays: number;
+  }>;
+}
+
 export const leaveBalanceService = {
   // Get all leave balances (admin)
   getAllLeaveBalances: async (
@@ -88,7 +105,10 @@ export const leaveBalanceService = {
     balanceId: string,
     balanceData: UpdateLeaveBalanceData
   ): Promise<ApiResponse<LeaveBalance>> => {
-    const response = await apiClient.patch(`/leave-balance/${balanceId}`, balanceData);
+    const response = await apiClient.patch(
+      `/leave-balance/${balanceId}`,
+      balanceData
+    );
     return response.data;
   },
 
@@ -111,5 +131,40 @@ export const leaveBalanceService = {
     );
     return response.data;
   },
-};
 
+  // Get employees leave summary
+  getEmployeesLeaveSummary: async (
+    year?: number,
+    params?: { page?: number; limit?: number }
+  ): Promise<
+    ApiResponse<EmployeeLeaveSummary[]> & {
+      meta?: { page: number; limit: number; total: number };
+    }
+  > => {
+    const { page = 1, limit = 10 } = params || {};
+    let url = `/leave-balance/summary?page=${page}&limit=${limit}`;
+    if (year) {
+      url += `&year=${year}`;
+    }
+    const response = await apiClient.get(url);
+    return response.data;
+  },
+
+  // Allocate yearly leave for all employees
+  allocateYearlyLeaveForAll: async (
+    year: number,
+    totalDays: number
+  ): Promise<
+    ApiResponse<{
+      allocated: number;
+      updated: number;
+      totalEmployees: number;
+    }>
+  > => {
+    const response = await apiClient.post("/leave-balance/allocate-all", {
+      year,
+      totalDays,
+    });
+    return response.data;
+  },
+};

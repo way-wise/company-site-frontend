@@ -100,10 +100,10 @@ export const useApplyLeave = () => {
     onSuccess: (data) => {
       if (data.success) {
         toast.success("Leave application submitted successfully");
-        queryClient.invalidateQueries({
-          queryKey: leaveQueryKeys.mine({ page: 1, limit: 10 }),
-        });
+        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.all });
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.stats() });
+        // Invalidate leave balance queries since balance might be affected
+        queryClient.invalidateQueries({ queryKey: ["leaveBalances"] });
       } else {
         toast.error(data.message || "Failed to apply for leave");
       }
@@ -125,13 +125,13 @@ export const useCancelLeave = () => {
     onSuccess: (data, leaveId) => {
       if (data.success) {
         toast.success("Leave cancelled successfully");
-        queryClient.invalidateQueries({
-          queryKey: leaveQueryKeys.mine({ page: 1, limit: 10 }),
-        });
+        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.all });
         queryClient.invalidateQueries({
           queryKey: leaveQueryKeys.detail(leaveId),
         });
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.stats() });
+        // Invalidate leave balance queries since balance will be restored
+        queryClient.invalidateQueries({ queryKey: ["leaveBalances"] });
       } else {
         toast.error(data.message || "Failed to cancel leave");
       }
@@ -153,9 +153,8 @@ export const useDeleteLeave = () => {
     onSuccess: (data) => {
       if (data.success) {
         toast.success("Leave deleted successfully");
-        queryClient.invalidateQueries({
-          queryKey: leaveQueryKeys.mine({ page: 1, limit: 10 }),
-        });
+        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.all });
+        queryClient.invalidateQueries({ queryKey: leaveQueryKeys.stats() });
       } else {
         toast.error(data.message || "Failed to delete leave");
       }
@@ -188,6 +187,8 @@ export const useApproveLeave = () => {
           queryKey: leaveQueryKeys.detail(variables.leaveId),
         });
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.stats() });
+        // Invalidate leave balance queries since balance will be updated
+        queryClient.invalidateQueries({ queryKey: ["leaveBalances"] });
       } else {
         toast.error(data.message || "Failed to approve leave");
       }
@@ -220,6 +221,8 @@ export const useRejectLeave = () => {
           queryKey: leaveQueryKeys.detail(variables.leaveId),
         });
         queryClient.invalidateQueries({ queryKey: leaveQueryKeys.stats() });
+        // Note: Balance is not affected by rejection, but invalidate to be safe
+        queryClient.invalidateQueries({ queryKey: ["leaveBalances"] });
       } else {
         toast.error(data.message || "Failed to reject leave");
       }

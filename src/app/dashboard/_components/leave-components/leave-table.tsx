@@ -104,6 +104,7 @@ export const LeaveTable = () => {
   const canViewAllLeaves = !isAuthLoading && hasPermission("view_team_leaves");
   const canApproveLeave = !isAuthLoading && hasPermission("approve_leave");
   const canDeleteLeave = !isAuthLoading && hasPermission("delete_leave");
+  const canUpdateLeave = !isAuthLoading && hasPermission("update_leave");
 
   const queryParams = {
     page: pagination.pageIndex,
@@ -128,7 +129,15 @@ export const LeaveTable = () => {
   const { mutate: deleteLeave } = useDeleteLeave();
   const { mutate: cancelLeave } = useCancelLeave();
 
-  const meta = (leavesData as any)?.meta || { page: 1, limit: 10, total: 0 };
+  interface LeavePaginationMeta {
+    page: number;
+    limit: number;
+    total: number;
+  }
+
+  const meta: LeavePaginationMeta =
+    (leavesData as { meta?: LeavePaginationMeta })?.meta ||
+    ({ page: 1, limit: 10, total: 0 } satisfies LeavePaginationMeta);
   const leaves = leavesData?.data || [];
 
   const handleDelete = () => {
@@ -297,8 +306,8 @@ export const LeaveTable = () => {
                     </Button>
                   </DropdownMenuItem>
                 )}
-                {/* Cancel action - only owner can cancel their APPROVED leave */}
-                {leave.status === "APPROVED" && isOwner && (
+                {/* Cancel action - only admin with update_leave permission can cancel APPROVED leave */}
+                {leave.status === "APPROVED" && canUpdateLeave && (
                   <DropdownMenuItem asChild>
                     <Button
                       variant="ghost"
@@ -321,38 +330,40 @@ export const LeaveTable = () => {
     ];
 
     return baseColumns;
-  }, [canViewAllLeaves, canApproveLeave, canDeleteLeave, user]);
+  }, [canViewAllLeaves, canApproveLeave, canDeleteLeave, canUpdateLeave, user]);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-primary" />
-          <h2 className="text-2xl font-semibold">
-            {canViewAllLeaves ? "All Leaves" : "My Leaves"}
-          </h2>
+    <div className="">
+      <div className="flex items-start justify-between pb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-primary" />
+            <h2 className="text-2xl font-semibold">
+              {canViewAllLeaves ? "All Leaves" : "My Leaves"}
+            </h2>
+          </div>
         </div>
-      </div>
 
-      <div className="flex items-center gap-4 pb-6">
-        <Select
-          value={statusFilter}
-          onValueChange={(value) => {
-            setStatusFilter(value);
-            setPagination({ pageIndex: 1, pageSize: pagination.pageSize });
-          }}
-        >
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="PENDING">Pending</SelectItem>
-            <SelectItem value="APPROVED">Approved</SelectItem>
-            <SelectItem value="REJECTED">Rejected</SelectItem>
-            <SelectItem value="CANCELLED">Cancelled</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-4">
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => {
+              setStatusFilter(value);
+              setPagination({ pageIndex: 1, pageSize: pagination.pageSize });
+            }}
+          >
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="PENDING">Pending</SelectItem>
+              <SelectItem value="APPROVED">Approved</SelectItem>
+              <SelectItem value="REJECTED">Rejected</SelectItem>
+              <SelectItem value="CANCELLED">Cancelled</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <DataTable

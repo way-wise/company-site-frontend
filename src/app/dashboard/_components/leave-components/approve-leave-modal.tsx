@@ -70,7 +70,7 @@ export const ApproveLeaveModal = ({
       });
       form.reset();
       onClose();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };

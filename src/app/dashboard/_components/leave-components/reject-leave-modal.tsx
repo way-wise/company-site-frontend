@@ -77,7 +77,7 @@ export const RejectLeaveModal = ({
       });
       form.reset();
       onClose();
-    } catch (error) {
+    } catch {
       // Error is handled by the mutation hook
     }
   };
