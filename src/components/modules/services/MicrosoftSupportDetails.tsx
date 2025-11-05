@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Check, Shield, Clock, Award, Users, Globe, Database, MessageSquare, Cloud, Lock } from "lucide-react";
 import microsoftSupportImage from "@/assets/images/services/microsoft-support.png";
+import supportDeliveryFramework from "@/assets/images/services/ms-support-flow-chart.png";
 
 const MicrosoftSupportDetails = () => {
   return (
@@ -359,6 +360,11 @@ const MicrosoftSupportDetails = () => {
                 </ul>
               </div>
             </div>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 md:p-8 shadow-sm max-w-5xl mx-auto mt-12 flex flex-col items-center justify-center">
+            <h2 className="text-lg lg:text-2xl text-center font-semibold text-[#1b3447] mb-4 md:mb-8">SUPPORT DELIVERY FRAMEWORK: </h2>
+            <Image src={supportDeliveryFramework} alt="Support Delivery Framework" />
           </div>
         </div>
       </section>
