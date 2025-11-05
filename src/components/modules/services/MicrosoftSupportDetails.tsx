@@ -363,7 +363,7 @@ const MicrosoftSupportDetails = () => {
           </div>
 
           <div className="bg-violet-100 rounded-lg p-6 md:p-8 shadow-sm max-w-5xl mx-auto mt-12 flex flex-col items-center justify-center">
-            <h2 className="text-lg lg:text-2xl text-center font-semibold text-[#1b3447] mb-4 md:mb-8">SUPPORT DELIVERY FRAMEWORK: </h2>
+            <h2 className="text-lg lg:text-2xl text-center font-semibold text-[#1b3447] mb-4 md:mb-8">SUPPORT DELIVERY FRAMEWORK</h2>
             <Image src={supportDeliveryFramework} alt="Support Delivery Framework" />
           </div>
         </div>
