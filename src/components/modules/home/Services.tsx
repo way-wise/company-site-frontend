@@ -21,8 +21,8 @@ growth, enhance your brand, and streamline your operations."
           />
         </div>
         <div className="flex justify-center items-center">
-          <div className="max-w-4xl flex gap-8 justify-between bg-white rounded-xl mb-8">
-            <div className="p-8">
+          <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 lg:gap-8 justify-between bg-white rounded-xl mb-12 relative overflow-hidden">
+            <div className="lg:w-1/2 p-5 lg:p-12">
               <h2 className="text-black text-2xl font-bold mb-4">Microsoft M365 Customer Support Services</h2>
                 <p className="text-gray-900 text-base mb-1">Way-Wise Tech provides end-to-end Microsoft 365 support covering:
                   </p>
@@ -37,10 +37,10 @@ growth, enhance your brand, and streamline your operations."
                 </ul>
                 <Link href="/microsoft-support" className="inline-block text-white bg-brand px-4 py-2 rounded-md text-base mt-3">Learn More</Link>
             </div>
-            <Image src={microsoftSupport} alt="Microsoft Support" className="w-1/2 rounded-md" />
+            <Image src={microsoftSupport} alt="Microsoft Support" className="h-full w-auto lg:absolute right-0 bottom-0" />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-20  ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-20">
           {services?.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
