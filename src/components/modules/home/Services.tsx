@@ -2,7 +2,7 @@ import SectionTitle from "@/components/modules/home/SectionTitle";
 import { ServiceDisplay } from "@/types";
 import ServiceCard from "./ServiceCard";
 import Image from "next/image";
-import microsoftSupport from "@/assets/images/services/microsoft-support.png";
+import microsoftSupport from "@/assets/images/services/ms-support.png";
 import Link from "next/link";
 
 const Services = ({ services }: { services: ServiceDisplay[] }) => {
@@ -21,12 +21,12 @@ growth, enhance your brand, and streamline your operations."
           />
         </div>
         <div className="flex justify-center items-center">
-          <div className="max-w-4xl p-8 flex gap-8 justify-between items-center bg-linear-to-tr from-[#638f06] to-[#e23808] rounded-xl mb-8">
-            <div>
-              <h2 className="text-white text-2xl font-bold mb-4">Microsoft M365 Customer Support Services</h2>
-                <p className="text-white text-base mb-1">Way-Wise Tech provides end-to-end Microsoft 365 support covering:
+          <div className="max-w-4xl flex gap-8 justify-between bg-white rounded-xl mb-8">
+            <div className="p-8">
+              <h2 className="text-black text-2xl font-bold mb-4">Microsoft M365 Customer Support Services</h2>
+                <p className="text-gray-900 text-base mb-1">Way-Wise Tech provides end-to-end Microsoft 365 support covering:
                   </p>
-                <ul className="list-disc text-sm list-inside text-white">
+                <ul className="list-disc text-sm list-inside text-gray-900">
                   <li>SCIM / Identity & Access Management</li>
                   <li>SharePoint Online (SPO)</li>
                   <li>Exchange (Online and On-Prem migrations)</li>
