@@ -204,7 +204,7 @@ const Skills = () => {
 
         <div className="space-y-16 lg:space-y-20">
           {skillGroups.map((group, groupIndex) => (
-            <div key={groupIndex} className="space-y-8 p-6 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+            <div key={groupIndex} className="space-y-8 p-3 md:p-6 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
               <div className="space-y-3">
                 <h3 className="text-2xl md:text-3xl xl:text-4xl font-bold text-black">
                   {group.title}
@@ -213,20 +213,20 @@ const Skills = () => {
                   {group.description}
                 </p>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 xl:gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 md:gap-6 xl:gap-8">
                 {group.skills.map((skill) => (
                   <div
                     key={skill.id}
-                    className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl group"
+                    className="bg-white/10 backdrop-blur-md rounded-2xl p-3 md:p-6 border border-white/20 hover:bg-white/15 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl group"
                   >
                     <div className="flex flex-col items-center justify-center text-center space-y-3">
                       <div className="text-4xl xl:text-5xl mb-2 group-hover:scale-110 transition-transform duration-300">
                         {skill.icon}
                       </div>
-                      <h4 className="text-gray-900 font-bold text-base xl:text-lg leading-tight">
+                      <h4 className="text-gray-900 font-bold text-sm xl:text-lg leading-tight">
                         {skill.name}
                       </h4>
-                      <span className="text-gray-700 text-xs xl:text-sm font-medium bg-white/30 backdrop-blur-sm px-3 py-1 rounded-full border border-white/30">
+                      <span className="text-gray-700 text-[10px] xl:text-sm font-medium bg-white/30 backdrop-blur-sm px-3 py-1 rounded-full border border-white/30">
                         {skill.category}
                       </span>
                     </div>
