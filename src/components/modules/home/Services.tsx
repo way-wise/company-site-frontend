@@ -3,6 +3,7 @@ import { ServiceDisplay } from "@/types";
 import ServiceCard from "./ServiceCard";
 import Image from "next/image";
 import microsoftSupport from "@/assets/images/services/microsoft-support.png";
+import Link from "next/link";
 
 const Services = ({ services }: { services: ServiceDisplay[] }) => {
 
@@ -34,6 +35,7 @@ growth, enhance your brand, and streamline your operations."
                   <li>Billing & Subscription Management</li>
                   <li>Forum / Community / Support Desk Operations</li>
                 </ul>
+                <Link href="/microsoft-support" className="inline-block text-white bg-brand px-4 py-2 rounded-md text-base mt-3">Learn More</Link>
             </div>
             <Image src={microsoftSupport} alt="Microsoft Support" className="w-1/2 rounded-md" />
           </div>
