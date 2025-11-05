@@ -27,7 +27,7 @@ const HeroSection = () => {
               </h2>
             </div>
           </div>
-
+          {/* <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">Microsoft M365 Customer Support Services</p> */}
           {/* Description */}
           <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
             We are a global software development firm, delivering innovative,
