@@ -5,6 +5,7 @@ import HeroSection from "@/components/modules/home/HeroSection";
 import Offers from "@/components/modules/home/Offers";
 import Projects from "@/components/modules/home/Projects";
 import Services from "@/components/modules/home/Services";
+import Skills from "@/components/modules/home/Skills";
 import { servicesData } from "@/datas/services";
 
 const HomePage = () => {
@@ -14,6 +15,7 @@ const HomePage = () => {
       <HeroSection />
       <CategorySection />
       <Services services={services} />
+      <Skills />
       <Projects />
       <Offers />
       <Feadback />
