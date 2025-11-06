@@ -1,5 +1,6 @@
 import microsoftSupport from "@/assets/images/services/ms-support.png";
 import SectionTitle from "@/components/modules/home/SectionTitle";
+import { ServiceDisplay } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import ServiceCard from "./ServiceCard";

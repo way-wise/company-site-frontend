@@ -310,3 +310,9 @@ export const servicesSecondData: ServiceDetail[] = [
     ],
   },
 ];
+
+// Combined export of all services
+export const servicesData: ServiceDetail[] = [
+  ...servicesFirstData,
+  ...servicesSecondData,
+];
