@@ -6,15 +6,17 @@ import Offers from "@/components/modules/home/Offers";
 import Projects from "@/components/modules/home/Projects";
 import Services from "@/components/modules/home/Services";
 import Skills from "@/components/modules/home/Skills";
-import { servicesData } from "@/datas/services";
+import { servicesFirstData, servicesSecondData } from "@/datas/services";
 
 const HomePage = () => {
-  const services = servicesData;
   return (
     <div>
       <HeroSection />
       <CategorySection />
-      <Services services={services} />
+      <Services
+        servicesFirstData={servicesFirstData}
+        servicesSecondData={servicesSecondData}
+      />
       <Skills />
       <Projects />
       <Offers />

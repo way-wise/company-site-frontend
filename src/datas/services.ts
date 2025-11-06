@@ -23,7 +23,7 @@ import internetIcon from "@/assets/icons/services/internet.svg";
 import mobileIcon from "@/assets/icons/services/mobile.svg";
 import webIcon from "@/assets/icons/services/web.png";
 
-export const servicesData: ServiceDetail[] = [
+export const servicesFirstData: ServiceDetail[] = [
   {
     id: 1,
     title: "Web Application",
@@ -165,6 +165,9 @@ export const servicesData: ServiceDetail[] = [
       "Competitive Market Position",
     ],
   },
+];
+
+export const servicesSecondData: ServiceDetail[] = [
   {
     id: 4,
     title: "Graphics Design",
