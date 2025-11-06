@@ -140,7 +140,7 @@ const ContactUs = () => {
                 </div>
                 <div className="text-center">
                   <p className="font-bold text-gray-800">Seung Lee</p>
-                  <p className="text-gray-600">CEO</p>
+                  <p className="text-gray-600">CTO</p>
                 </div>
               </div>
             </div>
