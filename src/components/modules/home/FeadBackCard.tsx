@@ -17,7 +17,7 @@ const FeadBackCard = ({
   companyLogo,
 }: Props) => {
   return (
-    <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 w-full h-auto flex flex-col sm:flex-row items-start gap-4 sm:gap-6 lg:gap-8">
+    <div className="bg-white overflow-hidden rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 w-full h-auto flex flex-col sm:flex-row items-start gap-4 sm:gap-6 lg:gap-8">
       {/* Client Image - Responsive layout */}
       <div className="flex-shrink-0 w-full sm:w-auto">
         <div className="bg-blue-100 rounded-lg overflow-hidden">
