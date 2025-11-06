@@ -209,7 +209,7 @@ const Skills = () => {
                 <h3 className="text-2xl md:text-3xl xl:text-4xl font-bold text-black">
                   {group.title}
                 </h3>
-                <p className="text-gray-900 text-base md:text-lg max-w-3xl">
+                <p className="text-gray-900 text-base md:text-lg max-w-xl">
                   {group.description}
                 </p>
               </div>
