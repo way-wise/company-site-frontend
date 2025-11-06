@@ -19,23 +19,20 @@ const HeroSection = () => {
       <div className="container mx-auto  grid grid-cols-1 md:grid-cols-2 h-full">
         <div className="flex flex-col justify-center items-center md:items-start">
           {/* Main heading */}
-          <span className="text-xs lg:text-sm bg-white inline-block px-3 py-1 rounded-full font-bold tracking-wide text-center md:text-left mb-4">
-            WAY-WISE TECHNOLOGY
-          </span>
-          <h1 className="text-white text-md  lg:text-4xl max-w-xl mb-4 md:mb-8 text-center font-bold md:text-left ">
-            The Best <span className="text-brand">Web Development</span> Company
-            USA <br />
-          </h1>
-          <p className="text-white/90 text-md  lg:text-lg max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
-            Building Smart, Scalable, and Future-Ready Solutions
-          </p>
+          <div className="mb-4 md:mb-8">
+            <div className="text-4xl lg:text-6xl  font-bold tracking-wide text-center md:text-left">
+              <h1 className="text-white ">WAY-WISE</h1>
+              <h2 className="text-transparent bg-gradient-to-r from-[#00D4FF] to-[#0099CC] bg-clip-text ">
+                TECHNOLOGY
+              </h2>
+            </div>
+          </div>
+          {/* <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">Microsoft M365 Customer Support Services</p> */}
           {/* Description */}
-          <p className="text-white/90 text-md  lg:text-lg max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
-            Way Wise Tech is one of the best web development company in the USA.
-            We make unique software that helps organizations expand and scale
-            quickly and easily. We create and build web apps, corporate
-            software, and digital platforms that work well and are customized to
-            match the demands of each client.
+          <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
+            We are a global software development firm, delivering innovative,
+            customized solutions that empower businesses and set new standards
+            in quality and technology.
           </p>
 
           {/* CTA Button */}

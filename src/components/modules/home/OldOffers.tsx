@@ -80,10 +80,13 @@ const Offers = () => {
   return (
     <section className="relative  bg-[url('@/assets/images/offers/offer-bg.png')] bg-cover bg-center bg-no-repeat">
       <div className="container relative z-10 py-10 lg:py-20 ">
-        <div className="mb-8 lg:mb-16 flex flex-col gap-4 items-center justify-center">
-          <span className="text-xs lg:text-sm bg-white inline-block px-3 py-1 rounded-full font-bold tracking-wide text-center md:text-left mb-4">What We Offer</span>
-          <h2 className="text-white text-4xl lg:text-5xl max-w-4xl mx-auto font-bold text-center md:text-center">Complete IT & Web Development Solutions in the USA</h2>
-          <p className="text-white/90 text-md  lg:text-lg max-w-3xl mx-auto text-center md:text-center">Way Wise Tech is a dependable web development corporation primarily based in the US, dedicated to imparting tailor-made IT answers that assist groups grow and scale results easily. We provide a variety of offerings, together with web development, mobile app development, graphic design, digital marketing, virtual assistance, data entry, software development and server deployment. Our commitment is to make sure that each mission we adopt is progressive, precise, and excessive-appearing, allowing your enterprise to shine in today’s bustling digital landscape.</p>
+        <div className="mb-8 lg:mb-16">
+          <SectionTitle
+            title="What We Offer"
+            description="We deliver tailored IT services—from web development, App Development and graphic design to digital marketing, virtual assistance, data entry, and server deployment."
+            titleClass="text-white text-3xl sm:text-4xl lg:text-[55px] font-bold"
+            descriptionClass="text-white text-base sm:text-lg lg:text-[20px]"
+          />
         </div>
 
         {/* Stack Scroll for All Devices */}
