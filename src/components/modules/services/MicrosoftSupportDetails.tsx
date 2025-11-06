@@ -1,7 +1,17 @@
-import Image from "next/image";
-import { Check, Shield, Clock, Award, Users, Globe, Database, MessageSquare, Cloud, Lock } from "lucide-react";
 import microsoftSupportImage from "@/assets/images/services/microsoft-support.png";
 import supportDeliveryFramework from "@/assets/images/services/ms-support-flow-chart.png";
+import {
+  Award,
+  Check,
+  Cloud,
+  Database,
+  Globe,
+  Lock,
+  MessageSquare,
+  Shield,
+  Users,
+} from "lucide-react";
+import Image from "next/image";
 
 const MicrosoftSupportDetails = () => {
   return (
@@ -28,11 +38,14 @@ const MicrosoftSupportDetails = () => {
             Microsoft Support Services Portfolio
           </h2>
           <p className="text-base md:text-lg lg:text-xl text-[#3d4e5c] leading-6 md:leading-8 mb-6">
-            <strong>Way-Wise Technology</strong> delivers enterprise-level Microsoft support services through our team of
-            certified experts who bring extensive hands-on experience from leading Microsoft support partners. Our technical
-            professionals have previously delivered exceptional Microsoft customer support through various third-party
-            companies, giving us proven capabilities to immediately handle Microsoft projects and ensure seamless service
-            delivery with exceptional customer satisfaction.
+            <strong>Way-Wise Technology</strong> delivered enterprise-level
+            Microsoft support services through our team of certified experts who
+            brought extensive hands-on experience from leading Microsoft support
+            partners. Our technical professionals had previously delivered
+            exceptional Microsoft customer support through various third-party
+            companies, giving us proven capabilities that immediately handled
+            Microsoft projects and ensured seamless service delivery with
+            exceptional customer satisfaction.
           </p>
 
           {/* Key Differentiators */}
@@ -44,34 +57,38 @@ const MicrosoftSupportDetails = () => {
               <div className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                 <p className="text-sm md:text-base text-[#3d4e5c]">
-                  <strong>Proven Microsoft Support Pedigree:</strong> Our team comes directly from Microsoft&apos;s premier
-                  support partners with verified track records.
+                  <strong>Proven Microsoft Support Pedigree:</strong> Our team
+                  came directly from Microsoft&apos;s premier support partners
+                  with verified track records.
                 </p>
               </div>
               <div className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                 <p className="text-sm md:text-base text-[#3d4e5c]">
-                  <strong>Immediate Project Readiness:</strong> We can onboard and handle Microsoft support projects with
-                  minimal ramp-up time.
+                  <strong>Immediate Project Readiness:</strong> We could onboard
+                  and handle Microsoft support projects with minimal ramp-up
+                  time.
                 </p>
               </div>
               <div className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                 <p className="text-sm md:text-base text-[#3d4e5c]">
-                  <strong>Dual Expertise:</strong> Extensive experience in both partner-managed cases and direct customer
-                  engagements.
+                  <strong>Dual Expertise:</strong> Extensive experience in both
+                  partner-managed cases and direct customer engagements.
                 </p>
               </div>
               <div className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                 <p className="text-sm md:text-base text-[#3d4e5c]">
-                  <strong>90%+ Customer Satisfaction:</strong> Consistently maintained across previous roles.
+                  <strong>90%+ Customer Satisfaction:</strong> Consistently was
+                  maintained across previous roles.
                 </p>
               </div>
               <div className="flex items-start gap-3 md:col-span-2">
                 <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                 <p className="text-sm md:text-base text-[#3d4e5c]">
-                  <strong>24/7/365 Global Support:</strong> Multi-lingual resources available around the clock.
+                  <strong>24/7/365 Global Support:</strong> Multi-lingual
+                  resources were available around the clock.
                 </p>
               </div>
             </div>
@@ -96,25 +113,27 @@ const MicrosoftSupportDetails = () => {
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Deep experience with Microsoft Partner Center case management
+                    Had deep experience with Microsoft Partner Center case
+                    management
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Advanced troubleshooting within partner support frameworks
+                    Performed advanced troubleshooting within partner support
+                    frameworks
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    SLA management and reporting for partner ecosystems
+                    Managed SLA and reporting for partner ecosystems
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Multi-tenant support coordination
+                    Coordinated multi-tenant support
                   </span>
                 </li>
               </ul>
@@ -130,19 +149,19 @@ const MicrosoftSupportDetails = () => {
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    End-to-end case ownership from initial contact to resolution
+                    Owned end-to-end cases from initial contact to resolution
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Direct customer communication and expectation management
+                    Managed direct customer communication and expectations
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Enterprise-level service delivery management
+                    Managed enterprise-level service delivery
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -178,7 +197,9 @@ const MicrosoftSupportDetails = () => {
               </div>
               <div className="ml-[52px] space-y-4">
                 <div>
-                  <h4 className="font-semibold text-[#1b3447] mb-2">Core Technologies:</h4>
+                  <h4 className="font-semibold text-[#1b3447] mb-2">
+                    Core Technologies:
+                  </h4>
                   <ul className="list-disc list-inside space-y-1 text-sm md:text-base text-[#3d4e5c] ml-4">
                     <li>Azure Active Directory / Entra ID</li>
                     <li>Hybrid Identity with Azure AD Connect</li>
@@ -189,7 +210,9 @@ const MicrosoftSupportDetails = () => {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-[#1b3447] mb-2">Advanced Skills:</h4>
+                  <h4 className="font-semibold text-[#1b3447] mb-2">
+                    Advanced Skills:
+                  </h4>
                   <ul className="list-disc list-inside space-y-1 text-sm md:text-base text-[#3d4e5c] ml-4">
                     <li>SCIM provisioning and synchronization</li>
                     <li>Identity Protection and risky events</li>
@@ -213,7 +236,9 @@ const MicrosoftSupportDetails = () => {
               </div>
               <div className="ml-[52px] space-y-4">
                 <div>
-                  <h4 className="font-semibold text-[#1b3447] mb-2">Exchange Online:</h4>
+                  <h4 className="font-semibold text-[#1b3447] mb-2">
+                    Exchange Online:
+                  </h4>
                   <ul className="list-disc list-inside space-y-1 text-sm md:text-base text-[#3d4e5c] ml-4">
                     <li>Mail flow and transport rules</li>
                     <li>Anti-spam/anti-malware policies</li>
@@ -223,7 +248,9 @@ const MicrosoftSupportDetails = () => {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-[#1b3447] mb-2">Exchange Server/Hybrid:</h4>
+                  <h4 className="font-semibold text-[#1b3447] mb-2">
+                    Exchange Server/Hybrid:
+                  </h4>
                   <ul className="list-disc list-inside space-y-1 text-sm md:text-base text-[#3d4e5c] ml-4">
                     <li>Database Availability Groups (DAG)</li>
                     <li>Migration batches and endpoint management</li>
@@ -247,7 +274,9 @@ const MicrosoftSupportDetails = () => {
                 </h3>
               </div>
               <div className="ml-[52px]">
-                <h4 className="font-semibold text-[#1b3447] mb-2">Migration & Integration:</h4>
+                <h4 className="font-semibold text-[#1b3447] mb-2">
+                  Migration & Integration:
+                </h4>
                 <ul className="list-disc list-inside space-y-1 text-sm md:text-base text-[#3d4e5c] ml-4">
                   <li>SharePoint Migration Tool (SPMT)</li>
                   <li>Third-party migration tools</li>
@@ -320,7 +349,9 @@ const MicrosoftSupportDetails = () => {
               </div>
               <div className="ml-[52px] space-y-4">
                 <div>
-                  <h4 className="font-semibold text-[#1b3447] mb-2">Microsoft 365 Security:</h4>
+                  <h4 className="font-semibold text-[#1b3447] mb-2">
+                    Microsoft 365 Security:
+                  </h4>
                   <ul className="list-disc list-inside space-y-1 text-sm md:text-base text-[#3d4e5c] ml-4">
                     <li>Microsoft Defender for Office 365</li>
                     <li>Data Loss Prevention (DLP) policies</li>
@@ -329,7 +360,9 @@ const MicrosoftSupportDetails = () => {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-[#1b3447] mb-2">Azure Security:</h4>
+                  <h4 className="font-semibold text-[#1b3447] mb-2">
+                    Azure Security:
+                  </h4>
                   <ul className="list-disc list-inside space-y-1 text-sm md:text-base text-[#3d4e5c] ml-4">
                     <li>Microsoft Defender for Cloud</li>
                     <li>Key Vault and secret management</li>
@@ -361,15 +394,21 @@ const MicrosoftSupportDetails = () => {
               </div>
             </div>
           </div>
-
-
         </div>
       </section>
       <section className="py-8 md:py-10 bg-white">
         <div className="container">
           <div className="bg-[#f2f6ff] rounded-lg p-6 md:p-8 shadow-sm max-w-5xl mx-auto mt-12 flex flex-col items-center justify-center">
-            <h2 className="text-lg lg:text-2xl text-center font-semibold text-[#1b3447] mb-4 md:mb-8">SUPPORT DELIVERY FRAMEWORK</h2>
-            <Image src={supportDeliveryFramework} alt="Support Delivery Framework" width={3200} height={1792} className="w-full h-full object-cover" />
+            <h2 className="text-lg lg:text-2xl text-center font-semibold text-[#1b3447] mb-4 md:mb-8">
+              SUPPORT DELIVERY FRAMEWORK
+            </h2>
+            <Image
+              src={supportDeliveryFramework}
+              alt="Support Delivery Framework"
+              width={3200}
+              height={1792}
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </section>
@@ -394,13 +433,13 @@ const MicrosoftSupportDetails = () => {
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Initial contact and basic troubleshooting
+                    Handled initial contact and basic troubleshooting
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Documentation and information gathering
+                    Performed documentation and information gathering
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -424,13 +463,13 @@ const MicrosoftSupportDetails = () => {
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Advanced troubleshooting and analysis
+                    Performed advanced troubleshooting and analysis
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Cross-service issue resolution
+                    Resolved cross-service issues
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -454,19 +493,20 @@ const MicrosoftSupportDetails = () => {
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Complex problem analysis and root cause investigation
+                    Performed complex problem analysis and root cause
+                    investigation
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Microsoft TA collaboration and coordination
+                    Collaborated and coordinated with Microsoft TA
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Solution design and implementation
+                    Designed and implemented solutions
                   </span>
                 </li>
               </ul>
@@ -484,19 +524,20 @@ const MicrosoftSupportDetails = () => {
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Structured escalation to Microsoft engineering
+                    Escalated issues to Microsoft engineering in a structured
+                    manner
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Comprehensive documentation and reproduction steps
+                    Created comprehensive documentation and reproduction steps
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
                   <span className="text-sm md:text-base text-[#3d4e5c]">
-                    Customer liaison and expectation management
+                    Served as customer liaison and managed expectations
                   </span>
                 </li>
               </ul>
@@ -512,10 +553,18 @@ const MicrosoftSupportDetails = () => {
               <table className="w-full border-collapse bg-white rounded-lg shadow-sm">
                 <thead>
                   <tr className="bg-[#00a3ff] text-white">
-                    <th className="border border-gray-300 px-4 py-3 text-left">Severity</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left">Response Time</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left">Resolution Target</th>
-                    <th className="border border-gray-300 px-4 py-3 text-left">Description</th>
+                    <th className="border border-gray-300 px-4 py-3 text-left">
+                      Severity
+                    </th>
+                    <th className="border border-gray-300 px-4 py-3 text-left">
+                      Response Time
+                    </th>
+                    <th className="border border-gray-300 px-4 py-3 text-left">
+                      Resolution Target
+                    </th>
+                    <th className="border border-gray-300 px-4 py-3 text-left">
+                      Description
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -523,38 +572,54 @@ const MicrosoftSupportDetails = () => {
                     <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                       Severity 1
                     </td>
-                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">&lt; 15 minutes</td>
-                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">4 hours</td>
                     <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
-                      Critical business impact, service down
+                      &lt; 15 minutes
+                    </td>
+                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                      4 hours
+                    </td>
+                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                      Critical business impact, service was down
                     </td>
                   </tr>
                   <tr className="bg-gray-50">
                     <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                       Severity 2
                     </td>
-                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">&lt; 1 hour</td>
-                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">8 hours</td>
                     <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
-                      Significant business impact, major features down
+                      &lt; 1 hour
+                    </td>
+                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                      8 hours
+                    </td>
+                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                      Significant business impact, major features were down
                     </td>
                   </tr>
                   <tr>
                     <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                       Severity 3
                     </td>
-                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">&lt; 4 hours</td>
-                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">3 business days</td>
                     <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
-                      Moderate business impact, workarounds available
+                      &lt; 4 hours
+                    </td>
+                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                      3 business days
+                    </td>
+                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                      Moderate business impact, workarounds were available
                     </td>
                   </tr>
                   <tr className="bg-gray-50">
                     <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                       Severity 4
                     </td>
-                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">&lt; 8 hours</td>
-                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">5 business days</td>
+                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                      &lt; 8 hours
+                    </td>
+                    <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                      5 business days
+                    </td>
                     <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
                       Minimal business impact, general guidance
                     </td>
@@ -576,9 +641,15 @@ const MicrosoftSupportDetails = () => {
             <table className="w-full border-collapse bg-white rounded-lg shadow-sm">
               <thead>
                 <tr className="bg-[#00a3ff] text-white">
-                  <th className="border border-gray-300 px-4 py-3 text-left">Metric</th>
-                  <th className="border border-gray-300 px-4 py-3 text-left">Our Commitment</th>
-                  <th className="border border-gray-300 px-4 py-3 text-left">Industry Standard</th>
+                  <th className="border border-gray-300 px-4 py-3 text-left">
+                    Metric
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3 text-left">
+                    Our Commitment
+                  </th>
+                  <th className="border border-gray-300 px-4 py-3 text-left">
+                    Industry Standard
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -586,43 +657,67 @@ const MicrosoftSupportDetails = () => {
                   <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                     First Response Time
                   </td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">&lt; 10 minutes (Sev 1)</td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">30 minutes</td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    &lt; 10 minutes (Sev 1)
+                  </td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    30 minutes
+                  </td>
                 </tr>
                 <tr className="bg-gray-50">
                   <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                     First Contact Resolution
                   </td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">70%</td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">45%</td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    70%
+                  </td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    45%
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                     Customer Satisfaction (CSAT)
                   </td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">90%+</td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">85%</td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    90%+
+                  </td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    85%
+                  </td>
                 </tr>
                 <tr className="bg-gray-50">
                   <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                     Mean Time to Resolution
                   </td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">&lt; 4 hours (Sev 1)</td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">8 hours</td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    &lt; 4 hours (Sev 1)
+                  </td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    8 hours
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                     Escalation Accuracy
                   </td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">95%</td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">70%</td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    95%
+                  </td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    70%
+                  </td>
                 </tr>
                 <tr className="bg-gray-50">
                   <td className="border border-gray-300 px-4 py-3 font-semibold text-[#1b3447]">
                     Knowledge Base Articles
                   </td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">100% of resolved cases</td>
-                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">40%</td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    100% of resolved cases
+                  </td>
+                  <td className="border border-gray-300 px-4 py-3 text-[#3d4e5c]">
+                    40%
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -657,13 +752,15 @@ const MicrosoftSupportDetails = () => {
                     className="bg-[#f2f6ff] rounded-lg p-4 flex items-start gap-3"
                   >
                     <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
-                    <span className="text-sm md:text-base text-[#3d4e5c]">{cert}</span>
+                    <span className="text-sm md:text-base text-[#3d4e5c]">
+                      {cert}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <h3 className="text-xl md:text-2xl font-semibold text-[#1b3447] mb-6 flex items-center gap-3">
                 <Clock className="w-6 h-6 text-[#00a3ff]" />
                 Training Roadmap
@@ -706,7 +803,7 @@ const MicrosoftSupportDetails = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
@@ -793,15 +890,17 @@ const MicrosoftSupportDetails = () => {
           <div className="bg-[#f2f6ff] rounded-lg p-6 md:p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                "Maintaining 24/7/365 support coverage",
-                "Achieving and maintaining all target KPIs",
-                "Providing transparent reporting and regular reviews",
-                "Continuous training and certification maintenance",
-                "Proactive knowledge sharing and process improvement",
+                "Maintained 24/7/365 support coverage",
+                "Achieved and maintained all target KPIs",
+                "Provided transparent reporting and regular reviews",
+                "Maintained continuous training and certifications",
+                "Enabled proactive knowledge sharing and process improvement",
               ].map((commitment, index) => (
                 <div key={index} className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-1" />
-                  <p className="text-sm md:text-base text-[#3d4e5c]">{commitment}</p>
+                  <p className="text-sm md:text-base text-[#3d4e5c]">
+                    {commitment}
+                  </p>
                 </div>
               ))}
             </div>
@@ -813,4 +912,3 @@ const MicrosoftSupportDetails = () => {
 };
 
 export default MicrosoftSupportDetails;
-
