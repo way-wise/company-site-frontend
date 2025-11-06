@@ -177,16 +177,16 @@ const Skills = () => {
 
   const skillGroups: SkillGroup[] = [
     {
-      title: "Microsoft Support Skills",
-      description:
-        "Comprehensive Microsoft 365 and Azure expertise for enterprise-level support and implementation.",
-      skills: microsoftSupportSkills,
-    },
-    {
-      title: "Web Development Skills",
+      title: "Our Web Development Skills",
       description:
         "Modern web technologies and frameworks for building scalable, high-performance applications.",
       skills: webDevelopmentSkills,
+    },
+    {
+      title: "Our Microsoft Support Skills",
+      description:
+        "Comprehensive Microsoft 365 and Azure expertise for enterprise-level support and implementation.",
+      skills: microsoftSupportSkills,
     },
   ];
 
