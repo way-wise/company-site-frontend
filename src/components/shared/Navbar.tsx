@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/UserContext";
+import { servicesData } from "@/datas/services";
 import { ChevronDown, Menu, Phone, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,6 +31,7 @@ export default function Navbar() {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isUsersPortalOpen, setIsUsersPortalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useAuth();
@@ -68,10 +70,6 @@ export default function Navbar() {
       href: "/",
     },
     {
-      label: `Services`,
-      href: "/services",
-    },
-    {
       label: "About Us",
       href: "/about-us",
     },
@@ -79,6 +77,20 @@ export default function Navbar() {
       label: "Contact Us",
       href: "/contact-us",
     },
+  ];
+
+  // Services links - main page + all individual services
+  const servicesLinks = [
+    { label: "All Services", href: "/services" },
+    ...servicesData.slice(0, 3).map((service) => ({
+      label: service.title,
+      href: service.url,
+    })),
+    { label: "Microsoft Support", href: "/microsoft-support" },
+    ...servicesData.slice(3).map((service) => ({
+      label: service.title,
+      href: service.url,
+    })),
   ];
 
   const portfolioLinks = [
@@ -202,6 +214,45 @@ export default function Navbar() {
                   </Link>
                 );
               })}
+
+              {/* Services Dropdown */}
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger
+                      className={`text-md px-0 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${
+                        pathname.startsWith("/services")
+                          ? "text-brand "
+                          : "text-[#1B3447] hover:text-brand"
+                      }`}
+                    >
+                      Services
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[220px] gap-3 p-2">
+                        {servicesLinks.map((item) => (
+                          <li key={item.href}>
+                            <NavigationMenuLink asChild>
+                              <Link
+                                href={item.href}
+                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                  pathname === item.href
+                                    ? "bg-accent text-brand font-semibold"
+                                    : ""
+                                }`}
+                              >
+                                <div className="text-sm font-medium leading-none">
+                                  {item.label}
+                                </div>
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
 
               {/* Portfolio Dropdown */}
               <NavigationMenu>
@@ -374,6 +425,43 @@ export default function Navbar() {
                       </button>
                     );
                   })}
+
+                  {/* Mobile Services Section */}
+                  <Collapsible
+                    open={isServicesOpen}
+                    onOpenChange={setIsServicesOpen}
+                  >
+                    <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
+                      <span>Services</span>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-500 ${
+                          isServicesOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pt-3 ">
+                      <div className="pl-4 space-y-3">
+                        {servicesLinks.map((item) => (
+                          <a
+                            key={item.href}
+                            href={item.href}
+                            rel="noopener noreferrer"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleNavigation(item.href);
+                            }}
+                            className={`block text-base transition-colors ${
+                              pathname === item.href
+                                ? "text-brand font-semibold"
+                                : "text-gray-600 hover:text-brand"
+                            }`}
+                          >
+                            {item.label}
+                          </a>
+                        ))}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
 
                   {/* Mobile Portfolio Section */}
                   <Collapsible
