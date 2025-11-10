@@ -100,7 +100,7 @@ export default function Navbar() {
       label: "Marketing Portfolio",
       href: "https://digitalmarketing.waywisetech.com/",
     },
-    { label: "Design Portfolio", href: "https://design.waywisetech.com/" },
+    { label: "Design Portfolio", href: "https://fiona.waywisetech.com/" },
   ];
 
   const usersPortalLinks = [
