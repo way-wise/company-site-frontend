@@ -10,7 +10,10 @@ interface LeaveBalanceCardProps {
   year?: number;
 }
 
-export const LeaveBalanceCard = ({ userProfileId, year }: LeaveBalanceCardProps) => {
+export const LeaveBalanceCard = ({
+  userProfileId,
+  year,
+}: LeaveBalanceCardProps) => {
   const { data: balancesData, isLoading } = useUserLeaveBalances(
     userProfileId,
     year || new Date().getFullYear()
@@ -48,7 +51,9 @@ export const LeaveBalanceCard = ({ userProfileId, year }: LeaveBalanceCardProps)
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground">No leave balance information available</p>
+          <p className="text-muted-foreground">
+            No leave balance information available
+          </p>
         </CardContent>
       </Card>
     );
@@ -69,18 +74,20 @@ export const LeaveBalanceCard = ({ userProfileId, year }: LeaveBalanceCardProps)
               key={balance.id}
               className="flex items-center justify-between p-3 rounded-lg border"
               style={{
-                borderLeftColor: balance.leaveType.color || "#ccc",
+                borderLeftColor: balance.leaveTypeMeta.color || "#ccc",
                 borderLeftWidth: "4px",
               }}
             >
               <div>
-                <h4 className="font-medium">{balance.leaveType.name}</h4>
+                <h4 className="font-medium">{balance.leaveTypeMeta.label}</h4>
                 <p className="text-xs text-muted-foreground">
-                  {balance.leaveType.description}
+                  {balance.leaveTypeMeta.description}
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold">{balance.remainingDays}</div>
+                <div className="text-2xl font-bold">
+                  {balance.remainingDays}
+                </div>
                 <div className="text-xs text-muted-foreground">
                   {balance.usedDays} used / {balance.totalDays} total
                 </div>
@@ -92,4 +99,3 @@ export const LeaveBalanceCard = ({ userProfileId, year }: LeaveBalanceCardProps)
     </Card>
   );
 };
-

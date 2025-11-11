@@ -28,7 +28,7 @@ import {
   useDeleteLeave,
   useMyLeaves,
 } from "@/hooks/useLeaveMutations";
-import { LeaveApplicationWithRelations } from "@/types";
+import { LeaveApplicationWithRelations, LeaveTypeMeta } from "@/types";
 import {
   Calendar,
   CheckCircle,
@@ -69,17 +69,22 @@ const getStatusBadge = (status: string) => {
   );
 };
 
-const getTypeBadge = (type: { name: string; color: string | null }) => {
+const getTypeBadge = (type: LeaveTypeMeta) => {
   return (
     <span
-      className="px-2 py-1 rounded-full text-xs font-medium border"
+      className="px-2 py-1 rounded-full text-xs font-medium border flex items-center gap-2"
       style={{
-        backgroundColor: type.color ? `${type.color}20` : undefined,
-        color: type.color || undefined,
-        borderColor: type.color || "#gray",
+        backgroundColor: `${type.color}20`,
+        color: type.color,
+        borderColor: type.color,
       }}
     >
-      {type.name}
+      <span
+        className="h-2 w-2 rounded-full"
+        style={{ backgroundColor: type.color }}
+        aria-hidden
+      />
+      {type.label}
     </span>
   );
 };
@@ -101,7 +106,10 @@ export const LeaveTable = () => {
   const [statusFilter, setStatusFilter] = useState("all");
 
   // Permission-based hook selection - wait for auth to load
-  const canViewAllLeaves = !isAuthLoading && hasPermission("view_team_leaves");
+  const hasTeamLeavePermission =
+    !isAuthLoading &&
+    (hasPermission("view_team_leaves") || hasPermission("approve_leave"));
+  const canViewAllLeaves = hasTeamLeavePermission;
   const canApproveLeave = !isAuthLoading && hasPermission("approve_leave");
   const canDeleteLeave = !isAuthLoading && hasPermission("delete_leave");
   const canUpdateLeave = !isAuthLoading && hasPermission("update_leave");
@@ -186,7 +194,7 @@ export const LeaveTable = () => {
         accessorKey: "leaveType",
         header: "Type",
         cell: ({ row }: { row: { original: LeaveApplicationWithRelations } }) =>
-          getTypeBadge(row.original.leaveType),
+          getTypeBadge(row.original.leaveTypeMeta),
       },
       {
         accessorKey: "startDate",

@@ -101,17 +101,18 @@ export const LeaveDetailsModal = ({
               Leave Type
             </h3>
             <div className="flex items-center gap-2">
-              {leave.leaveType.color && (
-                <div
-                  className="w-4 h-4 rounded-full"
-                  style={{ backgroundColor: leave.leaveType.color }}
-                />
-              )}
-              <p className="text-base font-medium">{leave.leaveType.name}</p>
+              <span
+                className="w-4 h-4 rounded-full"
+                style={{ backgroundColor: leave.leaveTypeMeta.color }}
+                aria-hidden
+              />
+              <p className="text-base font-medium">
+                {leave.leaveTypeMeta.label}
+              </p>
             </div>
-            {leave.leaveType.description && (
+            {leave.leaveTypeMeta.description && (
               <p className="text-sm text-muted-foreground mt-1">
-                {leave.leaveType.description}
+                {leave.leaveTypeMeta.description}
               </p>
             )}
           </div>

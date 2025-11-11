@@ -25,7 +25,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const approveLeaveSchema = z.object({
-  comments: z.string().max(500, "Comments cannot exceed 500 characters").optional(),
+  comments: z
+    .string()
+    .max(500, "Comments cannot exceed 500 characters")
+    .optional(),
 });
 
 type ApproveLeaveFormData = z.infer<typeof approveLeaveSchema>;
@@ -96,7 +99,7 @@ export const ApproveLeaveModal = ({
                 </div>
                 <div>
                   <span className="font-medium">Leave Type:</span>{" "}
-                  {leave.leaveType.name}
+                  {leave.leaveTypeMeta.label}
                 </div>
                 <div>
                   <span className="font-medium">Period:</span>{" "}
@@ -151,4 +154,3 @@ export const ApproveLeaveModal = ({
     </Modal>
   );
 };
-

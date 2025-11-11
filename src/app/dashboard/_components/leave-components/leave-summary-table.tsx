@@ -14,15 +14,6 @@ import { EmployeeLeaveSummary } from "@/services/LeaveBalanceService";
 import { Users } from "lucide-react";
 import { useMemo, useState } from "react";
 
-interface LeaveBreakdownItem {
-  leaveTypeId: string;
-  leaveTypeName: string;
-  leaveTypeColor: string | null;
-  usedDays: number;
-  remainingDays: number;
-  totalDays: number;
-}
-
 export const LeaveSummaryTable = () => {
   const { hasPermission, isLoading: isAuthLoading } = useAuth();
   const [year, setYear] = useState(new Date().getFullYear());
@@ -32,7 +23,8 @@ export const LeaveSummaryTable = () => {
   });
 
   const canViewAllEmployees =
-    !isAuthLoading && hasPermission("view_team_leaves");
+    !isAuthLoading &&
+    (hasPermission("view_team_leaves") || hasPermission("approve_leave"));
 
   const {
     data: summaryData,

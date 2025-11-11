@@ -6,10 +6,11 @@ import {
   LeaveApplicationWithRelations,
   LeaveCalendarEvent,
   LeaveStats,
+  LeaveType,
 } from "@/types";
 
 export interface ApplyLeaveData {
-  leaveTypeId: string;
+  leaveType?: LeaveType;
   startDate: string;
   endDate: string;
   reason: string;
@@ -29,7 +30,7 @@ export interface LeaveQueryParams {
   page?: number;
   limit?: number;
   status?: string;
-  leaveTypeId?: string;
+  leaveType?: LeaveType;
   startDate?: string;
   endDate?: string;
   userProfileId?: string;
@@ -39,7 +40,7 @@ export interface LeaveCalendarParams {
   startDate?: string;
   endDate?: string;
   userProfileId?: string;
-  leaveTypeId?: string;
+  leaveType?: LeaveType;
 }
 
 export const leaveService = {
@@ -51,15 +52,21 @@ export const leaveService = {
       meta: { page: number; limit: number; total: number };
     }
   > => {
-    const { page = 1, limit = 10, status, leaveTypeId, startDate, endDate } =
-      params;
+    const {
+      page = 1,
+      limit = 10,
+      status,
+      leaveType,
+      startDate,
+      endDate,
+    } = params;
     let url = `/leaves/mine?page=${page}&limit=${limit}`;
 
     if (status) {
       url += `&status=${encodeURIComponent(status)}`;
     }
-    if (leaveTypeId) {
-      url += `&leaveTypeId=${encodeURIComponent(leaveTypeId)}`;
+    if (leaveType) {
+      url += `&leaveType=${encodeURIComponent(leaveType)}`;
     }
     if (startDate) {
       url += `&startDate=${encodeURIComponent(startDate)}`;
@@ -80,15 +87,22 @@ export const leaveService = {
       meta: { page: number; limit: number; total: number };
     }
   > => {
-    const { page = 1, limit = 10, status, leaveTypeId, userProfileId, startDate, endDate } =
-      params;
+    const {
+      page = 1,
+      limit = 10,
+      status,
+      leaveType,
+      userProfileId,
+      startDate,
+      endDate,
+    } = params;
     let url = `/leaves/all?page=${page}&limit=${limit}`;
 
     if (status) {
       url += `&status=${encodeURIComponent(status)}`;
     }
-    if (leaveTypeId) {
-      url += `&leaveTypeId=${encodeURIComponent(leaveTypeId)}`;
+    if (leaveType) {
+      url += `&leaveType=${encodeURIComponent(leaveType)}`;
     }
     if (userProfileId) {
       url += `&userProfileId=${encodeURIComponent(userProfileId)}`;
@@ -159,15 +173,18 @@ export const leaveService = {
   },
 
   // Get leave statistics (admin)
-  getLeaveStats: async (
-    params?: { year?: number; userProfileId?: string }
-  ): Promise<ApiResponse<LeaveStats>> => {
+  getLeaveStats: async (params?: {
+    year?: number;
+    userProfileId?: string;
+  }): Promise<ApiResponse<LeaveStats>> => {
     let url = "/leaves/stats";
     if (params?.year) {
       url += `?year=${params.year}`;
     }
     if (params?.userProfileId) {
-      url += params.year ? `&userProfileId=${params.userProfileId}` : `?userProfileId=${params.userProfileId}`;
+      url += params.year
+        ? `&userProfileId=${params.userProfileId}`
+        : `?userProfileId=${params.userProfileId}`;
     }
     const response = await apiClient.get(url);
     return response.data;
@@ -177,14 +194,17 @@ export const leaveService = {
   getLeaveCalendar: async (
     params: LeaveCalendarParams
   ): Promise<ApiResponse<LeaveCalendarEvent[]>> => {
-    const { startDate, endDate, userProfileId, leaveTypeId } = params;
+    const { startDate, endDate, userProfileId, leaveType } = params;
     let url = "/leaves/calendar";
 
     const queryParams: string[] = [];
-    if (startDate) queryParams.push(`startDate=${encodeURIComponent(startDate)}`);
+    if (startDate)
+      queryParams.push(`startDate=${encodeURIComponent(startDate)}`);
     if (endDate) queryParams.push(`endDate=${encodeURIComponent(endDate)}`);
-    if (userProfileId) queryParams.push(`userProfileId=${encodeURIComponent(userProfileId)}`);
-    if (leaveTypeId) queryParams.push(`leaveTypeId=${encodeURIComponent(leaveTypeId)}`);
+    if (userProfileId)
+      queryParams.push(`userProfileId=${encodeURIComponent(userProfileId)}`);
+    if (leaveType)
+      queryParams.push(`leaveType=${encodeURIComponent(leaveType)}`);
 
     if (queryParams.length > 0) {
       url += `?${queryParams.join("&")}`;
@@ -194,4 +214,3 @@ export const leaveService = {
     return response.data;
   },
 };
-

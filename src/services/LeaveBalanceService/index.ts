@@ -1,11 +1,17 @@
 "use client";
 
 import apiClient from "@/lib/axios";
-import { ApiResponse, LeaveBalance, LeaveBalanceWithRelations } from "@/types";
+import {
+  ApiResponse,
+  LeaveBalance,
+  LeaveBalanceWithRelations,
+  LeaveType,
+  LeaveTypeMeta,
+} from "@/types";
 
 export interface CreateLeaveBalanceData {
   userProfileId: string;
-  leaveTypeId: string;
+  leaveType: LeaveType;
   year: number;
   totalDays: number;
 }
@@ -23,7 +29,7 @@ export interface LeaveBalanceQueryParams {
   page?: number;
   limit?: number;
   userProfileId?: string;
-  leaveTypeId?: string;
+  leaveType?: LeaveType;
   year?: number;
 }
 
@@ -35,9 +41,8 @@ export interface EmployeeLeaveSummary {
   totalRemainingDays: number;
   totalDays: number;
   leaveBreakdown: Array<{
-    leaveTypeId: string;
-    leaveTypeName: string;
-    leaveTypeColor: string | null;
+    leaveType: LeaveType;
+    leaveTypeMeta: LeaveTypeMeta;
     usedDays: number;
     remainingDays: number;
     totalDays: number;
@@ -54,14 +59,14 @@ export const leaveBalanceService = {
       result: LeaveBalanceWithRelations[];
     }>
   > => {
-    const { page = 1, limit = 10, userProfileId, leaveTypeId, year } = params;
+    const { page = 1, limit = 10, userProfileId, leaveType, year } = params;
     let url = `/leave-balance?page=${page}&limit=${limit}`;
 
     if (userProfileId) {
       url += `&userProfileId=${encodeURIComponent(userProfileId)}`;
     }
-    if (leaveTypeId) {
-      url += `&leaveTypeId=${encodeURIComponent(leaveTypeId)}`;
+    if (leaveType) {
+      url += `&leaveType=${encodeURIComponent(leaveType)}`;
     }
     if (year) {
       url += `&year=${year}`;

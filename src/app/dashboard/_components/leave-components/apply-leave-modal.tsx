@@ -24,8 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { LEAVE_TYPE_OPTIONS } from "@/constants/leave-types";
 import { useApplyLeave } from "@/hooks/useLeaveMutations";
-import { useActiveLeaveTypes } from "@/hooks/useLeaveTypeMutations";
+import { LEAVE_TYPE_VALUES } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -33,7 +34,7 @@ import { z } from "zod";
 
 const applyLeaveSchema = z
   .object({
-    leaveTypeId: z.string().min(1, "Leave type is required"),
+    leaveType: z.enum(LEAVE_TYPE_VALUES).optional(),
     startDate: z
       .string()
       .min(1, "Start date is required")
@@ -93,16 +94,12 @@ export default function ApplyLeaveModal({
   isOpen,
   onClose,
 }: ApplyLeaveModalProps) {
-  const { data: leaveTypesData, isLoading: isLeaveTypesLoading } =
-    useActiveLeaveTypes();
   const applyLeaveMutation = useApplyLeave();
-
-  const leaveTypes = leaveTypesData?.data || [];
 
   const form = useForm<ApplyLeaveFormData>({
     resolver: zodResolver(applyLeaveSchema),
     defaultValues: {
-      leaveTypeId: "",
+      leaveType: undefined,
       startDate: "",
       endDate: "",
       reason: "",
@@ -113,7 +110,7 @@ export default function ApplyLeaveModal({
   useEffect(() => {
     if (isOpen) {
       form.reset({
-        leaveTypeId: "",
+        leaveType: undefined,
         startDate: "",
         endDate: "",
         reason: "",
@@ -124,9 +121,10 @@ export default function ApplyLeaveModal({
 
   const onSubmit = async (data: ApplyLeaveFormData) => {
     try {
-      // Convert empty string to undefined for optional fields
+      // Normalize optional fields to undefined
       const submitData = {
         ...data,
+        leaveType: data.leaveType ?? undefined,
         attachmentUrl: data.attachmentUrl || undefined,
       };
       await applyLeaveMutation.mutateAsync(submitData);
@@ -146,14 +144,13 @@ export default function ApplyLeaveModal({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="leaveTypeId"
+              name="leaveType"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Leave Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={isLeaveTypesLoading}
+                    value={field.value ?? undefined}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -161,16 +158,20 @@ export default function ApplyLeaveModal({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {leaveTypes.map((type) => (
-                        <SelectItem key={type.id} value={type.id}>
+                      {LEAVE_TYPE_OPTIONS.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
                           <div className="flex items-center gap-2">
-                            {type.color && (
-                              <div
-                                className="w-3 h-3 rounded-full"
-                                style={{ backgroundColor: type.color }}
-                              />
-                            )}
-                            {type.name}
+                            <span
+                              className="h-3 w-3 rounded-full"
+                              style={{ backgroundColor: type.color }}
+                              aria-hidden
+                            />
+                            <div className="flex flex-col">
+                              <span className="font-medium">{type.label}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {type.description}
+                              </span>
+                            </div>
                           </div>
                         </SelectItem>
                       ))}

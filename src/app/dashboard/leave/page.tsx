@@ -24,8 +24,11 @@ export default function LeavePage() {
   const [allocateModalOpen, setAllocateModalOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const canViewAllLeaves = !isAuthLoading && hasPermission("view_team_leaves");
-  const canViewStats = !isAuthLoading && hasPermission("view_team_leaves");
+  const hasTeamLeavePermission =
+    !isAuthLoading &&
+    (hasPermission("view_team_leaves") || hasPermission("approve_leave"));
+  const canViewAllLeaves = hasTeamLeavePermission;
+  const canViewStats = hasTeamLeavePermission;
 
   const handleRefresh = async () => {
     setIsRefreshing(true);

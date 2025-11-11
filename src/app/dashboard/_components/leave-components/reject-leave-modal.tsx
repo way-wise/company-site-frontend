@@ -29,7 +29,10 @@ const rejectLeaveSchema = z.object({
     .string()
     .min(10, "Rejection reason must be at least 10 characters")
     .max(500, "Rejection reason cannot exceed 500 characters"),
-  comments: z.string().max(500, "Comments cannot exceed 500 characters").optional(),
+  comments: z
+    .string()
+    .max(500, "Comments cannot exceed 500 characters")
+    .optional(),
 });
 
 type RejectLeaveFormData = z.infer<typeof rejectLeaveSchema>;
@@ -103,7 +106,7 @@ export const RejectLeaveModal = ({
                 </div>
                 <div>
                   <span className="font-medium">Leave Type:</span>{" "}
-                  {leave.leaveType.name}
+                  {leave.leaveTypeMeta.label}
                 </div>
                 <div>
                   <span className="font-medium">Period:</span>{" "}
@@ -177,4 +180,3 @@ export const RejectLeaveModal = ({
     </Modal>
   );
 };
-

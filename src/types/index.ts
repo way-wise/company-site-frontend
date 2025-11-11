@@ -544,22 +544,22 @@ export interface ConversationsQueryParams {
 }
 
 // Leave Management Types
-export interface LeaveType {
-  id: string;
-  name: string;
-  description?: string;
+export const LEAVE_TYPE_VALUES = ["CASUAL", "SICK", "EMERGENCY"] as const;
+export type LeaveType = (typeof LEAVE_TYPE_VALUES)[number];
+
+export interface LeaveTypeMeta {
+  value: LeaveType;
+  label: string;
+  description: string;
   defaultDaysPerYear: number;
   requiresDocument: boolean;
-  color?: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+  color: string;
 }
 
 export interface LeaveBalance {
   id: string;
   userProfileId: string;
-  leaveTypeId: string;
+  leaveType: LeaveType;
   year: number;
   totalDays: number;
   usedDays: number;
@@ -578,18 +578,13 @@ export interface LeaveBalanceWithRelations extends LeaveBalance {
       email: string;
     };
   };
-  leaveType: {
-    id: string;
-    name: string;
-    description: string | null;
-    color: string | null;
-  };
+  leaveTypeMeta: LeaveTypeMeta;
 }
 
 export interface LeaveApplication {
   id: string;
   userProfileId: string;
-  leaveTypeId: string;
+  leaveType: LeaveType;
   startDate: string;
   endDate: string;
   reason: string;
@@ -614,12 +609,7 @@ export interface LeaveApplicationWithRelations extends LeaveApplication {
       email: string;
     };
   };
-  leaveType: {
-    id: string;
-    name: string;
-    description: string | null;
-    color: string | null;
-  };
+  leaveTypeMeta: LeaveTypeMeta;
   approver?: {
     id: string;
     userId: string;
@@ -638,9 +628,9 @@ export interface LeaveStats {
   rejected: number;
   cancelled: number;
   byType: Array<{
-    type: string;
+    type: LeaveType;
     count: number;
-    color: string | null;
+    color: string;
   }>;
 }
 
@@ -654,8 +644,9 @@ export interface LeaveCalendarEvent {
     email: string;
   };
   type: {
-    name: string;
-    color: string | null;
+    value: LeaveType;
+    label: string;
+    color: string;
   };
   status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
 }
