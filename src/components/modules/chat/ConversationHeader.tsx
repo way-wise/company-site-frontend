@@ -12,17 +12,19 @@ import { useSocket } from "@/context/SocketContext";
 import { useAuth } from "@/context/UserContext";
 import { useRemoveParticipant } from "@/hooks/useChatMutations";
 import { Conversation } from "@/types";
-import { MoreVertical, Users } from "lucide-react";
+import { Image as ImageIcon, MoreVertical, Users } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import ParticipantList from "./ParticipantList";
 
 interface ConversationHeaderProps {
   conversation: Conversation;
+  onOpenMedia: () => void;
 }
 
 export default function ConversationHeader({
   conversation,
+  onOpenMedia,
 }: ConversationHeaderProps) {
   const { user } = useAuth();
   const { isUserOnline } = useSocket();
@@ -154,6 +156,14 @@ export default function ConversationHeader({
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onOpenMedia}
+              aria-label="View shared media"
+            >
+              <ImageIcon className="h-4 w-4" />
+            </Button>
             {conversation.type !== "DIRECT" && (
               <Button
                 variant="ghost"

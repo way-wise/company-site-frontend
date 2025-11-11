@@ -11,16 +11,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { useDeleteMessage, useEditMessage } from "@/hooks/useChatMutations";
 import { cn } from "@/lib/utils";
-import { ChatMessage } from "@/types";
+import { ChatAttachment, ChatMessage } from "@/types";
 import { format } from "date-fns";
-import { MoreVertical, Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Download, FileText, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import Image from "next/image";
 
 interface MessageBubbleProps {
   message: ChatMessage;
   isOwnMessage: boolean;
   currentUserProfileId: string;
 }
+
+const formatFileSize = (bytes: number) => {
+  if (bytes >= 1024 * 1024) {
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+  if (bytes >= 1024) {
+    return `${Math.round(bytes / 1024)} KB`;
+  }
+  return `${bytes} B`;
+};
 
 export default function MessageBubble({
   message,
@@ -30,6 +41,32 @@ export default function MessageBubble({
   const [editContent, setEditContent] = useState(message.content);
   const editMessageMutation = useEditMessage();
   const deleteMessageMutation = useDeleteMessage();
+
+  const attachments = useMemo(() => {
+    if (!Array.isArray(message.attachments) || message.isDeleted) {
+      return [] as ChatAttachment[];
+    }
+
+    const typedAttachments = message.attachments as ChatAttachment[];
+    return typedAttachments.filter(
+      (attachment) =>
+        attachment !== null &&
+        typeof attachment === "object" &&
+        typeof attachment.url === "string"
+    );
+  }, [message.attachments, message.isDeleted]);
+
+  const imageAttachments = attachments.filter(
+    (attachment) => attachment.type === "image"
+  );
+  const documentAttachments = attachments.filter(
+    (attachment) => attachment.type === "document"
+  );
+  const hasImageAttachments = imageAttachments.length > 0;
+  const hasDocumentAttachments = documentAttachments.length > 0;
+  const hasMessageContent =
+    typeof message.content === "string" &&
+    message.content.trim().length > 0;
 
   const handleEdit = () => {
     if (editContent.trim() && editContent !== message.content) {
@@ -150,7 +187,74 @@ export default function MessageBubble({
               message.isDeleted && "italic opacity-70"
             )}
           >
-            <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+            <div className="flex flex-col gap-2">
+              {hasImageAttachments && (
+                <div className="grid grid-cols-2 gap-2">
+                  {imageAttachments.map((attachment) => (
+                    <a
+                      key={attachment.id}
+                      href={attachment.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        "block overflow-hidden rounded-md border border-border bg-background/40",
+                        {
+                          "border-primary/40": isOwnMessage
+                        }
+                      )}
+                      aria-label={`View ${attachment.name}`}
+                    >
+                      <Image
+                        src={attachment.url}
+                        alt={attachment.name}
+                        width={320}
+                        height={180}
+                        unoptimized
+                        className="h-32 w-full object-cover"
+                        sizes="(min-width: 768px) 200px, 50vw"
+                      />
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {hasDocumentAttachments && (
+                <div className="flex flex-col gap-2">
+                  {documentAttachments.map((attachment) => (
+                    <a
+                      key={attachment.id}
+                      href={attachment.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        "flex items-center gap-3 rounded-md border border-border bg-background/60 px-3 py-2 text-xs transition hover:bg-background/80",
+                        {
+                          "border-primary/40 bg-primary-foreground/20 hover:bg-primary-foreground/30":
+                            isOwnMessage
+                        }
+                      )}
+                    >
+                      <FileText className="h-4 w-4 shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-medium text-sm">
+                          {attachment.name}
+                        </p>
+                        <p className="text-muted-foreground text-[11px] uppercase">
+                          {attachment.mimeType} - {formatFileSize(attachment.size)}
+                        </p>
+                      </div>
+                      <Download className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {hasMessageContent && (
+                <p className="text-sm whitespace-pre-wrap">
+                  {message.content}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import {
   ApiResponse,
   ChatMessage,
   Conversation,
+  ConversationMediaItem,
   ConversationsQueryParams,
   CreateConversationData,
 } from "@/types";
@@ -110,6 +111,44 @@ export const chatService = {
     messageId: string
   ): Promise<ApiResponse<ChatMessage>> => {
     const response = await apiClient.delete(`/chat/messages/${messageId}`);
+    return response.data;
+  },
+
+  // Send message via REST (supports attachments)
+  sendMessage: async (
+    conversationId: string,
+    payload: { content?: string; files?: File[] }
+  ): Promise<ApiResponse<ChatMessage>> => {
+    const formData = new FormData();
+
+    if (payload.content && payload.content.trim().length > 0) {
+      formData.append("content", payload.content.trim());
+    }
+
+    payload.files?.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    const response = await apiClient.post(
+      `/chat/conversations/${conversationId}/messages`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+  },
+
+  // Fetch media attachments for a conversation
+  getConversationMedia: async (
+    conversationId: string
+  ): Promise<ApiResponse<ConversationMediaItem[]>> => {
+    const response = await apiClient.get(
+      `/chat/conversations/${conversationId}/media`
+    );
     return response.data;
   },
 };

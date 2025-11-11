@@ -24,6 +24,8 @@ export const chatQueryKeys = {
     [...chatQueryKeys.all, "messages", conversationId] as const,
   messageList: (conversationId: string, page: number) =>
     [...chatQueryKeys.messages(conversationId), page] as const,
+  media: (conversationId: string) =>
+    [...chatQueryKeys.all, "media", conversationId] as const,
 };
 
 // Get all conversations
@@ -57,6 +59,53 @@ export const useMessages = (
     queryFn: () => chatService.getMessages(conversationId, { page, limit }),
     enabled: !!conversationId,
     staleTime: 10 * 1000, // 10 seconds
+  });
+};
+
+// Get media attachments for a conversation
+export const useConversationMedia = (conversationId: string) => {
+  return useQuery({
+    queryKey: chatQueryKeys.media(conversationId),
+    queryFn: () => chatService.getConversationMedia(conversationId),
+    enabled: !!conversationId,
+    staleTime: 60 * 1000, // 1 minute
+  });
+};
+
+// Send message with attachments (uploads via REST)
+export const useSendMessageWithAttachments = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      conversationId,
+      content,
+      files,
+    }: {
+      conversationId: string;
+      content?: string;
+      files: File[];
+    }) => chatService.sendMessage(conversationId, { content, files }),
+    onSuccess: (response, variables) => {
+      if (response.success) {
+        queryClient.invalidateQueries({
+          queryKey: chatQueryKeys.messages(variables.conversationId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: chatQueryKeys.media(variables.conversationId),
+        });
+      } else {
+        toast.error(response.message || "Failed to send message with file");
+      }
+    },
+    onError: (error: Error) => {
+      const apiError = error as ApiError;
+      const errorMessage =
+        apiError.response?.data?.message ||
+        error.message ||
+        "Failed to send message with file";
+      toast.error(errorMessage);
+    },
   });
 };
 

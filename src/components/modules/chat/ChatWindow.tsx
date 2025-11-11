@@ -8,10 +8,11 @@ import {
 } from "@/hooks/useChatMutations";
 import { ChatMessage, Conversation } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ConversationHeader from "./ConversationHeader";
 import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
+import ConversationMediaGallery from "./ConversationMediaGallery";
 
 interface ChatWindowProps {
   conversationId: string;
@@ -25,6 +26,7 @@ export default function ChatWindow({
   const { socket, isConnected } = useSocket();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showMediaGallery, setShowMediaGallery] = useState(false);
 
   // Fetch conversation data (will auto-update when participants change)
   const { data: conversationData } = useConversation(conversationId);
@@ -122,9 +124,13 @@ export default function ChatWindow({
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <>
+      <div className="flex flex-col h-full">
       {/* Header */}
-      <ConversationHeader conversation={conversation} />
+      <ConversationHeader
+        conversation={conversation}
+        onOpenMedia={() => setShowMediaGallery(true)}
+      />
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -152,6 +158,13 @@ export default function ChatWindow({
 
       {/* Message Input */}
       <MessageInput conversationId={conversationId} />
-    </div>
+      </div>
+
+      <ConversationMediaGallery
+        conversationId={conversationId}
+        open={showMediaGallery}
+        onOpenChange={setShowMediaGallery}
+      />
+    </>
   );
 }

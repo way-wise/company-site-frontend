@@ -26,6 +26,7 @@ export const LeaveSummaryTable = () => {
     !isAuthLoading &&
     (hasPermission("view_team_leaves") || hasPermission("approve_leave"));
 
+  
   const {
     data: summaryData,
     isLoading,

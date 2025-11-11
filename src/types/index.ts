@@ -486,12 +486,25 @@ export interface ConversationParticipant {
   };
 }
 
+export type ChatAttachmentType = "image" | "document";
+
+export interface ChatAttachment {
+  id: string;
+  key: string;
+  url: string;
+  name: string;
+  mimeType: string;
+  size: number;
+  type: ChatAttachmentType;
+  uploadedAt: string;
+}
+
 export interface ChatMessage {
   id: string;
   conversationId: string;
   senderId: string;
   content: string;
-  attachments?: unknown[];
+  attachments?: ChatAttachment[] | null;
   isEdited: boolean;
   isDeleted: boolean;
   createdAt: string;
@@ -505,6 +518,13 @@ export interface ChatMessage {
     };
     profilePhoto?: string;
   };
+}
+
+export interface ConversationMediaItem extends ChatAttachment {
+  messageId: string;
+  conversationId: string;
+  senderId: string;
+  messageCreatedAt: string;
 }
 
 export interface Conversation {
