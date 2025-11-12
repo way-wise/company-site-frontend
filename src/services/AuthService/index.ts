@@ -34,10 +34,6 @@ export const authService = {
 
   // Logout user (backend clears HTTPOnly cookies)
   logout: async (): Promise<void> => {
-    try {
-      await apiClient.post("/auth/logout");
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
+    await apiClient.post("/auth/logout");
   },
 };
