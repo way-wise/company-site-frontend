@@ -2,6 +2,7 @@
 
 import apiClient from "@/lib/axios";
 import { Permission, User } from "@/types";
+import { usePathname } from "next/navigation";
 import {
   createContext,
   ReactNode,
@@ -51,6 +52,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [permissions, setPermissions] = useState<Permission[]>([]);
+  const pathname = usePathname();
 
   const refreshUser = useCallback(async (): Promise<User | null> => {
     try {
@@ -119,15 +121,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (!pathname) return;
 
-    const currentPath = window.location.pathname;
-    if (isPublicRoute(currentPath)) {
+    if (isPublicRoute(pathname)) {
       setIsLoading(false);
-    } else {
-      refreshUser();
+      return;
     }
-  }, [refreshUser]);
+
+    setIsLoading(true);
+    void refreshUser();
+  }, [pathname, refreshUser]);
 
   const value: AuthContextType = {
     user,

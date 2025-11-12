@@ -228,6 +228,19 @@ export const ProjectTable = () => {
         formatDate(row.original.createdAt),
     },
     {
+      header: "View Details",
+      accessorKey: "viewDetails",
+      cell: ({ row }: { row: { original: Project } }) => (
+        <Link
+          href={`/dashboard/projects/${row.original.id}`}
+          className="flex items-center gap-2"
+        >
+          <Eye />
+          <span>View </span>
+        </Link>
+      ),
+    },
+    {
       id: "actions",
       header: "Actions",
       cell: ({ row }: { row: { original: Project } }) => {

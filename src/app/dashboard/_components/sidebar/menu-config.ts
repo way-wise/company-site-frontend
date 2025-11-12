@@ -72,7 +72,7 @@ export const menuConfig: MenuItem[] = [
     title: "Projects",
     icon: FolderKanban,
     url: "/dashboard/projects",
-    permissions: ["read_project", "create_project"],
+    permissions: ["view_all_projects", "read_project", "create_project"],
   },
   {
     title: "Milestones",
