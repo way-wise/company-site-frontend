@@ -6,7 +6,7 @@ import Link from "next/link";
 const HeroSection = () => {
   return (
     <section
-      className="w-full h-full py-8 lg:py-10 lg:h-[80vh] bg-left  md:bg-right lg:bg-center relative"
+      className="w-full h-full py-8 lg:py-10 lg:h-screen bg-left  md:bg-right lg:bg-center relative"
       style={{
         backgroundImage: `url(${mainBackground.src})`,
         backgroundSize: "cover",
@@ -16,8 +16,8 @@ const HeroSection = () => {
     >
       {/* Main content */}
 
-      <div className="container mx-auto  grid grid-cols-1 md:grid-cols-2 h-full">
-        <div className="flex flex-col justify-center items-center md:items-start">
+      <div className="container mx-auto  grid grid-cols-1 md:grid-cols-3 h-full">
+        <div className=" lg:col-span-2 col-span-1 flex flex-col justify-center items-center md:items-start">
           {/* Main heading */}
           <div className="mb-4 md:mb-8">
             <div className="text-4xl lg:text-6xl  font-bold tracking-wide text-center md:text-left">
@@ -29,10 +29,19 @@ const HeroSection = () => {
           </div>
           {/* <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">Microsoft M365 Customer Support Services</p> */}
           {/* Description */}
-          <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
-            We are a global software development firm, delivering innovative,
-            customized solutions that empower businesses and set new standards
-            in quality and technology.
+          <h2 className="text-white/80 text-md  lg:text-2xl max-w-5xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
+            The Best Web Development Company USA Building Smart, Scalable, and
+            Future-Ready Solutions
+          </h2>
+
+          <p className="text-white/80 text-md  lg:text-2xl max-w-5xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
+            Way Wise Tech is one of the best web development company in the USA.
+            We make unique software that helps organizations expand and scale
+            quickly and easily. We create and build web apps, corporate
+            software, and digital platforms that work well and are customized to
+            match the demands of each client. We create and build web apps,
+            corporate software, and digital platforms that work well and are
+            customized to match the demands of each client.
           </p>
 
           {/* CTA Button */}
@@ -61,14 +70,14 @@ const HeroSection = () => {
             </Link>
           </div>
         </div>
-        <div className="flex md:justify-end justify-center items-center pt-3">
-          <div className="animate-bounce-slow">
+        <div className="col-span-1flex md:justify-end justify-center items-center pt-3">
+          <div className="animate-bounce-slow w-full h-full flex items-center justify-center">
             <Image
               src={heroLeftBg.src}
               alt="hero left bg"
-              width={350}
-              height={350}
-              className="w-full md:w-[250px]  lg:w-[300px] xl:w-[400px] h-full md:h-auto "
+              width={400}
+              height={400}
+              className="w-full h-full md:h-auto  flex items-center justify-center"
             />
           </div>
         </div>

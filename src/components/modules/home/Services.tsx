@@ -17,8 +17,8 @@ const Services = ({
       <div className="container mx-auto py-12 lg:py-20 ">
         <div className="mb-16">
           <SectionTitle
-            title="Our Services"
-            description="WWe are a reputable web development firm in the USA that offers a full range of digital and software development services that are customized to match the needs of your business. Our team of experts creates custom websites, apps, and business solutions that help your business expand, improve your brand identity, and make your operations run more smoothly. Way Wise Tech helps you transform your ideas into digital success that can grow, whether you're a new business or an established one.
+            title="Web Development, Software Development & Digital Solution Services"
+            description="We are a reputable web development firm in the USA that offers a full range of digital and software development services that are customized to match the needs of your business. Our team of experts creates custom websites, apps, and business solutions that help your business expand, improve your brand identity, and make your operations run more smoothly. Way Wise Tech helps you transform your ideas into digital success that can grow, whether you're a new business or an established one.
 "
             titleClass="text-white text-4xl pb-4  xl:text-[55px] font-bold"
             descriptionClass="text-white text-base xl:text-[20px]"
