@@ -39,12 +39,16 @@ const Footer = () => {
               </Link>
 
               <p className=" md:mr-6 text-sm sm:text-base leading-relaxed text-gray-600 dark:text-white">
-                As a leading software development firm with a worldwide reach,
-                we specialize in crafting cutting-edge solutions that drive your
-                business forward. Our team of experienced developers and tech
-                visionaries is dedicated to delivering customized software
-                solutions that cater to diverse industry needs and meet the
-                highest standards of quality.
+                Way Wise Tech stands proud as one of the pinnacle software
+                development agencies within the US. We create revolutionary and
+                specific cutting-edge, custom software solutions around the
+                globe. Our skilled team of developers and industry professionals
+                specializes innovative web applications, mobile apps, and
+                enterprise systems needs of various organizations. We empower
+                groups to develop greater hastily and navigate their digital
+                transformation by way of handing over software program this is
+                dependable, results-oriented, and emphasizes excellent,
+                scalability, and normal performance.
               </p>
 
               {/* Social Media Links */}

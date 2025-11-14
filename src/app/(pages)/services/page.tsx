@@ -14,7 +14,7 @@ const baseUrl =
     : "http://localhost:3000");
 
 export const metadata: Metadata = {
-  title: "Web Development Services | Custom Software Development | Way Wise Tech",
+  title: "Web Development Services | Software Development | Digital Solution Services",
   description:
     "Comprehensive web development services including custom software development, ecommerce solutions, web applications, mobile apps, and digital marketing. Expert team delivering innovative solutions.",
   keywords: [
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: `${baseUrl}/services`,
-    title: "Web Development Services | Custom Software Development",
+    title: "Web Development Services | Software Development | Digital Solution Services",
     description:
       "Comprehensive web development services including custom software development, ecommerce solutions, and digital marketing.",
   },

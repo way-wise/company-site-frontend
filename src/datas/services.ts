@@ -26,12 +26,12 @@ import webIcon from "@/assets/icons/services/web.png";
 export const servicesFirstData: ServiceDetail[] = [
   {
     id: 1,
-    title: "Web Application",
-    slug: "web-application",
+    title: "Web Development",
+    slug: "web-development",
     description:
       "Build responsive and scalable web applications that improve user engagement and business operations.",
     bgImage: webAppBg,
-    url: "/services/web-application",
+    url: "/services/web-development",
     icon: webIcon,
     videoImage: webImg,
     detailedDescription:
@@ -73,12 +73,12 @@ export const servicesFirstData: ServiceDetail[] = [
   },
   {
     id: 2,
-    title: "Mobile Application",
-    slug: "mobile-application",
+    title: "Software Development ",
+    slug: "software-development",
     description:
       "Develop intuitive mobile apps for iOS and Android to reach customers on the go and boost retention.",
     bgImage: mobileAppBg,
-    url: "/services/mobile-application",
+    url: "/services/software-development",
     icon: mobileIcon,
     videoImage: appImg,
     detailedDescription:
@@ -120,12 +120,12 @@ export const servicesFirstData: ServiceDetail[] = [
   },
   {
     id: 3,
-    title: "Digital Marketing",
-    slug: "digital-marketing",
+    title: "Digital Solution",
+    slug: "digital-solution",
     description:
       "Create targeted marketing campaigns that increase brand awareness and drive measurable conversions.",
     bgImage: digitalMarketingBg,
-    url: "/services/digital-marketing",
+    url: "/services/digital-solution",
     icon: digitalIcon,
     videoImage: digitalImg,
     detailedDescription:

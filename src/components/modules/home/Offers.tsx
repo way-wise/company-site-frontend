@@ -82,8 +82,8 @@ const Offers = () => {
       <div className="container relative z-10 py-10 lg:py-20 ">
         <div className="mb-8 lg:mb-16">
           <SectionTitle
-            title="What We Offer"
-            description="We deliver tailored IT services—from web development, App Development and graphic design to digital marketing, virtual assistance, data entry, and server deployment."
+            title="What We Offer - Complete IT & Web Development Solutions in the USA"
+            description="Way Wise Tech is a dependable web development corporation primarily based in the US, dedicated to imparting tailor-made IT answers that assist groups grow and scale results easily. We provide a variety of offerings, together with web development, mobile app development, graphic design, digital marketing, virtual assistance, data entry, software development and server deployment. Our commitment is to make sure that each mission we adopt is progressive, precise, and excessive-appearing, allowing your enterprise to shine in today’s bustling digital landscape."
             titleClass="text-white text-3xl sm:text-4xl lg:text-[55px] font-bold"
             descriptionClass="text-white text-base sm:text-lg lg:text-[20px]"
           />
