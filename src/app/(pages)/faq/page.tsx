@@ -6,6 +6,19 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card } from "@/components/ui/card";
+import type { Metadata } from "next";
+
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000");
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: `${baseUrl}/faq`,
+  },
+};
 
 const FaqPage = () => {
   const generalFaqs = [
