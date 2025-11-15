@@ -7,7 +7,7 @@ const MedicalITSupportPage = () => {
   return (
     <main>
       <PageHeader
-        title="Medical IT Support"
+        title="Medical Billing and Revenue Cycle Management"
         description="Services"
         titleClass="text-white text-5xl lg:text-[85px] font-bold"
         descriptionClass="text-brand text-5xl lg:text-[85px]"

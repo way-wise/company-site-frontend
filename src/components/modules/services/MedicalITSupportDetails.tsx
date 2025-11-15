@@ -1,6 +1,12 @@
 import medicalBillingImage from "@/assets/images/services/billing-shape.png";
 import digitalMarketingImage from "@/assets/images/services/digital-marketing.png";
 import cloudImage from "@/assets/images/services/cloud.jpg";
+import MedicalBillingServices from "@/assets/images/MedicalBilling/MedicalBillingServices.png";
+import medicalbillingandcodingservicesinfographic from "@/assets/images/MedicalBilling/medicalbillingandcodingservicesinfographic.png"
+import fedearalCompliance from "@/assets/images/MedicalBilling/federalCompliance.png"
+import providerCredentialing from "@/assets/images/MedicalBilling/providerCredentialing.png"
+import _24_7_calling from "@/assets/images/MedicalBilling/247_calling.png"
+import revenue_cycle from "@/assets/images/MedicalBilling/revenue_cycle.jpeg"
 import {
   Check,
   DollarSign,
@@ -22,128 +28,90 @@ const MedicalITSupportDetails = () => {
       id: 1,
       title: "Medical Billing Services",
       icon: DollarSign,
-      image: medicalBillingImage,
-      description:
-        "Our comprehensive medical billing services ensure accurate and timely claim submission, faster reimbursements, and improved cash flow for your practice.",
+      image: MedicalBillingServices,
+      description: "Expert billing for Medicare, Medicaid & commercial payers with NSA-compliant workflows to maximize reimbursements and minimize denials.",
       features: [
-        "Electronic claim submission and processing",
+        "Medicare/Medicaid claim submission & follow-up",
+        "NSA/IDR dispute resolution support",
         "Real-time claim status tracking",
-        "Denial management and appeals",
-        "Patient billing and statement generation",
-        "Payment posting and reconciliation",
-        "Customized reporting and analytics",
+        "Denial management with appeal expertise",
+        "Patient balance billing compliance",
+        "Revenue performance analytics",
       ],
     },
     {
       id: 2,
       title: "Medical Coding Services",
       icon: FileText,
-      image: medicalBillingImage,
-      description:
-        "Certified medical coders ensure accurate diagnosis and procedure coding, reducing claim denials and maximizing reimbursement.",
+      image: medicalbillingandcodingservicesinfographic,
+      description: "Certified coders specializing in emergency medicine coding with Medicare/Medicaid and NSA compliance expertise.",
       features: [
-        "ICD-10-CM diagnosis coding",
-        "CPT procedure coding",
-        "HCPCS Level II coding",
-        "Modifier application and validation",
-        "Chart review and coding audits",
-        "Compliance with coding guidelines",
+        "Emergency department coding (99281-99285)",
+        "Medicare Part B & Medicaid coding rules",
+        "NSA-compliant modifier application",
+        "Trauma and critical care coding",
+        "Compliance audits & documentation support",
+        "ICD-10, CPT & HCPCS expertise",
       ],
     },
     {
       id: 3,
-      title: "Compliance Services",
+      title: "Federal Compliance Services",
       icon: Shield,
-      image: cloudImage,
-      description:
-        "Stay compliant with ever-changing healthcare regulations through our comprehensive compliance management services.",
+      image: fedearalCompliance,
+      description: "Comprehensive compliance protection including HIPAA, No Surprises Act, and Medicare/Medicaid regulations to prevent penalties.",
       features: [
-        "HIPAA compliance audits and training",
-        "OSHA compliance management",
-        "Medicare and Medicaid compliance",
-        "Fraud and abuse prevention",
-        "Documentation improvement programs",
-        "Risk assessment and mitigation",
+        "NSA/IDR compliance & dispute filings",
+        "HIPAA privacy & security audits",
+        "Medicare/Medicaid program integrity",
+        "EMTALA billing compliance",
+        "Good Faith Estimates (GFE) management",
+        "Audit defense & documentation",
       ],
     },
     {
       id: 4,
-      title: "Credentialing Services",
+      title: "Provider Credentialing",
       icon: Award,
-      image: medicalBillingImage,
-      description:
-        "Streamlined provider credentialing and enrollment services to get your providers credentialed quickly and efficiently.",
+      image: providerCredentialing,
+      description: "Expedited Medicare, Medicaid & commercial credentialing with emergency provider enrollment prioritization.",
       features: [
-        "Provider enrollment and credentialing",
+        "Medicare/Medicaid enrollment (PECOS, state systems)",
+        "Emergency department provider credentialing",
         "CAQH ProView management",
-        "Insurance panel enrollment",
-        "License verification and renewal",
+        "Commercial payer panel enrollment",
+        "License & certification verification",
         "Recredentialing management",
-        "Credentialing database maintenance",
       ],
     },
     {
       id: 5,
-      title: "24-Hour Call Center",
+      title: "24/7 Emergency Support Center",
       icon: Headphones,
-      image: cloudImage,
-      description:
-        "Professional, multilingual call center services available 24/7/365 to handle patient inquiries, appointment scheduling, and support.",
+      image: _24_7_calling,
+      description: "Dedicated emergency billing support available 24/7/365 for prior authorizations, eligibility checks, and NSA compliance during crises.",
       features: [
-        "24/7/365 patient support",
-        "Appointment scheduling and reminders",
-        "Insurance verification",
-        "Patient billing inquiries",
-        "Multilingual support services",
-        "After-hours coverage",
+        "24/7/365 emergency billing support",
+        "Real-time prior authorization assistance",
+        "Unconscious patient eligibility verification",
+        "NSA balance billing protection",
+        "Mass casualty billing surge capacity",
+        "Multilingual patient support",
       ],
     },
     {
       id: 6,
       title: "Revenue Cycle Management",
       icon: TrendingUp,
-      image: medicalBillingImage,
-      description:
-        "End-to-end revenue cycle management to optimize collections, reduce denials, and improve your practice's financial performance.",
+      image: revenue_cycle,
+      description: "End-to-end RCM optimized for emergency providers with Medicare/Medicaid expertise and NSA-compliant workflows.",
       features: [
-        "Pre-authorization and eligibility verification",
-        "Charge capture and entry",
-        "Claims processing and submission",
-        "Payment posting and reconciliation",
+        "Emergency department workflow optimization",
+        "Medicare/Medicaid reimbursement maximization",
+        "NSA/IDR dispute preparation",
+        "Denial prevention & recovery",
+        "Cash flow forecasting & analytics",
         "Accounts receivable management",
-        "Performance analytics and reporting",
-      ],
-    },
-    {
-      id: 7,
-      title: "Online Reputation Management",
-      icon: Star,
-      image: digitalMarketingImage,
-      description:
-        "Build and maintain a positive online presence that attracts new patients and strengthens your practice's reputation.",
-      features: [
-        "Review monitoring and management",
-        "Patient feedback collection",
-        "Reputation repair strategies",
-        "Social media reputation management",
-        "Review response and engagement",
-        "Reputation analytics and reporting",
-      ],
-    },
-    {
-      id: 8,
-      title: "Digital Marketing Services",
-      icon: BarChart3,
-      image: digitalMarketingImage,
-      description:
-        "Healthcare-focused digital marketing strategies to grow your patient base and enhance your practice's online visibility.",
-      features: [
-        "Healthcare SEO and local search optimization",
-        "Social media marketing for healthcare",
-        "Content marketing and patient education",
-        "Pay-per-click advertising (PPC)",
-        "Email marketing campaigns",
-        "Website optimization and conversion",
       ],
     },
   ];
@@ -156,7 +124,7 @@ const MedicalITSupportDetails = () => {
           <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl group">
             <Image
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              alt="Medical IT Support Services"
+              alt="Medical billing and revenue cycle management Services"
               src={medicalBillingImage}
               width={1000}
               height={1000}
@@ -165,7 +133,7 @@ const MedicalITSupportDetails = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-[#1b3447]/80 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                Comprehensive Medical IT Support Services
+                Comprehensive Medical Billing and Revenue Cycle Management Services
               </h1>
               <p className="text-white/90 text-lg md:text-xl max-w-2xl">
                 Streamline healthcare operations and maximize revenue with our
@@ -181,45 +149,45 @@ const MedicalITSupportDetails = () => {
         <div className="container">
           <div className="max-w-4xl mx-auto text-center mb-12">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1b3447] mb-6">
-              Comprehensive Medical IT Support Services
+              Comprehensive Medical Billing and Revenue Cycle Management Services
             </h2>
             <p className="text-lg md:text-xl text-[#3d4e5c] leading-relaxed">
               <strong className="text-[#00a3ff]">Way-Wise Technology</strong>{" "}
-              provides end-to-end medical IT support services designed to
-              streamline healthcare operations and maximize revenue. Our
-              comprehensive suite of services covers medical billing, coding,
-              compliance, credentialing, and revenue cycle management, allowing
-              healthcare providers to focus on what matters most—patient care.
+              We provide end-to-end medical billing and revenue cycle management solutions designed to maximize collections and ensure full compliance. Our comprehensive services include expert coding for Medicare, Medicaid, and commercial payers, NSA/IDR dispute resolution, 24/7 emergency billing support, and rapid credentialing all backed by HIPAA-compliant operations. We handle the complex revenue challenges so healthcare providers can focus entirely on patient care without worrying about denials, compliance penalties, or cash flow disruptions.
             </p>
           </div>
 
           {/* Key Differentiators */}
           <div className="bg-white rounded-2xl p-6 md:p-10 mb-8 shadow-lg border border-gray-100">
             <h3 className="text-2xl md:text-3xl font-bold text-[#1b3447] mb-8 text-center">
-              Why Choose Our Medical IT Support Services
+              Why Choose Us for your Medical Billing and Revenue Cycle Management Services
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
                 {
-                  title: "Expert Medical Billing & Coding",
-                  desc: "Certified professionals with deep knowledge of ICD-10, CPT, and HCPCS coding systems.",
+                  "title": "24/7 Emergency Command Center",
+                  "desc": "Real-time prior auths, eligibility checks & NSA compliance during traumas/mass casualties — staffed by CMS-certified ER billing specialists ready at 3 AM."
                 },
                 {
-                  title: "HIPAA Compliant Operations",
-                  desc: "All services adhere to strict HIPAA regulations and industry compliance standards.",
+                  "title": "NSA-Proof Billing for Emergencies",
+                  "desc": "Zero surprise billing violations: Instant Good Faith Estimates (GFEs) for unconscious patients + IDR-ready dispute packages to block CMS penalties."
                 },
                 {
-                  title: "24/7/365 Support",
-                  desc: "Round-the-clock call center services ensuring your practice never misses a patient interaction.",
+                  "title": "ER-Specific Coding & Compliance",
+                  "desc": "EMTALA-compliant billing for trauma/uninsured cases — with Medicare/Medicaid emergency fee schedules and crisis modifier expertise (99285, G0390)."
                 },
                 {
-                  title: "Revenue Optimization",
-                  desc: "Advanced revenue cycle management that increases collections and reduces denials.",
+                  "title": "Instant ER Claim Adjudication",
+                  "desc": "98% clean claims in <24hrs: AI scrubbing for emergency modifiers + out-of-network crisis scenarios — no more 90-day payment delays."
                 },
                 {
-                  title: "Comprehensive Credentialing",
-                  desc: "Streamlined provider credentialing and enrollment processes to get you credentialed faster.",
+                  "title": "Medicare/Medicaid Emergency Revenue Recovery",
+                  "desc": "Maximize payments for 911 transports, trauma activations & EMTALA screenings — with state Medicaid waiver expertise for uncompensated care."
                 },
+                {
+                  "title": "Audit Armor for High-Risk ER Claims",
+                  "desc": "Pre-built defense packages: Medical necessity trails, NSA consent forms, and CMS audit responses delivered in <72hrs — or we cover penalties."
+                } 
               ].map((item, index) => (
                 <div
                   key={index}
@@ -248,7 +216,7 @@ const MedicalITSupportDetails = () => {
         <div className="container">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1b3447] mb-4">
-              Our Core Medical IT Support Services
+              Our Core Medical Billing and revenue cycle management Services
             </h2>
             <p className="text-lg text-[#3d4e5c] max-w-2xl mx-auto">
               Comprehensive solutions designed to optimize your healthcare
@@ -318,7 +286,7 @@ const MedicalITSupportDetails = () => {
         <div className="container">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1b3447] mb-4">
-              Benefits of Our Medical IT Support Services
+              Benefits of Our Medical Billing and Revenue Cycle Management Services
             </h2>
             <p className="text-lg text-[#3d4e5c] max-w-2xl mx-auto">
               Transform your practice with measurable results and improved
@@ -330,30 +298,26 @@ const MedicalITSupportDetails = () => {
             {[
               {
                 icon: DollarSign,
-                title: "Increased Revenue",
-                description:
-                  "Our optimized billing and coding processes result in faster claim processing, reduced denials, and improved collection rates, directly impacting your bottom line.",
+                title: "Maximized Revenue Recovery",
+                description: "Expert Medicare/Medicaid billing and NSA-compliant workflows that reduce denials by 40%+ and accelerate reimbursements for emergency and specialty services.",
                 gradient: "from-green-500 to-emerald-600",
               },
               {
                 icon: Users,
-                title: "Reduced Administrative Burden",
-                description:
-                  "Free up your staff to focus on patient care by outsourcing time-consuming administrative tasks to our expert team.",
+                title: "24/7 Emergency Revenue Support",
+                description: "Dedicated billing specialists available around-the-clock for prior authorizations, eligibility checks, and NSA compliance during emergencies—freeing your clinical staff to focus on patient care.",
                 gradient: "from-blue-500 to-cyan-600",
               },
               {
                 icon: Shield,
-                title: "Enhanced Compliance",
-                description:
-                  "Stay ahead of regulatory changes with our comprehensive compliance services, reducing the risk of audits and penalties.",
+                title: "Federal Compliance Protection",
+                description: "Proactive NSA/IDR dispute resolution, Medicare/Medicaid audit defense, and EMTALA-compliant billing to eliminate surprise billing penalties and protect your practice from $100k+ fines.",
                 gradient: "from-purple-500 to-indigo-600",
               },
               {
-                icon: Star,
-                title: "Improved Patient Satisfaction",
-                description:
-                  "Our 24/7 call center and streamlined processes ensure patients receive prompt, professional service, enhancing their experience with your practice.",
+                icon: TrendingUp,
+                title: "Optimized Cash Flow",
+                description: "End-to-end revenue cycle management with real-time analytics that cuts payment cycles by 30% and ensures maximum reimbursement from all payers—including complex emergency department cases.",
                 gradient: "from-orange-500 to-amber-600",
               },
             ].map((benefit, index) => {
@@ -401,40 +365,42 @@ const MedicalITSupportDetails = () => {
             {[
               {
                 icon: FileText,
-                title: "Billing & Coding Software",
+                title: "Advanced Billing & Coding Platforms",
                 items: [
-                  "Electronic Health Records (EHR) integration",
-                  "Practice Management Systems (PMS)",
-                  "ICD-10 and CPT coding software",
-                  "Claim scrubbing and validation tools",
-                  "Real-time eligibility verification",
+                  "Athenahealth RCM & EHR integration",
+                  "Epic and Cerner system optimization",
+                  "NextGen and AdvancedMD expertise",
+                  "Real-time eligibility verification (Availity, Experian)",
+                  "Medicare/Medicaid-specific billing modules",
                 ],
                 gradient: "from-blue-500 to-cyan-500",
               },
               {
                 icon: BarChart3,
-                title: "Analytics & Reporting",
+                title: "Intelligent Revenue Analytics",
                 items: [
-                  "Custom dashboard and KPI tracking",
-                  "Revenue cycle analytics",
-                  "Denial trend analysis",
-                  "Provider productivity reports",
-                  "Financial performance metrics",
+                  "AthenaCollector and Epic Revenue Cycle analytics",
+                  "AI-driven denial prediction and prevention",
+                  "Provider-specific performance dashboards",
+                  "Medicare/Medicaid reimbursement trend analysis",
+                  "NSA/IDR dispute outcome forecasting",
+                  "Cash flow optimization with real-time alerts",
                 ],
                 gradient: "from-purple-500 to-pink-500",
               },
               {
                 icon: MessageSquare,
-                title: "Communication Tools",
+                title: "Modern Patient Engagement Suite",
                 items: [
-                  "Secure patient communication portals",
-                  "Automated appointment reminders",
-                  "Multi-channel call center technology",
-                  "HIPAA-compliant messaging systems",
-                  "Patient engagement platforms",
+                  "24/7 call center with RingCentral and Five9 technology",
+                  "HIPAA-compliant patient portals (Luma Health, Phreesia)",
+                  "Automated GFE (Good Faith Estimate) generation",
+                  "Multi-language support for diverse populations",
+                  "Emergency billing notification systems",
+                  "Telehealth billing integration (Doxy.me, Zoom for Healthcare)",
                 ],
                 gradient: "from-green-500 to-teal-500",
-              },
+              }
             ].map((tool, index) => {
               const IconComponent = tool.icon;
               return (
@@ -478,22 +444,20 @@ const MedicalITSupportDetails = () => {
               Service Outcomes
             </h2>
             <p className="text-lg text-[#3d4e5c] max-w-2xl mx-auto">
-              Our comprehensive medical IT support services deliver measurable
-              results that transform your practice operations and financial
-              performance
+              Our specialized medical billing and revenue cycle management solutions deliver measurable results: 40%+ reduction in denials, 30% faster reimbursements, and complete NSA/IDR compliance protection—so healthcare providers maximize revenue while focusing on patient care.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {[
-              "Increased revenue through optimized billing and coding",
-              "Reduced claim denials and faster reimbursement cycles",
-              "Enhanced compliance with HIPAA and industry regulations",
-              "Improved patient satisfaction and retention rates",
-              "Streamlined administrative processes and reduced overhead",
-              "Better cash flow management and financial visibility",
-              "Expanded patient base through digital marketing",
-              "Professional 24/7 patient support and engagement",
+              "40%+ reduction in claim denials with expert Medicare/Medicaid billing",
+              "30% faster reimbursements through optimized revenue cycle management",
+              "Complete NSA/IDR compliance protection to avoid $100k+ penalties",
+              "24/7 emergency billing support for prior authorizations and eligibility checks",
+              "Athenahealth, Epic & Cerner integration expertise for seamless workflows",
+              "Enhanced cash flow with real-time revenue analytics and forecasting",
+              "Reduced administrative burden with automated claim scrubbing and validation",
+              "HIPAA-compliant operations with audit-ready documentation and reporting"
             ].map((outcome, index) => (
               <div
                 key={index}
@@ -525,12 +489,12 @@ const MedicalITSupportDetails = () => {
           <div className="bg-white rounded-xl p-6 md:p-10 shadow-xl border border-gray-100 max-w-5xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
-                "Maintain 99%+ claim accuracy and submission rates",
-                "Provide 24/7/365 support for uninterrupted operations",
-                "Ensure HIPAA compliance in all operations",
-                "Deliver transparent reporting and regular performance reviews",
-                "Continuously train staff on latest coding and billing updates",
-                "Proactively identify and resolve revenue cycle issues",
+                "99%+ clean claim rate with Medicare/Medicaid-specific coding expertise",
+                "24/7 emergency billing support: prior auths, eligibility checks, and NSA compliance during crises",
+                "Complete federal compliance: HIPAA, No Surprises Act, and Medicare/Medicaid program integrity",
+                "Real-time revenue dashboards with Athenahealth/Epic integration and denial trend analysis",
+                "Monthly staff certification on Medicare fee schedules, Medicaid waivers, and NSA regulations",
+                "Proactive revenue leakage detection with advanced claim scrubbing and emergency department workflow optimization"
               ].map((commitment, index) => (
                 <div
                   key={index}
