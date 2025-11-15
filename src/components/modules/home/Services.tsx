@@ -54,7 +54,7 @@ growth, enhance your brand, and streamline your operations."
             <Image
               src={microsoftSupport}
               alt="Microsoft Support"
-              className=" max-w-1/2 h-full w-auto lg:absolute right-0 bottom-0"
+              className="lg:max-w-1/2 h-full w-full lg:w-auto lg:absolute right-0 bottom-0"
             />
           </div>
           <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 lg:gap-8 justify-between bg-white rounded-xl relative overflow-hidden">
@@ -79,7 +79,7 @@ growth, enhance your brand, and streamline your operations."
             <Image
               src={medicalBilling}
               alt="Microsoft Support"
-              className=" max-w-1/2 h-full w-auto lg:absolute right-0 bottom-0"
+              className="lg:max-w-1/2 h-full w-full lg:w-auto lg:absolute right-0 bottom-0"
             />
           </div>
         </div>
