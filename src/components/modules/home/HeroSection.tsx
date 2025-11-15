@@ -21,20 +21,22 @@ const HeroSection = () => {
           {/* Main heading */}
           <div className="mb-4 md:mb-8">
             <div className="text-4xl lg:text-6xl  font-bold tracking-wide text-center md:text-left">
-              <h1 className="text-white ">WAY-WISE</h1>
-              <h2 className="text-transparent bg-gradient-to-r from-[#00D4FF] to-[#0099CC] bg-clip-text ">
-                TECHNOLOGY
-              </h2>
+              <h1 className="text-white ">
+                WAY-WISE <br />
+                <span className="text-transparent bg-gradient-to-r from-[#00D4FF] to-[#0099CC] bg-clip-text ">
+                  TECHNOLOGY
+                </span>
+              </h1>
             </div>
           </div>
           {/* <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">Microsoft M365 Customer Support Services</p> */}
           {/* Description */}
-          <h2 className="text-white/80 text-md  lg:text-2xl max-w-5xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
+          <h2 className="max-w-2xl text-white/80 text-md  lg:text-2xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
             The Best Web Development Company USA Building Smart, Scalable, and
             Future-Ready Solutions
           </h2>
 
-          <p className="text-white/80 text-md  lg:text-2xl max-w-5xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
+          {/* <p className="text-white/80 text-md  lg:text-2xl max-w-5xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
             Way Wise Tech is one of the best web development company in the USA.
             We make unique software that helps organizations expand and scale
             quickly and easily. We create and build web apps, corporate
@@ -42,7 +44,7 @@ const HeroSection = () => {
             match the demands of each client. We create and build web apps,
             corporate software, and digital platforms that work well and are
             customized to match the demands of each client.
-          </p>
+          </p> */}
 
           {/* CTA Button */}
           <div>

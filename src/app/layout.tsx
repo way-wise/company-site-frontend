@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     url: baseUrl,
     siteName: "Way Wise Tech",
     title:
-      "Web Development Company USA | Custom Software Solutions | Way Wise Tech",
+      "Web Development Company USA | Custom Software Solutions",
     description:
       "Way Wise Tech is a top-rated web development company in the USA, providing custom software development, web app design, and digital solutions for global businesses.",
     images: [
