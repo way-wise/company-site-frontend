@@ -60,7 +60,7 @@ growth, enhance your brand, and streamline your operations."
           <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 lg:gap-8 justify-between bg-white rounded-xl relative overflow-hidden">
             <div className="lg:w-1/2 p-5 lg:p-6">
               <h2 className="text-black text-2xl font-bold mb-4">
-                Medical Billing Services <br />
+                Medical Billing & Coding Services <br />
                 {/* <span className="text-lg tetx-brand">
                   (Services Previously Provided by our tech)
                 </span> */}
