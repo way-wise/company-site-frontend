@@ -57,7 +57,7 @@ function PaymentFormContent({
       const { error: submitError } = await elements.submit();
 
       if (submitError) {
-        setErrorMessage(submitError.message);
+        setErrorMessage(submitError.message ?? null);
         setIsProcessing(false);
         return;
       }
@@ -71,7 +71,7 @@ function PaymentFormContent({
         });
 
       if (confirmError) {
-        setErrorMessage(confirmError.message);
+        setErrorMessage(confirmError.message ?? null);
         setIsProcessing(false);
         return;
       }
