@@ -10,18 +10,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  useCreateSetupIntent,
   useAttachPaymentMethod,
+  useCreateSetupIntent,
 } from "@/hooks/usePaymentMutations";
-import { useState } from "react";
 import {
-  PaymentElement,
-  useStripe,
-  useElements,
   Elements,
+  PaymentElement,
+  useElements,
+  useStripe,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { CreditCard, Plus } from "lucide-react";
+import { useState } from "react";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
@@ -63,12 +63,11 @@ function PaymentFormContent({
       }
 
       // Then confirm the setup intent
-      const { error: confirmError, setupIntent } =
-        await stripe.confirmSetup({
-          elements,
-          clientSecret,
-          redirect: "if_required",
-        });
+      const { error: confirmError, setupIntent } = await stripe.confirmSetup({
+        elements,
+        clientSecret,
+        redirect: "if_required",
+      });
 
       if (confirmError) {
         setErrorMessage(confirmError.message ?? null);
@@ -76,10 +75,7 @@ function PaymentFormContent({
         return;
       }
 
-      if (
-        setupIntent?.status === "succeeded" &&
-        setupIntent.payment_method
-      ) {
+      if (setupIntent?.status === "succeeded" && setupIntent.payment_method) {
         // Attach the payment method
         await attachPaymentMethodMutation.mutateAsync({
           paymentMethodId: setupIntent.payment_method as string,
@@ -92,8 +88,7 @@ function PaymentFormContent({
         setIsProcessing(false);
       }
     } catch (err) {
-      const errorMsg =
-        err instanceof Error ? err.message : "An error occurred";
+      const errorMsg = err instanceof Error ? err.message : "An error occurred";
       setErrorMessage(errorMsg);
       setIsProcessing(false);
     }
@@ -207,4 +202,3 @@ export function AddPaymentMethodForm() {
     </Dialog>
   );
 }
-
