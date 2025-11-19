@@ -3,6 +3,7 @@
 import { SocketProvider } from "@/context/SocketContext";
 import { AuthProvider } from "@/context/UserContext";
 import { ProgressProvider } from "@/providers/progress-provider";
+import { StripeProvider } from "@/providers/stripe-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode, useState } from "react";
 
@@ -16,9 +17,11 @@ export default function Providers({ children }: ProvidersProps) {
   return (
     <ProgressProvider>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <SocketProvider>{children}</SocketProvider>
-        </AuthProvider>
+        <StripeProvider>
+          <AuthProvider>
+            <SocketProvider>{children}</SocketProvider>
+          </AuthProvider>
+        </StripeProvider>
       </QueryClientProvider>
     </ProgressProvider>
   );
