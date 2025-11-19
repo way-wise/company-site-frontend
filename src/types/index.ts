@@ -670,3 +670,26 @@ export interface LeaveCalendarEvent {
   };
   status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
 }
+
+// Partner Types
+export interface Partner {
+  id: string;
+  name: string;
+  image: string;
+  isShow: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PartnerFormData {
+  name: string;
+  image?: string;
+  isShow?: boolean;
+}
+
+export interface PartnersQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  isShow?: boolean;
+}

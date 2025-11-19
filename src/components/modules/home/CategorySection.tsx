@@ -1,8 +1,11 @@
-import { categoryData } from "@/datas/category";
+"use client";
+
+import { usePublicPartners } from "@/hooks/usePartnerMutations";
 import Image from "next/image";
 
 const CategorySection = () => {
-  const categories = categoryData;
+  const { data: partnersResponse, isLoading } = usePublicPartners();
+  const categories = partnersResponse?.data || [];
 
   return (
     <section
@@ -26,41 +29,51 @@ const CategorySection = () => {
           </div>
           <div className="flex items-center md:pl-4 w-full">
             <div className="overflow-hidden w-full">
-              <div className="flex items-center gap-4 lg:gap-8 xl:gap-12 auto-scroll">
-                {categories.map((category) => (
-                  <div
-                    key={`first-${category.id}`}
-                    className="flex-shrink-0 flex flex-col transition-all items-center justify-center text-center rounded-xl group duration-200 p-1"
-                  >
-                    <div className="flex items-center justify-center mb-2 bg-white p-2 rounded-md">
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        width={120}
-                        height={60}
-                        className="w-20 h-12 lg:w-32 lg:h-16 rounded-md object-contain"
-                      />
+              {isLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              ) : categories.length > 0 ? (
+                <div className="flex items-center gap-4 lg:gap-8 xl:gap-12 auto-scroll">
+                  {categories.map((category) => (
+                    <div
+                      key={`first-${category.id}`}
+                      className="flex-shrink-0 flex flex-col transition-all items-center justify-center text-center rounded-xl group duration-200 p-1"
+                    >
+                      <div className="flex items-center justify-center mb-2 bg-white p-2 rounded-md">
+                        <Image
+                          src={category.image}
+                          alt={category.name}
+                          width={120}
+                          height={60}
+                          className="w-20 h-12 lg:w-32 lg:h-16 rounded-md object-contain"
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
 
-                {categories.map((category) => (
-                  <div
-                    key={`second-${category.id}`}
-                    className="flex-shrink-0 flex flex-col transition-all items-center justify-center text-center rounded-xl group duration-200 p-1"
-                  >
-                    <div className="flex items-center justify-center mb-2 bg-white p-2 rounded-md">
-                      <Image
-                        src={category.image}
-                        alt={category.name}
-                        width={120}
-                        height={60}
-                        className="w-20 h-12 lg:w-32 lg:h-16 rounded-md object-contain"
-                      />
+                  {categories.map((category) => (
+                    <div
+                      key={`second-${category.id}`}
+                      className="flex-shrink-0 flex flex-col transition-all items-center justify-center text-center rounded-xl group duration-200 p-1"
+                    >
+                      <div className="flex items-center justify-center mb-2 bg-white p-2 rounded-md">
+                        <Image
+                          src={category.image}
+                          alt={category.name}
+                          width={120}
+                          height={60}
+                          className="w-20 h-12 lg:w-32 lg:h-16 rounded-md object-contain"
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center py-8 text-muted-foreground">
+                  No partners available
+                </div>
+              )}
             </div>
           </div>
         </div>
