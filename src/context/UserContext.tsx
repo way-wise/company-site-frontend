@@ -1,7 +1,10 @@
 "use client";
 
+import { subscribeToAuthLogout } from "@/lib/auth-events";
 import apiClient from "@/lib/axios";
 import { Permission, User } from "@/types";
+import { AxiosError } from "axios";
+import { usePathname } from "next/navigation";
 import {
   createContext,
   ReactNode,
@@ -17,7 +20,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   permissions: Permission[];
   setUser: (user: User | null) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   refreshUser: () => Promise<User | null>;
   hasPermission: (permissionName: string) => boolean;
   hasAnyPermission: (permissionNames: string[]) => boolean;
@@ -51,6 +54,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [permissions, setPermissions] = useState<Permission[]>([]);
+  const pathname = usePathname();
+
+  const logout = useCallback(async (): Promise<void> => {
+    try {
+      await apiClient.post("/auth/logout");
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Logout request failed:", error);
+      }
+    } finally {
+      setUser(null);
+      setPermissions([]);
+    }
+  }, []);
 
   const refreshUser = useCallback(async (): Promise<User | null> => {
     try {
@@ -74,19 +91,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       return userData;
     } catch (error) {
-      console.error("Auth check failed:", error);
-      setUser(null);
-      setPermissions([]);
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response?.status === 401) {
+        await logout();
+        return null;
+      }
+
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Auth check failed:", error);
+      }
+      await logout();
       return null;
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [logout]);
 
-  const logout = useCallback(() => {
-    setUser(null);
-    setPermissions([]);
-  }, []);
+  useEffect(() => {
+    const unsubscribe = subscribeToAuthLogout(() => {
+      void logout();
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [logout]);
 
   const hasPermission = useCallback(
     (permissionName: string): boolean =>
@@ -119,15 +149,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (!pathname) return;
 
-    const currentPath = window.location.pathname;
-    if (isPublicRoute(currentPath)) {
+    if (isPublicRoute(pathname)) {
       setIsLoading(false);
-    } else {
-      refreshUser();
+      return;
     }
-  }, [refreshUser]);
+
+    setIsLoading(true);
+    void refreshUser();
+  }, [pathname, refreshUser]);
 
   const value: AuthContextType = {
     user,
