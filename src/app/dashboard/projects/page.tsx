@@ -4,7 +4,7 @@ import { ProjectTable } from "../_components/project-components/project-table";
 const ProjectsPage = async () => {
   return (
     <PermissionGuard
-      permissions={["read_project", "create_project"]}
+      permissions={["view_all_projects", "read_project", "create_project"]}
       requireAll={false}
     >
       <ProjectTable />

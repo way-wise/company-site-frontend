@@ -3,6 +3,7 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
+import { dispatchAuthLogoutEvent } from "./auth-events";
 
 // Base API configuration
 const API_BASE_URL =
@@ -33,22 +34,39 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Handle token refresh on 401 errors
-const handleTokenRefresh = async (
-  originalRequest: InternalAxiosRequestConfig
-) => {
-  try {
-    await apiClient.post("/auth/refresh-token");
-    return apiClient(originalRequest);
-  } catch {
-    // Redirect to login if not on auth pages
-    if (typeof window !== "undefined") {
-      const isAuthPage = ["/login", "/register"].includes(
-        window.location.pathname
-      );
-      if (!isAuthPage) window.location.href = "/login";
+type FailedRequest = {
+  config: InternalAxiosRequestConfig;
+  resolve: (value: AxiosResponse) => void;
+  reject: (reason?: unknown) => void;
+};
+
+let isRefreshing = false;
+let failedQueue: FailedRequest[] = [];
+
+const processQueue = (error: AxiosError | null) => {
+  const queue = [...failedQueue];
+  failedQueue = [];
+
+  queue.forEach(({ config, resolve, reject }) => {
+    if (error) {
+      reject(error);
+      return;
     }
-    throw new Error("Token refresh failed");
+
+    apiClient(config).then(resolve).catch(reject);
+  });
+};
+
+const triggerLogout = () => {
+  dispatchAuthLogoutEvent();
+
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const authRoutes = ["/login", "/register"];
+  if (!authRoutes.includes(window.location.pathname)) {
+    window.location.href = "/login";
   }
 };
 
@@ -61,14 +79,39 @@ apiClient.interceptors.response.use(
     };
 
     // Skip refresh for refresh endpoint to prevent loops
-    if (config.url?.includes("/auth/refresh-token")) {
+    if (
+      config.url?.includes("/auth/refresh-token") ||
+      config.url?.includes("/auth/logout")
+    ) {
       return Promise.reject(error);
     }
 
     // Attempt token refresh on 401 errors
     if (error.response?.status === 401 && !config._retry) {
       config._retry = true;
-      return handleTokenRefresh(config);
+
+      return new Promise<AxiosResponse>((resolve, reject) => {
+        failedQueue.push({ config, resolve, reject });
+
+        if (isRefreshing) {
+          return;
+        }
+
+        isRefreshing = true;
+
+        apiClient
+          .post("/auth/refresh-token")
+          .then(() => {
+            processQueue(null);
+          })
+          .catch((refreshError) => {
+            triggerLogout();
+            processQueue(refreshError as AxiosError);
+          })
+          .finally(() => {
+            isRefreshing = false;
+          });
+      });
     }
 
     return Promise.reject(error);

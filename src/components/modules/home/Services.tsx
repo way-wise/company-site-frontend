@@ -1,3 +1,4 @@
+import medicalBilling from "@/assets/images/services/billing-shape.png";
 import microsoftSupport from "@/assets/images/services/ms-support.png";
 import medicalBilling from "@/assets/images/services/billing-shape.png";
 import SectionTitle from "@/components/modules/home/SectionTitle";
@@ -66,8 +67,9 @@ growth, enhance your brand, and streamline your operations."
                 </span> */}
               </h2>
               <p className="text-gray-900 text-sm mb-1">
-              Let Us Take Care of Your Revenue
-              While You Take Care of Your Patients. Expert medical billing, medical coding, revenue cycle management, credentialing, and compliance services.
+                Let Us Take Care of Your Revenue While You Take Care of Your
+                Patients. Expert medical billing, medical coding, revenue cycle
+                management, credentialing, and compliance services.
               </p>
               <Link
                 href="/medical-it-support"

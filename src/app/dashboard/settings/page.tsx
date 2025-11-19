@@ -7,11 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AddPaymentMethodForm } from "@/components/payment/AddPaymentMethodForm";
+import { PaymentMethodsList } from "@/components/payment/PaymentMethodsList";
 import { useAuth } from "@/context/UserContext";
-import { Settings } from "lucide-react";
+import { CreditCard, Settings } from "lucide-react";
 
 const SettingsPage = () => {
-  const { user } = useAuth();
+  const { user, hasRole } = useAuth();
+  const isClient = hasRole("CLIENT");
 
   return (
     <div className="container mx-auto py-8 space-y-6">
@@ -55,6 +58,28 @@ const SettingsPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      {isClient && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="h-5 w-5" />
+                  Payment Methods
+                </CardTitle>
+                <CardDescription>
+                  Manage your saved payment cards
+                </CardDescription>
+              </div>
+              <AddPaymentMethodForm />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <PaymentMethodsList />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

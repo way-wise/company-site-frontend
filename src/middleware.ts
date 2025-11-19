@@ -1,62 +1,37 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-// Route configurations
-const AUTH_ROUTES = ["/login", "/register"];
-const PROTECTED_ROUTES = ["/profile", "/dashboard"];
+const AUTH_ROUTES = new Set(["/login", "/register"]);
+const PROTECTED_PREFIXES = ["/dashboard", "/profile", "/admin", "/client"];
 
-// Helper functions
-const hasValidToken = (request: NextRequest): boolean => {
+const hasSession = (request: NextRequest): boolean => {
   const accessToken = request.cookies.get("accessToken")?.value;
-  const refreshToken = request.cookies.get("refreshToken")?.value;
-  return !!(accessToken || refreshToken);
+  return typeof accessToken === "string" && accessToken.trim().length > 0;
 };
 
-const isProtectedRoute = (pathname: string): boolean => {
-  return PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
-};
+const isProtectedPath = (pathname: string): boolean =>
+  PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 
-const isAuthRoute = (pathname: string): boolean => {
-  return AUTH_ROUTES.includes(pathname);
-};
+const isAuthRoute = (pathname: string): boolean => AUTH_ROUTES.has(pathname);
 
-const redirectToLogin = (
-  request: NextRequest,
-  pathname: string
-): NextResponse => {
-  const loginUrl = new URL("/login", request.url);
-  loginUrl.searchParams.set("redirect", pathname);
-  return NextResponse.redirect(loginUrl);
-};
+export function middleware(request: NextRequest): NextResponse {
+  const { nextUrl } = request;
+  const { pathname } = nextUrl;
+  const authenticated = hasSession(request);
 
-const redirectToHome = (request: NextRequest): NextResponse => {
-  return NextResponse.redirect(new URL("/", request.url));
-};
-
-// Main middleware function
-export const middleware = async (request: NextRequest) => {
-  const { pathname } = request.nextUrl;
-  const hasToken = hasValidToken(request);
-
-  if (process.env.NODE_ENV !== "production") {
-    console.log(
-      `Middleware: Checking access for ${pathname}, hasToken: ${hasToken}`
-    );
+  if (!authenticated && isProtectedPath(pathname)) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Redirect to login if accessing protected route without token
-  if (!hasToken && isProtectedRoute(pathname)) {
-    return redirectToLogin(request, pathname);
-  }
-
-  // Redirect to home if accessing auth routes with valid token
-  if (hasToken && isAuthRoute(pathname)) {
-    return redirectToHome(request);
+  if (authenticated && isAuthRoute(pathname)) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();
-};
+}
 
-// Middleware configuration
 export const config = {
   matcher: [
     "/login",
