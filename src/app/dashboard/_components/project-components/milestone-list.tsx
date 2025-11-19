@@ -88,6 +88,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   // Permission checks
   const canUpdateMilestone = hasPermission("update_milestone");
   const canDeleteMilestone = hasPermission("delete_milestone");
+  const canCreateTask = hasPermission("create_task");
   const canViewMilestoneActions = canUpdateMilestone || canDeleteMilestone;
   const [addMilestoneOpen, setAddMilestoneOpen] = useState(false);
   const [expandedMilestones, setExpandedMilestones] = useState<Set<string>>(
@@ -626,16 +627,18 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
 
                       {/* Toggle Tasks Button */}
                       <div className=" flex items-center gap-2 px-4  ">
-                        <Button
-                          size="sm"
-                          onClick={() =>
-                            handleOpenCreateTaskModal(milestone.id)
-                          }
-                          className="bg-blue-600 hover:bg-blue-700 text-white"
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Task
-                        </Button>
+                        {canCreateTask && (
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              handleOpenCreateTaskModal(milestone.id)
+                            }
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                          >
+                            <Plus className="h-4 w-4 mr-2" />
+                            Add Task
+                          </Button>
+                        )}
                         <Button
                           variant="outline"
                           size="sm"
@@ -870,16 +873,18 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                           <p className="text-gray-500 mb-4">
                             Start building your milestone by adding tasks
                           </p>
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              handleOpenCreateTaskModal(milestone.id)
-                            }
-                            className="bg-blue-600 hover:bg-blue-700 text-white"
-                          >
-                            <Plus className="h-4 w-4 mr-2" />
-                            Create First Task
-                          </Button>
+                          {canCreateTask && (
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                handleOpenCreateTaskModal(milestone.id)
+                              }
+                              className="bg-blue-600 hover:bg-blue-700 text-white"
+                            >
+                              <Plus className="h-4 w-4 mr-2" />
+                              Create First Task
+                            </Button>
+                          )}
                         </div>
                       )}
                     </div>

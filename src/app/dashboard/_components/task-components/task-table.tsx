@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuth } from "@/context/UserContext";
 import { useMilestones } from "@/hooks/useMilestoneMutations";
 import { useProjects } from "@/hooks/useProjectMutations";
 import { useDeleteTask, useTasks } from "@/hooks/useTaskMutations";
@@ -76,6 +77,8 @@ const getPriorityBadge = (priority: string) => {
 };
 
 export const TaskTable = () => {
+  const { hasPermission } = useAuth();
+  const canCreateTask = hasPermission("create_task");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addTaskModalOpen, setAddTaskModalOpen] = useState(false);
   const [updateTaskModalOpen, setUpdateTaskModalOpen] = useState(false);
@@ -391,10 +394,12 @@ export const TaskTable = () => {
     <>
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-medium">Tasks</h1>
-        <Button onClick={() => setAddTaskModalOpen(true)}>
-          <Plus />
-          <span>Add Task</span>
-        </Button>
+        {canCreateTask && (
+          <Button onClick={() => setAddTaskModalOpen(true)}>
+            <Plus />
+            <span>Add Task</span>
+          </Button>
+        )}
       </div>
       <div className="rounded-xl border bg-card p-6">
         <div className="flex items-center justify-between gap-4 pb-6">

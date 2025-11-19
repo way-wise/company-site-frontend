@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/context/UserContext";
 // import { useMilestone } from "@/hooks/useMilestoneMutations";
 import { useTasks } from "@/hooks/useTaskMutations";
 import { Task } from "@/types";
@@ -21,6 +22,8 @@ export default function MilestoneTasksView({
   milestoneId,
   projectId,
 }: MilestoneTasksViewProps) {
+  const { hasPermission } = useAuth();
+  const canCreateTask = hasPermission("create_task");
   const [viewMode, setViewMode] = useState<"table" | "kanban">("table");
   const [addTaskOpen, setAddTaskOpen] = useState(false);
 
@@ -61,10 +64,12 @@ export default function MilestoneTasksView({
           <CheckSquare className="h-5 w-5" />
           Tasks ({tasks.length})
         </h2>
-        <Button onClick={handleCreateTask}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Task
-        </Button>
+        {canCreateTask && (
+          <Button onClick={handleCreateTask}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Task
+          </Button>
+        )}
       </div>
 
       <Tabs

@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuth } from "@/context/UserContext";
 import { useDeleteTask, useUpdateTask } from "@/hooks/useTaskMutations";
 import { formatStatusText, getTaskStatusColor } from "@/lib/status-utils";
 import { Task } from "@/types";
@@ -43,6 +44,10 @@ interface SingleTaskProps {
 }
 
 export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
+  const { hasPermission } = useAuth();
+  const canUpdateTask = hasPermission("update_task");
+  const canDeleteTask = hasPermission("delete_task");
+  const canViewTaskActions = canUpdateTask || canDeleteTask;
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -109,7 +114,7 @@ export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
   return (
     <>
       <div className="p-3 bg-gray-50 rounded-lg border hover:shadow-sm transition-shadow">
-        {isEditing ? (
+        {isEditing && canUpdateTask ? (
           // Quick Edit Mode - Status and Progress only
           <Form {...quickEditForm}>
             <form onSubmit={quickEditForm.handleSubmit(handleQuickSave)}>
@@ -219,25 +224,31 @@ export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
               <h5 className="font-medium text-sm flex-1 pr-2">{task.title}</h5>
               <div className="flex items-center gap-2">
                 {getTaskStatusBadge(task.status)}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                      <MoreVertical className="h-3 w-3" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-32">
-                    <DropdownMenuItem onClick={handleQuickEdit}>
-                      Update
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setDeleteModalOpen(true)}
-                      className="text-red-600"
-                    >
-                      <Trash className="h-3 w-3 mr-2" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {canViewTaskActions && (canUpdateTask || canDeleteTask) && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                        <MoreVertical className="h-3 w-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-32">
+                      {canUpdateTask && (
+                        <DropdownMenuItem onClick={handleQuickEdit}>
+                          Update
+                        </DropdownMenuItem>
+                      )}
+                      {canDeleteTask && (
+                        <DropdownMenuItem
+                          onClick={() => setDeleteModalOpen(true)}
+                          className="text-red-600"
+                        >
+                          <Trash className="h-3 w-3 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </div>
             </div>
 
@@ -270,43 +281,45 @@ export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
       </div>
 
       {/* Delete Confirmation Modal */}
-      <Modal open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
-        <ModalContent>
-          <ModalHeader>
-            <ModalTitle>Delete Task</ModalTitle>
-          </ModalHeader>
-          <div className="space-y-4">
-            <p className="text-muted-foreground">
-              Are you sure you want to delete this task? This action cannot be
-              undone.
-            </p>
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <h4 className="font-medium text-sm">{task.title}</h4>
-              {task.description && (
-                <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                  {task.description}
-                </p>
-              )}
+      {canDeleteTask && (
+        <Modal open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+          <ModalContent>
+            <ModalHeader>
+              <ModalTitle>Delete Task</ModalTitle>
+            </ModalHeader>
+            <div className="space-y-4">
+              <p className="text-muted-foreground">
+                Are you sure you want to delete this task? This action cannot be
+                undone.
+              </p>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <h4 className="font-medium text-sm">{task.title}</h4>
+                {task.description && (
+                  <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                    {task.description}
+                  </p>
+                )}
+              </div>
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setDeleteModalOpen(false)}
+                  disabled={deleteTaskMutation.isPending}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleDelete}
+                  isLoading={deleteTaskMutation.isPending}
+                >
+                  Delete Task
+                </Button>
+              </div>
             </div>
-            <div className="flex justify-end gap-3">
-              <Button
-                variant="outline"
-                onClick={() => setDeleteModalOpen(false)}
-                disabled={deleteTaskMutation.isPending}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={handleDelete}
-                isLoading={deleteTaskMutation.isPending}
-              >
-                Delete Task
-              </Button>
-            </div>
-          </div>
-        </ModalContent>
-      </Modal>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 }
