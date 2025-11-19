@@ -23,9 +23,17 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CreditCard, Plus } from "lucide-react";
 import { useState } from "react";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
-);
+const getStripeKey = () => {
+  const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+  if (!key) {
+    console.error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set");
+    return null;
+  }
+  return key;
+};
+
+const stripeKey = getStripeKey();
+const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 function PaymentFormContent({
   clientSecret,
@@ -174,7 +182,12 @@ export function AddPaymentMethodForm() {
             Add a new credit or debit card to your account
           </DialogDescription>
         </DialogHeader>
-        {clientSecret && setupIntentId ? (
+        {!stripePromise ? (
+          <div className="py-8 text-center">
+            <p className="text-red-600 mb-2">Stripe is not configured</p>
+            <p className="text-sm text-gray-500">Please set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in your environment variables.</p>
+          </div>
+        ) : clientSecret && setupIntentId ? (
           <Elements
             stripe={stripePromise}
             options={{

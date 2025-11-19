@@ -1,7 +1,7 @@
 "use client";
 
 import apiClient from "@/lib/axios";
-import { ApiResponse } from "@/types";
+import { ApiResponse, MilestonePayment } from "@/types";
 
 export interface PaymentMethod {
   id: string;
@@ -65,6 +65,40 @@ export const paymentService = {
     const response = await apiClient.patch(
       `/payment/payment-methods/${paymentMethodId}/set-default`
     );
+    return response.data;
+  },
+
+  // Process milestone payment
+  processMilestonePayment: async (
+    milestoneId: string
+  ): Promise<ApiResponse<MilestonePayment>> => {
+    const response = await apiClient.post(
+      `/payment/milestones/${milestoneId}/process`
+    );
+    return response.data;
+  },
+
+  // Get milestone payments
+  getMilestonePayments: async (
+    milestoneId: string
+  ): Promise<ApiResponse<MilestonePayment[]>> => {
+    const response = await apiClient.get(
+      `/payment/milestones/${milestoneId}/payments`
+    );
+    return response.data;
+  },
+
+  // Get user payments
+  getUserPayments: async (): Promise<ApiResponse<MilestonePayment[]>> => {
+    const response = await apiClient.get("/payment/payments");
+    return response.data;
+  },
+
+  // Get payment invoice
+  getPaymentInvoice: async (
+    paymentId: string
+  ): Promise<ApiResponse<MilestonePayment>> => {
+    const response = await apiClient.get(`/payment/payments/${paymentId}/invoice`);
     return response.data;
   },
 };

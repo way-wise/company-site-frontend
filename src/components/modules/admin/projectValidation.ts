@@ -21,8 +21,9 @@ export type UpdateProjectFormData = z.infer<typeof updateProjectSchema>;
 export const createMilestoneSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
+  cost: z.number().positive("Cost must be a positive number"),
   status: z
-    .enum(["PENDING", "ONGOING", "COMPLETED", "REVIEW", "APPROVED", "REJECTED"])
+    .enum(["PENDING", "ONGOING", "COMPLETED", "CANCELLED"])
     .optional(),
   projectId: z.string().min(1, "Project is required"),
 });
@@ -30,8 +31,9 @@ export const createMilestoneSchema = z.object({
 export const updateMilestoneSchema = z.object({
   name: z.string().min(1, "Name is required").optional(),
   description: z.string().optional(),
+  cost: z.number().positive("Cost must be a positive number").optional(),
   status: z
-    .enum(["PENDING", "ONGOING", "COMPLETED", "REVIEW", "APPROVED", "REJECTED"])
+    .enum(["PENDING", "ONGOING", "COMPLETED", "CANCELLED"])
     .optional(),
 });
 

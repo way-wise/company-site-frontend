@@ -44,6 +44,7 @@ export const milestoneService = {
   createMilestone: async (milestoneData: {
     name: string;
     description?: string;
+    cost: number;
     status?: string;
     projectId: string;
   }): Promise<ApiResponse<Milestone>> => {

@@ -10,11 +10,17 @@ import {
 import { AddPaymentMethodForm } from "@/components/payment/AddPaymentMethodForm";
 import { PaymentMethodsList } from "@/components/payment/PaymentMethodsList";
 import { useAuth } from "@/context/UserContext";
-import { CreditCard, Settings } from "lucide-react";
+import { useUserPayments } from "@/hooks/usePaymentMutations";
+import { MilestonePayment } from "@/types";
+import { Button } from "@/components/ui/button";
+import { CreditCard, Settings, FileText, Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const SettingsPage = () => {
   const { user, hasRole } = useAuth();
+  const router = useRouter();
   const isClient = hasRole("CLIENT");
+  const { data: payments, isLoading: loadingPayments } = useUserPayments();
 
   return (
     <div className="container mx-auto py-8 space-y-6">
@@ -77,6 +83,94 @@ const SettingsPage = () => {
           </CardHeader>
           <CardContent>
             <PaymentMethodsList />
+          </CardContent>
+        </Card>
+      )}
+
+      {isClient && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Payment History
+            </CardTitle>
+            <CardDescription>
+              View all your milestone payment records
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingPayments ? (
+              <div className="text-center py-8">
+                <p className="text-gray-600">Loading payment history...</p>
+              </div>
+            ) : payments && payments.length > 0 ? (
+              <div className="space-y-4">
+                {payments.map((payment: MilestonePayment) => (
+                  <div
+                    key={payment.id}
+                    className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-semibold text-gray-900">
+                            {payment.milestone?.name || "Milestone Payment"}
+                          </h3>
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              payment.status === "succeeded"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-yellow-100 text-yellow-700"
+                            }`}
+                          >
+                            {payment.status}
+                          </span>
+                        </div>
+                        {payment.milestone?.project && (
+                          <p className="text-sm text-gray-600 mb-1">
+                            Project: {payment.milestone.project.name}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-4 text-sm text-gray-500 mt-2">
+                          <span>Invoice: {payment.invoiceNumber}</span>
+                          <span>
+                            {new Date(payment.paidAt).toLocaleDateString()}
+                          </span>
+                          {payment.paymentMethod && (
+                            <span>
+                              {payment.paymentMethod.cardBrand.toUpperCase()} ••••{" "}
+                              {payment.paymentMethod.cardLast4}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-bold text-gray-900">
+                          ${Number(payment.amount).toFixed(2)}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            router.push(
+                              `/dashboard/milestones/${payment.milestoneId}/invoice/${payment.id}`
+                            );
+                          }}
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Invoice
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600">No payment history found</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

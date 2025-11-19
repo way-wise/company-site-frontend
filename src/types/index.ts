@@ -276,13 +276,14 @@ export interface Milestone {
   id: string;
   name: string;
   description?: string;
+  cost: number;
+  paymentStatus: "UNPAID" | "PAID";
+  index: number;
   status:
     | "PENDING"
     | "ONGOING"
     | "COMPLETED"
-    | "REVIEW"
-    | "APPROVED"
-    | "REJECTED";
+    | "CANCELLED";
   projectId: string;
   createdAt: string;
   updatedAt: string;
@@ -294,6 +295,7 @@ export interface Milestone {
   employeeMilestones?: EmployeeMilestone[];
   serviceMilestones?: ServiceMilestone[];
   Task?: Task[];
+  payments?: MilestonePayment[];
   _count?: {
     employeeMilestones: number;
     serviceMilestones: number;
@@ -335,6 +337,7 @@ export interface ServiceMilestone {
 export interface MilestoneFormData {
   name: string;
   description?: string;
+  cost: number;
   status?:
     | "PENDING"
     | "ONGOING"
@@ -343,6 +346,53 @@ export interface MilestoneFormData {
     | "APPROVED"
     | "REJECTED";
   projectId: string;
+}
+
+export interface MilestonePayment {
+  id: string;
+  milestoneId: string;
+  userId: string;
+  amount: number;
+  stripePaymentIntentId: string;
+  stripeChargeId?: string;
+  paymentMethodId: string;
+  status: string;
+  invoiceNumber: string;
+  paidAt: string;
+  createdAt: string;
+  updatedAt: string;
+  milestone?: {
+    id: string;
+    name: string;
+    description?: string;
+    cost: number;
+    project?: {
+      id: string;
+      name: string;
+    };
+  };
+  paymentMethod?: {
+    id: string;
+    cardLast4: string;
+    cardBrand: string;
+    cardExpMonth?: number;
+    cardExpYear?: number;
+  };
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+export interface Invoice {
+  payment: MilestonePayment;
+  companyInfo?: {
+    name: string;
+    address?: string;
+    email?: string;
+    phone?: string;
+  };
 }
 
 export interface MilestoneStats {
