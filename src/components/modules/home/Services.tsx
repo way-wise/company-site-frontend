@@ -1,5 +1,6 @@
 import medicalBilling from "@/assets/images/services/billing-shape.png";
 import microsoftSupport from "@/assets/images/services/ms-support.png";
+import medicalBilling from "@/assets/images/services/billing-shape.png";
 import SectionTitle from "@/components/modules/home/SectionTitle";
 import { ServiceDisplay } from "@/types";
 import Image from "next/image";
