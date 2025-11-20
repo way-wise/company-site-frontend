@@ -69,3 +69,24 @@ export const useLogout = () => {
     },
   });
 };
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: (data: { currentPassword: string; newPassword: string }) =>
+      authService.changePassword(data),
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success("Password changed successfully!");
+      } else {
+        toast.error(data.message || "Failed to change password");
+      }
+    },
+    onError: (error: Error) => {
+      console.error("Change password error:", error);
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || error.message || "Failed to change password";
+      toast.error(errorMessage);
+    },
+  });
+};
