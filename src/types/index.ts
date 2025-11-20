@@ -796,3 +796,118 @@ export interface ProjectFileFormData {
   projectId: string;
   file: File;
 }
+
+// Earning Types
+export interface Earning {
+  id: string;
+  amount: number;
+  description?: string;
+  date: string;
+  projectId?: string;
+  category?: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  project?: {
+    id: string;
+    name: string;
+  };
+  creator?: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface EarningFormData {
+  amount: number;
+  description?: string;
+  date: string;
+  projectId?: string;
+  category?: string;
+}
+
+export interface EarningsQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  projectId?: string;
+  category?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface EarningStats {
+  totalEarnings: number;
+  totalCount: number;
+  earningsByProject: Array<{
+    projectId: string | null;
+    projectName: string;
+    totalAmount: number;
+    count: number;
+  }>;
+  earningsByCategory: Array<{
+    category: string;
+    totalAmount: number;
+    count: number;
+  }>;
+}
+
+export interface ProjectEarning {
+  projectId: string;
+  projectName: string;
+  totalAmount: number;
+  count: number;
+}
+
+// Expense Types
+export interface Expense {
+  id: string;
+  amount: number;
+  description?: string;
+  date: string;
+  category?: string;
+  receiptUrl?: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  creator?: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface ExpenseFormData {
+  amount: number;
+  description?: string;
+  date: string;
+  category?: string;
+  receiptUrl?: string;
+  receiptFile?: File;
+}
+
+export interface ExpensesQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  category?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface ExpenseStats {
+  totalExpenses: number;
+  totalCount: number;
+  expensesByCategory: Array<{
+    category: string;
+    totalAmount: number;
+    count: number;
+  }>;
+}
