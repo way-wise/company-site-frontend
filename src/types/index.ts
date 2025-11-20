@@ -244,6 +244,8 @@ export interface Project {
     };
   };
   milestones?: Milestone[];
+  notes?: ProjectNote[];
+  files?: ProjectFile[];
   _count?: {
     milestones: number;
   };
@@ -742,4 +744,55 @@ export interface PartnersQueryParams {
   limit: number;
   search?: string;
   isShow?: boolean;
+}
+
+// Project Note Types
+export interface ProjectNote {
+  id: string;
+  projectId: string;
+  content: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  creator?: {
+    id: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface ProjectNoteFormData {
+  projectId: string;
+  content: string;
+}
+
+// Project File Types
+export interface ProjectFile {
+  id: string;
+  projectId: string;
+  fileName: string;
+  fileUrl: string;
+  fileType: string;
+  fileSize: number;
+  uploadedBy: string;
+  createdAt: string;
+  updatedAt: string;
+  uploader?: {
+    id: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface ProjectFileFormData {
+  projectId: string;
+  file: File;
 }
