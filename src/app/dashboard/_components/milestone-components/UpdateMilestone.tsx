@@ -53,6 +53,7 @@ export default function UpdateMilestone({
     defaultValues: {
       name: "",
       description: "",
+      cost: 0,
       status: "PENDING",
     },
   });
@@ -62,6 +63,7 @@ export default function UpdateMilestone({
       form.reset({
         name: milestone.name,
         description: milestone.description || "",
+        cost: milestone.cost || 0,
         status: milestone.status,
       });
     }
@@ -124,6 +126,30 @@ export default function UpdateMilestone({
 
               <FormField
                 control={form.control}
+                name="cost"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cost ($)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.00"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name="status"
                 render={({ field }) => (
                   <FormItem>
@@ -138,9 +164,7 @@ export default function UpdateMilestone({
                         <SelectItem value="PENDING">Pending</SelectItem>
                         <SelectItem value="ONGOING">Ongoing</SelectItem>
                         <SelectItem value="COMPLETED">Completed</SelectItem>
-                        <SelectItem value="REVIEW">Review</SelectItem>
-                        <SelectItem value="APPROVED">Approved</SelectItem>
-                        <SelectItem value="REJECTED">Rejected</SelectItem>
+                        <SelectItem value="CANCELLED">Cancelled</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

@@ -6,6 +6,7 @@ import {
   PaymentMethod,
   SetupIntentResponse,
 } from "@/services/PaymentService";
+import { MilestonePayment } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -14,6 +15,9 @@ export const paymentQueryKeys = {
   all: ["payment"] as const,
   methods: () => [...paymentQueryKeys.all, "methods"] as const,
   setupIntent: () => [...paymentQueryKeys.all, "setup-intent"] as const,
+  milestonePayments: (milestoneId: string) =>
+    [...paymentQueryKeys.all, "milestone-payments", milestoneId] as const,
+  userPayments: () => [...paymentQueryKeys.all, "user-payments"] as const,
 };
 
 // Hook to fetch all payment methods
@@ -117,6 +121,67 @@ export const useSetDefaultPaymentMethod = () => {
         error.message || "Failed to update default payment method";
       toast.error(errorMessage);
     },
+  });
+};
+
+// Hook to process milestone payment
+export const useProcessMilestonePayment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (milestoneId: string): Promise<MilestonePayment> => {
+      const response = await paymentService.processMilestonePayment(milestoneId);
+      if (!response.data) {
+        throw new Error("Failed to process payment");
+      }
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success(`Payment processed successfully! Invoice: ${data.invoiceNumber}`);
+      queryClient.invalidateQueries({ queryKey: paymentQueryKeys.userPayments() });
+      queryClient.invalidateQueries({ queryKey: ["milestones"] });
+    },
+    onError: (error: Error) => {
+      const errorMessage = error.message || "Failed to process payment";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+// Hook to get milestone payments
+export const useMilestonePayments = (milestoneId: string) => {
+  return useQuery({
+    queryKey: paymentQueryKeys.milestonePayments(milestoneId),
+    queryFn: async () => {
+      const response = await paymentService.getMilestonePayments(milestoneId);
+      return response.data || [];
+    },
+    enabled: !!milestoneId,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+// Hook to get user payments
+export const useUserPayments = () => {
+  return useQuery({
+    queryKey: paymentQueryKeys.userPayments(),
+    queryFn: async () => {
+      const response = await paymentService.getUserPayments();
+      return response.data || [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+// Hook to get payment invoice
+export const usePaymentInvoice = (paymentId: string) => {
+  return useQuery({
+    queryKey: [...paymentQueryKeys.all, "invoice", paymentId],
+    queryFn: async () => {
+      const response = await paymentService.getPaymentInvoice(paymentId);
+      return response.data;
+    },
+    enabled: !!paymentId,
   });
 };
 

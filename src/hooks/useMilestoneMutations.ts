@@ -51,6 +51,7 @@ export const useCreateMilestone = () => {
     mutationFn: (milestoneData: {
       name: string;
       description?: string;
+      cost: number;
       status?: string;
       projectId: string;
     }) => milestoneService.createMilestone(milestoneData),

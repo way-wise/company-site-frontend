@@ -11,6 +11,7 @@ import {
   Settings,
   Shield,
   UsersRound,
+  Handshake,
 } from "lucide-react";
 
 export interface MenuItem {
@@ -67,6 +68,12 @@ export const menuConfig: MenuItem[] = [
     icon: CassetteTape,
     url: "/dashboard/services",
     permissions: ["read_service", "create_service"],
+  },
+  {
+    title: "Partners",
+    icon: Handshake,
+    url: "/dashboard/partners",
+    permissions: ["read_partner", "create_partner"],
   },
   {
     title: "Projects",

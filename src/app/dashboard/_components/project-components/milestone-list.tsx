@@ -38,6 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/context/UserContext";
 import {
   useCreateMilestone,
   useDeleteMilestone,
@@ -63,6 +64,7 @@ import {
   User,
   Users,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import AssignEmployeeModal from "../milestone-components/assign-employee-modal";
@@ -79,6 +81,15 @@ interface MilestoneListProps {
 }
 
 export default function MilestoneList({ projectId, name }: MilestoneListProps) {
+  const { hasAnyRole, hasPermission } = useAuth();
+  const router = useRouter();
+  const isClient = hasAnyRole(["CLIENT"]);
+
+  // Permission checks
+  const canUpdateMilestone = hasPermission("update_milestone");
+  const canDeleteMilestone = hasPermission("delete_milestone");
+  const canCreateTask = hasPermission("create_task");
+  const canViewMilestoneActions = canUpdateMilestone || canDeleteMilestone;
   const [addMilestoneOpen, setAddMilestoneOpen] = useState(false);
   const [expandedMilestones, setExpandedMilestones] = useState<Set<string>>(
     new Set()
@@ -119,6 +130,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
     defaultValues: {
       name: "",
       description: "",
+      cost: 0,
       status: "PENDING",
       projectId: projectId,
     },
@@ -316,9 +328,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                 <div className="bg-white rounded-lg p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="mb-1">
-                        Milestone {milestones.indexOf(milestone) + 1}
-                      </h3>
+                      <h3 className="mb-1">Milestone-{milestone.index}</h3>
                       <div className="flex items-center gap-3 mb-2">
                         <div
                           className={`p-2 rounded-lg ${
@@ -363,70 +373,122 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                       >
                         {formatStatusText(milestone.status)}
                       </Badge>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedMilestone(milestone);
-                          setViewMilestoneModalOpen(true);
-                        }}
-                        className="flex items-center gap-2"
+                      <Badge
+                        className={`font-medium px-3 py-2 text-xs ${
+                          milestone.paymentStatus === "PAID"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
                       >
-                        <Eye className="h-4 w-4" />
-                        View
-                      </Button>
-
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
+                        {milestone.paymentStatus}
+                      </Badge>
+                      {isClient && milestone.paymentStatus === "UNPAID" && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={() => {
+                            router.push(
+                              `/dashboard/milestones/${milestone.id}/payment`
+                            );
+                          }}
+                          className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          <Target className="h-4 w-4" />
+                          Pay
+                        </Button>
+                      )}
+                      {milestone.paymentStatus === "PAID" &&
+                        milestone.payments &&
+                        milestone.payments.length > 0 && (
                           <Button
                             variant="outline"
                             size="sm"
+                            onClick={() => {
+                              const payment = milestone.payments?.[0];
+                              if (payment) {
+                                router.push(
+                                  `/dashboard/milestones/${milestone.id}/invoice/${payment.id}`
+                                );
+                              }
+                            }}
                             className="flex items-center gap-2"
                           >
-                            <Settings className="h-4 w-4" />
-                            <span>Actions</span>
+                            <Eye className="h-4 w-4" />
+                            Print Invoice
                           </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedMilestone(milestone);
-                              setEditMilestoneModalOpen(true);
-                            }}
-                          >
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit Milestone
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedMilestone(milestone);
-                              setAssignEmployeeModalOpen(true);
-                            }}
-                          >
-                            <Users className="h-4 w-4 mr-2" />
-                            Assign Team
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedMilestone(milestone);
-                              setAssignServiceModalOpen(true);
-                            }}
-                          >
-                            <Settings className="h-4 w-4 mr-2" />
-                            Assign Services
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedMilestone(milestone);
-                              setDeleteMilestoneModalOpen(true);
-                            }}
-                            className="text-red-600 focus:text-red-600"
-                          >
-                            <Trash className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                        )}
+                      {canViewMilestoneActions && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedMilestone(milestone);
+                            setViewMilestoneModalOpen(true);
+                          }}
+                          className="flex items-center gap-2"
+                        >
+                          <Eye className="h-4 w-4" />
+                          View
+                        </Button>
+                      )}
+
+                      {canViewMilestoneActions && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex items-center gap-2"
+                            >
+                              <Settings className="h-4 w-4" />
+                              <span>Actions</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            {canUpdateMilestone && (
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setSelectedMilestone(milestone);
+                                  setEditMilestoneModalOpen(true);
+                                }}
+                              >
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit Milestone
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setSelectedMilestone(milestone);
+                                setAssignEmployeeModalOpen(true);
+                              }}
+                            >
+                              <Users className="h-4 w-4 mr-2" />
+                              Assign Team
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setSelectedMilestone(milestone);
+                                setAssignServiceModalOpen(true);
+                              }}
+                            >
+                              <Settings className="h-4 w-4 mr-2" />
+                              Assign Services
+                            </DropdownMenuItem>
+                            {canDeleteMilestone && (
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setSelectedMilestone(milestone);
+                                  setDeleteMilestoneModalOpen(true);
+                                }}
+                                className="text-red-600 focus:text-red-600"
+                              >
+                                <Trash className="h-4 w-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </div>
                   </div>
 
@@ -565,16 +627,18 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
 
                       {/* Toggle Tasks Button */}
                       <div className=" flex items-center gap-2 px-4  ">
-                        <Button
-                          size="sm"
-                          onClick={() =>
-                            handleOpenCreateTaskModal(milestone.id)
-                          }
-                          className="bg-blue-600 hover:bg-blue-700 text-white"
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Task
-                        </Button>
+                        {canCreateTask && (
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              handleOpenCreateTaskModal(milestone.id)
+                            }
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                          >
+                            <Plus className="h-4 w-4 mr-2" />
+                            Add Task
+                          </Button>
+                        )}
                         <Button
                           variant="outline"
                           size="sm"
@@ -809,16 +873,18 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                           <p className="text-gray-500 mb-4">
                             Start building your milestone by adding tasks
                           </p>
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              handleOpenCreateTaskModal(milestone.id)
-                            }
-                            className="bg-blue-600 hover:bg-blue-700 text-white"
-                          >
-                            <Plus className="h-4 w-4 mr-2" />
-                            Create First Task
-                          </Button>
+                          {canCreateTask && (
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                handleOpenCreateTaskModal(milestone.id)
+                              }
+                              className="bg-blue-600 hover:bg-blue-700 text-white"
+                            >
+                              <Plus className="h-4 w-4 mr-2" />
+                              Create First Task
+                            </Button>
+                          )}
                         </div>
                       )}
                     </div>
@@ -888,6 +954,29 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
 
                 <FormField
                   control={addMilestoneForm.control}
+                  name="cost"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cost ($)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          placeholder="0.00"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseFloat(e.target.value) || 0)
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={addMilestoneForm.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem>
@@ -921,9 +1010,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="PENDING">Pending</SelectItem>
-                          <SelectItem value="IN_PROGRESS">
-                            In Progress
-                          </SelectItem>
+                          <SelectItem value="ONGOING">Ongoing</SelectItem>
                           <SelectItem value="COMPLETED">Completed</SelectItem>
                           <SelectItem value="CANCELLED">Cancelled</SelectItem>
                         </SelectContent>

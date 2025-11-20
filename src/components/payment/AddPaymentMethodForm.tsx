@@ -10,22 +10,30 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  useCreateSetupIntent,
   useAttachPaymentMethod,
+  useCreateSetupIntent,
 } from "@/hooks/usePaymentMutations";
-import { useState } from "react";
 import {
-  PaymentElement,
-  useStripe,
-  useElements,
   Elements,
+  PaymentElement,
+  useElements,
+  useStripe,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { CreditCard, Plus } from "lucide-react";
+import { useState } from "react";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
-);
+const getStripeKey = () => {
+  const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+  if (!key) {
+    console.error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set");
+    return null;
+  }
+  return key;
+};
+
+const stripeKey = getStripeKey();
+const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 function PaymentFormContent({
   clientSecret,
@@ -57,29 +65,25 @@ function PaymentFormContent({
       const { error: submitError } = await elements.submit();
 
       if (submitError) {
-        setErrorMessage(submitError.message);
+        setErrorMessage(submitError.message ?? null);
         setIsProcessing(false);
         return;
       }
 
       // Then confirm the setup intent
-      const { error: confirmError, setupIntent } =
-        await stripe.confirmSetup({
-          elements,
-          clientSecret,
-          redirect: "if_required",
-        });
+      const { error: confirmError, setupIntent } = await stripe.confirmSetup({
+        elements,
+        clientSecret,
+        redirect: "if_required",
+      });
 
       if (confirmError) {
-        setErrorMessage(confirmError.message);
+        setErrorMessage(confirmError.message ?? null);
         setIsProcessing(false);
         return;
       }
 
-      if (
-        setupIntent?.status === "succeeded" &&
-        setupIntent.payment_method
-      ) {
+      if (setupIntent?.status === "succeeded" && setupIntent.payment_method) {
         // Attach the payment method
         await attachPaymentMethodMutation.mutateAsync({
           paymentMethodId: setupIntent.payment_method as string,
@@ -92,8 +96,7 @@ function PaymentFormContent({
         setIsProcessing(false);
       }
     } catch (err) {
-      const errorMsg =
-        err instanceof Error ? err.message : "An error occurred";
+      const errorMsg = err instanceof Error ? err.message : "An error occurred";
       setErrorMessage(errorMsg);
       setIsProcessing(false);
     }
@@ -179,7 +182,12 @@ export function AddPaymentMethodForm() {
             Add a new credit or debit card to your account
           </DialogDescription>
         </DialogHeader>
-        {clientSecret && setupIntentId ? (
+        {!stripePromise ? (
+          <div className="py-8 text-center">
+            <p className="text-red-600 mb-2">Stripe is not configured</p>
+            <p className="text-sm text-gray-500">Please set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in your environment variables.</p>
+          </div>
+        ) : clientSecret && setupIntentId ? (
           <Elements
             stripe={stripePromise}
             options={{
@@ -207,4 +215,3 @@ export function AddPaymentMethodForm() {
     </Dialog>
   );
 }
-
