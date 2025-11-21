@@ -915,3 +915,54 @@ export interface ExpenseStats {
     count: number;
   }>;
 }
+
+// Notification Types
+export type NotificationType =
+  | "PROJECT"
+  | "TASK"
+  | "LEAVE"
+  | "PAYMENT"
+  | "MILESTONE"
+  | "CHAT"
+  | "FILE"
+  | "COMMENT"
+  | "SYSTEM";
+
+export interface Notification {
+  id: string;
+  userProfileId: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  data?: Record<string, unknown> | null;
+  read: boolean;
+  readAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface NotificationsQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  type?: NotificationType;
+  read?: boolean;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface NotificationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface NotificationsResponse {
+  meta: NotificationMeta;
+  result: Notification[];
+}
+
+export interface UnreadCountResponse {
+  count: number;
+}

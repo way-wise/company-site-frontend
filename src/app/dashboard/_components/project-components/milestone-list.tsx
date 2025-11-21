@@ -148,8 +148,12 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       // Convert empty date strings to undefined
       const submitData = {
         ...data,
-        startDate: data.startDate && data.startDate.trim() !== "" ? data.startDate : undefined,
-        endDate: data.endDate && data.endDate.trim() !== "" ? data.endDate : undefined,
+        startDate:
+          data.startDate && data.startDate.trim() !== ""
+            ? data.startDate
+            : undefined,
+        endDate:
+          data.endDate && data.endDate.trim() !== "" ? data.endDate : undefined,
       };
       await createMilestoneMutation.mutateAsync(submitData);
       setAddMilestoneOpen(false);

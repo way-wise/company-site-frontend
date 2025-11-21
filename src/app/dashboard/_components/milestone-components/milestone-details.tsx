@@ -157,25 +157,26 @@ export default function MilestoneDetails({
                 </span>
               </div>
               <div className="text-sm font-bold text-gray-900">
-                {milestone.startDate && milestone.endDate ? (
-                  (() => {
-                    const start = new Date(milestone.startDate);
-                    const end = new Date(milestone.endDate);
-                    const days =
-                      Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-                    const startFormatted = start.toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    });
-                    const endFormatted = end.toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    });
-                    return `${days} days (${startFormatted} - ${endFormatted})`;
-                  })()
-                ) : (
-                  new Date(milestone.createdAt).toLocaleDateString()
-                )}
+                {milestone.startDate && milestone.endDate
+                  ? (() => {
+                      const start = new Date(milestone.startDate);
+                      const end = new Date(milestone.endDate);
+                      const days =
+                        Math.ceil(
+                          (end.getTime() - start.getTime()) /
+                            (1000 * 60 * 60 * 24)
+                        ) + 1;
+                      const startFormatted = start.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      });
+                      const endFormatted = end.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      });
+                      return `${days} days (${startFormatted} - ${endFormatted})`;
+                    })()
+                  : new Date(milestone.createdAt).toLocaleDateString()}
               </div>
             </div>
           </div>

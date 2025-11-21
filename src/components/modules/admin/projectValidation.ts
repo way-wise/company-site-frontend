@@ -23,9 +23,7 @@ export const createMilestoneSchema = z
     name: z.string().min(1, "Name is required"),
     description: z.string().optional(),
     cost: z.number().positive("Cost must be a positive number"),
-    status: z
-      .enum(["PENDING", "ONGOING", "COMPLETED", "CANCELLED"])
-      .optional(),
+    status: z.enum(["PENDING", "ONGOING", "COMPLETED", "CANCELLED"]).optional(),
     projectId: z.string().min(1, "Project is required"),
     startDate: z.string().optional(),
     endDate: z.string().optional(),
@@ -50,9 +48,7 @@ export const updateMilestoneSchema = z
     name: z.string().min(1, "Name is required").optional(),
     description: z.string().optional(),
     cost: z.number().positive("Cost must be a positive number").optional(),
-    status: z
-      .enum(["PENDING", "ONGOING", "COMPLETED", "CANCELLED"])
-      .optional(),
+    status: z.enum(["PENDING", "ONGOING", "COMPLETED", "CANCELLED"]).optional(),
     startDate: z.string().optional(),
     endDate: z.string().optional(),
   })

@@ -87,8 +87,14 @@ export default function UpdateMilestone({
       // Convert empty date strings to undefined
       const submitData = {
         ...values,
-        startDate: values.startDate && values.startDate.trim() !== "" ? values.startDate : undefined,
-        endDate: values.endDate && values.endDate.trim() !== "" ? values.endDate : undefined,
+        startDate:
+          values.startDate && values.startDate.trim() !== ""
+            ? values.startDate
+            : undefined,
+        endDate:
+          values.endDate && values.endDate.trim() !== ""
+            ? values.endDate
+            : undefined,
       };
       await updateMilestoneMutation.mutateAsync({
         milestoneId: milestone.id,
