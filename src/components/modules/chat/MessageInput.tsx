@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useSocket } from "@/context/SocketContext";
 import { useSendMessageWithAttachments } from "@/hooks/useChatMutations";
 import { Loader2, Paperclip, Send, X } from "lucide-react";
 import { useRef, useState } from "react";
@@ -34,7 +33,6 @@ const formatFileSize = (bytes: number) => {
 export default function MessageInput({ conversationId }: MessageInputProps) {
   const [message, setMessage] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const { socket, isConnected } = useSocket();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const sendMessageMutation = useSendMessageWithAttachments();
@@ -123,10 +121,6 @@ export default function MessageInput({ conversationId }: MessageInputProps) {
       return;
     }
 
-    if (!socket || !isConnected) {
-      toast.error("Not connected to chat server");
-      return;
-    }
 
     const trimmedMessage = message.trim();
 
@@ -150,14 +144,23 @@ export default function MessageInput({ conversationId }: MessageInputProps) {
       return;
     }
 
-    // Send message via socket
-    socket.emit("message:send", {
-      conversationId,
-      content: trimmedMessage,
-    });
-
-    // Clear input
-    resetComposer();
+    // Send message via REST API
+    sendMessageMutation.mutate(
+      {
+        conversationId,
+        content: trimmedMessage,
+        files: [],
+      },
+      {
+        onSuccess: () => {
+          resetComposer();
+        },
+        onError: (error) => {
+          toast.error("Failed to send message");
+          console.error("Error sending message:", error);
+        },
+      }
+    );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -185,7 +188,7 @@ export default function MessageInput({ conversationId }: MessageInputProps) {
             size="icon"
             className="h-10 w-10 shrink-0"
             onClick={handleAttachClick}
-            disabled={!isConnected || sendMessageMutation.isPending}
+            disabled={sendMessageMutation.isPending}
           >
             <Paperclip className="h-4 w-4" />
           </Button>
@@ -202,7 +205,6 @@ export default function MessageInput({ conversationId }: MessageInputProps) {
             type="button"
             onClick={handleSend}
             disabled={
-              !isConnected ||
               sendMessageMutation.isPending ||
               (selectedFiles.length === 0 && !message.trim())
             }
@@ -240,12 +242,6 @@ export default function MessageInput({ conversationId }: MessageInputProps) {
               </div>
             ))}
           </div>
-        )}
-
-        {!isConnected && (
-          <p className="text-xs text-destructive">
-            Not connected to chat server
-          </p>
         )}
 
         <p className="text-xs text-muted-foreground">

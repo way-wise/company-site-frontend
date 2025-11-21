@@ -1,9 +1,7 @@
 "use client";
 
-import Breadcrumb from "@/components/shared/Breadcrumb";
 import { NotificationItem } from "@/components/notifications/NotificationItem";
-import { useNotifications, useMarkAllAsRead } from "@/hooks/useNotificationMutations";
-import { NotificationType } from "@/types";
+import Breadcrumb from "@/components/shared/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -12,22 +10,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCheck, Bell } from "lucide-react";
-import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  useMarkAllAsRead,
+  useNotifications,
+} from "@/hooks/useNotificationMutations";
+import { NotificationType } from "@/types";
+import { Bell, CheckCheck } from "lucide-react";
+import { useState } from "react";
 
 export default function NotificationsPage() {
   const [page, setPage] = useState(1);
   const [typeFilter, setTypeFilter] = useState<NotificationType | "all">("all");
-  const [readFilter, setReadFilter] = useState<"all" | "read" | "unread">("all");
+  const [readFilter, setReadFilter] = useState<"all" | "read" | "unread">(
+    "all"
+  );
   const limit = 20;
 
   const { data, isLoading, refetch } = useNotifications({
     page,
     limit,
     type: typeFilter !== "all" ? typeFilter : undefined,
-    read: readFilter === "read" ? true : readFilter === "unread" ? false : undefined,
+    read:
+    
+      readFilter === "read"
+        ? true
+        : readFilter === "unread"
+        ? false
+        : undefined,
   });
 
   const markAllAsReadMutation = useMarkAllAsRead();
@@ -79,10 +90,13 @@ export default function NotificationsPage() {
       </div>
 
       <div className="flex gap-4">
-        <Select value={typeFilter} onValueChange={(value) => {
-          setTypeFilter(value as NotificationType | "all");
-          setPage(1);
-        }}>
+        <Select
+          value={typeFilter}
+          onValueChange={(value) => {
+            setTypeFilter(value as NotificationType | "all");
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
@@ -100,10 +114,13 @@ export default function NotificationsPage() {
           </SelectContent>
         </Select>
 
-        <Select value={readFilter} onValueChange={(value) => {
-          setReadFilter(value as "all" | "read" | "unread");
-          setPage(1);
-        }}>
+        <Select
+          value={readFilter}
+          onValueChange={(value) => {
+            setReadFilter(value as "all" | "read" | "unread");
+            setPage(1);
+          }}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
@@ -117,9 +134,7 @@ export default function NotificationsPage() {
 
       <Tabs defaultValue="all" className="w-full">
         <TabsList>
-          <TabsTrigger value="all">
-            All ({notifications.length})
-          </TabsTrigger>
+          <TabsTrigger value="all">All ({notifications.length})</TabsTrigger>
           <TabsTrigger value="unread">
             Unread ({unreadNotifications.length})
           </TabsTrigger>
@@ -220,4 +235,3 @@ export default function NotificationsPage() {
     </div>
   );
 }
-

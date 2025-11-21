@@ -1,9 +1,10 @@
 "use client";
 
 import { chatService } from "@/services/ChatService";
-import { ConversationsQueryParams, CreateConversationData } from "@/types";
+import { ApiResponse, ChatMessage, ConversationsQueryParams, CreateConversationData } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useAuth } from "@/context/UserContext";
 
 interface ApiError extends Error {
   response?: {
@@ -75,6 +76,7 @@ export const useConversationMedia = (conversationId: string) => {
 // Send message with attachments (uploads via REST)
 export const useSendMessageWithAttachments = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   return useMutation({
     mutationFn: ({
@@ -86,24 +88,130 @@ export const useSendMessageWithAttachments = () => {
       content?: string;
       files: File[];
     }) => chatService.sendMessage(conversationId, { content, files }),
+    onMutate: async (variables) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({
+        queryKey: chatQueryKeys.messages(variables.conversationId),
+      });
+
+      // Snapshot previous value
+      const previousMessages = queryClient.getQueryData<
+        ApiResponse<{
+          meta: { page: number; limit: number; total: number };
+          result: ChatMessage[];
+        }>
+      >(chatQueryKeys.messageList(variables.conversationId, 1));
+
+      // Create optimistic message
+      if (user?.userProfile) {
+        const optimisticMessage: ChatMessage = {
+          id: `temp-${Date.now()}`,
+          conversationId: variables.conversationId,
+          senderId: user.userProfile.id,
+          content: variables.content || "",
+          attachments: variables.files.length > 0 ? variables.files.map((file, index) => ({
+            id: `temp-attachment-${Date.now()}-${index}`,
+            key: `temp/${file.name}`,
+            url: URL.createObjectURL(file),
+            name: file.name,
+            mimeType: file.type,
+            size: file.size,
+            type: file.type.startsWith("image/") ? "image" : "document",
+            uploadedAt: new Date().toISOString(),
+          })) : null,
+          isEdited: false,
+          isDeleted: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          sender: {
+            id: user.userProfile.id,
+            user: {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+            },
+            profilePhoto: user.userProfile.profilePhoto,
+          },
+        };
+
+        // Optimistically update messages cache
+        if (previousMessages?.data) {
+          queryClient.setQueryData(
+            chatQueryKeys.messageList(variables.conversationId, 1),
+            {
+              ...previousMessages,
+              data: {
+                ...previousMessages.data,
+                result: [...previousMessages.data.result, optimisticMessage],
+                meta: {
+                  ...previousMessages.data.meta,
+                  total: previousMessages.data.meta.total + 1,
+                },
+              },
+            }
+          );
+        }
+      }
+
+      return { previousMessages };
+    },
     onSuccess: (response, variables) => {
-      if (response.success) {
+      if (response.success && response.data) {
+        // Replace optimistic message with real message
+        const currentMessages = queryClient.getQueryData<
+          ApiResponse<{
+            meta: { page: number; limit: number; total: number };
+            result: ChatMessage[];
+          }>
+        >(chatQueryKeys.messageList(variables.conversationId, 1));
+
+        if (currentMessages?.data) {
+          // Remove temporary message and add real one
+          const filteredMessages = currentMessages.data.result.filter(
+            (msg) => !msg.id.startsWith("temp-")
+          );
+          
+          queryClient.setQueryData(
+            chatQueryKeys.messageList(variables.conversationId, 1),
+            {
+              ...currentMessages,
+              data: {
+                ...currentMessages.data,
+                result: [...filteredMessages, response.data],
+              },
+            }
+          );
+        }
+
+        // Invalidate media if files were sent
+        if (variables.files.length > 0) {
+          queryClient.invalidateQueries({
+            queryKey: chatQueryKeys.media(variables.conversationId),
+          });
+        }
+
+        // Invalidate conversations to update last message
         queryClient.invalidateQueries({
-          queryKey: chatQueryKeys.messages(variables.conversationId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: chatQueryKeys.media(variables.conversationId),
+          queryKey: chatQueryKeys.conversations(),
         });
       } else {
-        toast.error(response.message || "Failed to send message with file");
+        toast.error(response.message || "Failed to send message");
       }
     },
-    onError: (error: Error) => {
+    onError: (error, variables, context) => {
+      // Rollback on error
+      if (context?.previousMessages) {
+        queryClient.setQueryData(
+          chatQueryKeys.messageList(variables.conversationId, 1),
+          context.previousMessages
+        );
+      }
+
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
         error.message ||
-        "Failed to send message with file";
+        "Failed to send message";
       toast.error(errorMessage);
     },
   });
@@ -268,6 +376,34 @@ export const useDeleteMessage = () => {
         error.message ||
         "Failed to delete message";
       toast.error(errorMessage);
+    },
+  });
+};
+
+// Mark conversation as read
+export const useMarkConversationAsRead = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (conversationId: string) =>
+      chatService.markConversationAsRead(conversationId),
+    onSuccess: (response, conversationId) => {
+      if (response.success) {
+        queryClient.invalidateQueries({
+          queryKey: chatQueryKeys.conversations(),
+        });
+        queryClient.invalidateQueries({
+          queryKey: chatQueryKeys.conversationDetail(conversationId),
+        });
+      }
+    },
+    onError: (error: Error) => {
+      const apiError = error as ApiError;
+      const errorMessage =
+        apiError.response?.data?.message ||
+        error.message ||
+        "Failed to mark conversation as read";
+      console.error(errorMessage);
     },
   });
 };

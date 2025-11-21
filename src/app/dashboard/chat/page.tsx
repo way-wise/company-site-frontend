@@ -2,7 +2,7 @@
 
 import ChatWindow from "@/components/modules/chat/ChatWindow";
 import ConversationList from "@/components/modules/chat/ConversationList";
-import { useSocket } from "@/context/SocketContext";
+import { useSSE } from "@/context/SSEContext";
 import { useAuth } from "@/context/UserContext";
 import {
   chatQueryKeys,
@@ -15,7 +15,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ChatPage() {
-  const { socket, isConnected, connect } = useSocket();
+  const { isConnected, connect, onEvent, offEvent } = useSSE();
   const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -47,16 +47,14 @@ export default function ChatPage() {
     }
   }, [conversationIdFromQuery, conversationData, conversationsData]);
 
-  // Connect socket when user is authenticated
   useEffect(() => {
     if (isAuthenticated && !isConnected) {
       connect();
     }
   }, [isAuthenticated, isConnected, connect]);
 
-  // Listen for conversation updates via socket
   useEffect(() => {
-    if (!socket || !isConnected) return;
+    if (!isConnected) return;
 
     const handleConversationUpdate = () => {
       queryClient.invalidateQueries({
@@ -64,27 +62,26 @@ export default function ChatPage() {
       });
     };
 
-    const handleConversationRemoved = (data: { conversationId: string }) => {
-      // Clear selection if removed from current conversation
-      if (selectedConversation?.id === data.conversationId) {
+    const handleConversationRemoved = (data: unknown) => {
+      const removedData = data as { conversationId: string };
+      if (selectedConversation?.id === removedData.conversationId) {
         setSelectedConversation(null);
       }
-      // Refresh conversation list
       queryClient.invalidateQueries({
         queryKey: chatQueryKeys.conversations(),
       });
     };
 
-    socket.on("conversation:new", handleConversationUpdate);
-    socket.on("conversation:updated", handleConversationUpdate);
-    socket.on("conversation:removed", handleConversationRemoved);
+    onEvent("conversation:new", handleConversationUpdate);
+    onEvent("conversation:updated", handleConversationUpdate);
+    onEvent("conversation:removed", handleConversationRemoved);
 
     return () => {
-      socket.off("conversation:new", handleConversationUpdate);
-      socket.off("conversation:updated", handleConversationUpdate);
-      socket.off("conversation:removed", handleConversationRemoved);
+      offEvent("conversation:new", handleConversationUpdate);
+      offEvent("conversation:updated", handleConversationUpdate);
+      offEvent("conversation:removed", handleConversationRemoved);
     };
-  }, [socket, isConnected, queryClient, selectedConversation]);
+  }, [isConnected, queryClient, selectedConversation, onEvent, offEvent]);
 
   return (
     <div className="flex h-[calc(100vh-7rem)] bg-background">
@@ -98,7 +95,6 @@ export default function ChatPage() {
         />
       </div>
 
-      {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {selectedConversation ? (
           <ChatWindow
@@ -132,7 +128,6 @@ export default function ChatPage() {
         )}
       </div>
 
-      {/* Connection Status Indicator */}
       {isAuthenticated && (
         <div className="fixed bottom-4 right-4 z-50">
           <div

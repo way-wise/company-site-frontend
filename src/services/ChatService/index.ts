@@ -151,4 +151,14 @@ export const chatService = {
     );
     return response.data;
   },
+
+  // Mark conversation as read
+  markConversationAsRead: async (
+    conversationId: string
+  ): Promise<ApiResponse<Conversation>> => {
+    const response = await apiClient.patch(
+      `/chat/conversations/${conversationId}/read`
+    );
+    return response.data;
+  },
 };

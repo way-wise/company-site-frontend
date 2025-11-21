@@ -1,18 +1,19 @@
 "use client";
 
-import { useSocket } from "@/context/SocketContext";
+import { useSSE } from "@/context/SSEContext";
 import {
   chatQueryKeys,
   useConversation,
+  useMarkConversationAsRead,
   useMessages,
 } from "@/hooks/useChatMutations";
-import { ChatMessage, Conversation } from "@/types";
+import { ApiResponse, ChatMessage, Conversation } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ConversationHeader from "./ConversationHeader";
+import ConversationMediaGallery from "./ConversationMediaGallery";
 import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
-import ConversationMediaGallery from "./ConversationMediaGallery";
 
 interface ChatWindowProps {
   conversationId: string;
@@ -23,12 +24,13 @@ export default function ChatWindow({
   conversationId,
   currentUserProfileId,
 }: ChatWindowProps) {
-  const { socket, isConnected } = useSocket();
+  const { isConnected, connect, onEvent, offEvent } = useSSE();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showMediaGallery, setShowMediaGallery] = useState(false);
+  const markAsReadMutation = useMarkConversationAsRead();
+  const markedAsReadRef = useRef<string | null>(null);
 
-  // Fetch conversation data (will auto-update when participants change)
   const { data: conversationData } = useConversation(conversationId);
   const conversation = conversationData?.data;
 
@@ -38,83 +40,262 @@ export default function ChatWindow({
     [messagesData?.data?.result]
   );
 
-  // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Socket event handlers
   useEffect(() => {
-    if (!socket || !isConnected) return;
+    if (
+      conversationId &&
+      conversation &&
+      markedAsReadRef.current !== conversationId &&
+      !markAsReadMutation.isPending
+    ) {
+      markedAsReadRef.current = conversationId;
+      markAsReadMutation.mutate(conversationId);
+    }
+  }, [conversationId, markAsReadMutation]);
 
-    // Join conversation room
-    socket.emit("conversation:join", { conversationId });
+  // Ensure SSE connection is active before registering event listeners
+  useEffect(() => {
+    if (!isConnected) {
+      connect();
+      return;
+    }
 
-    // Listen for new messages
-    const handleNewMessage = (message: ChatMessage) => {
+    const handleNewMessage = (data: unknown) => {
+      const message = data as ChatMessage;
       if (message.conversationId === conversationId) {
-        queryClient.invalidateQueries({
-          queryKey: chatQueryKeys.messages(conversationId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: chatQueryKeys.conversations(),
-        });
+        // Directly update messages cache
+        const messagesQueryKey = chatQueryKeys.messageList(conversationId, 1);
+        const currentMessages = queryClient.getQueryData<
+          ApiResponse<{
+            meta: { page: number; limit: number; total: number };
+            result: ChatMessage[];
+          }>
+        >(messagesQueryKey);
+
+        if (currentMessages?.data) {
+          // Check if message already exists by real ID
+          const messageExists = currentMessages.data.result.some(
+            (msg) => msg.id === message.id && !msg.id.startsWith("temp-")
+          );
+
+          if (!messageExists) {
+            // Check if there's a temp message from optimistic update that should be replaced
+            const hasTempMessage = currentMessages.data.result.some((msg) =>
+              msg.id.startsWith("temp-")
+            );
+
+            if (hasTempMessage) {
+              // Replace temp message with real message
+              const filteredMessages = currentMessages.data.result.filter(
+                (msg) => !msg.id.startsWith("temp-")
+              );
+
+              queryClient.setQueryData(messagesQueryKey, {
+                ...currentMessages,
+                data: {
+                  ...currentMessages.data,
+                  result: [...filteredMessages, message],
+                  meta: {
+                    ...currentMessages.data.meta,
+                    total: filteredMessages.length + 1,
+                  },
+                },
+              });
+            } else {
+              // No temp message, just add the new message
+              queryClient.setQueryData(messagesQueryKey, {
+                ...currentMessages,
+                data: {
+                  ...currentMessages.data,
+                  result: [...currentMessages.data.result, message],
+                  meta: {
+                    ...currentMessages.data.meta,
+                    total: currentMessages.data.meta.total + 1,
+                  },
+                },
+              });
+            }
+          }
+        } else {
+          // If cache doesn't exist, invalidate to trigger fetch
+          queryClient.invalidateQueries({
+            queryKey: chatQueryKeys.messages(conversationId),
+          });
+        }
+
+        // Update conversations list to reflect new last message
+        queryClient.setQueryData(
+          chatQueryKeys.conversations(),
+          (
+            old:
+              | ApiResponse<{
+                  meta: { page: number; limit: number; total: number };
+                  result: Conversation[];
+                }>
+              | undefined
+          ) => {
+            if (!old?.data) {
+              return old;
+            }
+            return {
+              ...old,
+              data: {
+                ...old.data,
+                result: old.data.result.map((conv) =>
+                  conv.id === conversationId
+                    ? {
+                        ...conv,
+                        lastMessage: message,
+                        updatedAt: message.createdAt,
+                      }
+                    : conv
+                ),
+              },
+            };
+          }
+        );
       }
     };
 
-    const handleMessageUpdated = (message: ChatMessage) => {
+    const handleMessageUpdated = (data: unknown) => {
+      const message = data as ChatMessage;
       if (message.conversationId === conversationId) {
-        queryClient.invalidateQueries({
-          queryKey: chatQueryKeys.messages(conversationId),
-        });
+        // Directly update the message in cache
+        const messagesQueryKey = chatQueryKeys.messageList(conversationId, 1);
+        const currentMessages = queryClient.getQueryData<
+          ApiResponse<{
+            meta: { page: number; limit: number; total: number };
+            result: ChatMessage[];
+          }>
+        >(messagesQueryKey);
+
+        if (currentMessages?.data) {
+          queryClient.setQueryData(messagesQueryKey, {
+            ...currentMessages,
+            data: {
+              ...currentMessages.data,
+              result: currentMessages.data.result.map((msg) =>
+                msg.id === message.id ? message : msg
+              ),
+            },
+          });
+        } else {
+          queryClient.invalidateQueries({
+            queryKey: chatQueryKeys.messages(conversationId),
+          });
+        }
       }
     };
 
-    // Listen for message deletion
-    const handleMessageDeleted = (data: {
-      messageId: string;
-      conversationId: string;
-    }) => {
-      if (data.conversationId === conversationId) {
-        queryClient.invalidateQueries({
-          queryKey: chatQueryKeys.messages(conversationId),
-        });
+    const handleMessageDeleted = (data: unknown) => {
+      const deletedData = data as { messageId: string; conversationId: string };
+      if (deletedData.conversationId === conversationId) {
+        // Directly remove the message from cache
+        const messagesQueryKey = chatQueryKeys.messageList(conversationId, 1);
+        const currentMessages = queryClient.getQueryData<
+          ApiResponse<{
+            meta: { page: number; limit: number; total: number };
+            result: ChatMessage[];
+          }>
+        >(messagesQueryKey);
+
+        if (currentMessages?.data) {
+          queryClient.setQueryData(messagesQueryKey, {
+            ...currentMessages,
+            data: {
+              ...currentMessages.data,
+              result: currentMessages.data.result.filter(
+                (msg) => msg.id !== deletedData.messageId
+              ),
+              meta: {
+                ...currentMessages.data.meta,
+                total: Math.max(0, currentMessages.data.meta.total - 1),
+              },
+            },
+          });
+        } else {
+          queryClient.invalidateQueries({
+            queryKey: chatQueryKeys.messages(conversationId),
+          });
+        }
       }
     };
 
-    // Listen for conversation updates (participant changes, etc.)
-    const handleConversationUpdated = (data: Conversation) => {
-      if (data.id === conversationId) {
-        queryClient.invalidateQueries({
-          queryKey: chatQueryKeys.conversationDetail(conversationId),
-        });
+    const handleConversationUpdated = (data: unknown) => {
+      const updateData = data as {
+        conversationId: string;
+        lastMessage?: ChatMessage;
+        updatedAt: string;
+      };
+      if (updateData.conversationId === conversationId) {
+        // Directly update conversation detail cache
+        queryClient.setQueryData(
+          chatQueryKeys.conversationDetail(conversationId),
+          (old: ApiResponse<Conversation> | undefined) => {
+            if (!old?.data) {
+              return old;
+            }
+            return {
+              ...old,
+              data: {
+                ...old.data,
+                lastMessage: updateData.lastMessage || old.data.lastMessage,
+                updatedAt: updateData.updatedAt,
+              },
+            };
+          }
+        );
+
+        // Also update in conversations list
+        queryClient.setQueryData(
+          chatQueryKeys.conversations(),
+          (
+            old:
+              | ApiResponse<{
+                  meta: { page: number; limit: number; total: number };
+                  result: Conversation[];
+                }>
+              | undefined
+          ) => {
+            if (!old?.data) {
+              return old;
+            }
+            return {
+              ...old,
+              data: {
+                ...old.data,
+                result: old.data.result.map((conv) =>
+                  conv.id === conversationId
+                    ? {
+                        ...conv,
+                        lastMessage: updateData.lastMessage || conv.lastMessage,
+                        updatedAt: updateData.updatedAt,
+                      }
+                    : conv
+                ),
+              },
+            };
+          }
+        );
       }
     };
 
-    socket.on("message:new", handleNewMessage);
-    socket.on("message:updated", handleMessageUpdated);
-    socket.on("message:deleted", handleMessageDeleted);
-    socket.on("conversation:updated", handleConversationUpdated);
+    onEvent("message:new", handleNewMessage);
+    onEvent("message:updated", handleMessageUpdated);
+    onEvent("message:deleted", handleMessageDeleted);
+    onEvent("conversation:updated", handleConversationUpdated);
 
     return () => {
-      socket.off("message:new", handleNewMessage);
-      socket.off("message:updated", handleMessageUpdated);
-      socket.off("message:deleted", handleMessageDeleted);
-      socket.off("conversation:updated", handleConversationUpdated);
-
-      // Leave conversation room
-      socket.emit("conversation:leave", { conversationId });
+      offEvent("message:new", handleNewMessage);
+      offEvent("message:updated", handleMessageUpdated);
+      offEvent("message:deleted", handleMessageDeleted);
+      offEvent("conversation:updated", handleConversationUpdated);
     };
-  }, [socket, isConnected, conversationId, queryClient]);
+  }, [isConnected, connect, conversationId, queryClient, onEvent, offEvent]);
 
-  // Mark messages as read when viewing conversation
-  useEffect(() => {
-    if (socket && isConnected && messages.length > 0) {
-      socket.emit("message:read", { conversationId });
-    }
-  }, [socket, isConnected, conversationId, messages]);
-
-  // Show loading state if conversation is not loaded yet
   if (!conversation) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground">
@@ -126,38 +307,35 @@ export default function ChatWindow({
   return (
     <>
       <div className="flex flex-col h-full">
-      {/* Header */}
-      <ConversationHeader
-        conversation={conversation}
-        onOpenMedia={() => setShowMediaGallery(true)}
-      />
+        <ConversationHeader
+          conversation={conversation}
+          onOpenMedia={() => setShowMediaGallery(true)}
+        />
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-full text-muted-foreground">
-            Loading messages...
-          </div>
-        ) : messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-muted-foreground">
-            No messages yet. Start the conversation!
-          </div>
-        ) : (
-          messages.map((message) => (
-            <MessageBubble
-              key={message.id}
-              message={message}
-              isOwnMessage={message.senderId === currentUserProfileId}
-              currentUserProfileId={currentUserProfileId}
-            />
-          ))
-        )}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full text-muted-foreground">
+              Loading messages...
+            </div>
+          ) : messages.length === 0 ? (
+            <div className="flex items-center justify-center h-full text-muted-foreground">
+              No messages yet. Start the conversation!
+            </div>
+          ) : (
+            messages.map((message) => (
+              <MessageBubble
+                key={message.id}
+                message={message}
+                isOwnMessage={message.senderId === currentUserProfileId}
+                currentUserProfileId={currentUserProfileId}
+              />
+            ))
+          )}
 
-        <div ref={messagesEndRef} />
-      </div>
+          <div ref={messagesEndRef} />
+        </div>
 
-      {/* Message Input */}
-      <MessageInput conversationId={conversationId} />
+        <MessageInput conversationId={conversationId} />
       </div>
 
       <ConversationMediaGallery

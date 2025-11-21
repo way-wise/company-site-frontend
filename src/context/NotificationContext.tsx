@@ -1,7 +1,7 @@
 "use client";
 
 import { useUnreadCount } from "@/hooks/useNotificationMutations";
-import { useSocket } from "@/context/SocketContext";
+import { useSSE } from "@/context/SSEContext";
 import { useAuth } from "@/context/UserContext";
 import {
   createContext,
@@ -12,6 +12,7 @@ import {
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { notificationQueryKeys } from "@/hooks/useNotificationMutations";
+import { ApiResponse, Notification, NotificationsResponse, UnreadCountResponse } from "@/types";
 
 interface NotificationContextType {
   unreadCount: number | undefined;
@@ -30,8 +31,8 @@ interface NotificationProviderProps {
 export const NotificationProvider = ({
   children,
 }: NotificationProviderProps) => {
-  const { socket, isConnected, connect } = useSocket();
-  const { user } = useAuth();
+  const { isConnected, connect, disconnect, onEvent, offEvent } = useSSE();
+  const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const { data: unreadCountData, isLoading } = useUnreadCount();
   const unreadCount = unreadCountData?.data?.count;
@@ -42,67 +43,110 @@ export const NotificationProvider = ({
     });
   }, [queryClient]);
 
-  // Connect socket when user is authenticated
   useEffect(() => {
-    if (user && !isConnected) {
-      console.log("🔌 Connecting socket for notifications...");
+    if (user && isAuthenticated && !isConnected) {
       connect();
+    } else if (!user && isConnected) {
+      disconnect();
     }
-  }, [user, isConnected, connect]);
-
-  // Log socket connection status changes
-  useEffect(() => {
-    if (socket) {
-      if (isConnected) {
-        console.log("✅ Socket connected - notification listener ready");
-      } else {
-        console.log("⚠️ Socket disconnected - notifications will not be received in real-time");
-      }
-    }
-  }, [socket, isConnected]);
+  }, [user, isAuthenticated, isConnected, connect, disconnect]);
 
   useEffect(() => {
-    // Verify socket is connected before setting up listener
-    if (!socket || !isConnected) {
-      if (socket && !isConnected) {
-        console.log("⏳ Waiting for socket connection before setting up notification listener...");
-      }
+    if (!isConnected) {
       return;
     }
 
-    // Listen for new notifications
-    const handleNewNotification = (notification: unknown) => {
+    const handleNewNotification = (data: unknown) => {
       try {
-        console.log("🔔 New notification received:", notification);
+        const notification = data as Notification;
+
+        // Update unread count immediately
+        queryClient.setQueryData(
+          notificationQueryKeys.unreadCount(),
+          (old: ApiResponse<UnreadCountResponse> | undefined) => {
+            if (!old?.data) {
+              // If cache doesn't exist, create it
+              return {
+                success: true,
+                message: "",
+                data: { count: 1 },
+              };
+            }
+            return {
+              ...old,
+              data: {
+                count: old.data.count + 1,
+              },
+            };
+          }
+        );
+
+        // Update all notification lists by prepending the new notification
+        // This will update all queries that match the pattern ["notifications", "list", ...]
+        queryClient.setQueriesData<ApiResponse<NotificationsResponse>>(
+          { queryKey: notificationQueryKeys.lists() },
+          (old) => {
+            if (!old?.data) {
+              // If cache doesn't exist for this query variant, return old unchanged
+              // We'll invalidate below to trigger fetch for missing caches
+              return old;
+            }
+
+            // Check if notification already exists (avoid duplicates)
+            const notificationExists = old.data.result.some(
+              (n) => n.id === notification.id
+            );
+
+            if (notificationExists) {
+              return old;
+            }
+
+            // Prepend new notification and update meta
+            const newTotal = old.data.meta.total + 1;
+            return {
+              ...old,
+              data: {
+                ...old.data,
+                result: [notification, ...old.data.result],
+                meta: {
+                  ...old.data.meta,
+                  total: newTotal,
+                  totalPages: Math.ceil(newTotal / (old.data.meta.limit || 1)),
+                },
+              },
+            };
+          }
+        );
+
+        // Also ensure the default NotificationPanel query (page 1, limit 10) gets updated
+        // If it doesn't exist in cache, invalidate to trigger fetch
+        const defaultPanelQuery = notificationQueryKeys.list({ page: 1, limit: 10 });
+        const panelCache = queryClient.getQueryData<ApiResponse<NotificationsResponse>>(
+          defaultPanelQuery
+        );
         
-        // Invalidate queries to refresh notification list and unread count
+        if (!panelCache?.data) {
+          // If the panel's cache doesn't exist, invalidate to trigger fetch
+          queryClient.invalidateQueries({
+            queryKey: notificationQueryKeys.lists(),
+            exact: false,
+          });
+        }
+      } catch (error) {
+        console.error("Error handling notification event:", error);
+        // Fallback to invalidation on error
         queryClient.invalidateQueries({
           queryKey: notificationQueryKeys.all,
         });
-        
-        console.log("✅ Notification queries invalidated - UI will update");
-      } catch (error) {
-        console.error("❌ Error handling notification event:", error);
       }
     };
 
-    // Set up error handler for socket events
-    const handleError = (error: unknown) => {
-      console.error("❌ Socket error in notification listener:", error);
-    };
-
-    // Register event listeners
-    socket.on("notification:new", handleNewNotification);
-    socket.on("error", handleError);
-
-    console.log("👂 Notification listener registered on socket");
+    onEvent("notification:new", handleNewNotification);
 
     return () => {
-      socket.off("notification:new", handleNewNotification);
-      socket.off("error", handleError);
-      console.log("🔇 Notification listener removed");
+      offEvent("notification:new", handleNewNotification);
     };
-  }, [socket, isConnected, queryClient]);
+  }, [isConnected, onEvent, offEvent, queryClient]);
 
   const value: NotificationContextType = {
     unreadCount,

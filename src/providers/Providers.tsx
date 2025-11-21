@@ -1,6 +1,6 @@
 "use client";
 
-import { SocketProvider } from "@/context/SocketContext";
+import { SSEProvider } from "@/context/SSEContext";
 import { AuthProvider } from "@/context/UserContext";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { ProgressProvider } from "@/providers/progress-provider";
@@ -20,9 +20,9 @@ export default function Providers({ children }: ProvidersProps) {
       <QueryClientProvider client={queryClient}>
         <StripeProvider>
           <AuthProvider>
-            <SocketProvider>
+            <SSEProvider>
               <NotificationProvider>{children}</NotificationProvider>
-            </SocketProvider>
+            </SSEProvider>
           </AuthProvider>
         </StripeProvider>
       </QueryClientProvider>
