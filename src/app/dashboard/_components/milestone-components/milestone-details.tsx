@@ -151,11 +151,31 @@ export default function MilestoneDetails({
               <div className="flex items-center gap-2 mb-1">
                 <Calendar className="h-4 w-4 text-gray-600" />
                 <span className="text-sm font-medium text-gray-700">
-                  Created
+                  {milestone.startDate && milestone.endDate
+                    ? "Duration"
+                    : "Created"}
                 </span>
               </div>
               <div className="text-sm font-bold text-gray-900">
-                {new Date(milestone.createdAt).toLocaleDateString()}
+                {milestone.startDate && milestone.endDate ? (
+                  (() => {
+                    const start = new Date(milestone.startDate);
+                    const end = new Date(milestone.endDate);
+                    const days =
+                      Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+                    const startFormatted = start.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    });
+                    const endFormatted = end.toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    });
+                    return `${days} days (${startFormatted} - ${endFormatted})`;
+                  })()
+                ) : (
+                  new Date(milestone.createdAt).toLocaleDateString()
+                )}
               </div>
             </div>
           </div>

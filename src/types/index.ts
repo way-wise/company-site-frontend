@@ -280,6 +280,8 @@ export interface Milestone {
   description?: string;
   cost: number;
   paymentStatus: "UNPAID" | "PAID";
+  startDate?: string;
+  endDate?: string;
   index: number;
   status:
     | "PENDING"
@@ -348,6 +350,8 @@ export interface MilestoneFormData {
     | "APPROVED"
     | "REJECTED";
   projectId: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface MilestonePayment {

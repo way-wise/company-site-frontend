@@ -133,6 +133,8 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       cost: 0,
       status: "PENDING",
       projectId: projectId,
+      startDate: undefined,
+      endDate: undefined,
     },
   });
 
@@ -143,7 +145,13 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
 
   const handleCreateMilestone = async (data: CreateMilestoneFormData) => {
     try {
-      await createMilestoneMutation.mutateAsync(data);
+      // Convert empty date strings to undefined
+      const submitData = {
+        ...data,
+        startDate: data.startDate && data.startDate.trim() !== "" ? data.startDate : undefined,
+        endDate: data.endDate && data.endDate.trim() !== "" ? data.endDate : undefined,
+      };
+      await createMilestoneMutation.mutateAsync(submitData);
       setAddMilestoneOpen(false);
       addMilestoneForm.reset();
     } catch (error) {
@@ -270,6 +278,35 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       blocked: tasks.filter((task) => task.status === "BLOCKED").length,
       review: tasks.filter((task) => task.status === "REVIEW").length,
       todo: tasks.filter((task) => task.status === "TODO").length,
+    };
+  };
+
+  const getMilestoneDateRange = (milestone: Milestone) => {
+    if (!milestone.startDate || !milestone.endDate) {
+      return null;
+    }
+
+    const start = new Date(milestone.startDate);
+    const end = new Date(milestone.endDate);
+
+    // Calculate total days (inclusive)
+    const timeDiff = end.getTime() - start.getTime();
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+
+    // Format dates as "MMM D"
+    const startFormatted = start.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+    const endFormatted = end.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+
+    return {
+      totalDays: daysDiff,
+      formattedRange: `${startFormatted} - ${endFormatted}`,
+      displayText: `${daysDiff} days (${startFormatted} - ${endFormatted})`,
     };
   };
 
@@ -540,15 +577,24 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                       <Settings className="h-4 w-4 text-purple-500" />
                       <span>{stats.totalServices} services</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4 text-orange-500" />
-                      <span>
-                        {new Date(milestone.createdAt).toLocaleDateString(
-                          "en-US",
-                          { month: "short", day: "numeric" }
-                        )}
-                      </span>
-                    </div>
+                    {getMilestoneDateRange(milestone) ? (
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4 text-orange-500" />
+                        <span>
+                          {getMilestoneDateRange(milestone)?.displayText}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4 text-orange-500" />
+                        <span>
+                          {new Date(milestone.createdAt).toLocaleDateString(
+                            "en-US",
+                            { month: "short", day: "numeric" }
+                          )}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Team Members & Services */}
@@ -992,6 +1038,44 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                     </FormItem>
                   )}
                 />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={addMilestoneForm.control}
+                    name="startDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Start Date</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="date"
+                            {...field}
+                            value={field.value || ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={addMilestoneForm.control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>End Date</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="date"
+                            {...field}
+                            value={field.value || ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 <FormField
                   control={addMilestoneForm.control}
