@@ -12,7 +12,13 @@ import {
   useProjectEarnings,
 } from "@/hooks/useEarningMutations";
 import { useExpenseStats } from "@/hooks/useExpenseMutations";
-import { ArrowDown, ArrowUp, DollarSign, TrendingDown, TrendingUp } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  DollarSign,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 
 interface EarningsStatsProps {
   startDate?: string;
@@ -20,58 +26,77 @@ interface EarningsStatsProps {
 }
 
 export function EarningsStats({ startDate, endDate }: EarningsStatsProps) {
-  const { data: earningStatsData, isLoading: earningsLoading } = useEarningStats(
-    startDate,
-    endDate
-  );
+  const { data: earningStatsData, isLoading: earningsLoading } =
+    useEarningStats(startDate, endDate);
   const { data: expenseStatsData, isLoading: expensesLoading } =
     useExpenseStats(startDate, endDate);
   const { data: projectEarningsData, isLoading: projectEarningsLoading } =
     useProjectEarnings(startDate, endDate);
 
-  const isLoading = earningsLoading || expensesLoading || projectEarningsLoading;
+  const isLoading =
+    earningsLoading || expensesLoading || projectEarningsLoading;
 
   // Access stats data - response structure: { success: true, data: { ... } }
   const earningStatsResponse = earningStatsData?.data;
   let manualEarnings = 0;
-  
-  if (earningStatsResponse && typeof earningStatsResponse === 'object') {
-    if ('data' in earningStatsResponse && earningStatsResponse.data && typeof earningStatsResponse.data === 'object') {
-      manualEarnings = (earningStatsResponse.data as { totalEarnings?: number })?.totalEarnings || 0;
-    } else if ('totalEarnings' in earningStatsResponse) {
-      manualEarnings = (earningStatsResponse as { totalEarnings: number }).totalEarnings || 0;
+
+  if (earningStatsResponse && typeof earningStatsResponse === "object") {
+    if (
+      "data" in earningStatsResponse &&
+      earningStatsResponse.data &&
+      typeof earningStatsResponse.data === "object"
+    ) {
+      manualEarnings =
+        (earningStatsResponse.data as { totalEarnings?: number })
+          ?.totalEarnings || 0;
+    } else if ("totalEarnings" in earningStatsResponse) {
+      manualEarnings =
+        (earningStatsResponse as { totalEarnings: number }).totalEarnings || 0;
     }
   }
-  
+
   const projectEarningsResponse = projectEarningsData?.data;
   let projectEarningsList: Array<{ totalAmount: number }> = [];
-  
-  if (projectEarningsResponse && typeof projectEarningsResponse === 'object') {
-    if ('data' in projectEarningsResponse && Array.isArray(projectEarningsResponse.data)) {
+
+  if (projectEarningsResponse && typeof projectEarningsResponse === "object") {
+    if (
+      "data" in projectEarningsResponse &&
+      Array.isArray(projectEarningsResponse.data)
+    ) {
       projectEarningsList = projectEarningsResponse.data;
     } else if (Array.isArray(projectEarningsResponse)) {
       projectEarningsList = projectEarningsResponse;
     }
   }
-  
+
   const projectEarnings = projectEarningsList.reduce(
     (sum, item) => sum + item.totalAmount,
     0
   );
-  
+
   const totalEarnings = manualEarnings + projectEarnings;
-  
+
   const expenseStatsResponse = expenseStatsData?.data;
   let totalExpenses = 0;
   let totalCount = 0;
-  
-  if (expenseStatsResponse && typeof expenseStatsResponse === 'object') {
-    if ('data' in expenseStatsResponse && expenseStatsResponse.data && typeof expenseStatsResponse.data === 'object') {
-      totalExpenses = (expenseStatsResponse.data as { totalExpenses?: number })?.totalExpenses || 0;
-      totalCount = (expenseStatsResponse.data as { totalCount?: number })?.totalCount || 0;
+
+  if (expenseStatsResponse && typeof expenseStatsResponse === "object") {
+    if (
+      "data" in expenseStatsResponse &&
+      expenseStatsResponse.data &&
+      typeof expenseStatsResponse.data === "object"
+    ) {
+      totalExpenses =
+        (expenseStatsResponse.data as { totalExpenses?: number })
+          ?.totalExpenses || 0;
+      totalCount =
+        (expenseStatsResponse.data as { totalCount?: number })?.totalCount || 0;
     } else {
-      totalExpenses = (expenseStatsResponse as { totalExpenses?: number })?.totalExpenses || 0;
-      totalCount = (expenseStatsResponse as { totalCount?: number })?.totalCount || 0;
+      totalExpenses =
+        (expenseStatsResponse as { totalExpenses?: number })?.totalExpenses ||
+        0;
+      totalCount =
+        (expenseStatsResponse as { totalCount?: number })?.totalCount || 0;
     }
   }
   const netProfit = totalEarnings - totalExpenses;
@@ -102,17 +127,20 @@ export function EarningsStats({ startDate, endDate }: EarningsStatsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-green-600">
-            ${totalEarnings.toLocaleString("en-US", {
+            $
+            {totalEarnings.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
           </div>
           <CardDescription className="text-xs mt-1">
-            Manual: ${manualEarnings.toLocaleString("en-US", {
+            Manual: $
+            {manualEarnings.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}{" "}
-            | Projects: ${projectEarnings.toLocaleString("en-US", {
+            | Projects: $
+            {projectEarnings.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -127,7 +155,8 @@ export function EarningsStats({ startDate, endDate }: EarningsStatsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-red-600">
-            ${totalExpenses.toLocaleString("en-US", {
+            $
+            {totalExpenses.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -153,7 +182,8 @@ export function EarningsStats({ startDate, endDate }: EarningsStatsProps) {
               netProfit >= 0 ? "text-green-600" : "text-red-600"
             }`}
           >
-            ${netProfit.toLocaleString("en-US", {
+            $
+            {netProfit.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -189,4 +219,3 @@ export function EarningsStats({ startDate, endDate }: EarningsStatsProps) {
     </div>
   );
 }
-
