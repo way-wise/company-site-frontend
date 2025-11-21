@@ -55,16 +55,27 @@ export default function UpdateMilestone({
       description: "",
       cost: 0,
       status: "PENDING",
+      startDate: undefined,
+      endDate: undefined,
     },
   });
 
   useEffect(() => {
     if (milestone && isOpen) {
+      // Format dates for input fields (YYYY-MM-DD format)
+      const formatDateForInput = (dateString?: string) => {
+        if (!dateString) return undefined;
+        const date = new Date(dateString);
+        return date.toISOString().split("T")[0];
+      };
+
       form.reset({
         name: milestone.name,
         description: milestone.description || "",
         cost: milestone.cost || 0,
         status: milestone.status,
+        startDate: formatDateForInput(milestone.startDate) || undefined,
+        endDate: formatDateForInput(milestone.endDate) || undefined,
       });
     }
   }, [milestone, isOpen, form]);
@@ -73,9 +84,21 @@ export default function UpdateMilestone({
     if (!milestone) return;
 
     try {
+      // Convert empty date strings to undefined
+      const submitData = {
+        ...values,
+        startDate:
+          values.startDate && values.startDate.trim() !== ""
+            ? values.startDate
+            : undefined,
+        endDate:
+          values.endDate && values.endDate.trim() !== ""
+            ? values.endDate
+            : undefined,
+      };
       await updateMilestoneMutation.mutateAsync({
         milestoneId: milestone.id,
-        milestoneData: values,
+        milestoneData: submitData,
       });
       onClose();
     } catch {
@@ -123,6 +146,44 @@ export default function UpdateMilestone({
                   </FormItem>
                 )}
               />
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Start Date</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="date"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>End Date</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="date"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={form.control}

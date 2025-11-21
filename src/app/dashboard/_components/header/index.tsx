@@ -1,5 +1,6 @@
 import { ProfileDropdown } from "../shared/header/profile-dropdown";
 import SidebarToggle from "../shared/header/sidebar-toggle";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 const Header = () => {
   return (
@@ -8,6 +9,7 @@ const Header = () => {
         <SidebarToggle />
       </div>
       <div className="flex items-center gap-4">
+        <NotificationBell />
         <ProfileDropdown />
       </div>
     </header>
