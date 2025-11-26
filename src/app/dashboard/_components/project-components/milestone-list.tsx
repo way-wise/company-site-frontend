@@ -159,7 +159,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       setAddMilestoneOpen(false);
       addMilestoneForm.reset();
     } catch (error) {
-      console.error("Error creating milestone:", error);
+      // Error creating milestone
     }
   };
 
@@ -191,7 +191,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       setDeleteMilestoneModalOpen(false);
       setSelectedMilestone(null);
     } catch (error) {
-      console.error("Failed to delete milestone:", error);
+      // Failed to delete milestone
     }
   };
 
@@ -203,7 +203,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       setDeleteTaskModalOpen(false);
       setSelectedTask(null);
     } catch (error) {
-      console.error("Failed to delete task:", error);
+      // Failed to delete task
     }
   };
 
@@ -220,7 +220,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   //     console.error("Failed to update task status:", error);
   //   }
   // };
-  console.log("Milestones data");
+  
   if (isLoading) {
     return (
       <Card className="p-6">

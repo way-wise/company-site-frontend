@@ -114,7 +114,7 @@ export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
       setIsEditing(false);
       onTaskUpdate?.();
     } catch (error) {
-      console.error("Failed to update task:", error);
+      // Failed to update task
     }
   };
 
@@ -129,7 +129,7 @@ export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
       setDeleteModalOpen(false);
       onTaskUpdate?.();
     } catch (error) {
-      console.error("Failed to delete task:", error);
+      // Failed to delete task
     }
   };
 

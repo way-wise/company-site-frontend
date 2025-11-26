@@ -74,7 +74,6 @@ export const useCreateService = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Create service error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -111,7 +110,6 @@ export const useUpdateService = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Update service error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -139,7 +137,6 @@ export const useDeleteService = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Delete service error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||

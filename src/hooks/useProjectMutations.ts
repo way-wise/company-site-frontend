@@ -77,7 +77,6 @@ export const useCreateProject = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Create project error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -113,7 +112,6 @@ export const useUpdateProject = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Update project error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -140,7 +138,6 @@ export const useDeleteProject = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Delete project error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||

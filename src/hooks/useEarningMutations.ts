@@ -91,7 +91,6 @@ export const useCreateEarning = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Create earning error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -127,7 +126,6 @@ export const useUpdateEarning = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Update earning error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -154,7 +152,6 @@ export const useDeleteEarning = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Delete earning error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||

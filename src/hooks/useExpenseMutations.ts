@@ -79,7 +79,6 @@ export const useCreateExpense = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Create expense error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -115,7 +114,6 @@ export const useUpdateExpense = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Update expense error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -142,7 +140,6 @@ export const useDeleteExpense = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Delete expense error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||

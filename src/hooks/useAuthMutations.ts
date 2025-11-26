@@ -22,7 +22,6 @@ export const useLogin = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Login error:", error);
       toast.error(error.message || "Login failed");
     },
   });
@@ -45,7 +44,6 @@ export const useRegister = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Registration error:", error);
       toast.error(error.message || "Registration failed");
     },
   });
@@ -60,12 +58,17 @@ export const useLogout = () => {
     onSuccess: () => {
       toast.success("Logged out successfully!");
       queryClient.clear();
-      router.push("/login");
+      
+      // Redirect to main public domain after logout
+      const publicUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      window.location.href = publicUrl;
     },
     onError: (error: Error) => {
-      console.error("Logout error:", error);
       queryClient.clear();
-      router.push("/login");
+      
+      // Even on error, redirect to main public domain
+      const publicUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      window.location.href = publicUrl;
     },
   });
 };
@@ -82,7 +85,6 @@ export const useChangePassword = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Change password error:", error);
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response
           ?.data?.message || error.message || "Failed to change password";

@@ -45,62 +45,36 @@ export const NotificationProvider = ({
   // Connect socket when user is authenticated
   useEffect(() => {
     if (user && !isConnected) {
-      console.log("🔌 Connecting socket for notifications...");
       connect();
     }
   }, [user, isConnected, connect]);
 
-  // Log socket connection status changes
-  useEffect(() => {
-    if (socket) {
-      if (isConnected) {
-        console.log("✅ Socket connected - notification listener ready");
-      } else {
-        console.log("⚠️ Socket disconnected - notifications will not be received in real-time");
-      }
-    }
-  }, [socket, isConnected]);
-
   useEffect(() => {
     // Verify socket is connected before setting up listener
     if (!socket || !isConnected) {
-      if (socket && !isConnected) {
-        console.log("⏳ Waiting for socket connection before setting up notification listener...");
-      }
       return;
     }
 
     // Listen for new notifications
-    const handleNewNotification = (notification: unknown) => {
-      try {
-        console.log("🔔 New notification received:", notification);
-        
-        // Invalidate queries to refresh notification list and unread count
-        queryClient.invalidateQueries({
-          queryKey: notificationQueryKeys.all,
-        });
-        
-        console.log("✅ Notification queries invalidated - UI will update");
-      } catch (error) {
-        console.error("❌ Error handling notification event:", error);
-      }
+    const handleNewNotification = () => {
+      // Invalidate queries to refresh notification list and unread count
+      queryClient.invalidateQueries({
+        queryKey: notificationQueryKeys.all,
+      });
     };
 
     // Set up error handler for socket events
-    const handleError = (error: unknown) => {
-      console.error("❌ Socket error in notification listener:", error);
+    const handleError = () => {
+      // Socket error in notification listener
     };
 
     // Register event listeners
     socket.on("notification:new", handleNewNotification);
     socket.on("error", handleError);
 
-    console.log("👂 Notification listener registered on socket");
-
     return () => {
       socket.off("notification:new", handleNewNotification);
       socket.off("error", handleError);
-      console.log("🔇 Notification listener removed");
     };
   }, [socket, isConnected, queryClient]);
 

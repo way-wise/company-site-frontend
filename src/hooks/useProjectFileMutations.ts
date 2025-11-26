@@ -43,7 +43,6 @@ export const useUploadProjectFile = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Upload file error:", error);
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response
           ?.data?.message || error.message || "Failed to upload file";
@@ -75,7 +74,6 @@ export const useDeleteProjectFile = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Delete file error:", error);
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response
           ?.data?.message || error.message || "Failed to delete file";

@@ -54,9 +54,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       await apiClient.post("/auth/logout");
     } catch (error) {
-      if (process.env.NODE_ENV !== "production") {
-        console.error("Logout request failed:", error);
-      }
+      // Logout request failed
     } finally {
       setUser(null);
       setPermissions([]);
@@ -97,10 +95,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           await logout();
           return null;
         }
-
-        if (process.env.NODE_ENV !== "production") {
-          console.error("Auth check failed:", error);
-        }
+        // Auth check failed
         await logout();
         return null;
       } finally {

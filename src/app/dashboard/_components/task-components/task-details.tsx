@@ -73,7 +73,7 @@ export default function TaskDetails({ taskId, onClose }: TaskDetailsProps) {
       });
       setIsEditing(false);
     } catch (error) {
-      console.error("Failed to update task:", error);
+      // Failed to update task
     }
   };
 

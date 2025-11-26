@@ -307,7 +307,6 @@ export const UsersTable = () => {
   const handleRoleUpdate = (values: RoleUpdateFormData) => {
     // TODO: Implement role update with UserRoleAssignment API
     // This will require a new backend endpoint to manage user role assignments
-    console.log("Role update not yet implemented", values);
     setRoleUpdateModalOpen(false);
 
     // if (userId) {
@@ -346,7 +345,7 @@ export const UsersTable = () => {
           }
         );
       } catch (error) {
-        console.error("Validation error:", error);
+        // Validation error
       }
     }
   };

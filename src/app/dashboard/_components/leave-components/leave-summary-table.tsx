@@ -21,7 +21,7 @@ export const LeaveSummaryTable = () => {
     pageIndex: 1,
     pageSize: 10,
   });
-  console.log("year", year);
+  
   const canViewAllEmployees =
     !isAuthLoading &&
     (hasPermission("view_team_leaves") || hasPermission("approve_leave"));

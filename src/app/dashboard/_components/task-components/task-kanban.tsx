@@ -129,7 +129,6 @@ export default function TaskKanban({
                       variant="ghost"
                       onClick={() => {
                         // TODO: Open add task modal with pre-selected status
-                        console.log("Add task to", column.id);
                       }}
                     >
                       <Plus className="h-4 w-4" />

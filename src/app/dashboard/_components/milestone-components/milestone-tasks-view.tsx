@@ -40,7 +40,6 @@ export default function MilestoneTasksView({
 
   const handleTaskClick = (task: Task) => {
     // TODO: Open task detail modal
-    console.log("Task clicked:", task);
   };
 
   const handleCreateTask = () => {

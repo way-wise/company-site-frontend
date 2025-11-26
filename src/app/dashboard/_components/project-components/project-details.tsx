@@ -64,7 +64,6 @@ export default function ProjectDetails({ project }: ProjectDetailsProps) {
         }
       }
     } catch (error) {
-      console.error("Error navigating to chat:", error);
       toast.error("Failed to open project chat");
     } finally {
       setIsNavigatingToChat(false);

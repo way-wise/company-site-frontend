@@ -45,7 +45,6 @@ export const useCreateOrUpdateProjectNote = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Save note error:", error);
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response
           ?.data?.message || error.message || "Failed to save note";
@@ -72,7 +71,6 @@ export const useUpdateProjectNote = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Update note error:", error);
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response
           ?.data?.message || error.message || "Failed to update note";
