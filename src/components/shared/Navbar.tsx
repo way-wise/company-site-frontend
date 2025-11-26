@@ -103,10 +103,16 @@ export default function Navbar() {
     { label: "Design Portfolio", href: "https://fiona.waywisetech.com/" },
   ];
 
-  const usersPortalLinks = [
-    { label: "Profile", href: "/profile" },
-    { label: "Dashboard", href: "/dashboard" },
-  ];
+  // Conditional links based on authentication status
+  const usersPortalLinks = user
+    ? [
+        { label: "Profile", href: "/profile" },
+        { label: "Dashboard", href: "/dashboard" },
+      ]
+    : [
+        { label: "Login", href: "/login" },
+        { label: "Signup", href: "/register" },
+      ];
 
   // Function to check if a route is active
   const isRouteActive = (href: string) => {

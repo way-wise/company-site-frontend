@@ -31,13 +31,14 @@ export const useNotifications = (params: NotificationsQueryParams) => {
   });
 };
 
-export const useUnreadCount = () => {
+export const useUnreadCount = (enabled = true) => {
   return useQuery({
     queryKey: notificationQueryKeys.unreadCount(),
     queryFn: () => notificationService.getUnreadCount(),
     staleTime: 10 * 1000, // 10 seconds
     refetchOnWindowFocus: true,
     refetchInterval: 30 * 1000, // Refetch every 30 seconds
+    enabled,
   });
 };
 

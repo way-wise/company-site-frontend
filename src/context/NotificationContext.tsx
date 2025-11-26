@@ -33,7 +33,7 @@ export const NotificationProvider = ({
   const { socket, isConnected, connect } = useSocket();
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { data: unreadCountData, isLoading } = useUnreadCount();
+  const { data: unreadCountData, isLoading } = useUnreadCount(!!user);
   const unreadCount = unreadCountData?.data?.count;
 
   const refreshNotifications = useCallback(() => {
