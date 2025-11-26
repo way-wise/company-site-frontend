@@ -53,16 +53,29 @@ export default function UpdateMilestone({
     defaultValues: {
       name: "",
       description: "",
+      cost: 0,
       status: "PENDING",
+      startDate: undefined,
+      endDate: undefined,
     },
   });
 
   useEffect(() => {
     if (milestone && isOpen) {
+      // Format dates for input fields (YYYY-MM-DD format)
+      const formatDateForInput = (dateString?: string) => {
+        if (!dateString) return undefined;
+        const date = new Date(dateString);
+        return date.toISOString().split("T")[0];
+      };
+
       form.reset({
         name: milestone.name,
         description: milestone.description || "",
+        cost: milestone.cost || 0,
         status: milestone.status,
+        startDate: formatDateForInput(milestone.startDate) || undefined,
+        endDate: formatDateForInput(milestone.endDate) || undefined,
       });
     }
   }, [milestone, isOpen, form]);
@@ -71,9 +84,21 @@ export default function UpdateMilestone({
     if (!milestone) return;
 
     try {
+      // Convert empty date strings to undefined
+      const submitData = {
+        ...values,
+        startDate:
+          values.startDate && values.startDate.trim() !== ""
+            ? values.startDate
+            : undefined,
+        endDate:
+          values.endDate && values.endDate.trim() !== ""
+            ? values.endDate
+            : undefined,
+      };
       await updateMilestoneMutation.mutateAsync({
         milestoneId: milestone.id,
-        milestoneData: values,
+        milestoneData: submitData,
       });
       onClose();
     } catch {
@@ -122,6 +147,68 @@ export default function UpdateMilestone({
                 )}
               />
 
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Start Date</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="date"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>End Date</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="date"
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="cost"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cost ($)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.00"
+                        {...field}
+                        value={field.value || ""}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="status"
@@ -138,9 +225,7 @@ export default function UpdateMilestone({
                         <SelectItem value="PENDING">Pending</SelectItem>
                         <SelectItem value="ONGOING">Ongoing</SelectItem>
                         <SelectItem value="COMPLETED">Completed</SelectItem>
-                        <SelectItem value="REVIEW">Review</SelectItem>
-                        <SelectItem value="APPROVED">Approved</SelectItem>
-                        <SelectItem value="REJECTED">Rejected</SelectItem>
+                        <SelectItem value="CANCELLED">Cancelled</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

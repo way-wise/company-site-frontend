@@ -119,50 +119,50 @@ export const servicesFirstData: ServiceDetail[] = [
     ],
   },
   {
-    id: 3,
-    title: "Digital Marketing",
-    slug: "digital-marketing",
+    id: 5,
+    title: "AI/ML",
+    slug: "ai-integration",
     description:
-      "Create targeted marketing campaigns that increase brand awareness and drive measurable conversions.",
-    bgImage: digitalMarketingBg,
-    url: "/services/digital-marketing",
-    icon: digitalIcon,
-    videoImage: digitalImg,
+      "Implement smart AI/ML solutions to connect devices, gather insights, and optimize processes in real time.",
+    bgImage: internetThingsBg,
+    url: "/services/internet-of-things",
+    icon: cloudIcon,
+    videoImage: aiImg,
     detailedDescription:
-      "Elevate your brand with data-driven digital marketing strategies that deliver real results. Our comprehensive approach combines SEO, social media marketing, content marketing, PPC advertising, and email campaigns to maximize your online presence. We analyze market trends, understand your target audience, and craft personalized campaigns that resonate with your customers. From increasing brand awareness to driving conversions, we help you achieve your business goals through strategic digital marketing.",
+      "Unlock the power of connected devices with our advanced IoT solutions. We design and implement smart systems that collect, analyze, and act on real-time data from sensors and devices. From smart homes to industrial automation, our IoT expertise helps businesses optimize operations, reduce costs, and create innovative products. We work with cutting-edge technologies including Arduino, Raspberry Pi, AWS IoT, and Azure IoT to build scalable and secure IoT ecosystems.",
     expertiseAreas: [
       {
         number: "01",
-        title: "Search Engine Optimization (SEO)",
+        title: "IoT System Architecture",
         description:
-          "Improve your website's visibility in search results\nand drive organic traffic with proven SEO strategies.",
+          "Design robust IoT architectures that seamlessly connect\ndevices, sensors, and cloud platforms for data flow.",
       },
       {
         number: "02",
-        title: "Social Media Marketing",
+        title: "Smart Home Solutions",
         description:
-          "Build and engage your community across platforms\nlike Facebook, Instagram, LinkedIn, and Twitter.",
+          "Develop intelligent home automation systems that\nenhance comfort, security, and energy efficiency.",
       },
       {
         number: "03",
-        title: "Pay-Per-Click (PPC) Advertising",
+        title: "Industrial IoT (IIoT)",
         description:
-          "Generate immediate results with targeted ad campaigns\non Google Ads, Facebook Ads, and other platforms.",
+          "Implement industrial IoT solutions for predictive\nmaintenance, monitoring, and process optimization.",
       },
       {
         number: "04",
-        title: "Content Marketing & Strategy",
+        title: "IoT Data Analytics",
         description:
-          "Create compelling content that attracts, educates,\nand converts your target audience into loyal customers.",
+          "Transform device data into actionable insights\nusing advanced analytics and machine learning.",
       },
     ],
     serviceOutcomes: [
-      "Increased Brand Visibility",
-      "Higher Conversion Rates",
-      "Improved ROI",
-      "Enhanced Customer Engagement",
-      "Data-Driven Insights",
-      "Competitive Market Position",
+      "Real-time Monitoring & Control",
+      "Operational Efficiency",
+      "Cost Reduction",
+      "Predictive Maintenance",
+      "Data-Driven Decision Making",
+      "Scalable Infrastructure",
     ],
   },
 ];
@@ -216,50 +216,50 @@ export const servicesSecondData: ServiceDetail[] = [
     ],
   },
   {
-    id: 5,
-    title: "AI/ML",
-    slug: "ai-integration",
+    id: 3,
+    title: "Digital Marketing",
+    slug: "digital-marketing",
     description:
-      "Implement smart AI/ML solutions to connect devices, gather insights, and optimize processes in real time.",
-    bgImage: internetThingsBg,
-    url: "/services/internet-of-things",
-    icon: cloudIcon,
-    videoImage: aiImg,
+      "Create targeted marketing campaigns that increase brand awareness and drive measurable conversions.",
+    bgImage: digitalMarketingBg,
+    url: "/services/digital-marketing",
+    icon: digitalIcon,
+    videoImage: digitalImg,
     detailedDescription:
-      "Unlock the power of connected devices with our advanced IoT solutions. We design and implement smart systems that collect, analyze, and act on real-time data from sensors and devices. From smart homes to industrial automation, our IoT expertise helps businesses optimize operations, reduce costs, and create innovative products. We work with cutting-edge technologies including Arduino, Raspberry Pi, AWS IoT, and Azure IoT to build scalable and secure IoT ecosystems.",
+      "Elevate your brand with data-driven digital marketing strategies that deliver real results. Our comprehensive approach combines SEO, social media marketing, content marketing, PPC advertising, and email campaigns to maximize your online presence. We analyze market trends, understand your target audience, and craft personalized campaigns that resonate with your customers. From increasing brand awareness to driving conversions, we help you achieve your business goals through strategic digital marketing.",
     expertiseAreas: [
       {
         number: "01",
-        title: "IoT System Architecture",
+        title: "Search Engine Optimization (SEO)",
         description:
-          "Design robust IoT architectures that seamlessly connect\ndevices, sensors, and cloud platforms for data flow.",
+          "Improve your website's visibility in search results\nand drive organic traffic with proven SEO strategies.",
       },
       {
         number: "02",
-        title: "Smart Home Solutions",
+        title: "Social Media Marketing",
         description:
-          "Develop intelligent home automation systems that\nenhance comfort, security, and energy efficiency.",
+          "Build and engage your community across platforms\nlike Facebook, Instagram, LinkedIn, and Twitter.",
       },
       {
         number: "03",
-        title: "Industrial IoT (IIoT)",
+        title: "Pay-Per-Click (PPC) Advertising",
         description:
-          "Implement industrial IoT solutions for predictive\nmaintenance, monitoring, and process optimization.",
+          "Generate immediate results with targeted ad campaigns\non Google Ads, Facebook Ads, and other platforms.",
       },
       {
         number: "04",
-        title: "IoT Data Analytics",
+        title: "Content Marketing & Strategy",
         description:
-          "Transform device data into actionable insights\nusing advanced analytics and machine learning.",
+          "Create compelling content that attracts, educates,\nand converts your target audience into loyal customers.",
       },
     ],
     serviceOutcomes: [
-      "Real-time Monitoring & Control",
-      "Operational Efficiency",
-      "Cost Reduction",
-      "Predictive Maintenance",
-      "Data-Driven Decision Making",
-      "Scalable Infrastructure",
+      "Increased Brand Visibility",
+      "Higher Conversion Rates",
+      "Improved ROI",
+      "Enhanced Customer Engagement",
+      "Data-Driven Insights",
+      "Competitive Market Position",
     ],
   },
   {

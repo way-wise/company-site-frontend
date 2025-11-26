@@ -18,22 +18,54 @@ export type CreateProjectFormData = z.infer<typeof createProjectSchema>;
 export type UpdateProjectFormData = z.infer<typeof updateProjectSchema>;
 
 // Milestone Schemas
-export const createMilestoneSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
-  status: z
-    .enum(["PENDING", "ONGOING", "COMPLETED", "REVIEW", "APPROVED", "REJECTED"])
-    .optional(),
-  projectId: z.string().min(1, "Project is required"),
-});
+export const createMilestoneSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    description: z.string().optional(),
+    cost: z.number().positive("Cost must be a positive number"),
+    status: z.enum(["PENDING", "ONGOING", "COMPLETED", "CANCELLED"]).optional(),
+    projectId: z.string().min(1, "Project is required"),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.startDate && data.endDate) {
+        const start = new Date(data.startDate);
+        const end = new Date(data.endDate);
+        return end >= start;
+      }
+      return true;
+    },
+    {
+      message: "End date must be after or equal to start date",
+      path: ["endDate"],
+    }
+  );
 
-export const updateMilestoneSchema = z.object({
-  name: z.string().min(1, "Name is required").optional(),
-  description: z.string().optional(),
-  status: z
-    .enum(["PENDING", "ONGOING", "COMPLETED", "REVIEW", "APPROVED", "REJECTED"])
-    .optional(),
-});
+export const updateMilestoneSchema = z
+  .object({
+    name: z.string().min(1, "Name is required").optional(),
+    description: z.string().optional(),
+    cost: z.number().positive("Cost must be a positive number").optional(),
+    status: z.enum(["PENDING", "ONGOING", "COMPLETED", "CANCELLED"]).optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.startDate && data.endDate) {
+        const start = new Date(data.startDate);
+        const end = new Date(data.endDate);
+        return end >= start;
+      }
+      return true;
+    },
+    {
+      message: "End date must be after or equal to start date",
+      path: ["endDate"],
+    }
+  );
 
 export type CreateMilestoneFormData = z.infer<typeof createMilestoneSchema>;
 export type UpdateMilestoneFormData = z.infer<typeof updateMilestoneSchema>;

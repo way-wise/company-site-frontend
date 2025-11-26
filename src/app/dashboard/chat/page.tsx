@@ -4,15 +4,22 @@ import ChatWindow from "@/components/modules/chat/ChatWindow";
 import ConversationList from "@/components/modules/chat/ConversationList";
 import { useSocket } from "@/context/SocketContext";
 import { useAuth } from "@/context/UserContext";
-import { chatQueryKeys, useConversations } from "@/hooks/useChatMutations";
+import {
+  chatQueryKeys,
+  useConversation,
+  useConversations,
+} from "@/hooks/useChatMutations";
 import { Conversation } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ChatPage() {
   const { socket, isConnected, connect } = useSocket();
   const { user, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
+  const conversationIdFromQuery = searchParams.get("conversationId");
   const [selectedConversation, setSelectedConversation] =
     useState<Conversation | null>(null);
 
@@ -20,6 +27,25 @@ export default function ChatPage() {
     page: 1,
     limit: 50,
   });
+
+  const { data: conversationData } = useConversation(
+    conversationIdFromQuery || ""
+  );
+
+  // Set selected conversation from query parameter
+  useEffect(() => {
+    if (conversationIdFromQuery && conversationData?.data) {
+      setSelectedConversation(conversationData.data);
+    } else if (conversationIdFromQuery && conversationsData?.data?.result) {
+      // Try to find in the list if not loaded yet
+      const found = conversationsData.data.result.find(
+        (conv) => conv.id === conversationIdFromQuery
+      );
+      if (found) {
+        setSelectedConversation(found);
+      }
+    }
+  }, [conversationIdFromQuery, conversationData, conversationsData]);
 
   // Connect socket when user is authenticated
   useEffect(() => {

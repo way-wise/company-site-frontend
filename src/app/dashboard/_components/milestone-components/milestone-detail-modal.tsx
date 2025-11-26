@@ -157,6 +157,30 @@ export default function MilestoneDetailModal({
                   {formatDateTime(milestone.updatedAt)}
                 </p>
               </div>
+
+              {milestone.startDate && milestone.endDate && (
+                <>
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">
+                      Start Date
+                    </label>
+                    <p className="mt-1 text-sm text-gray-900 flex items-center gap-1">
+                      <Calendar className="h-4 w-4" />
+                      {formatDate(milestone.startDate)}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">
+                      End Date
+                    </label>
+                    <p className="mt-1 text-sm text-gray-900 flex items-center gap-1">
+                      <Calendar className="h-4 w-4" />
+                      {formatDate(milestone.endDate)}
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

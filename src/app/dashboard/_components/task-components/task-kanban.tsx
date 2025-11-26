@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/UserContext";
 import { useTasks } from "@/hooks/useTaskMutations";
 import { Task } from "@/types";
 import { Plus } from "lucide-react";
@@ -24,6 +25,8 @@ export default function TaskKanban({
   milestoneId,
   onTaskClick,
 }: TaskKanbanProps) {
+  const { hasPermission } = useAuth();
+  const canCreateTask = hasPermission("create_task");
   const [search, setSearch] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
 
@@ -120,16 +123,18 @@ export default function TaskKanban({
                       {stats.count} task{stats.count !== 1 ? "s" : ""}
                     </div>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      // TODO: Open add task modal with pre-selected status
-                      console.log("Add task to", column.id);
-                    }}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                  {canCreateTask && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        // TODO: Open add task modal with pre-selected status
+                        console.log("Add task to", column.id);
+                      }}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
 
                 {/* Column Stats */}

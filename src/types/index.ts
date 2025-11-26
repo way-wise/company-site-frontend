@@ -244,6 +244,8 @@ export interface Project {
     };
   };
   milestones?: Milestone[];
+  notes?: ProjectNote[];
+  files?: ProjectFile[];
   _count?: {
     milestones: number;
   };
@@ -276,13 +278,16 @@ export interface Milestone {
   id: string;
   name: string;
   description?: string;
+  cost: number;
+  paymentStatus: "UNPAID" | "PAID";
+  startDate?: string;
+  endDate?: string;
+  index: number;
   status:
     | "PENDING"
     | "ONGOING"
     | "COMPLETED"
-    | "REVIEW"
-    | "APPROVED"
-    | "REJECTED";
+    | "CANCELLED";
   projectId: string;
   createdAt: string;
   updatedAt: string;
@@ -294,6 +299,7 @@ export interface Milestone {
   employeeMilestones?: EmployeeMilestone[];
   serviceMilestones?: ServiceMilestone[];
   Task?: Task[];
+  payments?: MilestonePayment[];
   _count?: {
     employeeMilestones: number;
     serviceMilestones: number;
@@ -335,6 +341,7 @@ export interface ServiceMilestone {
 export interface MilestoneFormData {
   name: string;
   description?: string;
+  cost: number;
   status?:
     | "PENDING"
     | "ONGOING"
@@ -343,6 +350,55 @@ export interface MilestoneFormData {
     | "APPROVED"
     | "REJECTED";
   projectId: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface MilestonePayment {
+  id: string;
+  milestoneId: string;
+  userId: string;
+  amount: number;
+  stripePaymentIntentId: string;
+  stripeChargeId?: string;
+  paymentMethodId: string;
+  status: string;
+  invoiceNumber: string;
+  paidAt: string;
+  createdAt: string;
+  updatedAt: string;
+  milestone?: {
+    id: string;
+    name: string;
+    description?: string;
+    cost: number;
+    project?: {
+      id: string;
+      name: string;
+    };
+  };
+  paymentMethod?: {
+    id: string;
+    cardLast4: string;
+    cardBrand: string;
+    cardExpMonth?: number;
+    cardExpYear?: number;
+  };
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+export interface Invoice {
+  payment: MilestonePayment;
+  companyInfo?: {
+    name: string;
+    address?: string;
+    email?: string;
+    phone?: string;
+  };
 }
 
 export interface MilestoneStats {
@@ -669,4 +725,244 @@ export interface LeaveCalendarEvent {
     color: string;
   };
   status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+}
+
+// Partner Types
+export interface Partner {
+  id: string;
+  name: string;
+  image: string;
+  isShow: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PartnerFormData {
+  name: string;
+  image?: string;
+  isShow?: boolean;
+}
+
+export interface PartnersQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  isShow?: boolean;
+}
+
+// Project Note Types
+export interface ProjectNote {
+  id: string;
+  projectId: string;
+  content: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  creator?: {
+    id: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface ProjectNoteFormData {
+  projectId: string;
+  content: string;
+}
+
+// Project File Types
+export interface ProjectFile {
+  id: string;
+  projectId: string;
+  fileName: string;
+  fileUrl: string;
+  fileType: string;
+  fileSize: number;
+  uploadedBy: string;
+  createdAt: string;
+  updatedAt: string;
+  uploader?: {
+    id: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface ProjectFileFormData {
+  projectId: string;
+  file: File;
+}
+
+// Earning Types
+export interface Earning {
+  id: string;
+  amount: number;
+  description?: string;
+  date: string;
+  projectId?: string;
+  category?: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  project?: {
+    id: string;
+    name: string;
+  };
+  creator?: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface EarningFormData {
+  amount: number;
+  description?: string;
+  date: string;
+  projectId?: string;
+  category?: string;
+}
+
+export interface EarningsQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  projectId?: string;
+  category?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface EarningStats {
+  totalEarnings: number;
+  totalCount: number;
+  earningsByProject: Array<{
+    projectId: string | null;
+    projectName: string;
+    totalAmount: number;
+    count: number;
+  }>;
+  earningsByCategory: Array<{
+    category: string;
+    totalAmount: number;
+    count: number;
+  }>;
+}
+
+export interface ProjectEarning {
+  projectId: string;
+  projectName: string;
+  totalAmount: number;
+  count: number;
+}
+
+// Expense Types
+export interface Expense {
+  id: string;
+  amount: number;
+  description?: string;
+  date: string;
+  category?: string;
+  receiptUrl?: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  creator?: {
+    id: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface ExpenseFormData {
+  amount: number;
+  description?: string;
+  date: string;
+  category?: string;
+  receiptUrl?: string;
+  receiptFile?: File;
+}
+
+export interface ExpensesQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  category?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface ExpenseStats {
+  totalExpenses: number;
+  totalCount: number;
+  expensesByCategory: Array<{
+    category: string;
+    totalAmount: number;
+    count: number;
+  }>;
+}
+
+// Notification Types
+export type NotificationType =
+  | "PROJECT"
+  | "TASK"
+  | "LEAVE"
+  | "PAYMENT"
+  | "MILESTONE"
+  | "CHAT"
+  | "FILE"
+  | "COMMENT"
+  | "SYSTEM";
+
+export interface Notification {
+  id: string;
+  userProfileId: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  data?: Record<string, unknown> | null;
+  read: boolean;
+  readAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface NotificationsQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  type?: NotificationType;
+  read?: boolean;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface NotificationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface NotificationsResponse {
+  meta: NotificationMeta;
+  result: Notification[];
+}
+
+export interface UnreadCountResponse {
+  count: number;
 }

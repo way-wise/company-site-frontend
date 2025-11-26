@@ -1,5 +1,5 @@
-import microsoftSupport from "@/assets/images/services/ms-support.png";
 import medicalBilling from "@/assets/images/services/billing-shape.png";
+import microsoftSupport from "@/assets/images/services/ms-support.png";
 import SectionTitle from "@/components/modules/home/SectionTitle";
 import { ServiceDisplay } from "@/types";
 import Image from "next/image";
@@ -18,9 +18,10 @@ const Services = ({
       <div className="container mx-auto py-12 lg:py-20 ">
         <div className="mb-16">
           <SectionTitle
-            title="Web Development, Software Development & Digital Solution Services"
-            description="We are a reputable web development firm in the USA that offers a full range of digital and software development services that are customized to match the needs of your business. Our team of experts creates custom websites, apps, and business solutions that help your business expand, improve your brand identity, and make your operations run more smoothly. Way Wise Tech helps you transform your ideas into digital success that can grow, whether you're a new business or an established one.
-"
+            title="Our Services"
+            description="We offer a comprehensive suite of services designed to meet all your digital needs.
+Our team of experts is committed to delivering top-notch solutions that drive
+growth, enhance your brand, and streamline your operations."
             titleClass="text-white text-4xl pb-4  xl:text-[55px] font-bold"
             descriptionClass="text-white text-base xl:text-[20px]"
           />
@@ -65,8 +66,9 @@ const Services = ({
                 </span> */}
               </h2>
               <p className="text-gray-900 text-sm mb-1">
-              Let Us Take Care of Your Revenue
-              While You Take Care of Your Patients. Expert medical billing, medical coding, revenue cycle management, credentialing, and compliance services.
+                Let Us Take Care of Your Revenue While You Take Care of Your
+                Patients. Expert medical billing, medical coding, revenue cycle
+                management, credentialing, and compliance services.
               </p>
               <Link
                 href="/medical-it-support"

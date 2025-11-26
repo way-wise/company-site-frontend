@@ -11,6 +11,8 @@ import {
   Settings,
   Shield,
   UsersRound,
+  Handshake,
+  DollarSign,
 } from "lucide-react";
 
 export interface MenuItem {
@@ -69,6 +71,12 @@ export const menuConfig: MenuItem[] = [
     permissions: ["read_service", "create_service"],
   },
   {
+    title: "Partners",
+    icon: Handshake,
+    url: "/dashboard/partners",
+    permissions: ["read_partner", "create_partner"],
+  },
+  {
     title: "Projects",
     icon: FolderKanban,
     url: "/dashboard/projects",
@@ -97,6 +105,12 @@ export const menuConfig: MenuItem[] = [
     icon: CalendarDays,
     url: "/dashboard/leave",
     permissions: ["read_leave", "create_leave"],
+  },
+  {
+    title: "Earnings",
+    icon: DollarSign,
+    url: "/dashboard/earnings",
+    permissions: ["read_earning", "read_expense"],
   },
   {
     title: "Settings",
