@@ -98,7 +98,6 @@ export const useCreateUser = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Create user error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -127,7 +126,6 @@ export const useCreateAdmin = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Create admin error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -156,7 +154,6 @@ export const useCreateEmployee = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Create employee error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -191,7 +188,6 @@ export const useUpdateUser = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Update user error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -228,7 +224,6 @@ export const useBanUser = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Ban user error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -259,7 +254,6 @@ export const useUnbanUser = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Unban user error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -289,7 +283,6 @@ export const useDeleteUser = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Delete user error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||

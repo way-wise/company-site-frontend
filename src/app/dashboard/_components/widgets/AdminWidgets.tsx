@@ -26,7 +26,7 @@ const AdminWidgets = () => {
           setStats((prev) => ({ ...prev, ...userResponse.data.data }));
         }
       } catch (error) {
-        console.error("Failed to fetch admin stats:", error);
+        // Failed to fetch admin stats
       } finally {
         setLoading(false);
       }

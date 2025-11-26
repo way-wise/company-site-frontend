@@ -153,16 +153,8 @@ export default function CreateTaskModal({
   }, [selectedMilestoneId, form]);
 
   const handleSubmit = async (data: TaskFormData) => {
-    console.log("Form data being submitted:", data);
-    console.log("Form values:", form.getValues());
-    console.log("Selected milestone ID:", selectedMilestoneId);
-
     // Ensure we have the required fields
     if (!data.title || !data.milestoneId) {
-      console.error("Missing required fields:", {
-        title: data.title,
-        milestoneId: data.milestoneId,
-      });
       return;
     }
 
@@ -183,13 +175,11 @@ export default function CreateTaskModal({
           : undefined,
     };
 
-    console.log("Cleaned data being sent:", cleanedData);
-
     try {
       await createTaskMutation.mutateAsync(cleanedData);
       onClose();
     } catch (error) {
-      console.error("Error creating task:", error);
+      // Error creating task
     }
   };
 

@@ -11,6 +11,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -35,19 +36,11 @@ interface AuthProviderProps {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const PUBLIC_ROUTES = [
-  "/",
-  "/login",
-  "/register",
-  "/about",
-  "/contact",
-  "/services",
-];
+// Match the protected prefixes from middleware.ts
+const PROTECTED_PREFIXES = ["/dashboard", "/profile", "/admin", "/client"];
 
-const isPublicRoute = (pathname: string): boolean => {
-  return PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
-  );
+const isProtectedRoute = (pathname: string): boolean => {
+  return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -55,58 +48,62 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const pathname = usePathname();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const logout = useCallback(async (): Promise<void> => {
     try {
       await apiClient.post("/auth/logout");
     } catch (error) {
-      if (process.env.NODE_ENV !== "production") {
-        console.error("Logout request failed:", error);
-      }
+      // Logout request failed
     } finally {
       setUser(null);
       setPermissions([]);
     }
   }, []);
 
-  const refreshUser = useCallback(async (): Promise<User | null> => {
-    try {
-      const response = await apiClient.get("/auth/me");
+  const refreshUser = useCallback(
+    async (signal?: AbortSignal): Promise<User | null> => {
+      try {
+        const response = await apiClient.get("/auth/me", { signal });
 
-      if (!response.data.success) {
-        setUser(null);
-        setPermissions([]);
-        return null;
-      }
+        if (!response.data.success) {
+          setUser(null);
+          setPermissions([]);
+          return null;
+        }
 
-      const userData = response.data.data;
-      setUser(userData);
+        const userData = response.data.data;
+        setUser(userData);
 
-      // Extract permissions from user data (already included in /auth/me response)
-      if (userData?.permissions && Array.isArray(userData.permissions)) {
-        setPermissions(userData.permissions);
-      } else {
-        setPermissions([]);
-      }
+        // Extract permissions from user data (already included in /auth/me response)
+        if (userData?.permissions && Array.isArray(userData.permissions)) {
+          setPermissions(userData.permissions);
+        } else {
+          setPermissions([]);
+        }
 
-      return userData;
-    } catch (error) {
-      const axiosError = error as AxiosError;
+        return userData;
+      } catch (error) {
+        const axiosError = error as AxiosError;
 
-      if (axiosError.response?.status === 401) {
+        // Don't handle aborted requests
+        if (axiosError.name === "CanceledError" || signal?.aborted) {
+          return null;
+        }
+
+        if (axiosError.response?.status === 401) {
+          await logout();
+          return null;
+        }
+        // Auth check failed
         await logout();
         return null;
+      } finally {
+        setIsLoading(false);
       }
-
-      if (process.env.NODE_ENV !== "production") {
-        console.error("Auth check failed:", error);
-      }
-      await logout();
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [logout]);
+    },
+    [logout]
+  );
 
   useEffect(() => {
     const unsubscribe = subscribeToAuthLogout(() => {
@@ -151,13 +148,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     if (!pathname) return;
 
-    if (isPublicRoute(pathname)) {
+    // Only fetch user data for protected routes
+    if (!isProtectedRoute(pathname)) {
       setIsLoading(false);
       return;
     }
 
+    // Cancel any in-flight request from previous route
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create new AbortController for this route
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     setIsLoading(true);
-    void refreshUser();
+    refreshUser(abortController.signal);
+
+    // Cleanup: abort on unmount or route change
+    return () => {
+      abortController.abort();
+    };
   }, [pathname, refreshUser]);
 
   const value: AuthContextType = {

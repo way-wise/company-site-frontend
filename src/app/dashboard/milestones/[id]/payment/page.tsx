@@ -25,7 +25,6 @@ import { toast } from "sonner";
 const getStripeKey = () => {
   const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   if (!key) {
-    console.error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set");
     return null;
   }
   return key;
@@ -82,7 +81,6 @@ function AddCardFormContent({
 
       onSuccess();
     } catch (error) {
-      console.error("Error adding payment method:", error);
       toast.error("Failed to add payment method");
     } finally {
       setIsProcessing(false);
@@ -125,7 +123,7 @@ function AddCardForm({ onSuccess }: { onSuccess: () => void }) {
         setClientSecret(result.clientSecret);
         setSetupIntentId(result.setupIntentId);
       } catch (error) {
-        console.error("Failed to create setup intent:", error);
+        // Failed to create setup intent
       }
     };
     createIntent();
@@ -209,7 +207,7 @@ export default function MilestonePaymentPage() {
         router.push(`/dashboard/projects/${milestone.projectId}`);
       }, 2000);
     } catch (error) {
-      console.error("Payment error:", error);
+      // Payment error
     }
   };
 
@@ -226,7 +224,7 @@ export default function MilestonePaymentPage() {
           router.push(`/dashboard/projects/${milestone.projectId}`);
         }, 2000);
       } catch (error) {
-        console.error("Payment error:", error);
+        // Payment error
       }
     }, 1000);
   };

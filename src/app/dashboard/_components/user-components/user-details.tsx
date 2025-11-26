@@ -29,7 +29,7 @@ const UserDetails = ({ id }: { id: string }) => {
 
   // Extract user data from the response
   const user = userResponse?.data;
-  console.log(user);
+  
   return (
     <>
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">

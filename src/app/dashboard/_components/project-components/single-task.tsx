@@ -84,7 +84,6 @@ export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
 
   const handleQuickSave = async (data: Partial<Task>) => {
     try {
-      console.log("Updating task with data:", data);
       await updateTaskMutation.mutateAsync({
         taskId: task.id,
         taskData: data,
@@ -92,7 +91,7 @@ export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
       setIsEditing(false);
       onTaskUpdate?.();
     } catch (error) {
-      console.error("Failed to update task:", error);
+      // Failed to update task
     }
   };
 
@@ -107,7 +106,7 @@ export default function SingleTask({ task, onTaskUpdate }: SingleTaskProps) {
       setDeleteModalOpen(false);
       onTaskUpdate?.();
     } catch (error) {
-      console.error("Failed to delete task:", error);
+      // Failed to delete task
     }
   };
 

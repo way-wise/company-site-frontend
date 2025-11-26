@@ -1,8 +1,10 @@
 import { io, Socket } from "socket.io-client";
 import { cookieManager } from "./cookies";
 
+// Support both NEXT_PUBLIC_BASE_API (remove /api/v1) and NEXT_PUBLIC_API_URL
 const SOCKET_URL =
   process.env.NEXT_PUBLIC_BASE_API?.replace("/api/v1", "") ||
+  process.env.NEXT_PUBLIC_API_URL ||
   "http://localhost:5000";
 
 let socket: Socket | null = null;
@@ -28,23 +30,21 @@ export const initializeSocket = (): Socket => {
 
     // Connection event listeners
     socket.on("connect", () => {
-      console.log("✅ Socket connected:", socket?.id);
+      // Socket connected
     });
 
     socket.on("disconnect", (reason) => {
-      console.log("❌ Socket disconnected:", reason);
       if (reason === "io server disconnect") {
         // Server disconnected the socket, try to reconnect manually
         socket?.connect();
       }
     });
 
-    socket.on("reconnect", (attemptNumber) => {
-      console.log("🔄 Socket reconnected after", attemptNumber, "attempts");
+    socket.on("reconnect", () => {
+      // Socket reconnected
     });
 
-    socket.on("reconnect_attempt", (attemptNumber) => {
-      console.log("🔄 Reconnection attempt", attemptNumber);
+    socket.on("reconnect_attempt", () => {
       // Update auth token on reconnection attempt
       const newToken = cookieManager.get("accessToken");
       if (socket && newToken) {
@@ -52,20 +52,20 @@ export const initializeSocket = (): Socket => {
       }
     });
 
-    socket.on("reconnect_error", (error) => {
-      console.error("Reconnection error:", error.message);
+    socket.on("reconnect_error", () => {
+      // Reconnection error occurred
     });
 
     socket.on("reconnect_failed", () => {
-      console.error("❌ Failed to reconnect after maximum attempts");
+      // Failed to reconnect after maximum attempts
     });
 
-    socket.on("connect_error", (error) => {
-      console.error("Socket connection error:", error.message);
+    socket.on("connect_error", () => {
+      // Socket connection error
     });
 
-    socket.on("error", (error) => {
-      console.error("Socket error:", error);
+    socket.on("error", () => {
+      // Socket error occurred
     });
   }
 

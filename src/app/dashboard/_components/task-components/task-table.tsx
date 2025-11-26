@@ -366,7 +366,6 @@ export const TaskTable = () => {
               <DropdownMenuItem
                 onClick={() => {
                   // TODO: Implement task details view
-                  console.log("View task details:", row.original);
                 }}
               >
                 <Eye />

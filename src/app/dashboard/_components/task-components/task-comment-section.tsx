@@ -47,7 +47,7 @@ export default function TaskCommentSection({
       setIsAddingComment(false);
       refetch();
     } catch (error) {
-      console.error("Failed to add comment:", error);
+      // Failed to add comment
     }
   };
 

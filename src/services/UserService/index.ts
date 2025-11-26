@@ -124,7 +124,6 @@ export const userService = {
   createUser: async (
     userData: RegisterCredentials
   ): Promise<ApiResponse<User>> => {
-    console.log(userData);
     const response = await apiClient.post("/user/create-client", userData);
     return response.data;
   },

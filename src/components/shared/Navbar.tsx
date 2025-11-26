@@ -19,6 +19,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/UserContext";
 import { servicesData } from "@/datas/services";
+import { getDashboardUrl, isPublicMode } from "@/lib/app-mode";
 import { ChevronDown, Menu, Phone, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -103,10 +104,44 @@ export default function Navbar() {
     { label: "Design Portfolio", href: "https://fiona.waywisetech.com/" },
   ];
 
-  const usersPortalLinks = [
-    { label: "Profile", href: "/profile" },
-    { label: "Dashboard", href: "/dashboard" },
-  ];
+  // Conditional links based on authentication status
+  // In public mode, redirect to dashboard subdomain for auth and protected routes
+  // In development mode (no APP_MODE), use local routes
+  const dashboardUrl = getDashboardUrl();
+  const isDevelopment = !process.env.NEXT_PUBLIC_APP_MODE;
+  const shouldUseDashboardDomain = isPublicMode() && !isDevelopment;
+
+  const usersPortalLinks = user
+    ? [
+        {
+          label: "Profile",
+          href: shouldUseDashboardDomain
+            ? `${dashboardUrl}/profile`
+            : "/profile",
+          external: shouldUseDashboardDomain,
+        },
+        {
+          label: "Dashboard",
+          href: shouldUseDashboardDomain
+            ? `${dashboardUrl}/dashboard`
+            : "/dashboard",
+          external: shouldUseDashboardDomain,
+        },
+      ]
+    : [
+        {
+          label: "Login",
+          href: shouldUseDashboardDomain ? `${dashboardUrl}/login` : "/login",
+          external: shouldUseDashboardDomain,
+        },
+        {
+          label: "Signup",
+          href: shouldUseDashboardDomain
+            ? `${dashboardUrl}/register`
+            : "/register",
+          external: shouldUseDashboardDomain,
+        },
+      ];
 
   // Function to check if a route is active
   const isRouteActive = (href: string) => {
@@ -312,18 +347,29 @@ export default function Navbar() {
                         {usersPortalLinks.map((item) => (
                           <li key={item.href}>
                             <NavigationMenuLink asChild>
-                              <Link
-                                href={item.href}
-                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
-                                  pathname === item.href
-                                    ? "bg-accent text-brand font-semibold"
-                                    : ""
-                                }`}
-                              >
-                                <div className="text-sm font-medium leading-none">
-                                  {item.label}
-                                </div>
-                              </Link>
+                              {item.external ? (
+                                <a
+                                  href={item.href}
+                                  className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md`}
+                                >
+                                  <div className="text-sm font-medium leading-none">
+                                    {item.label}
+                                  </div>
+                                </a>
+                              ) : (
+                                <Link
+                                  href={item.href}
+                                  className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                    pathname === item.href
+                                      ? "bg-accent text-brand font-semibold"
+                                      : ""
+                                  }`}
+                                >
+                                  <div className="text-sm font-medium leading-none">
+                                    {item.label}
+                                  </div>
+                                </Link>
+                              )}
                             </NavigationMenuLink>
                           </li>
                         ))}
@@ -528,15 +574,16 @@ export default function Navbar() {
                             href={item.href}
                             rel="noopener noreferrer"
                             onClick={(e) => {
-                              e.preventDefault();
-                              setIsMobileMenuOpen(false);
-                              setTimeout(() => {
-                                window.open(
-                                  item.href,
-                                  "_self",
-                                  "noopener,noreferrer"
-                                );
-                              }, 100);
+                              if (!item.external) {
+                                e.preventDefault();
+                                setIsMobileMenuOpen(false);
+                                setTimeout(() => {
+                                  router.push(item.href);
+                                }, 100);
+                              } else {
+                                // For external links, just let the default behavior happen
+                                setIsMobileMenuOpen(false);
+                              }
                             }}
                             className={`block text-base transition-colors duration-700 ${
                               pathname === item.href

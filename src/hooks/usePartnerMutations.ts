@@ -79,7 +79,6 @@ export const useCreatePartner = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Create partner error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -118,7 +117,6 @@ export const useUpdatePartner = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Update partner error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -152,7 +150,6 @@ export const useTogglePartnerVisibility = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Toggle partner visibility error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
@@ -180,7 +177,6 @@ export const useDeletePartner = () => {
       }
     },
     onError: (error: Error) => {
-      console.error("Delete partner error:", error);
       const apiError = error as ApiError;
       const errorMessage =
         apiError.response?.data?.message ||
