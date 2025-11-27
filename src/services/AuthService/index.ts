@@ -15,6 +15,7 @@ export const authService = {
     credentials: LoginCredentials
   ): Promise<ApiResponse<{ user: User }>> => {
     const response = await apiClient.post("/auth/login", credentials);
+    console.log(response.data);
     return response.data;
   },
 

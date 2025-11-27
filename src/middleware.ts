@@ -12,7 +12,19 @@ import {
 
 const hasSession = (request: NextRequest): boolean => {
   const accessToken = request.cookies.get("accessToken")?.value;
-  return typeof accessToken === "string" && accessToken.trim().length > 0;
+  const hasToken =
+    typeof accessToken === "string" && accessToken.trim().length > 0;
+
+  // Debug logging for production troubleshooting
+  // Debug logging for troubleshooting
+  console.log("[Auth Middleware]", {
+    pathname: request.nextUrl.pathname,
+    hasAccessToken: hasToken,
+    cookieCount: request.cookies.getAll().length,
+    allCookies: request.cookies.getAll().map((c) => c.name),
+  });
+
+  return hasToken;
 };
 
 export function middleware(request: NextRequest): NextResponse {
