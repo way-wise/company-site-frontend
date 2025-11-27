@@ -12,18 +12,18 @@ import {
 
 const hasSession = (request: NextRequest): boolean => {
   const accessToken = request.cookies.get("accessToken")?.value;
-  const hasToken = typeof accessToken === "string" && accessToken.trim().length > 0;
-  
+  const hasToken =
+    typeof accessToken === "string" && accessToken.trim().length > 0;
+
   // Debug logging for production troubleshooting
-  if (process.env.NODE_ENV === "production") {
-    console.log("[Auth Middleware]", {
-      pathname: request.nextUrl.pathname,
-      hasAccessToken: hasToken,
-      cookieCount: request.cookies.getAll().length,
-      allCookies: request.cookies.getAll().map(c => c.name),
-    });
-  }
-  
+  // Debug logging for troubleshooting
+  console.log("[Auth Middleware]", {
+    pathname: request.nextUrl.pathname,
+    hasAccessToken: hasToken,
+    cookieCount: request.cookies.getAll().length,
+    allCookies: request.cookies.getAll().map((c) => c.name),
+  });
+
   return hasToken;
 };
 
