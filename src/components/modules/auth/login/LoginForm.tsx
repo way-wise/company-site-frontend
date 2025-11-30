@@ -26,9 +26,9 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     loginMutation.mutate(data, {
-      // onSuccess: () => {
-      //   router.push("/dashboard");
-      // },
+      onSuccess: () => {
+        router.push("/dashboard");
+      },
     });
   };
 
