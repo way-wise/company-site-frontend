@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Conversation } from "@/types";
 import { Plus, Search } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ConversationItem from "./ConversationItem";
 import CreateConversationModal from "./CreateConversationModal";
 
@@ -22,21 +22,36 @@ export default function ConversationList({
   isLoading,
 }: ConversationListProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const filteredConversations = conversations.filter((conv) => {
-    if (!searchQuery) return true;
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
 
-    const searchLower = searchQuery.toLowerCase();
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-    // Search in conversation name
-    if (conv.name?.toLowerCase().includes(searchLower)) return true;
+  // Memoized filtered conversations with optimized filtering
+  const filteredConversations = useMemo(() => {
+    if (!debouncedSearchQuery) return conversations;
 
-    // Search in participant names
-    return conv.participants.some((p) =>
-      p.userProfile.user.name.toLowerCase().includes(searchLower)
-    );
-  });
+    const searchLower = debouncedSearchQuery.toLowerCase();
+
+    return conversations.filter((conv) => {
+      // Search in conversation name
+      const convName = conv.name?.toLowerCase();
+      if (convName && convName.includes(searchLower)) return true;
+
+      // Search in participant names
+      return conv.participants.some((p) => {
+        const participantName = p.userProfile.user.name.toLowerCase();
+        return participantName.includes(searchLower);
+      });
+    });
+  }, [conversations, debouncedSearchQuery]);
 
   return (
     <>

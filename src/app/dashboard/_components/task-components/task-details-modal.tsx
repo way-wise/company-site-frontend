@@ -10,7 +10,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
-import { Task } from "@/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { Task, TaskStatus } from "@/types";
 import { format } from "date-fns";
 import {
   AlertCircle,
@@ -19,6 +28,9 @@ import {
   User,
   XCircle,
 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/context/UserContext";
+import { useUpdateTask } from "@/hooks/useTaskMutations";
 import TaskCommentSection from "./task-comment-section";
 
 interface TaskDetailsModalProps {
@@ -54,7 +66,69 @@ export default function TaskDetailsModal({
   open,
   onOpenChange,
 }: TaskDetailsModalProps) {
+  const { hasPermission } = useAuth();
+  const canUpdateTask = hasPermission("update_task");
+  const updateTaskMutation = useUpdateTask();
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [localProgress, setLocalProgress] = useState(task?.progress || 0);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Update local progress when task changes
+  useEffect(() => {
+    if (task) {
+      setLocalProgress(task.progress);
+    }
+  }, [task?.progress, task]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
   if (!task) return null;
+
+  const handleStatusChange = async (newStatus: TaskStatus) => {
+    if (!canUpdateTask || isUpdating) return;
+    
+    setIsUpdating(true);
+    try {
+      await updateTaskMutation.mutateAsync({
+        taskId: task.id,
+        taskData: { status: newStatus },
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleProgressChange = (newProgress: number) => {
+    if (!canUpdateTask) return;
+    
+    // Update local state immediately for smooth UI
+    setLocalProgress(newProgress);
+
+    // Clear existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Set new timer to update API after 500ms of no changes
+    debounceTimerRef.current = setTimeout(async () => {
+      setIsUpdating(true);
+      try {
+        await updateTaskMutation.mutateAsync({
+          taskId: task.id,
+          taskData: { progress: newProgress },
+        });
+      } finally {
+        setIsUpdating(false);
+      }
+    }, 500);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -91,10 +165,32 @@ export default function TaskDetailsModal({
 
         <div className="space-y-6 mt-4">
           {/* Status and Priority */}
-          <div className="flex items-center gap-4">
-            <Badge className={statusColors[task.status]}>
-              {task.status.replace("_", " ")}
-            </Badge>
+          <div className="flex items-center gap-4 flex-wrap">
+            {canUpdateTask ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Status:</span>
+                <Select
+                  value={task.status}
+                  onValueChange={handleStatusChange}
+                  disabled={isUpdating}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="TODO">To Do</SelectItem>
+                    <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                    <SelectItem value="BLOCKED">Blocked</SelectItem>
+                    <SelectItem value="REVIEW">Review</SelectItem>
+                    <SelectItem value="DONE">Done</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : (
+              <Badge className={statusColors[task.status]}>
+                {task.status.replace("_", " ")}
+              </Badge>
+            )}
             <Badge className={priorityColors[task.priority]}>
               <span className="flex items-center gap-1">
                 {priorityIcons[task.priority]}
@@ -106,10 +202,39 @@ export default function TaskDetailsModal({
           {/* Progress */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Progress</span>
-              <span className="font-medium">{task.progress}%</span>
+              <span className="text-gray-600 font-medium">Progress</span>
+              <span className="font-medium">{localProgress}%</span>
             </div>
-            <Progress value={task.progress} className="h-2" />
+            <Progress value={localProgress} className="h-2" />
+            {canUpdateTask && (
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center gap-3">
+                  <Slider
+                    value={[localProgress]}
+                    onValueChange={(values) => handleProgressChange(values[0])}
+                    max={100}
+                    step={1}
+                    disabled={isUpdating}
+                    className="flex-1"
+                  />
+                  <Input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={localProgress}
+                    onChange={(e) => {
+                      const value = Math.min(100, Math.max(0, Number(e.target.value) || 0));
+                      handleProgressChange(value);
+                    }}
+                    disabled={isUpdating}
+                    className="w-20 text-center"
+                  />
+                </div>
+                <p className="text-xs text-gray-500">
+                  {isUpdating ? "Saving..." : "Drag slider or enter value (auto-saves)"}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Time Information */}
