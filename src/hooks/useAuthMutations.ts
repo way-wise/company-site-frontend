@@ -6,6 +6,26 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+// export const useLogin = () => {
+//   const queryClient = useQueryClient();
+
+//   return useMutation({
+//     mutationFn: (credentials: LoginCredentials) =>
+//       authService.login(credentials),
+//     onSuccess: (data) => {
+//       if (data.success && data.data?.user) {
+//         toast.success("Login successful!");
+//         queryClient.setQueryData(["currentUser"], data.data.user);
+//         queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+//       } else {
+//         toast.error(data.message || "Login failed");
+//       }
+//     },
+//     onError: (error: Error) => {
+//       toast.error(error.message || "Login failed");
+//     },
+//   });
+// };
 export const useLogin = () => {
   const queryClient = useQueryClient();
 
@@ -17,6 +37,10 @@ export const useLogin = () => {
         toast.success("Login successful!");
         queryClient.setQueryData(["currentUser"], data.data.user);
         queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+
+        // Use window.location.href instead of router.push
+        // This ensures cookies are properly set before redirect
+        window.location.href = "/dashboard";
       } else {
         toast.error(data.message || "Login failed");
       }
@@ -58,16 +82,18 @@ export const useLogout = () => {
     onSuccess: () => {
       toast.success("Logged out successfully!");
       queryClient.clear();
-      
+
       // Redirect to main public domain after logout
-      const publicUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const publicUrl =
+        process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
       window.location.href = publicUrl;
     },
     onError: (error: Error) => {
       queryClient.clear();
-      
+
       // Even on error, redirect to main public domain
-      const publicUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      const publicUrl =
+        process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
       window.location.href = publicUrl;
     },
   });
@@ -87,7 +113,9 @@ export const useChangePassword = () => {
     onError: (error: Error) => {
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response
-          ?.data?.message || error.message || "Failed to change password";
+          ?.data?.message ||
+        error.message ||
+        "Failed to change password";
       toast.error(errorMessage);
     },
   });
