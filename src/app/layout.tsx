@@ -1,6 +1,7 @@
 import Providers from "@/providers/Providers";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -41,6 +42,9 @@ export const metadata: Metadata = {
     "best web development company",
     "top web development firm",
   ],
+  verification: {
+    google: "_P7U2RrZRrtu-vgri8bZ0pPBnHiRK99hlp0mh54mpfM",
+  },
   authors: [{ name: "Way Wise Tech" }],
   creator: "Way Wise Tech",
   publisher: "Way Wise Tech",
@@ -52,8 +56,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: baseUrl,
     siteName: "Way Wise Tech",
-    title:
-      "Web Development Company USA | Custom Software Solutions",
+    title: "Web Development Company USA | Custom Software Solutions",
     description:
       "Way Wise Tech is a top-rated web development company in the USA, providing custom software development, web app design, and digital solutions for global businesses.",
     images: [
@@ -92,7 +95,33 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google Tag Manager */}
+        <Script
+          id="google-tag-manager"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-NHZ8RNGJ');
+            `,
+          }}
+        />
+      </head>
       <body className={`${inter.variable} font-sans antialiased`}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-NHZ8RNGJ"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+
         <Providers>
           <Toaster position="bottom-right" />
           {children}

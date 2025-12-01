@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Conversation } from "@/types";
 import { Plus, Search } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ConversationItem from "./ConversationItem";
 import CreateConversationModal from "./CreateConversationModal";
 

@@ -1,10 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/UserContext";
 import { useTasks, useUpdateTask } from "@/hooks/useTaskMutations";
 import { Task, TaskStatus } from "@/types";
-import { Plus } from "lucide-react";
 import { useState } from "react";
 import TaskCard from "./task-card";
 import {
@@ -35,6 +33,8 @@ const KANBAN_COLUMNS = [
 
 interface TaskKanbanProps {
   milestoneId?: string;
+  projectMilestoneIds?: string[];
+  priorityFilter?: string;
   onTaskClick?: (task: Task) => void;
 }
 
@@ -124,19 +124,18 @@ function DroppableColumn({
 
 export default function TaskKanban({
   milestoneId,
+  projectMilestoneIds,
+  priorityFilter = "",
   onTaskClick,
 }: TaskKanbanProps) {
   const { hasPermission } = useAuth();
-  const canCreateTask = hasPermission("create_task");
   const canUpdateTask = hasPermission("update_task");
-  const [search, setSearch] = useState("");
-  const [priorityFilter, setPriorityFilter] = useState("");
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const { data: tasksData, isLoading } = useTasks({
     page: 1,
     limit: 1000, // Get all tasks for Kanban
-    search: search,
+    search: "",
     priority: priorityFilter,
     milestoneId: milestoneId,
   });
@@ -153,10 +152,21 @@ export default function TaskKanban({
   );
 
   const tasksByStatus = KANBAN_COLUMNS.reduce((acc, column) => {
-    acc[column.id] =
-      (tasksData as { data?: { result?: Task[] } })?.data?.result?.filter(
-        (task: Task) => task.status === column.id
-      ) || [];
+    const allTasks = (tasksData as { data?: { result?: Task[] } })?.data?.result || [];
+    
+    // Filter tasks by status and optionally by project milestones
+    acc[column.id] = allTasks.filter((task: Task) => {
+      if (task.status !== column.id) return false;
+      
+      // If projectMilestoneIds is provided (for "All Milestones" view),
+      // only show tasks from those milestones
+      if (projectMilestoneIds && projectMilestoneIds.length > 0) {
+        return task.milestone?.id && projectMilestoneIds.includes(task.milestone.id);
+      }
+      
+      return true;
+    });
+    
     return acc;
   }, {} as Record<string, Task[]>);
 
@@ -224,28 +234,6 @@ export default function TaskKanban({
       onDragEnd={handleDragEnd}
     >
       <div className="space-y-6">
-        {/* Filters */}
-        <div className="flex items-center gap-4">
-          <input
-            type="search"
-            placeholder="Search tasks..."
-            className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <select
-            className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value)}
-          >
-            <option value="">All Priorities</option>
-            <option value="LOW">Low</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="HIGH">High</option>
-            <option value="CRITICAL">Critical</option>
-          </select>
-        </div>
-
         {/* Kanban Board */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {KANBAN_COLUMNS.map((column) => {
@@ -263,25 +251,14 @@ export default function TaskKanban({
                 {/* Column Header */}
                 <div className={`p-4 rounded-lg ${column.color}`}>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium text-gray-900">
-                        {column.title}
-                      </h3>
-                      <div className="text-sm text-gray-600">
-                        {stats.count} task{stats.count !== 1 ? "s" : ""}
-                      </div>
+                    <h3 className="font-medium text-gray-900">
+                      {column.title}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-semibold text-gray-700">
+                        {stats.count}
+                      </span>
                     </div>
-                    {canCreateTask && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => {
-                          // TODO: Open add task modal with pre-selected status
-                        }}
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    )}
                   </div>
 
                   {/* Column Stats */}
