@@ -44,6 +44,7 @@ import {
   useDeleteMilestone,
   useMilestones,
 } from "@/hooks/useMilestoneMutations";
+import { useMarkMilestoneAsPaidManually } from "@/hooks/usePaymentMutations";
 import { useDeleteTask } from "@/hooks/useTaskMutations";
 import { formatStatusText, getMilestoneStatusColor } from "@/lib/status-utils";
 import { EmployeeMilestone, Milestone, ServiceMilestone, Task } from "@/types";
@@ -67,6 +68,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import MarkAsPaidModal from "@/components/payment/MarkAsPaidModal";
 import AssignEmployeeModal from "../milestone-components/assign-employee-modal";
 import AssignServiceModal from "../milestone-components/assign-service-modal";
 import MilestoneDetailModal from "../milestone-components/milestone-detail-modal";
@@ -89,6 +91,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   const canUpdateMilestone = hasPermission("update_milestone");
   const canDeleteMilestone = hasPermission("delete_milestone");
   const canCreateTask = hasPermission("create_task");
+  const canManageManualPayment = hasPermission("manage_manual_payment");
   const canViewMilestoneActions = canUpdateMilestone || canDeleteMilestone;
   const [addMilestoneOpen, setAddMilestoneOpen] = useState(false);
   const [expandedMilestones, setExpandedMilestones] = useState<Set<string>>(
@@ -109,6 +112,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   const [assignServiceModalOpen, setAssignServiceModalOpen] = useState(false);
   const [deleteMilestoneModalOpen, setDeleteMilestoneModalOpen] =
     useState(false);
+  const [markAsPaidModalOpen, setMarkAsPaidModalOpen] = useState(false);
 
   // Task action modals
   const [deleteTaskModalOpen, setDeleteTaskModalOpen] = useState(false);
@@ -141,6 +145,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   const createMilestoneMutation = useCreateMilestone();
   const deleteMilestoneMutation = useDeleteMilestone();
   const deleteTaskMutation = useDeleteTask();
+  const markAsPaidMutation = useMarkMilestoneAsPaidManually();
   // const updateTaskMutation = useUpdateTask();
 
   const handleCreateMilestone = async (data: CreateMilestoneFormData) => {
@@ -204,6 +209,26 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
       setSelectedTask(null);
     } catch (error) {
       // Failed to delete task
+    }
+  };
+
+  const handleMarkAsPaid = async (data: {
+    amount: number;
+    paidAt: string;
+    manualPaymentMethod: string;
+    notes?: string;
+  }) => {
+    if (!selectedMilestone) return;
+
+    try {
+      await markAsPaidMutation.mutateAsync({
+        milestoneId: selectedMilestone.id,
+        data,
+      });
+      setMarkAsPaidModalOpen(false);
+      setSelectedMilestone(null);
+    } catch (error) {
+      // Error is handled by the mutation hook
     }
   };
 
@@ -438,6 +463,21 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
                           Pay
                         </Button>
                       )}
+                      {canManageManualPayment &&
+                        milestone.paymentStatus === "UNPAID" && (
+                          <Button
+                            variant="default"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedMilestone(milestone);
+                              setMarkAsPaidModalOpen(true);
+                            }}
+                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+                          >
+                            <CheckSquare className="h-4 w-4" />
+                            Mark as Paid
+                          </Button>
+                        )}
                       {milestone.paymentStatus === "PAID" &&
                         milestone.payments &&
                         milestone.payments.length > 0 && (
@@ -1224,6 +1264,18 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
           </div>
         </ModalContent>
       </Modal>
+
+      {/* Mark as Paid Modal */}
+      <MarkAsPaidModal
+        isOpen={markAsPaidModalOpen}
+        onClose={() => {
+          setMarkAsPaidModalOpen(false);
+          setSelectedMilestone(null);
+        }}
+        milestone={selectedMilestone}
+        onSubmit={handleMarkAsPaid}
+        isLoading={markAsPaidMutation.isPending}
+      />
 
       {/* Delete Task Modal */}
       <Modal open={deleteTaskModalOpen} onOpenChange={setDeleteTaskModalOpen}>

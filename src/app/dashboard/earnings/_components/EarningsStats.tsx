@@ -46,12 +46,14 @@ export function EarningsStats({ startDate, endDate }: EarningsStatsProps) {
       earningStatsResponse.data &&
       typeof earningStatsResponse.data === "object"
     ) {
-      manualEarnings =
+      manualEarnings = Number(
         (earningStatsResponse.data as { totalEarnings?: number })
-          ?.totalEarnings || 0;
+          ?.totalEarnings || 0
+      );
     } else if ("totalEarnings" in earningStatsResponse) {
-      manualEarnings =
-        (earningStatsResponse as { totalEarnings: number }).totalEarnings || 0;
+      manualEarnings = Number(
+        (earningStatsResponse as { totalEarnings: number }).totalEarnings || 0
+      );
     }
   }
 
@@ -70,7 +72,7 @@ export function EarningsStats({ startDate, endDate }: EarningsStatsProps) {
   }
 
   const projectEarnings = projectEarningsList.reduce(
-    (sum, item) => sum + item.totalAmount,
+    (sum, item) => sum + Number(item.totalAmount || 0),
     0
   );
 
@@ -86,17 +88,21 @@ export function EarningsStats({ startDate, endDate }: EarningsStatsProps) {
       expenseStatsResponse.data &&
       typeof expenseStatsResponse.data === "object"
     ) {
-      totalExpenses =
+      totalExpenses = Number(
         (expenseStatsResponse.data as { totalExpenses?: number })
-          ?.totalExpenses || 0;
-      totalCount =
-        (expenseStatsResponse.data as { totalCount?: number })?.totalCount || 0;
+          ?.totalExpenses || 0
+      );
+      totalCount = Number(
+        (expenseStatsResponse.data as { totalCount?: number })?.totalCount || 0
+      );
     } else {
-      totalExpenses =
+      totalExpenses = Number(
         (expenseStatsResponse as { totalExpenses?: number })?.totalExpenses ||
-        0;
-      totalCount =
-        (expenseStatsResponse as { totalCount?: number })?.totalCount || 0;
+        0
+      );
+      totalCount = Number(
+        (expenseStatsResponse as { totalCount?: number })?.totalCount || 0
+      );
     }
   }
   const netProfit = totalEarnings - totalExpenses;

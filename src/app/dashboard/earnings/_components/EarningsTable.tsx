@@ -242,8 +242,8 @@ export function EarningsTable({ startDate, endDate }: EarningsTableProps) {
     return new Date(dateString).toLocaleDateString();
   };
 
-  const totalEarnings = allEarnings.reduce((sum, e) => sum + e.amount, 0);
-  const totalExpenses = allExpenses.reduce((sum, e) => sum + e.amount, 0);
+  const totalEarnings = allEarnings.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+  const totalExpenses = allExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
   const netTotal = totalEarnings - totalExpenses;
 
   return (

@@ -101,6 +101,23 @@ export const paymentService = {
     const response = await apiClient.get(`/payment/payments/${paymentId}/invoice`);
     return response.data;
   },
+
+  // Mark milestone as paid manually (admin only)
+  markMilestoneAsPaidManually: async (
+    milestoneId: string,
+    data: {
+      amount: number;
+      paidAt: string;
+      manualPaymentMethod: string;
+      notes?: string;
+    }
+  ): Promise<ApiResponse<MilestonePayment>> => {
+    const response = await apiClient.post(
+      `/payment/milestones/${milestoneId}/mark-paid-manually`,
+      data
+    );
+    return response.data;
+  },
 };
 
 

@@ -185,3 +185,45 @@ export const usePaymentInvoice = (paymentId: string) => {
   });
 };
 
+// Hook to mark milestone as paid manually (admin only)
+export const useMarkMilestoneAsPaidManually = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      milestoneId,
+      data,
+    }: {
+      milestoneId: string;
+      data: {
+        amount: number;
+        paidAt: string;
+        manualPaymentMethod: string;
+        notes?: string;
+      };
+    }): Promise<MilestonePayment> => {
+      const response = await paymentService.markMilestoneAsPaidManually(
+        milestoneId,
+        data
+      );
+      if (!response.data) {
+        throw new Error("Failed to mark payment as paid");
+      }
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success(
+        `Payment marked as paid successfully! Invoice: ${data.invoiceNumber}`
+      );
+      queryClient.invalidateQueries({ queryKey: paymentQueryKeys.userPayments() });
+      queryClient.invalidateQueries({ queryKey: ["milestones"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    },
+    onError: (error: Error) => {
+      const errorMessage =
+        error.message || "Failed to mark payment as paid";
+      toast.error(errorMessage);
+    },
+  });
+};
+

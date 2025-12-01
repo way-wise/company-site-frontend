@@ -15,6 +15,42 @@ import { useEffect, useState } from "react";
 import TaskDetailsModal from "../_components/task-components/task-details-modal";
 import TaskKanban from "../_components/task-components/task-kanban";
 
+const STORAGE_KEY = 'tasks_selected_project';
+const RECENT_PROJECTS_KEY = 'tasks_recent_projects';
+const MAX_RECENT = 5;
+
+const getStoredProject = (): Project | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
+  }
+};
+
+const storeProject = (project: Project) => {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
+  
+  // Also add to recent projects
+  const recentStr = localStorage.getItem(RECENT_PROJECTS_KEY);
+  const recent: Project[] = recentStr ? JSON.parse(recentStr) : [];
+  const filtered = recent.filter(p => p.id !== project.id);
+  const updated = [project, ...filtered].slice(0, MAX_RECENT);
+  localStorage.setItem(RECENT_PROJECTS_KEY, JSON.stringify(updated));
+};
+
+const getRecentProjects = (): Project[] => {
+  if (typeof window === 'undefined') return [];
+  try {
+    const stored = localStorage.getItem(RECENT_PROJECTS_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
+
 export default function TasksPage() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [projectSearch, setProjectSearch] = useState("");
@@ -22,8 +58,21 @@ export default function TasksPage() {
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>("all");
   const [showProjectDropdown, setShowProjectDropdown] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState("");
+  const [recentProjects, setRecentProjects] = useState<Project[]>([]);
 
   const debouncedProjectSearch = useDebounce(projectSearch, 500);
+  
+  // Load from localStorage on mount
+  useEffect(() => {
+    const stored = getStoredProject();
+    const recent = getRecentProjects();
+    setRecentProjects(recent);
+    
+    if (stored) {
+      setSelectedProject(stored);
+      setProjectSearch(stored.name);
+    }
+  }, []);
 
   // Fetch projects with search
   const { data: projectsData, isLoading: isProjectsLoading } = useProjects({
@@ -52,6 +101,8 @@ export default function TasksPage() {
     setSelectedProject(project);
     setProjectSearch(project.name);
     setShowProjectDropdown(false);
+    storeProject(project);
+    setRecentProjects(getRecentProjects());
   };
 
   const handleClearProject = () => {
@@ -105,29 +156,64 @@ export default function TasksPage() {
               </div>
 
               {/* Project Dropdown */}
-              {showProjectDropdown && !selectedProject && projectSearch && (
+              {showProjectDropdown && !selectedProject && (
                 <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-auto">
                   {isProjectsLoading ? (
                     <div className="p-3 text-sm text-gray-500">Loading...</div>
-                  ) : projects.length === 0 ? (
-                    <div className="p-3 text-sm text-gray-500">
-                      No projects found
-                    </div>
                   ) : (
-                    projects.map((project) => (
-                      <button
-                        key={project.id}
-                        onClick={() => handleProjectSelect(project)}
-                        className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors"
-                      >
-                        <div className="font-medium text-sm">{project.name}</div>
-                        {project.description && (
-                          <div className="text-xs text-gray-500 line-clamp-1">
-                            {project.description}
+                    <>
+                      {/* Recent Projects Section */}
+                      {!projectSearch && recentProjects.length > 0 && (
+                        <div className="border-b">
+                          <div className="px-3 py-2 text-xs font-semibold text-gray-500 bg-gray-50">
+                            Recent Projects
                           </div>
-                        )}
-                      </button>
-                    ))
+                          {recentProjects.map((project) => (
+                            <button
+                              key={project.id}
+                              onClick={() => handleProjectSelect(project)}
+                              className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors"
+                            >
+                              <div className="font-medium text-sm">{project.name}</div>
+                              {project.description && (
+                                <div className="text-xs text-gray-500 line-clamp-1">
+                                  {project.description}
+                                </div>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Search Results or All Projects */}
+                      {projects.length === 0 ? (
+                        <div className="p-3 text-sm text-gray-500">
+                          No projects found
+                        </div>
+                      ) : (
+                        <>
+                          {projectSearch && projects.length > 0 && (
+                            <div className="px-3 py-2 text-xs font-semibold text-gray-500 bg-gray-50">
+                              {projectSearch ? 'Search Results' : 'All Projects'}
+                            </div>
+                          )}
+                          {projects.map((project) => (
+                            <button
+                              key={project.id}
+                              onClick={() => handleProjectSelect(project)}
+                              className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors"
+                            >
+                              <div className="font-medium text-sm">{project.name}</div>
+                              {project.description && (
+                                <div className="text-xs text-gray-500 line-clamp-1">
+                                  {project.description}
+                                </div>
+                              )}
+                            </button>
+                          ))}
+                        </>
+                      )}
+                    </>
                   )}
                 </div>
               )}
