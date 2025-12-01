@@ -125,7 +125,7 @@ export const servicesFirstData: ServiceDetail[] = [
     description:
       "Implement smart AI/ML solutions to connect devices, gather insights, and optimize processes in real time.",
     bgImage: internetThingsBg,
-    url: "/services/internet-of-things",
+    url: "/services/ai-integration",
     icon: cloudIcon,
     videoImage: aiImg,
     detailedDescription:

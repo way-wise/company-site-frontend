@@ -11,7 +11,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_API;
 const REQUEST_TIMEOUT = 20000;
 
 // Create axios instance
-export const apiClient = axios.create({
+const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: REQUEST_TIMEOUT,
   headers: {
