@@ -85,7 +85,7 @@ export const useLogout = () => {
 
       // Redirect to main public domain after logout
       const publicUrl =
-        process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
       window.location.href = publicUrl;
     },
     onError: (error: Error) => {
@@ -93,7 +93,7 @@ export const useLogout = () => {
 
       // Even on error, redirect to main public domain
       const publicUrl =
-        process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
       window.location.href = publicUrl;
     },
   });
