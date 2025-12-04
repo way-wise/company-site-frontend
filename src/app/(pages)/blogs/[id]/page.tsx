@@ -6,7 +6,7 @@ import { BlogDetail } from "../../_components/blogs/blog-detail";
 async function getBlogBySlug(slug: string): Promise<Blog | null> {
   try {
     const baseUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+      process.env.NEXT_PUBLIC_BASE_API || "http://localhost:5000/api/v1";
     const response = await fetch(`${baseUrl}/blogs/slug/${slug}`, {
       cache: "no-store",
     });
@@ -46,7 +46,7 @@ export async function generateMetadata({
     };
   }
 
-  const baseUrl = process.env.APP_URL || "https://escalade4lax.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const blogUrl = `${baseUrl}/blogs/${blog.slug}`;
 
   // Filter out undefined tags
@@ -103,7 +103,7 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "https://escalade4lax.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const blogUrl = `${baseUrl}/blogs/${blog.slug}`;
 
   // Filter out undefined tags

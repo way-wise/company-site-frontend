@@ -7,7 +7,8 @@ import { dispatchAuthLogoutEvent } from "./auth-events";
 
 // Base API configuration
 // Support both NEXT_PUBLIC_BASE_API (with /api/v1) and NEXT_PUBLIC_API_URL (without /api/v1)
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_API;
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_API || "http://localhost:5000/api/v1";
 const REQUEST_TIMEOUT = 20000;
 
 // Create axios instance

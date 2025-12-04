@@ -20,17 +20,24 @@ export interface BlogStats {
   archivedBlogs: number;
 }
 
+export interface BlogsResponse {
+  success: boolean;
+  message: string;
+  data: Blog[];
+  meta: { page: number; limit: number; total: number; totalPages: number };
+}
+
 export const blogService = {
   // Get all blogs with pagination and search
-  getAllBlogs: async (
-    params: BlogsQueryParams
-  ): Promise<
-    ApiResponse<{
-      meta: { page: number; limit: number; total: number; totalPages: number };
-      data: Blog[];
-    }>
-  > => {
-    const { page = 1, limit = 10, search, status, title, userProfileId } = params;
+  getAllBlogs: async (params: BlogsQueryParams): Promise<BlogsResponse> => {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      status,
+      title,
+      userProfileId,
+    } = params;
     let url = `/blogs?page=${page}&limit=${limit}`;
 
     if (search?.trim()) {
@@ -97,4 +104,3 @@ export const blogService = {
     return response.data;
   },
 };
-

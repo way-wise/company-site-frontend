@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Blog status enum
-export type BlogStatus = "draft" | "published" | "archived";
+export type BlogStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
 // Author type
 export interface Author {
@@ -42,8 +42,8 @@ export const createBlogSchema = z.object({
   content: z.string().min(1, "Content is required"),
   excerpt: z.string().optional(),
   featuredImage: z.string().optional(),
-  status: z.enum(["draft", "published", "archived"]).default("draft"),
-  tags: z.array(z.string()).optional().default([]),
+  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]),
+  tags: z.array(z.string()),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
 });

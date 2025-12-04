@@ -21,23 +21,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/context/UserContext";
 import { useCreateBlog } from "@/hooks/useBlogMutations";
-import { CreateBlogInput } from "@/schema/blogSchema";
+import { CreateBlogInput, createBlogSchema } from "@/schema/blogSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 function CreateBlogForm() {
   const router = useRouter();
+  const { user } = useAuth();
   const createBlogMutation = useCreateBlog();
 
   const form = useForm<CreateBlogInput>({
+    resolver: zodResolver(createBlogSchema),
     defaultValues: {
       title: "",
       content: "",
       excerpt: "",
       featuredImage: "",
-      status: "draft",
+      status: "DRAFT",
       tags: [],
       metaTitle: "",
       metaDescription: "",
@@ -46,7 +50,11 @@ function CreateBlogForm() {
 
   const handleSubmit = async (data: CreateBlogInput) => {
     try {
-      await createBlogMutation.mutateAsync(data);
+      const userProfileId = user?.userProfile?.id;
+      if (!userProfileId) {
+        throw new Error("User profile not found");
+      }
+      await createBlogMutation.mutateAsync({ ...data, userProfileId });
       router.push("/dashboard/blogs");
     } catch {
       // Error is handled by the mutation hook
@@ -64,7 +72,7 @@ function CreateBlogForm() {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-6 p-6">
+    <div className="w-full space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button
@@ -78,12 +86,12 @@ function CreateBlogForm() {
         </Button>
         <div>
           <h1 className="text-3xl font-bold">Create New Blog</h1>
-          <p className="text-gray-600">Write and publish a new blog post</p>
+          <p className="text-muted-foreground">Write and publish a new blog post</p>
         </div>
       </div>
 
       {/* Form */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="rounded-lg border bg-card p-6 shadow-sm">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
@@ -164,9 +172,9 @@ function CreateBlogForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="published">Published</SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
+                        <SelectItem value="DRAFT">Draft</SelectItem>
+                        <SelectItem value="PUBLISHED">Published</SelectItem>
+                        <SelectItem value="ARCHIVED">Archived</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Modal } from "@/components/ui/modal";
+import { CustomModal as Modal } from "@/components/ui/modal";
 import {
   Select,
   SelectContent,
@@ -25,7 +25,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, Eye, MoreVertical, Plus, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export const BlogTable = () => {
   const router = useRouter();
@@ -52,7 +51,11 @@ export const BlogTable = () => {
   }, [search]);
 
   // Fetch blogs data
-  const { data: blogsData, isLoading } = useBlogs({
+  const {
+    data: blogsData,
+    isLoading,
+    error,
+  } = useBlogs({
     page: pagination.pageIndex,
     limit: pagination.pageSize,
     search: debouncedSearch || undefined,
@@ -130,13 +133,16 @@ export const BlogTable = () => {
       header: "Status",
       cell: ({ row }) => {
         const status = row.getValue("status") as string;
+        const statusLower = status.toLowerCase();
         const statusColors = {
           draft: "bg-gray-100 text-gray-800",
           published: "bg-green-100 text-green-800",
           archived: "bg-red-100 text-red-800",
         };
         return (
-          <Badge className={statusColors[status as keyof typeof statusColors]}>
+          <Badge
+            className={statusColors[statusLower as keyof typeof statusColors]}
+          >
             {status}
           </Badge>
         );
@@ -243,6 +249,56 @@ export const BlogTable = () => {
     },
   ];
 
+  // Handle error state
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">Blog Management</h2>
+            <p className="text-gray-600">Manage your blog posts</p>
+          </div>
+          <Button onClick={handleCreateBlog}>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Blog
+          </Button>
+        </div>
+        <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-800">
+          <p className="font-medium">Error loading blogs</p>
+          <p className="text-sm">
+            {error instanceof Error
+              ? error.message
+              : "An unexpected error occurred"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle API response failure
+  if (blogsData && !blogsData.success) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">Blog Management</h2>
+            <p className="text-gray-600">Manage your blog posts</p>
+          </div>
+          <Button onClick={handleCreateBlog}>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Blog
+          </Button>
+        </div>
+        <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-800">
+          <p className="font-medium">Failed to load blogs</p>
+          <p className="text-sm">
+            {blogsData.message || "An unexpected error occurred"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -271,9 +327,9 @@ export const BlogTable = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
-            <SelectItem value="published">Published</SelectItem>
-            <SelectItem value="archived">Archived</SelectItem>
+            <SelectItem value="DRAFT">Draft</SelectItem>
+            <SelectItem value="PUBLISHED">Published</SelectItem>
+            <SelectItem value="ARCHIVED">Archived</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -281,11 +337,11 @@ export const BlogTable = () => {
       {/* Data Table */}
       <DataTable
         columns={columns}
-        data={blogsData?.data?.data || []}
+        data={blogsData?.data || []}
         pagination={{
           pageIndex: pagination.pageIndex,
           pageSize: pagination.pageSize,
-          total: blogsData?.data?.meta?.total || 0,
+          total: blogsData?.meta?.total || 0,
         }}
         onPaginationChange={(newPagination) => {
           setPagination({

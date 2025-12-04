@@ -5,7 +5,7 @@ import { BlogList } from "../_components/blogs/blog-list";
 async function getAllBlogs(): Promise<Blog[]> {
   try {
     const baseUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+      process.env.NEXT_PUBLIC_BASE_API || "http://localhost:5000/api/v1";
     const url = `${baseUrl}/blogs/public`;
 
     const response = await fetch(url, {
@@ -18,7 +18,7 @@ async function getAllBlogs(): Promise<Blog[]> {
 
     const data = await response.json();
     return data.data || [];
-  } catch (error) {
+  } catch {
     return [];
   }
 }
@@ -58,9 +58,8 @@ export const metadata: Metadata = {
 
 const BlogsPage = async () => {
   const blogs = await getAllBlogs();
-  const baseUrl = process.env.APP_URL || "https://escalade4lax.com/api";
-  const frontendUrl = baseUrl;
-
+  const frontendUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   // Structured data for blog collection
   const structuredData = {
     "@context": "https://schema.org",

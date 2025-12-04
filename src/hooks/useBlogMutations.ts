@@ -1,7 +1,8 @@
 "use client";
 
 import { blogService, BlogsQueryParams, BlogStats } from "@/services/BlogService";
-import { ApiResponse, Blog, CreateBlogInput } from "@/schema/blogSchema";
+import { Blog, CreateBlogInput } from "@/schema/blogSchema";
+import { ApiResponse } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -85,7 +86,7 @@ export const useCreateBlog = () => {
         queryClient.invalidateQueries({ queryKey: blogQueryKeys.lists() });
         queryClient.invalidateQueries({ queryKey: blogQueryKeys.stats() });
         // Invalidate public blogs if published
-        if (variables.status === "published") {
+        if (variables.status === "PUBLISHED") {
           queryClient.invalidateQueries({ queryKey: blogQueryKeys.publicList() });
         }
       } else {
@@ -124,7 +125,7 @@ export const useUpdateBlog = () => {
         });
         queryClient.invalidateQueries({ queryKey: blogQueryKeys.stats() });
         // Invalidate public blogs if status changed to/from published
-        if (variables.blogData.status === "published") {
+        if (variables.blogData.status === "PUBLISHED") {
           queryClient.invalidateQueries({ queryKey: blogQueryKeys.publicList() });
         }
       } else {

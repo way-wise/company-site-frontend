@@ -22,12 +22,12 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useBlog, useUpdateBlog } from "@/hooks/useBlogMutations";
-import { CreateBlogInput } from "@/schema/blogSchema";
+import { CreateBlogInput, createBlogSchema } from "@/schema/blogSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 function EditBlogForm() {
   const router = useRouter();
@@ -40,12 +40,13 @@ function EditBlogForm() {
   const blog = blogResponse?.data;
 
   const form = useForm<CreateBlogInput>({
+    resolver: zodResolver(createBlogSchema),
     defaultValues: {
       title: "",
       content: "",
       excerpt: "",
       featuredImage: "",
-      status: "draft",
+      status: "DRAFT",
       tags: [],
       metaTitle: "",
       metaDescription: "",
@@ -56,10 +57,10 @@ function EditBlogForm() {
   useEffect(() => {
     if (blog) {
       // Ensure status is a valid string value
-      const statusValue = String(blog.status || "draft") as
-        | "draft"
-        | "published"
-        | "archived";
+      const statusValue = String(blog.status || "DRAFT") as
+        | "DRAFT"
+        | "PUBLISHED"
+        | "ARCHIVED";
 
       form.reset({
         title: blog.title || "",
@@ -85,16 +86,16 @@ function EditBlogForm() {
   const handleSubmit = async (data: CreateBlogInput) => {
     try {
       // Ensure status is always a valid value
-      const validStatuses = ["draft", "published", "archived"] as const;
+      const validStatuses = ["DRAFT", "PUBLISHED", "ARCHIVED"] as const;
       const statusValue = validStatuses.includes(
-        data.status as (typeof validStatuses)[number],
+        data.status as (typeof validStatuses)[number]
       )
         ? data.status
-        : blog?.status || "draft";
+        : blog?.status || "DRAFT";
 
       const submitData = {
         ...data,
-        status: statusValue as "draft" | "published" | "archived",
+        status: statusValue as "DRAFT" | "PUBLISHED" | "ARCHIVED",
       };
 
       await updateBlogMutation.mutateAsync({
@@ -120,14 +121,14 @@ function EditBlogForm() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-4xl space-y-6 p-6">
+      <div className="w-full space-y-6">
         <div className="animate-pulse">
-          <div className="mb-4 h-8 w-1/3 rounded bg-gray-200"></div>
-          <div className="mb-8 h-4 w-1/2 rounded bg-gray-200"></div>
+          <div className="mb-4 h-8 w-1/3 rounded bg-muted"></div>
+          <div className="mb-8 h-4 w-1/2 rounded bg-muted"></div>
           <div className="space-y-4">
-            <div className="h-10 rounded bg-gray-200"></div>
-            <div className="h-20 rounded bg-gray-200"></div>
-            <div className="h-32 rounded bg-gray-200"></div>
+            <div className="h-10 rounded bg-muted"></div>
+            <div className="h-20 rounded bg-muted"></div>
+            <div className="h-32 rounded bg-muted"></div>
           </div>
         </div>
       </div>
@@ -136,10 +137,10 @@ function EditBlogForm() {
 
   if (!blog) {
     return (
-      <div className="container mx-auto max-w-4xl space-y-6 p-6">
+      <div className="w-full space-y-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Blog not found</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-2xl font-bold">Blog not found</h1>
+          <p className="mt-2 text-muted-foreground">
             The blog you&apos;re looking for doesn&apos;t exist.
           </p>
           <Button
@@ -154,7 +155,7 @@ function EditBlogForm() {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-6 p-6">
+    <div className="w-full space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button
@@ -168,12 +169,12 @@ function EditBlogForm() {
         </Button>
         <div>
           <h1 className="text-3xl font-bold">Edit Blog</h1>
-          <p className="text-gray-600">Update your blog post</p>
+          <p className="text-muted-foreground">Update your blog post</p>
         </div>
       </div>
 
       {/* Form */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
+      <div className="rounded-lg border bg-card p-6 shadow-sm">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
@@ -240,39 +241,28 @@ function EditBlogForm() {
               <FormField
                 control={form.control}
                 name="status"
-                render={({ field }) => {
-                  // Ensure we always have a valid status value
-                  const currentValue = field.value || blog?.status || "draft";
-                  const statusValue = String(currentValue) as
-                    | "draft"
-                    | "published"
-                    | "archived";
-
-                  return (
-                    <FormItem>
-                      <FormLabel>Status</FormLabel>
-                      <Select
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                        }}
-                        value={statusValue}
-                        disabled={isSubmitting}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select status" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="draft">Draft</SelectItem>
-                          <SelectItem value="published">Published</SelectItem>
-                          <SelectItem value="archived">Archived</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || "DRAFT"}
+                      disabled={isSubmitting}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="DRAFT">Draft</SelectItem>
+                        <SelectItem value="PUBLISHED">Published</SelectItem>
+                        <SelectItem value="ARCHIVED">Archived</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
 
               <FormField

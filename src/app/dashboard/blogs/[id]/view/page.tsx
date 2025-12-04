@@ -154,9 +154,9 @@ function BlogViewContent({ params }: BlogViewPageProps) {
           <div className="mb-4 flex items-center gap-2">
             <Badge
               className={
-                blog.status === "published"
+                blog.status === "PUBLISHED"
                   ? "bg-green-100 text-green-800"
-                  : blog.status === "draft"
+                  : blog.status === "DRAFT"
                     ? "bg-gray-100 text-gray-800"
                     : "bg-red-100 text-red-800"
               }

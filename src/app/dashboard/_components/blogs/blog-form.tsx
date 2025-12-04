@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Modal } from "@/components/ui/modal";
+import { CustomModal as Modal } from "@/components/ui/modal";
 import {
   Select,
   SelectContent,
@@ -48,7 +48,7 @@ export const BlogForm = ({
       excerpt: initialData?.excerpt || "",
       featuredImage: initialData?.featuredImage || "",
       status:
-        (initialData?.status as "draft" | "published" | "archived") || "draft",
+        (initialData?.status as "DRAFT" | "PUBLISHED" | "ARCHIVED") || "DRAFT",
       tags: initialData?.tags || [],
       metaTitle: initialData?.metaTitle || "",
       metaDescription: initialData?.metaDescription || "",
@@ -64,7 +64,7 @@ export const BlogForm = ({
         excerpt: initialData.excerpt || "",
         featuredImage: initialData.featuredImage || "",
         status:
-          (initialData.status as "draft" | "published" | "archived") || "draft",
+          (initialData.status as "DRAFT" | "PUBLISHED" | "ARCHIVED") || "DRAFT",
         tags: initialData.tags || [],
         metaTitle: initialData.metaTitle || "",
         metaDescription: initialData.metaDescription || "",
@@ -94,7 +94,7 @@ export const BlogForm = ({
         content: "",
         excerpt: "",
         featuredImage: "",
-        status: "draft",
+        status: "DRAFT",
         tags: [],
         metaTitle: "",
         metaDescription: "",
@@ -198,9 +198,9 @@ export const BlogForm = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="published">Published</SelectItem>
-                      <SelectItem value="archived">Archived</SelectItem>
+                      <SelectItem value="DRAFT">Draft</SelectItem>
+                      <SelectItem value="PUBLISHED">Published</SelectItem>
+                      <SelectItem value="ARCHIVED">Archived</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
