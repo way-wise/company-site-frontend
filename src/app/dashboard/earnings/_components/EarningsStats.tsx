@@ -97,8 +97,7 @@ export function EarningsStats({ startDate, endDate }: EarningsStatsProps) {
       );
     } else {
       totalExpenses = Number(
-        (expenseStatsResponse as { totalExpenses?: number })?.totalExpenses ||
-        0
+        (expenseStatsResponse as { totalExpenses?: number })?.totalExpenses || 0
       );
       totalCount = Number(
         (expenseStatsResponse as { totalCount?: number })?.totalCount || 0
