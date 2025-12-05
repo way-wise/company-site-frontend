@@ -120,3 +120,49 @@ export const useChangePassword = () => {
     },
   });
 };
+
+export const useForgotPassword = () => {
+  return useMutation({
+    mutationFn: (email: string) => authService.forgotPassword(email),
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success(data.message || "Password reset link sent to your email!");
+      } else {
+        toast.error(data.message || "Failed to send reset link");
+      }
+    },
+    onError: (error: Error) => {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message ||
+        error.message ||
+        "Failed to send reset link";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useResetPassword = () => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: (data: { token: string; newPassword: string }) =>
+      authService.resetPassword(data),
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success("Password reset successfully! Please login with your new password.");
+        router.push("/login");
+      } else {
+        toast.error(data.message || "Failed to reset password");
+      }
+    },
+    onError: (error: Error) => {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message ||
+        error.message ||
+        "Failed to reset password";
+      toast.error(errorMessage);
+    },
+  });
+};
