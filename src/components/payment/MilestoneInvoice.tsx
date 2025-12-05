@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { usePaymentInvoice } from "@/hooks/usePaymentMutations";
@@ -64,6 +65,17 @@ export function MilestoneInvoice({ paymentId }: MilestoneInvoiceProps) {
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">INVOICE</h2>
                 <p className="text-gray-600">Invoice Number: {payment.invoiceNumber}</p>
                 <p className="text-gray-600">Date: {formatDate(payment.paidAt)}</p>
+                <div className="mt-2">
+                  <Badge
+                    className={
+                      payment.paymentType === "MANUAL"
+                        ? "bg-blue-100 text-blue-700"
+                        : "bg-purple-100 text-purple-700"
+                    }
+                  >
+                    {payment.paymentType === "MANUAL" ? "Manual Payment" : "Stripe Payment"}
+                  </Badge>
+                </div>
               </div>
               <div className="text-right">
                 <p className="text-sm text-gray-600">Status</p>
@@ -147,24 +159,45 @@ export function MilestoneInvoice({ paymentId }: MilestoneInvoiceProps) {
           </div>
 
           {/* Payment Method */}
-          {payment.paymentMethod && (
-            <div className="mb-8 p-4 bg-gray-50 rounded-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">Payment Method</h3>
+          <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-semibold text-gray-900 mb-2">Payment Method</h3>
+            {payment.paymentType === "MANUAL" ? (
+              <div className="space-y-2">
+                <p className="text-gray-700">
+                  <span className="font-medium">Method:</span> {payment.manualPaymentMethod}
+                </p>
+                {payment.notes && (
+                  <div>
+                    <p className="font-medium text-gray-700 mb-1">Notes:</p>
+                    <p className="text-sm text-gray-600">{payment.notes}</p>
+                  </div>
+                )}
+                {payment.processor && (
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium">Processed by:</span> {payment.processor.name} ({payment.processor.email})
+                  </p>
+                )}
+              </div>
+            ) : payment.paymentMethod ? (
               <p className="text-gray-700">
                 {payment.paymentMethod.cardBrand.toUpperCase()} ••••{" "}
                 {payment.paymentMethod.cardLast4}
               </p>
-            </div>
-          )}
+            ) : (
+              <p className="text-gray-600">N/A</p>
+            )}
+          </div>
 
           {/* Footer */}
           <div className="border-t border-gray-200 pt-6 mt-8">
             <p className="text-sm text-gray-600 text-center">
               Thank you for your business!
             </p>
-            <p className="text-xs text-gray-500 text-center mt-2">
-              Payment Intent ID: {payment.stripePaymentIntentId}
-            </p>
+            {payment.paymentType === "STRIPE" && payment.stripePaymentIntentId && (
+              <p className="text-xs text-gray-500 text-center mt-2">
+                Payment Intent ID: {payment.stripePaymentIntentId}
+              </p>
+            )}
           </div>
         </Card>
       </div>

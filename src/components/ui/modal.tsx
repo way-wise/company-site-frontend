@@ -108,8 +108,35 @@ const ModalDescription = React.forwardRef<
 ));
 ModalDescription.displayName = DialogPrimitive.Description.displayName;
 
+// Wrapper Modal component for convenience with isOpen/onClose props
+interface CustomModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  description?: string;
+  children: React.ReactNode;
+  isPending?: boolean;
+}
+
+const CustomModal = ({ isOpen, onClose, title, description, children }: CustomModalProps) => {
+  return (
+    <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <ModalContent>
+        {title && (
+          <ModalHeader>
+            <ModalTitle>{title}</ModalTitle>
+            {description && <ModalDescription>{description}</ModalDescription>}
+          </ModalHeader>
+        )}
+        {children}
+      </ModalContent>
+    </DialogPrimitive.Root>
+  );
+};
+
 export {
   Modal,
+  CustomModal,
   ModalClose,
   ModalContent,
   ModalDescription,

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/useAuthMutations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -93,6 +94,14 @@ export default function LoginForm() {
                   {errors.password.message}
                 </p>
               )}
+              <div className="flex justify-end mt-2">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
             </div>
 
             {/* API Error Display */}

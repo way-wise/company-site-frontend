@@ -1,5 +1,6 @@
 "use client";
 
+import { DeleteModal } from "@/components/shared/DeleteModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -16,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/context/UserContext";
 import {
   useDeleteEarning,
   useEarnings,
@@ -25,13 +27,11 @@ import {
   useDeleteExpense,
   useExpenses,
 } from "@/hooks/useExpenseMutations";
-import { useAuth } from "@/context/UserContext";
 import { Earning, Expense } from "@/types";
 import { Download, Edit, MoreVertical, Plus, Trash } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { EarningModal } from "./EarningModal";
 import { ExpenseModal } from "./ExpenseModal";
-import { DeleteModal } from "@/components/shared/DeleteModal";
 
 interface EarningsTableProps {
   startDate?: string;
@@ -242,8 +242,8 @@ export function EarningsTable({ startDate, endDate }: EarningsTableProps) {
     return new Date(dateString).toLocaleDateString();
   };
 
-  const totalEarnings = allEarnings.reduce((sum, e) => sum + e.amount, 0);
-  const totalExpenses = allExpenses.reduce((sum, e) => sum + e.amount, 0);
+  const totalEarnings = allEarnings.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+  const totalExpenses = allExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
   const netTotal = totalEarnings - totalExpenses;
 
   return (

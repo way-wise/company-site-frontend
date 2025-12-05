@@ -165,6 +165,14 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
+                      href="/blogs"
+                      className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
+                    >
+                      Blogs
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       href="/faq"
                       className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
                     >

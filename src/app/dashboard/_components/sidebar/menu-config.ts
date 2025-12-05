@@ -2,6 +2,7 @@ import {
   CalendarDays,
   CassetteTape,
   CheckSquare,
+  FileText,
   FolderKanban,
   Home,
   Key,
@@ -93,6 +94,12 @@ export const menuConfig: MenuItem[] = [
     icon: CheckSquare,
     url: "/dashboard/tasks",
     permissions: ["read_task", "create_task"],
+  },
+  {
+    title: "Blogs",
+    icon: FileText,
+    url: "/dashboard/blogs",
+    permissions: ["read_blog", "view_all_blogs", "create_blog"],
   },
   {
     title: "Chat",

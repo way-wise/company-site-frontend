@@ -198,7 +198,23 @@ export default function TaskKanban({
     if (!over || !canUpdateTask) return;
 
     const taskId = active.id as string;
-    const newStatus = over.id as TaskStatus;
+    
+    // Determine the new status
+    let newStatus: TaskStatus;
+    
+    // Check if over.id is a status column or a task
+    if (KANBAN_COLUMNS.some(col => col.id === over.id)) {
+      // Dropped on a column
+      newStatus = over.id as TaskStatus;
+    } else {
+      // Dropped on a task - find that task's status
+      const targetTask = Object.values(tasksByStatus)
+        .flat()
+        .find((t) => t.id === over.id);
+      
+      if (!targetTask) return;
+      newStatus = targetTask.status;
+    }
 
     // Find the task being dragged
     const task = Object.values(tasksByStatus)

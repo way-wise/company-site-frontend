@@ -37,6 +37,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/context/UserContext";
 import {
   useCreateProject,
   useDeleteProject,
@@ -76,6 +77,9 @@ const getStatusBadge = (status: string) => {
 
 export const ProjectTable = () => {
   // const router = useRouter();
+  const { user, hasAnyRole } = useAuth();
+  const isClient = hasAnyRole(["CLIENT"]);
+  
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addProjectModalOpen, setAddProjectModalOpen] = useState(false);
   const [updateProjectModalOpen, setUpdateProjectModalOpen] = useState(false);
@@ -331,11 +335,14 @@ export const ProjectTable = () => {
           setAddProjectModalOpen(open);
           if (open) {
             // Reset form when modal opens
+            // Auto-populate userProfileId for clients
             addProjectForm.reset({
               name: "",
               description: "",
               status: "PENDING",
-              userProfileId: "",
+              userProfileId: isClient && user?.userProfile?.id 
+                ? user.userProfile.id 
+                : "",
             });
             setUserSearch("");
           }
@@ -414,17 +421,29 @@ export const ProjectTable = () => {
                     <FormItem>
                       <FormLabel>Owner</FormLabel>
                       <FormControl>
-                        <Combobox
-                          options={userOptions}
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          onSearchChange={setUserSearch}
-                          placeholder="Search for a client..."
-                          searchPlaceholder="Search by name or email..."
-                          emptyText="No clients found."
-                          isLoading={isUsersLoading}
-                          disabled={createProjectMutation.isPending}
-                        />
+                        {isClient ? (
+                          <>
+                            <Input 
+                              value={user?.name || ""} 
+                              disabled 
+                              className="bg-gray-50 cursor-not-allowed"
+                            />
+                            {/* Hidden input to maintain form field value */}
+                            <input type="hidden" {...field} />
+                          </>
+                        ) : (
+                          <Combobox
+                            options={userOptions}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            onSearchChange={setUserSearch}
+                            placeholder="Search for a client..."
+                            searchPlaceholder="Search by name or email..."
+                            emptyText="No clients found."
+                            isLoading={isUsersLoading}
+                            disabled={createProjectMutation.isPending}
+                          />
+                        )}
                       </FormControl>
                       <FormMessage />
                     </FormItem>

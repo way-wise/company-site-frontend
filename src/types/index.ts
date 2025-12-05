@@ -359,9 +359,13 @@ export interface MilestonePayment {
   milestoneId: string;
   userId: string;
   amount: number;
-  stripePaymentIntentId: string;
+  paymentType: "STRIPE" | "MANUAL";
+  stripePaymentIntentId?: string;
   stripeChargeId?: string;
-  paymentMethodId: string;
+  paymentMethodId?: string;
+  manualPaymentMethod?: string;
+  notes?: string;
+  processedBy?: string;
   status: string;
   invoiceNumber: string;
   paidAt: string;
@@ -383,6 +387,11 @@ export interface MilestonePayment {
     cardBrand: string;
     cardExpMonth?: number;
     cardExpYear?: number;
+  };
+  processor?: {
+    id: string;
+    name: string;
+    email: string;
   };
   user?: {
     id: string;

@@ -11,6 +11,27 @@ import {
 
 export type { TasksQueryParams };
 
+// Helper function to sanitize task data for updates
+const sanitizeTaskUpdateData = (taskData: Partial<Task>): Partial<Task> => {
+  const allowedFields = [
+    "title",
+    "description",
+    "status",
+    "priority",
+    "progress",
+    "estimatedHours",
+    "spentHours",
+  ];
+
+  return Object.keys(taskData)
+    .filter((key) => allowedFields.includes(key))
+    .reduce((obj, key) => {
+      const typedKey = key as keyof Task;
+      (obj as Record<string, unknown>)[key] = taskData[typedKey];
+      return obj;
+    }, {} as Partial<Task>);
+};
+
 export const taskService = {
   // Get all tasks with pagination and search
   getAllTasks: async (
@@ -71,7 +92,8 @@ export const taskService = {
     taskId: string,
     taskData: Partial<Task>
   ): Promise<ApiResponse<Task>> => {
-    const response = await apiClient.patch(`/tasks/${taskId}`, taskData);
+    const sanitizedData = sanitizeTaskUpdateData(taskData);
+    const response = await apiClient.patch(`/tasks/${taskId}`, sanitizedData);
     return response.data;
   },
 
