@@ -85,7 +85,7 @@ export const useLogout = () => {
 
       // Redirect to main public domain after logout
       const publicUrl =
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
       window.location.href = publicUrl;
     },
     onError: (error: Error) => {
@@ -93,7 +93,7 @@ export const useLogout = () => {
 
       // Even on error, redirect to main public domain
       const publicUrl =
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
       window.location.href = publicUrl;
     },
   });
@@ -126,7 +126,9 @@ export const useForgotPassword = () => {
     mutationFn: (email: string) => authService.forgotPassword(email),
     onSuccess: (data) => {
       if (data.success) {
-        toast.success(data.message || "Password reset link sent to your email!");
+        toast.success(
+          data.message || "Password reset link sent to your email!"
+        );
       } else {
         toast.error(data.message || "Failed to send reset link");
       }
@@ -150,7 +152,9 @@ export const useResetPassword = () => {
       authService.resetPassword(data),
     onSuccess: (data) => {
       if (data.success) {
-        toast.success("Password reset successfully! Please login with your new password.");
+        toast.success(
+          "Password reset successfully! Please login with your new password."
+        );
         router.push("/login");
       } else {
         toast.error(data.message || "Failed to reset password");
