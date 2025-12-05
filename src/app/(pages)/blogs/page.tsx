@@ -4,12 +4,11 @@ import { BlogList } from "../_components/blogs/blog-list";
 
 async function getAllBlogs(): Promise<Blog[]> {
   try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_API || "http://localhost:5000/api/v1";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_API;
     const url = `${baseUrl}/blogs/public`;
 
     const response = await fetch(url, {
-      cache: "no-store", // Always fetch fresh data to show new published blogs immediately
+      cache: "no-store",
     });
 
     if (!response.ok) {
@@ -25,31 +24,31 @@ async function getAllBlogs(): Promise<Blog[]> {
 
 // SEO Metadata
 export const metadata: Metadata = {
-  title: "Luxury Car & Limo Service Blog | Escalade4LAX Los Angeles",
+  title: "Blog | Way-Wise - Insights, Tips & Industry News",
   description:
-    "Explore travel tips, LAX airport guides, and insights on luxury limo and car services in Los Angeles. Stay updated with Escalade4LAX premium ride news",
+    "Stay updated with the latest insights, tips, and industry news from Way-Wise. Explore articles on business solutions, technology trends, and expert advice to help your business grow.",
   keywords: [
     "blog",
-    "travel tips",
-    "LAX airport guides",
-    "Los Angeles",
-    "LAX airport",
-    "luxury limo service",
-    "car service Los Angeles",
-    "Escalade4LAX",
+    "business insights",
+    "industry news",
+    "business tips",
+    "technology trends",
+    "expert advice",
+    "Way-Wise blog",
+    "business solutions",
   ],
   openGraph: {
-    title: "Luxury Car & Limo Service Blog | Escalade4LAX Los Angeles",
+    title: "Blog | Way-Wise - Insights, Tips & Industry News",
     description:
-      "Explore travel tips, LAX airport guides, and insights on luxury limo and car services in Los Angeles. Stay updated with Escalade4LAX premium ride news",
+      "Stay updated with the latest insights, tips, and industry news from Way-Wise. Expert articles to help your business grow.",
     type: "website",
     url: "/blogs",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury Car & Limo Service Blog | Escalade4LAX Los Angeles",
+    title: "Blog | Way-Wise - Insights, Tips & Industry News",
     description:
-      "Explore travel tips, LAX airport guides, and insights on luxury limo and car services in Los Angeles. Stay updated with Escalade4LAX premium ride news",
+      "Stay updated with the latest insights, tips, and industry news from Way-Wise. Expert articles to help your business grow.",
   },
   alternates: {
     canonical: "/blogs",
@@ -58,19 +57,18 @@ export const metadata: Metadata = {
 
 const BlogsPage = async () => {
   const blogs = await getAllBlogs();
-  const frontendUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const frontendUrl = process.env.NEXT_PUBLIC_SITE_URL;
   // Structured data for blog collection
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    name: "Luxury Car & Limo Service Blog ",
+    name: "Way-Wise Blog",
     description:
-      "Explore travel tips, LAX airport guides, and insights on luxury limo and car services in Los Angeles. Stay updated with Escalade4LAX premium ride news",
+      "Stay updated with the latest insights, tips, and industry news from Way-Wise. Expert articles on business solutions, technology trends, and growth strategies.",
     url: `${frontendUrl}/blogs`,
     publisher: {
       "@type": "Organization",
-      name: "Escalade4LAX Los Angeles",
+      name: "Way-Wise",
       url: frontendUrl,
     },
     blogPost: blogs.map((blog) => ({
