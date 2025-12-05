@@ -4,6 +4,7 @@ import {
   CreateMilestoneFormData,
   createMilestoneSchema,
 } from "@/components/modules/admin/projectValidation";
+import MarkAsPaidModal from "@/components/payment/MarkAsPaidModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -68,7 +69,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import MarkAsPaidModal from "@/components/payment/MarkAsPaidModal";
 import AssignEmployeeModal from "../milestone-components/assign-employee-modal";
 import AssignServiceModal from "../milestone-components/assign-service-modal";
 import MilestoneDetailModal from "../milestone-components/milestone-detail-modal";
@@ -88,6 +88,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   const isClient = hasAnyRole(["CLIENT"]);
 
   // Permission checks
+  const canCreateMilestone = hasPermission("create_milestone");
   const canUpdateMilestone = hasPermission("update_milestone");
   const canDeleteMilestone = hasPermission("delete_milestone");
   const canCreateTask = hasPermission("create_task");
@@ -245,7 +246,7 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
   //     console.error("Failed to update task status:", error);
   //   }
   // };
-  
+
   if (isLoading) {
     return (
       <Card className="p-6">
@@ -358,13 +359,15 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
               </p>
             </div>
           </div>
-          <Button
-            onClick={() => setAddMilestoneOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Create Milestone
-          </Button>
+          {canCreateMilestone && (
+            <Button
+              onClick={() => setAddMilestoneOpen(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Create Milestone
+            </Button>
+          )}
         </div>
       </div>
 
@@ -997,13 +1000,15 @@ export default function MilestoneList({ projectId, name }: MilestoneListProps) {
               Milestones help you break down your project into manageable
               phases. Create your first milestone to start tracking progress.
             </p>
-            <Button
-              onClick={() => setAddMilestoneOpen(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium"
-            >
-              <Plus className="h-5 w-5 mr-2" />
-              Create First Milestone
-            </Button>
+            {canCreateMilestone && (
+              <Button
+                onClick={() => setAddMilestoneOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create First Milestone
+              </Button>
+            )}
           </div>
         </div>
       )}
