@@ -2,18 +2,17 @@ import {
   CalendarDays,
   CassetteTape,
   CheckSquare,
+  DollarSign,
   FileText,
   FolderKanban,
+  Handshake,
   Home,
   Key,
   LayoutGrid,
   MessageCircle,
-  Milestone,
   Settings,
   Shield,
   UsersRound,
-  Handshake,
-  DollarSign,
 } from "lucide-react";
 
 export interface MenuItem {
@@ -83,12 +82,12 @@ export const menuConfig: MenuItem[] = [
     url: "/dashboard/projects",
     permissions: ["view_all_projects", "read_project", "create_project"],
   },
-  {
-    title: "Milestones",
-    icon: Milestone,
-    url: "/dashboard/milestones",
-    permissions: ["read_milestone", "create_milestone"],
-  },
+  // {
+  //   title: "Milestones",
+  //   icon: Milestone,
+  //   url: "/dashboard/milestones",
+  //   permissions: ["read_milestone", "create_milestone"],
+  // },
   {
     title: "Tasks",
     icon: CheckSquare,
