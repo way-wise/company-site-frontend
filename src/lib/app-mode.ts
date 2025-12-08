@@ -11,7 +11,10 @@ export const isDashboardMode = (): boolean =>
   process.env.NEXT_PUBLIC_APP_MODE === "dashboard";
 
 export const getPublicUrl = (): string =>
-  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  (typeof window !== "undefined"
+    ? window.location.origin
+    : "http://localhost:3000");
 
 export const getDashboardUrl = (): string =>
   process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000";

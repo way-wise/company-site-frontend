@@ -5,8 +5,7 @@ import { BlogDetail } from "../../_components/blogs/blog-detail";
 
 async function getBlogBySlug(slug: string): Promise<Blog | null> {
   try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_API || "http://localhost:5000/api/v1";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_API;
     const response = await fetch(`${baseUrl}/blogs/slug/${slug}`, {
       cache: "no-store",
     });
@@ -19,7 +18,6 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
     }
 
     const data = await response.json();
-    // Backend returns { success: true, message: "...", data: Blog }
     return data.data || null;
   } catch {
     return null;
@@ -46,7 +44,7 @@ export async function generateMetadata({
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
   const blogUrl = `${baseUrl}/blogs/${blog.slug}`;
 
   // Filter out undefined tags
@@ -103,14 +101,12 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
   const blogUrl = `${baseUrl}/blogs/${blog.slug}`;
 
-  // Filter out undefined tags
   const validTags =
     blog.tags?.filter((tag): tag is string => tag !== undefined) || [];
 
-  // Structured data for better SEO
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
