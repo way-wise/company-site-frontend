@@ -1,91 +1,100 @@
 // components/ServiceDetails.tsx
 
+import CalendlyButton from "@/components/shared/CalendlyButton";
 import { ServiceDetail } from "@/types";
 import { Check } from "lucide-react";
 import Image from "next/image";
 
 interface ServiceDetailsProps {
-  service: ServiceDetail;
+	service: ServiceDetail;
+	cta?: string;
 }
 
 export default function ServiceDetails({ service }: ServiceDetailsProps) {
-  return (
-    <div className="bg-[#f2f6ff] overflow-hidden w-full min-h-screen relative  animate-fade-in opacity-0">
-      {/* Video/Image Placeholder */}
-      <section className="relative py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:600ms]">
-        <div className="max-w-[1170px] mx-auto px-4 md:px-0">
-          <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] bg-[#d9d9d9] rounded-[10px] flex items-center justify-center">
-            <Image
-              className="w-full h-full object-cover rounded-[10px]"
-              alt={`${service.title} Video`}
-              src={service.videoImage}
-              width={1000}
-              height={1000}
-            />
-          </div>
-        </div>
-      </section>
-      <section className="py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:800ms]">
-        <div className="max-w-[1170px] mx-auto px-4 md:px-8">
-          <h2 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-4 md:mb-8">
-            {service.title}
-          </h2>
-          <p className="text-base md:text-lg lg:text-xl text-[#3d4e5c] leading-6 md:leading-8 mb-8 md:mb-16">
-            {service.detailedDescription}
-          </p>
+	return (
+		<div className="bg-[#f2f6ff] overflow-hidden w-full min-h-screen relative  animate-fade-in opacity-0">
+			{/* Video/Image Placeholder */}
+			<section className="relative py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:600ms]">
+				<div className="max-w-[1170px] mx-auto px-4 md:px-0">
+					<div className="w-full h-[300px] md:h-[400px] lg:h-[500px] bg-[#d9d9d9] rounded-[10px] flex items-center justify-center">
+						<Image
+							className="w-full h-full object-cover rounded-[10px]"
+							alt={`${service.title} Video`}
+							src={service.videoImage}
+							width={1000}
+							height={1000}
+						/>
+					</div>
+				</div>
+			</section>
+			<section className="py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:800ms]">
+				<div className="max-w-[1170px] mx-auto px-4 md:px-8">
+					<h2 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-4 md:mb-8">
+						{service.title}
+					</h2>
+					<p className="text-base md:text-lg lg:text-xl text-[#3d4e5c] leading-6 md:leading-8 mb-4">
+						{service.detailedDescription}
+					</p>
 
-          <h3 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-8 md:mb-12">
-            Our {service.title} Expertise
-          </h3>
+					<div className="mb-8 md:mb-16 ">
+						<CalendlyButton
+							buttonText="Book Now"
+							url="https://calendly.com/way-wise-tech/marketing-growth-call?month=2025-12"
+						/>
+					</div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-x-16 lg:gap-y-12">
-            {service.expertiseAreas.map((area, index) => (
-              <div key={index} className="flex gap-4 md:gap-6">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-[#00a3ff] rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white font-medium text-sm md:text-lg">
-                    {area.number}
-                  </span>
-                </div>
-                <div>
-                  <h4 className="text-lg md:text-xl font-semibold text-[#1b3447] mb-2 md:mb-4">
-                    {area.title}
-                  </h4>
-                  <p className="text-sm text-[#3d4e5c] leading-5 md:leading-6 whitespace-pre-line">
-                    {area.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+					<h3 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-8 md:mb-12">
+						Our {service.title} Expertise
+					</h3>
 
-      {/* Service Outcome Section */}
-      <section className="py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:1000ms]">
-        <div className="max-w-[1170px] mx-auto px-4 md:px-8">
-          <h2 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-4 md:mb-8">
-            Service Outcome
-          </h2>
-          <p className="text-sm md:text-base text-[#657585] leading-6 md:leading-8 mb-8 md:mb-12">
-            Here are six key points that can be associated with a digital
-            transformation gallery case global digital systems engineer services
-            leader helping fortune 500 companies on their innovation agenda:
-          </p>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-x-16 lg:gap-y-12">
+						{service.expertiseAreas.map((area, index) => (
+							<div key={index} className="flex gap-4 md:gap-6">
+								<div className="w-8 h-8 md:w-10 md:h-10 bg-[#00a3ff] rounded-full flex items-center justify-center flex-shrink-0">
+									<span className="text-white font-medium text-sm md:text-lg">
+										{area.number}
+									</span>
+								</div>
+								<div>
+									<h4 className="text-lg md:text-xl font-semibold text-[#1b3447] mb-2 md:mb-4">
+										{area.title}
+									</h4>
+									<p className="text-sm text-[#3d4e5c] leading-5 md:leading-6 whitespace-pre-line">
+										{area.description}
+									</p>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-x-16 lg:gap-y-8">
-            {service.serviceOutcomes.map((outcome, index) => (
-              <div key={index} className="flex items-center gap-3 md:gap-4">
-                <div className="bg-white rounded-full flex items-center justify-center p-2 flex-shrink-0">
-                  <Check className="w-4 h-4 md:w-6 md:h-6" />
-                </div>
-                <span className="text-sm md:text-base text-[#657585]">
-                  {outcome}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+			{/* Service Outcome Section */}
+			<section className="py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:1000ms]">
+				<div className="max-w-[1170px] mx-auto px-4 md:px-8">
+					<h2 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-4 md:mb-8">
+						Service Outcome
+					</h2>
+					<p className="text-sm md:text-base text-[#657585] leading-6 md:leading-8 mb-8 md:mb-12">
+						Here are six key points that can be associated with a digital
+						transformation gallery case global digital systems engineer services
+						leader helping fortune 500 companies on their innovation agenda:
+					</p>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-x-16 lg:gap-y-8">
+						{service.serviceOutcomes.map((outcome, index) => (
+							<div key={index} className="flex items-center gap-3 md:gap-4">
+								<div className="bg-white rounded-full flex items-center justify-center p-2 flex-shrink-0">
+									<Check className="w-4 h-4 md:w-6 md:h-6" />
+								</div>
+								<span className="text-sm md:text-base text-[#657585]">
+									{outcome}
+								</span>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+		</div>
+	);
 }

@@ -129,7 +129,7 @@ const ServiceDetailsPage = async ({ params }: ServiceDetailsPageProps) => {
         titleClass="text-white text-5xl lg:text-[85px] font-bold"
         descriptionClass="text-brand text-5xl lg:text-[85px]"
       />
-      <ServiceDetails service={service} />
+      <ServiceDetails service={service} cta={service.ctabutton}/>
       <SuccessProjects />
       {/* <CategorySection /> */}
       <ServiceSlider />
