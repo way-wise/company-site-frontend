@@ -1,12 +1,12 @@
 "use client";
 
-import { Blog } from "@/schema/blogSchema";
-import { formatDate } from "@/lib/date-format";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, Calendar, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { formatDate } from "@/lib/date-format";
+import { Blog } from "@/schema/blogSchema";
+import { ArrowRight, Calendar } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface BlogHeroProps {
 	blog: Blog;

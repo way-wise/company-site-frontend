@@ -1,14 +1,13 @@
 "use client";
 
-import { Blog } from "@/schema/blogSchema";
+import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/date-format";
+import { Blog } from "@/schema/blogSchema";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, User, ArrowRight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
 
 interface BlogListProps {
 	blogs: Blog[];
@@ -24,8 +23,6 @@ export const BlogList = ({ blogs }: BlogListProps) => {
 			const matchesCategory =
 				!category ||
 				category === "All" ||
-				// For now, checking if tags include the category.
-				// In real app, might want rigorous category mapping
 				blog.tags?.some((tag) => tag.toLowerCase() === category.toLowerCase());
 
 			const matchesSearch =
@@ -49,7 +46,8 @@ export const BlogList = ({ blogs }: BlogListProps) => {
 					No articles found
 				</h3>
 				<p className="text-gray-500">
-					Try adjusting your search or filters to find what you're looking for.
+					Try adjusting your search or filters to find what you&apos;re looking
+					for.
 				</p>
 			</div>
 		);
@@ -143,10 +141,11 @@ export const BlogList = ({ blogs }: BlogListProps) => {
 	);
 };
 
-function SearchIcon(props: any) {
+function SearchIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
 	return (
 		<svg
 			{...props}
+			className={className}
 			xmlns="http://www.w3.org/2000/svg"
 			width="24"
 			height="24"

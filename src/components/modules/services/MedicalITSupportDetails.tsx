@@ -1,24 +1,21 @@
-import medicalBillingImage from "@/assets/images/services/billing-shape.png";
-import digitalMarketingImage from "@/assets/images/services/digital-marketing.png";
-import cloudImage from "@/assets/images/services/cloud.jpg";
+import _24_7_calling from "@/assets/images/MedicalBilling/247_calling.png";
 import MedicalBillingServices from "@/assets/images/MedicalBilling/MedicalBillingServices.png";
-import medicalbillingandcodingservicesinfographic from "@/assets/images/MedicalBilling/medicalbillingandcodingservicesinfographic.png"
-import fedearalCompliance from "@/assets/images/MedicalBilling/federalCompliance.png"
-import providerCredentialing from "@/assets/images/MedicalBilling/providerCredentialing.png"
-import _24_7_calling from "@/assets/images/MedicalBilling/247_calling.png"
-import revenue_cycle from "@/assets/images/MedicalBilling/revenue_cycle.jpeg"
+import fedearalCompliance from "@/assets/images/MedicalBilling/federalCompliance.png";
+import medicalbillingandcodingservicesinfographic from "@/assets/images/MedicalBilling/medicalbillingandcodingservicesinfographic.png";
+import providerCredentialing from "@/assets/images/MedicalBilling/providerCredentialing.png";
+import revenue_cycle from "@/assets/images/MedicalBilling/revenue_cycle.jpeg";
+import medicalBillingImage from "@/assets/images/services/billing-shape.png";
 import {
+  Award,
+  BarChart3,
   Check,
   DollarSign,
   FileText,
   Headphones,
-  Shield,
-  Star,
-  TrendingUp,
-  Users,
-  Award,
-  BarChart3,
   MessageSquare,
+  Shield,
+  TrendingUp,
+  Users
 } from "lucide-react";
 import Image from "next/image";
 

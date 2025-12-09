@@ -11,11 +11,10 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,7 +27,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/UserContext";
 import { useUpdateUser } from "@/hooks/useUserMutations";
-import { User, UserProfile } from "@/types";
+import { User } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2, Save, X } from "lucide-react";
 import { useState } from "react";

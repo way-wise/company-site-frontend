@@ -1,7 +1,7 @@
 "use client";
 
 import { projectFileService } from "@/services/ProjectFileService";
-import { ProjectFile, ProjectFileFormData } from "@/types";
+import { ProjectFileFormData } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 

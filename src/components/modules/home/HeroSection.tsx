@@ -2,7 +2,6 @@ import mainBackground from "@/assets/images/home/full-bg.png";
 import heroLeftBg from "@/assets/images/home/hero-ai.png";
 import CalendlyButton from "@/components/shared/CalendlyButton";
 import Image from "next/image";
-import Link from "next/link";
 
 const HeroSection = () => {
 	return (
