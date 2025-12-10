@@ -130,7 +130,7 @@ export default function RootLayout({
 				<Providers>
 					<Toaster position="bottom-right" />
 					{children}
-					<WhatsAppButton />
+					{/* <WhatsAppButton /> */}
 				</Providers>
 
 				<Script
