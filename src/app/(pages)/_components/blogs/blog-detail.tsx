@@ -126,6 +126,23 @@ export const BlogDetail = ({ blog, relatedBlogs }: BlogDetailProps) => {
 					<div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
 						<ShareButtons title={blog.title} slug={blog.slug} />
 					</div>
+
+					{/* Author Card */}
+					<div className="mt-12 rounded-lg border bg-gray-50 p-6">
+						<div className="flex items-start gap-4">
+							<div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 text-lg font-semibold text-gray-700">
+								{authorName.charAt(0).toUpperCase()}
+							</div>
+							<div>
+								<h3 className="mb-1 text-lg font-semibold text-gray-900">
+									{authorName}
+								</h3>
+								<p className="text-sm text-gray-600">
+									Published on {formatDate(blog.publishedAt || blog.createdAt)}
+								</p>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				{/* Table of Contents sidebar */}
