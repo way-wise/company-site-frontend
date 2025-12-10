@@ -340,7 +340,7 @@ const Footer = () => {
 											<CalendlyButton
 												buttonText="Book a Meeting"
 												url="https://calendly.com/way-wise-tech/marketing-growth-call"
-												className=""
+												className="max-w-[200px] !py-3 !text-sm !px-6"
 											/>
 										</div>
 									</li>
