@@ -75,11 +75,9 @@ const BlogsPage = async ({
 			new Date(a.publishedAt || a.createdAt).getTime()
 	);
 
-	const featuredBlog = sortedBlogs[0];
 	// If not filtering, we remove the featured one from the grid?
 	// Or keep it? Let's remove it from grid if it's shown in Hero
-	const gridBlogs =
-		!isFiltering && featuredBlog ? sortedBlogs.slice(1) : sortedBlogs;
+	const gridBlogs = !isFiltering ? sortedBlogs : sortedBlogs;
 
 	// Extract unique tags for categories
 	const allTags = Array.from(
@@ -104,7 +102,7 @@ const BlogsPage = async ({
 			"@type": "BlogPosting",
 			headline: blog.title,
 			description: blog.metaDescription || blog.excerpt || blog.title,
-			url: `${frontendUrl}/blogs/${blog.slug}`,
+			url: `${frontendUrl}/blog/${blog.slug}`,
 			datePublished: blog.publishedAt || blog.createdAt,
 			dateModified: blog.updatedAt,
 			author: {
@@ -140,7 +138,7 @@ const BlogsPage = async ({
 				</div>
 
 				{/* Hero Section - Only show when not filtering */}
-				{!isFiltering && featuredBlog && <BlogHero blog={featuredBlog} />}
+				{/* {!isFiltering && featuredBlog && <BlogHero blog={featuredBlog} />} */}
 
 				{/* Filters and Search */}
 				<BlogFilters categories={allTags} />

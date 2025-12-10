@@ -72,7 +72,7 @@ export const BlogList = ({ blogs }: BlogListProps) => {
 							className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:border-blue-100 hover:shadow-lg hover:shadow-blue-500/5 dark:border-gray-800 dark:bg-gray-900"
 						>
 							<Link
-								href={`/blogs/${blog.slug}`}
+								href={`/blog/${blog.slug}`}
 								className="block overflow-hidden"
 							>
 								{blog.featuredImage ? (
@@ -105,7 +105,7 @@ export const BlogList = ({ blogs }: BlogListProps) => {
 									))}
 								</div>
 
-								<Link href={`/blogs/${blog.slug}`} className="mb-3 block">
+								<Link href={`/blog/${blog.slug}`} className="mb-3 block">
 									<h2 className="text-xl font-bold text-gray-900 line-clamp-2 transition-colors group-hover:text-blue-600 dark:text-white">
 										{blog.title}
 									</h2>

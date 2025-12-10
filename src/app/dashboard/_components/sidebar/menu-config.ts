@@ -12,6 +12,8 @@ import {
 	LayoutGrid,
 	LucideRemoveFormatting,
 	MessageCircle,
+	MessageSquare,
+	MessageSquareHeart,
 	Settings,
 	Shield,
 	UsersRound,
@@ -119,6 +121,18 @@ export const menuConfig: MenuItem[] = [
 		icon: FileQuestionMarkIcon,
 		url: "/dashboard/faqs",
 		permissions: ["read_faq", "create_faq"],
+	},
+	{
+		title: "Feedback",
+		icon: MessageSquare,
+		url: "/dashboard/feedback",
+		permissions: ["read_contact"],
+	},
+
+	{
+		title: "Feedback",
+		icon: MessageSquareHeart,
+		url: "/dashboard/feedback",
 	},
 
 	{

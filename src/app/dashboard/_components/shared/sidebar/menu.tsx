@@ -7,6 +7,7 @@ import {
 	Key,
 	LayoutGrid,
 	ListCheck,
+	MessageSquare,
 	Play,
 	Shield,
 	UsersRound,
@@ -56,6 +57,11 @@ const SidebarMenu = () => {
 			title: "FAQs",
 			icon: <FileQuestionMarkIcon className="icon" />,
 			url: "/admin/faqs",
+		},
+		{
+			title: "Feedback",
+			icon: <MessageSquare className="icon" />,
+			url: "/dashboard/feedback",
 		},
 		{
 			title: "Demo",

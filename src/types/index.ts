@@ -5,6 +5,7 @@ export interface ApiResponse<T = unknown> {
 	success: boolean;
 	message: string;
 	data?: T;
+	meta?: PaginationMeta;
 }
 
 // Permission Types
@@ -89,6 +90,9 @@ export interface PaginationMeta {
 	hasNextPage: boolean;
 	hasPrevPage: boolean;
 	itemsPerPage: number;
+	page?: number;
+	total?: number;
+	limit?: number;
 }
 
 export interface PaginatedResponse<T> {
