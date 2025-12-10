@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 
 import { Toaster } from "@/components/ui/sonner";
+import WhatsAppButton from "@/components/ui/whatsapp-button";
 import "./globals.css";
 
 const inter = Inter({
@@ -129,6 +130,7 @@ export default function RootLayout({
 				<Providers>
 					<Toaster position="bottom-right" />
 					{children}
+					<WhatsAppButton />
 				</Providers>
 
 				<Script
