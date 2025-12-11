@@ -223,6 +223,62 @@ const MarkdownEditor = React.forwardRef<HTMLDivElement, MarkdownEditorProps>(
             list-style-type: square;
           }
 
+          /* Task list (checkbox) styles */
+          .markdown-editor-wrapper .w-md-editor-preview .task-list-item {
+            list-style-type: none;
+            position: relative;
+            padding-left: 0;
+            display: flex;
+            align-items: flex-start;
+          }
+
+          .markdown-editor-wrapper
+            .w-md-editor-preview
+            .task-list-item
+            input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #d1d5db;
+            border-radius: 0.25rem;
+            margin-right: 0.5rem;
+            margin-top: 0.125rem;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+            background-color: white;
+            transition: all 0.2s;
+          }
+
+          .markdown-editor-wrapper
+            .w-md-editor-preview
+            .task-list-item
+            input[type="checkbox"]:checked {
+            background-color: #22c55e;
+            border-color: #22c55e;
+          }
+
+          .markdown-editor-wrapper
+            .w-md-editor-preview
+            .task-list-item
+            input[type="checkbox"]:checked::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+
+          .markdown-editor-wrapper .w-md-editor-preview .contains-task-list {
+            list-style-type: none;
+            padding-left: 0;
+          }
+
           .markdown-editor-wrapper .w-md-editor-toolbar button {
             color: hsl(var(--foreground));
           }
