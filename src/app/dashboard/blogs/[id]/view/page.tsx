@@ -7,9 +7,14 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useBlog, useDeleteBlog } from "@/hooks/useBlogMutations";
 import { formatDate } from "@/lib/date-format";
 import { ArrowLeft, Calendar, Edit, Tag, Trash, User } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), {
+  ssr: false,
+});
 
 interface BlogViewPageProps {
   params: Promise<{
@@ -25,7 +30,7 @@ function BlogViewContent({ params }: BlogViewPageProps) {
 
   // Resolve params and fetch blog data
   const [resolvedId, setResolvedId] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const resolveParams = async () => {
       const resolved = await params;
@@ -156,8 +161,8 @@ function BlogViewContent({ params }: BlogViewPageProps) {
                 blog.status === "PUBLISHED"
                   ? "bg-green-100 text-green-800"
                   : blog.status === "DRAFT"
-                    ? "bg-gray-100 text-gray-800"
-                    : "bg-red-100 text-red-800"
+                  ? "bg-gray-100 text-gray-800"
+                  : "bg-red-100 text-red-800"
               }
             >
               {blog.status}
@@ -213,10 +218,15 @@ function BlogViewContent({ params }: BlogViewPageProps) {
         </header>
 
         {/* Blog Content */}
-        <div className="prose prose-lg max-w-none">
-          <div className="leading-relaxed whitespace-pre-wrap text-gray-800">
-            {blog.content}
-          </div>
+        <div className="prose prose-lg max-w-none dark:prose-invert">
+          <MarkdownPreview
+            source={blog.content}
+            className="bg-transparent"
+            style={{ backgroundColor: "transparent" }}
+            wrapperElement={{
+              "data-color-mode": "light",
+            }}
+          />
         </div>
 
         {/* SEO Information */}
