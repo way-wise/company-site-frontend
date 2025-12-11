@@ -3,318 +3,360 @@
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { Button } from "@/components/ui/button";
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { MarkdownEditor } from "@/components/ui/markdown-editor";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { TagsInput } from "@/components/ui/tags-input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/UserContext";
 import { useCreateBlog } from "@/hooks/useBlogMutations";
+import { generateSlugFromTitle } from "@/lib/slugify";
 import { CreateBlogInput, createBlogSchema } from "@/schema/blogSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 function CreateBlogForm() {
-	const router = useRouter();
-	const { user } = useAuth();
-	const createBlogMutation = useCreateBlog();
+  const router = useRouter();
+  const { user } = useAuth();
+  const createBlogMutation = useCreateBlog();
+  const isSlugManuallyEdited = useRef(false);
 
-	const form = useForm<CreateBlogInput>({
-		resolver: zodResolver(createBlogSchema),
-		defaultValues: {
-			title: "",
-			content: "",
-			excerpt: "",
-			featuredImage: "",
-			status: "DRAFT",
-			tags: [],
-			metaTitle: "",
-			metaDescription: "",
-		},
-	});
+  const form = useForm<CreateBlogInput>({
+    resolver: zodResolver(createBlogSchema),
+    defaultValues: {
+      title: "",
+      slug: "",
+      content: "",
+      excerpt: "",
+      featuredImage: "",
+      status: "DRAFT",
+      tags: [],
+      metaTitle: "",
+      metaDescription: "",
+    },
+  });
 
-	const handleSubmit = async (data: CreateBlogInput) => {
-		try {
-			const userProfileId = user?.userProfile?.id;
-			if (!userProfileId) {
-				throw new Error("User profile not found");
-			}
-			await createBlogMutation.mutateAsync({ ...data, userProfileId });
-			router.push("/dashboard/blogs");
-		} catch {
-			// Error is handled by the mutation hook
-		}
-	};
+  // Auto-generate slug from title
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === "title" && !isSlugManuallyEdited.current) {
+        const newSlug = generateSlugFromTitle(value.title || "");
+        form.setValue("slug", newSlug);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
 
-	const isSubmitting = createBlogMutation.isPending;
+  const handleSubmit = async (data: CreateBlogInput) => {
+    try {
+      const userProfileId = user?.userProfile?.id;
+      if (!userProfileId) {
+        throw new Error("User profile not found");
+      }
+      await createBlogMutation.mutateAsync({ ...data, userProfileId });
+      router.push("/dashboard/blogs");
+    } catch {
+      // Error is handled by the mutation hook
+    }
+  };
 
-	return (
-		<div className="w-full space-y-6">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div className="space-y-1">
-					<div className="flex items-center gap-2">
-						<Button
-							variant="ghost"
-							size="sm"
-							onClick={() => router.back()}
-							className="h-8 w-8 p-0"
-						>
-							<ArrowLeft className="h-4 w-4" />
-						</Button>
-						<h1 className="text-2xl font-bold tracking-tight">
-							Create Blog Post
-						</h1>
-					</div>
-					<p className="text-sm text-muted-foreground pl-10">
-						Create a new blog post for your audience.
-					</p>
-				</div>
-				<div className="flex items-center gap-2">
-					<Button
-						variant="outline"
-						onClick={() => router.back()}
-						disabled={isSubmitting}
-					>
-						Cancel
-					</Button>
-					<Button
-						onClick={form.handleSubmit(handleSubmit)}
-						disabled={isSubmitting}
-					>
-						{isSubmitting ? "Creating..." : "Create Post"}
-					</Button>
-				</div>
-			</div>
+  const isSubmitting = createBlogMutation.isPending;
 
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-					<div className="grid gap-8 lg:grid-cols-3">
-						{/* Main Content - Left Column */}
-						<div className="space-y-6 lg:col-span-2">
-							<div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
-								<FormField
-									control={form.control}
-									name="title"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Post Title</FormLabel>
-											<FormControl>
-												<Input
-													placeholder="Enter a descriptive title"
-													className="text-lg font-medium"
-													{...field}
-													disabled={isSubmitting}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+  return (
+    <div className="w-full space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.back()}
+              className="h-8 w-8 p-0"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h1 className="text-2xl font-bold tracking-tight">
+              Create Blog Post
+            </h1>
+          </div>
+          <p className="text-sm text-muted-foreground pl-10">
+            Create a new blog post for your audience.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.back()}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={form.handleSubmit(handleSubmit)}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Creating..." : "Create Post"}
+          </Button>
+        </div>
+      </div>
 
-								<FormField
-									control={form.control}
-									name="excerpt"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Excerpt</FormLabel>
-											<FormControl>
-												<Textarea
-													placeholder="A short summary of your post to appear in cards and search results..."
-													className="resize-none"
-													{...field}
-													value={field.value || ""}
-													rows={3}
-													disabled={isSubmitting}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+          <div className="grid gap-8 lg:grid-cols-3">
+            {/* Main Content - Left Column */}
+            <div className="space-y-6 lg:col-span-2">
+              <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Post Title</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter a descriptive title"
+                          className="text-lg font-medium"
+                          {...field}
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-								<FormField
-									control={form.control}
-									name="content"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Content</FormLabel>
-											<FormControl>
-												<div className="min-h-[500px]">
-													<MarkdownEditor
-														value={field.value || ""}
-														onChange={field.onChange}
-														placeholder="Write your story here..."
-														disabled={isSubmitting}
-														height={500}
-													/>
-												</div>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
+                <FormField
+                  control={form.control}
+                  name="slug"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>URL Slug</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="auto-generated-from-title"
+                          {...field}
+                          onChange={(e) => {
+                            isSlugManuallyEdited.current = true;
+                            field.onChange(e);
+                          }}
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Used in the blog URL. Auto-generates from title but can
+                        be edited.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-							<div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
-								<div className="space-y-2">
-									<h3 className="text-lg font-medium">
-										Search Engine Optimization
-									</h3>
-									<p className="text-sm text-muted-foreground">
-										Manage how your post appears in search results.
-									</p>
-								</div>
-								<FormField
-									control={form.control}
-									name="metaTitle"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Meta Title</FormLabel>
-											<FormControl>
-												<Input
-													placeholder="SEO title (defaults to post title if empty)"
-													{...field}
-													value={field.value || ""}
-													disabled={isSubmitting}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+                <FormField
+                  control={form.control}
+                  name="excerpt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Excerpt</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="A short summary of your post to appear in cards and search results..."
+                          className="resize-none"
+                          {...field}
+                          value={field.value || ""}
+                          rows={3}
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-								<FormField
-									control={form.control}
-									name="metaDescription"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Meta Description</FormLabel>
-											<FormControl>
-												<Textarea
-													placeholder="A concise description for search engines..."
-													{...field}
-													value={field.value || ""}
-													rows={3}
-													disabled={isSubmitting}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-						</div>
+                <FormField
+                  control={form.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Content</FormLabel>
+                      <FormControl>
+                        <div className="min-h-[500px]">
+                          <MarkdownEditor
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                            placeholder="Write your story here..."
+                            disabled={isSubmitting}
+                            height={500}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-						{/* Sidebar - Right Column */}
-						<div className="space-y-6 lg:col-span-1">
-							{/* Status & Visibility */}
-							<div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
-								<h3 className="font-medium">Publishing</h3>
-								<FormField
-									control={form.control}
-									name="status"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Status</FormLabel>
-											<Select
-												onValueChange={field.onChange}
-												value={field.value}
-												disabled={isSubmitting}
-											>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder="Select status" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													<SelectItem value="DRAFT">Draft</SelectItem>
-													<SelectItem value="PUBLISHED">Published</SelectItem>
-													<SelectItem value="ARCHIVED">Archived</SelectItem>
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
+              <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium">
+                    Search Engine Optimization
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Manage how your post appears in search results.
+                  </p>
+                </div>
+                <FormField
+                  control={form.control}
+                  name="metaTitle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Meta Title</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="SEO title (defaults to post title if empty)"
+                          {...field}
+                          value={field.value || ""}
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-							{/* Tags */}
-							<div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
-								<h3 className="font-medium">Tags</h3>
-								<FormField
-									control={form.control}
-									name="tags"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel className="sr-only">Tags</FormLabel>
-											<FormControl>
-												<TagsInput
-													value={field.value}
-													onChange={field.onChange}
-													placeholder="Add tags..."
-													disabled={isSubmitting}
-												/>
-											</FormControl>
-											<p className="text-xs text-muted-foreground">
-												Press enter or comma to add a tag.
-											</p>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
+                <FormField
+                  control={form.control}
+                  name="metaDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Meta Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="A concise description for search engines..."
+                          {...field}
+                          value={field.value || ""}
+                          rows={3}
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
 
-							{/* Featured Image */}
-							<div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
-								<h3 className="font-medium">Featured Image</h3>
-								<FormField
-									control={form.control}
-									name="featuredImage"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel className="sr-only">Featured Image</FormLabel>
-											<FormControl>
-												<ImageUpload
-													value={field.value || ""}
-													onChange={field.onChange}
-													disabled={isSubmitting}
-													placeholder="Upload image"
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-						</div>
-					</div>
-				</form>
-			</Form>
-		</div>
-	);
+            {/* Sidebar - Right Column */}
+            <div className="space-y-6 lg:col-span-1">
+              {/* Status & Visibility */}
+              <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
+                <h3 className="font-medium">Publishing</h3>
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={isSubmitting}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="DRAFT">Draft</SelectItem>
+                          <SelectItem value="PUBLISHED">Published</SelectItem>
+                          <SelectItem value="ARCHIVED">Archived</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Tags */}
+              <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
+                <h3 className="font-medium">Tags</h3>
+                <FormField
+                  control={form.control}
+                  name="tags"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="sr-only">Tags</FormLabel>
+                      <FormControl>
+                        <TagsInput
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Add tags..."
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <p className="text-xs text-muted-foreground">
+                        Press enter or comma to add a tag.
+                      </p>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Featured Image */}
+              <div className="rounded-lg border bg-card p-6 shadow-sm space-y-6">
+                <h3 className="font-medium">Featured Image</h3>
+                <FormField
+                  control={form.control}
+                  name="featuredImage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="sr-only">Featured Image</FormLabel>
+                      <FormControl>
+                        <ImageUpload
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                          disabled={isSubmitting}
+                          placeholder="Upload image"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
 }
 
 export default function CreateBlogPage() {
-	return (
-		<PermissionGuard permissions={["create_blog"]}>
-			<CreateBlogForm />
-		</PermissionGuard>
-	);
+  return (
+    <PermissionGuard permissions={["create_blog"]}>
+      <CreateBlogForm />
+    </PermissionGuard>
+  );
 }
