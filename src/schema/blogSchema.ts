@@ -39,6 +39,13 @@ export interface Blog {
 // Create blog input schema
 export const createBlogSchema = z.object({
   title: z.string().min(1, "Title is required"),
+  slug: z
+    .string()
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      "Slug must be lowercase, alphanumeric with hyphens only"
+    )
+    .optional(),
   content: z.string().min(1, "Content is required"),
   excerpt: z.string().optional(),
   featuredImage: z.string().optional(),
@@ -49,4 +56,3 @@ export const createBlogSchema = z.object({
 });
 
 export type CreateBlogInput = z.infer<typeof createBlogSchema>;
-
