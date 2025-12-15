@@ -1,5 +1,6 @@
 import aboutMainPng from "@/assets/images/about-us/about-main.png";
 import aboutUs from "@/assets/images/about-us/about-us.svg";
+import CalendlyButton from "@/components/shared/CalendlyButton";
 import Image from "next/image";
 
 const whyChooseUsItems = [
@@ -121,6 +122,12 @@ const ChooseUs = () => {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="flex justify-center mt-8 md:mt-16">
+            <CalendlyButton
+                buttonText="Need an Expert Help - Book a Meeting"
+                url="https://calendly.com/way-wise-tech/software-development-meeting"
+              />
           </div>
         </div>
       </section>
