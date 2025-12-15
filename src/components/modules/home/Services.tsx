@@ -5,6 +5,7 @@ import { ServiceDisplay } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import ServiceCard from "./ServiceCard";
+import CalendlyButton from "@/components/shared/CalendlyButton";
 
 const Services = ({
   servicesFirstData,
@@ -88,6 +89,13 @@ growth, enhance your brand, and streamline your operations."
           {servicesSecondData?.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
+        </div>
+
+        <div className="flex justify-center mt-8 md:mt-16">
+          <CalendlyButton
+            buttonText="Have a Project? Let's Discuss"
+            url="https://calendly.com/way-wise-tech/software-development-meeting"
+          />
         </div>
       </div>
     </section>
