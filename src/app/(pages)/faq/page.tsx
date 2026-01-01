@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { getAllFaqs } from "@/lib/api/faqs";
 import { Faq } from "@/schema/faqSchema";
 import type { Metadata } from "next";
+import { FaqAnswer } from "../_components/faq-answer";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_API;
 
@@ -86,12 +87,7 @@ const FaqPage = async () => {
 														{faq.question}
 													</AccordionTrigger>
 													<AccordionContent className="text-gray-700 leading-relaxed">
-														<div
-															dangerouslySetInnerHTML={{
-																__html: faq.answer,
-															}}
-															className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-strong:text-gray-900 prose-ul:text-gray-700 prose-ol:text-gray-700 prose-li:text-gray-700 prose-a:text-brand prose-a:no-underline hover:prose-a:underline"
-														/>
+														<FaqAnswer answer={faq.answer} />
 													</AccordionContent>
 												</AccordionItem>
 											))}
