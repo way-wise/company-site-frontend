@@ -39,7 +39,7 @@ export const useLiveProjects = (params: LiveProjectsQueryParams) => {
   return useQuery({
     queryKey: liveProjectQueryKeys.list(params),
     queryFn: () => liveProjectService.getAllLiveProjects(params),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0, // Always refetch when invalidated to ensure fresh data
     refetchOnWindowFocus: false,
   });
 };
@@ -157,7 +157,11 @@ export const useCreateLiveProject = () => {
     onSuccess: (data) => {
       if (data.success) {
         toast.success("Live project created successfully");
-        queryClient.invalidateQueries({ queryKey: liveProjectQueryKeys.lists() });
+        // Invalidate all list queries (with any params) to ensure the list refreshes
+        queryClient.invalidateQueries({ 
+          queryKey: liveProjectQueryKeys.lists(),
+          refetchType: 'active' // Only refetch active queries
+        });
         queryClient.invalidateQueries({ queryKey: liveProjectQueryKeys.stats() });
       } else {
         toast.error(data.message || "Failed to create live project");
@@ -198,7 +202,11 @@ export const useUpdateLiveProject = () => {
     onSuccess: (data, variables) => {
       if (data.success) {
         toast.success("Live project updated successfully");
-        queryClient.invalidateQueries({ queryKey: liveProjectQueryKeys.lists() });
+        // Invalidate all list queries (with any params) to ensure the list refreshes
+        queryClient.invalidateQueries({ 
+          queryKey: liveProjectQueryKeys.lists(),
+          refetchType: 'active' // Only refetch active queries
+        });
         queryClient.invalidateQueries({
           queryKey: liveProjectQueryKeys.detail(variables.liveProjectId),
         });

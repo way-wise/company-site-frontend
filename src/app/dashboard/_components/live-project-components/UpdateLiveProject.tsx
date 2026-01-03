@@ -103,15 +103,33 @@ const UpdateLiveProject = ({
         assignedMembersString = assignedMembersValue;
       }
 
-      // Build update payload - exclude paidAmount for HOURLY projects
+      // Determine the project type (use form value if changed, otherwise use existing)
+      const currentProjectType = values.projectType || liveProject.projectType;
+
+      // Build update payload - handle paidAmount based on project type
       const updateData: Record<string, unknown> = {
-        ...values,
+        clientName: values.clientName,
+        clientLocation: values.clientLocation,
+        projectType: currentProjectType,
         assignedMembers: assignedMembersString,
+        projectStatus: values.projectStatus,
+        nextActions: values.nextActions,
       };
 
-      // Remove paidAmount if project type is HOURLY
-      if (values.projectType === "HOURLY" || liveProject.projectType === "HOURLY") {
-        delete updateData.paidAmount;
+      // Add fields based on project type
+      if (currentProjectType === "HOURLY") {
+        // For HOURLY: include hourlyRate, exclude paidAmount completely
+        if (values.hourlyRate !== undefined) {
+          updateData.hourlyRate = values.hourlyRate;
+        }
+        // Explicitly do NOT include paidAmount for HOURLY projects
+      } else {
+        // For FIXED and other types: include projectBudget and paidAmount (required)
+        if (values.projectBudget !== undefined) {
+          updateData.projectBudget = values.projectBudget;
+        }
+        // paidAmount is required for FIXED projects
+        updateData.paidAmount = typeof values.paidAmount === "number" ? values.paidAmount : (liveProject.paidAmount ?? 0);
       }
 
       await updateLiveProjectMutation.mutateAsync({
@@ -232,8 +250,6 @@ const UpdateLiveProject = ({
                           <SelectContent>
                             <SelectItem value="FIXED">Fixed</SelectItem>
                             <SelectItem value="HOURLY">Hourly</SelectItem>
-                            <SelectItem value="MONTHLY">Monthly</SelectItem>
-                            <SelectItem value="CUSTOM">Custom</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />

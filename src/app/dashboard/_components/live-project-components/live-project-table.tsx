@@ -170,16 +170,17 @@ export const LiveProjectTable = () => {
         assignedMembersString = values.assignedMembers;
       }
 
+      // Build payload based on project type
       const payload: {
         clientName: string;
         clientLocation: string;
         projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
-        paidAmount?: number;
         assignedMembers: string; // API expects string, not array
         projectStatus: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
         nextActions?: string;
         projectBudget?: number;
         hourlyRate?: number;
+        paidAmount?: number;
       } = {
         clientName: values.clientName,
         clientLocation: values.clientLocation,
@@ -189,13 +190,14 @@ export const LiveProjectTable = () => {
         nextActions: values.nextActions || undefined,
       };
 
-      // Add budget or hourly rate based on project type
+      // Add fields based on project type
       if (values.projectType === "HOURLY") {
         payload.hourlyRate = values.hourlyRate;
-        // Don't include paidAmount for HOURLY projects
+        // Explicitly exclude paidAmount for HOURLY projects (don't include it at all)
       } else {
+        // For FIXED and other types, paidAmount is required
         payload.projectBudget = values.projectBudget;
-        payload.paidAmount = values.paidAmount ?? 0;
+        payload.paidAmount = typeof values.paidAmount === "number" ? values.paidAmount : 0;
       }
 
       await createLiveProjectMutation.mutateAsync(payload);
@@ -416,9 +418,10 @@ export const LiveProjectTable = () => {
       header: "Paid",
       accessorKey: "paidAmount",
       cell: ({ row }: { row: { original: LiveProject } }) => {
+        const paidAmount = row.original.paidAmount ?? 0;
         return (
           <div className="font-medium text-green-600">
-            ${row.original.paidAmount.toLocaleString()}
+            ${paidAmount.toLocaleString()}
           </div>
         );
       },
@@ -428,13 +431,15 @@ export const LiveProjectTable = () => {
       accessorKey: "remaining",
       cell: ({ row }: { row: { original: LiveProject } }) => {
         const project = row.original;
-        const budget = project.projectBudget || 0;
-        const remaining = budget - project.paidAmount;
         
         // Only show remaining for non-hourly projects
         if (project.projectType === "HOURLY") {
           return <span className="text-muted-foreground">-</span>;
         }
+        
+        const budget = project.projectBudget || 0;
+        const paidAmount = project.paidAmount ?? 0;
+        const remaining = budget - paidAmount;
         
         return (
           <div className={`font-medium ${remaining > 0 ? "text-orange-600" : "text-green-600"}`}>
