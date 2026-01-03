@@ -119,6 +119,7 @@ export const LiveProjectTable = () => {
     isLoading,
     error,
     isError,
+    refetch,
   } = useLiveProjects({
     page: pagination.pageIndex,
     limit: pagination.pageSize,
@@ -191,8 +192,43 @@ export const LiveProjectTable = () => {
       await createLiveProjectMutation.mutateAsync(payload);
       setAddLiveProjectModalOpen(false);
       addLiveProjectForm.reset();
-    } catch {
-      // Error is handled by the mutation hook
+    } catch (error: unknown) {
+      // Parse validation errors and set them on form fields
+      const apiError = error as {
+        response?: {
+          data?: {
+            error?: Array<{
+              code: string;
+              path: string[];
+              message: string;
+            }>;
+          };
+        };
+      };
+
+      if (Array.isArray(apiError.response?.data?.error)) {
+        const validationErrors = apiError.response.data.error;
+        validationErrors.forEach((err) => {
+          // Extract field name from path (e.g., ["body", "projectType"] -> "projectType")
+          const fieldName = err.path[err.path.length - 1] as keyof CreateLiveProjectFormData;
+          
+          // Format the error message to be more user-friendly
+          let friendlyMessage = err.message;
+          if (err.message.includes("expected one of")) {
+            const match = err.message.match(/expected one of "([^"]+)"/);
+            if (match) {
+              const options = match[1].split("|").map(opt => opt.trim());
+              friendlyMessage = `Please select one of: ${options.join(", ")}`;
+            }
+          }
+          
+          // Set error on the form field
+          addLiveProjectForm.setError(fieldName, {
+            type: "manual",
+            message: friendlyMessage,
+          });
+        });
+      }
     }
   };
 
@@ -215,6 +251,106 @@ export const LiveProjectTable = () => {
 
   // Check if we have data
   const hasData = liveProjects.length > 0;
+
+  // Helper function to extract error message
+  const getErrorMessage = (err: unknown): string => {
+    // Check if it's an Error object
+    if (err && typeof err === "object" && "message" in err) {
+      // Check if it's an API error with response data
+      const apiError = err as {
+        response?: {
+          data?: {
+            message?: string;
+            error?: string;
+          };
+        };
+        message?: string;
+      };
+      
+      // Try to get message from API response first
+      if (apiError.response?.data?.message) {
+        return apiError.response.data.message;
+      }
+      if (apiError.response?.data?.error) {
+        return apiError.response.data.error;
+      }
+      // Fall back to error message
+      if (apiError.message && typeof apiError.message === "string") {
+        return apiError.message;
+      }
+    }
+    return "An unexpected error occurred while loading live projects";
+  };
+
+  // Handle error state (matching blogs pattern)
+  if (error) {
+    const errorMessage = getErrorMessage(error);
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">Live Projects</h2>
+            <p className="text-gray-600">Manage your live projects</p>
+          </div>
+          <Button onClick={() => setAddLiveProjectModalOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Live Project
+          </Button>
+        </div>
+        <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-800">
+          <p className="font-medium">Error loading live projects</p>
+          <p className="text-sm mt-1">{errorMessage}</p>
+          <p className="text-xs mt-2 text-red-600 mb-3">
+            Please check your connection and try again. If the problem persists, contact support.
+          </p>
+          <Button
+            onClick={() => refetch()}
+            variant="outline"
+            size="sm"
+            className="mt-2 border-red-300 text-red-800 hover:bg-red-100"
+          >
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle API response failure (matching blogs pattern)
+  if (liveProjectsData && !liveProjectsData.success) {
+    const apiErrorMessage = liveProjectsData.message || 
+      "An unexpected error occurred while loading live projects";
+    
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">Live Projects</h2>
+            <p className="text-gray-600">Manage your live projects</p>
+          </div>
+          <Button onClick={() => setAddLiveProjectModalOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Live Project
+          </Button>
+        </div>
+        <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-800">
+          <p className="font-medium">Failed to load live projects</p>
+          <p className="text-sm mt-1">{apiErrorMessage}</p>
+          <p className="text-xs mt-2 text-red-600 mb-3">
+            The server returned an error. Please check your permissions or contact support if this issue persists.
+          </p>
+          <Button
+            onClick={() => refetch()}
+            variant="outline"
+            size="sm"
+            className="mt-2 border-red-300 text-red-800 hover:bg-red-100"
+          >
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   // Table columns
   const columns = [
@@ -414,20 +550,6 @@ export const LiveProjectTable = () => {
             </Select>
           </div>
         </div>
-
-        {/* Error State */}
-        {isError && (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="mb-4 text-destructive">
-              <p className="text-lg font-medium">Failed to load live projects</p>
-              <p className="text-sm text-muted-foreground">
-                {error instanceof Error
-                  ? error.message
-                  : "Something went wrong"}
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Loading State */}
         {isLoading && !liveProjectsData && (

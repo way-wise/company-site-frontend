@@ -87,8 +87,43 @@ const UpdateLiveProject = ({
         liveProjectData: values as Partial<LiveProject>,
       });
       onClose();
-    } catch {
-      // Error is handled by the mutation hook
+    } catch (error: unknown) {
+      // Parse validation errors and set them on form fields
+      const apiError = error as {
+        response?: {
+          data?: {
+            error?: Array<{
+              code: string;
+              path: string[];
+              message: string;
+            }>;
+          };
+        };
+      };
+
+      if (Array.isArray(apiError.response?.data?.error)) {
+        const validationErrors = apiError.response.data.error;
+        validationErrors.forEach((err) => {
+          // Extract field name from path (e.g., ["body", "projectType"] -> "projectType")
+          const fieldName = err.path[err.path.length - 1] as keyof UpdateLiveProjectFormData;
+          
+          // Format the error message to be more user-friendly
+          let friendlyMessage = err.message;
+          if (err.message.includes("expected one of")) {
+            const match = err.message.match(/expected one of "([^"]+)"/);
+            if (match) {
+              const options = match[1].split("|").map(opt => opt.trim());
+              friendlyMessage = `Please select one of: ${options.join(", ")}`;
+            }
+          }
+          
+          // Set error on the form field
+          form.setError(fieldName, {
+            type: "manual",
+            message: friendlyMessage,
+          });
+        });
+      }
     }
   };
 

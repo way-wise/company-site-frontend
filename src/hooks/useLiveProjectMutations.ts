@@ -5,11 +5,20 @@ import { LiveProject } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+// Type for validation error from API
+interface ValidationError {
+  code: string;
+  values?: unknown[];
+  path: string[];
+  message: string;
+}
+
 // Type for API error responses
 interface ApiError extends Error {
   response?: {
     data?: {
       message?: string;
+      error?: string | ValidationError[];
     };
   };
 }
@@ -56,6 +65,78 @@ export const useLiveProjectStats = () => {
   });
 };
 
+// Helper function to format validation errors
+export const formatValidationErrors = (errors: ValidationError[]): {
+  fieldErrors: Record<string, string>;
+  summary: string;
+} => {
+  const fieldErrors: Record<string, string> = {};
+  const errorMessages: string[] = [];
+
+  errors.forEach((error) => {
+    // Extract field name from path (e.g., ["body", "projectType"] -> "projectType")
+    const fieldName = error.path[error.path.length - 1];
+    
+    // Format the error message to be more user-friendly
+    let friendlyMessage = error.message;
+    
+    // Make messages more readable
+    if (error.message.includes("expected one of")) {
+      // Extract the valid options from the message
+      const match = error.message.match(/expected one of "([^"]+)"/);
+      if (match) {
+        const options = match[1].split("|").map(opt => opt.trim());
+        friendlyMessage = `Please select one of: ${options.join(", ")}`;
+      }
+    }
+    
+    // Convert field names to more readable labels
+    const fieldLabels: Record<string, string> = {
+      projectType: "Project Type",
+      projectStatus: "Project Status",
+      clientName: "Client Name",
+      clientLocation: "Client Location",
+      projectBudget: "Project Budget",
+      hourlyRate: "Hourly Rate",
+      paidAmount: "Paid Amount",
+      assignedMembers: "Assigned Members",
+      nextActions: "Next Actions",
+    };
+    
+    const fieldLabel = fieldLabels[fieldName] || fieldName;
+    fieldErrors[fieldName] = friendlyMessage;
+    errorMessages.push(`${fieldLabel}: ${friendlyMessage}`);
+  });
+
+  // Create a user-friendly summary for toast
+  let summary: string;
+  if (errorMessages.length === 0) {
+    summary = "Please check the form for errors";
+  } else if (errorMessages.length === 1) {
+    summary = errorMessages[0];
+  } else {
+    // For multiple errors, show a concise summary
+    const fieldNames = errors.map(err => {
+      const fieldName = err.path[err.path.length - 1];
+      const fieldLabels: Record<string, string> = {
+        projectType: "Project Type",
+        projectStatus: "Project Status",
+        clientName: "Client Name",
+        clientLocation: "Client Location",
+        projectBudget: "Project Budget",
+        hourlyRate: "Hourly Rate",
+        paidAmount: "Paid Amount",
+        assignedMembers: "Assigned Members",
+        nextActions: "Next Actions",
+      };
+      return fieldLabels[fieldName] || fieldName;
+    });
+    summary = `Please fix errors in: ${fieldNames.join(", ")}`;
+  }
+
+  return { fieldErrors, summary };
+};
+
 // Hook to create live project
 export const useCreateLiveProject = () => {
   const queryClient = useQueryClient();
@@ -84,11 +165,20 @@ export const useCreateLiveProject = () => {
     },
     onError: (error: Error) => {
       const apiError = error as ApiError;
-      const errorMessage =
-        apiError.response?.data?.message ||
-        error.message ||
-        "Failed to create live project";
-      toast.error(errorMessage);
+      const errorData = apiError.response?.data;
+      
+      // Check if it's a validation error array
+      if (Array.isArray(errorData?.error)) {
+        const { summary } = formatValidationErrors(errorData.error as ValidationError[]);
+        toast.error(summary);
+      } else {
+        const errorMessage =
+          errorData?.message ||
+          (typeof errorData?.error === "string" ? errorData.error : undefined) ||
+          error.message ||
+          "Failed to create live project";
+        toast.error(errorMessage);
+      }
     },
   });
 };
@@ -119,11 +209,20 @@ export const useUpdateLiveProject = () => {
     },
     onError: (error: Error) => {
       const apiError = error as ApiError;
-      const errorMessage =
-        apiError.response?.data?.message ||
-        error.message ||
-        "Failed to update live project";
-      toast.error(errorMessage);
+      const errorData = apiError.response?.data;
+      
+      // Check if it's a validation error array
+      if (Array.isArray(errorData?.error)) {
+        const { summary } = formatValidationErrors(errorData.error as ValidationError[]);
+        toast.error(summary);
+      } else {
+        const errorMessage =
+          errorData?.message ||
+          (typeof errorData?.error === "string" ? errorData.error : undefined) ||
+          error.message ||
+          "Failed to update live project";
+        toast.error(errorMessage);
+      }
     },
   });
 };
