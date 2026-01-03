@@ -162,19 +162,20 @@ export const LiveProjectTable = () => {
   // Handle Add Live Project
   const handleAddLiveProject = async (values: CreateLiveProjectFormData) => {
     try {
-      // Ensure assignedMembers is always an array
-      const assignedMembersArray = Array.isArray(values.assignedMembers)
-        ? values.assignedMembers
-        : typeof values.assignedMembers === "string" && values.assignedMembers.trim()
-        ? values.assignedMembers.split(",").map((m) => m.trim()).filter((m) => m.length > 0)
-        : [];
+      // Convert assignedMembers to string (API expects comma-separated string)
+      let assignedMembersString: string = "";
+      if (Array.isArray(values.assignedMembers)) {
+        assignedMembersString = values.assignedMembers.join(", ");
+      } else if (typeof values.assignedMembers === "string") {
+        assignedMembersString = values.assignedMembers;
+      }
 
       const payload: {
         clientName: string;
         clientLocation: string;
         projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
         paidAmount: number;
-        assignedMembers: string[];
+        assignedMembers: string; // API expects string, not array
         projectStatus: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
         nextActions?: string;
         projectBudget?: number;
@@ -184,7 +185,7 @@ export const LiveProjectTable = () => {
         clientLocation: values.clientLocation,
         projectType: values.projectType,
         paidAmount: values.paidAmount ?? 0,
-        assignedMembers: assignedMembersArray,
+        assignedMembers: assignedMembersString,
         projectStatus: values.projectStatus || "PENDING",
         nextActions: values.nextActions || undefined,
       };

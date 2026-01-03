@@ -94,20 +94,21 @@ const UpdateLiveProject = ({
     if (!liveProject?.id) return;
 
     try {
-      // Ensure assignedMembers is always an array
+      // Convert assignedMembers to string (API expects comma-separated string)
+      let assignedMembersString: string = "";
       const assignedMembersValue = values.assignedMembers as string[] | string | undefined;
-      const assignedMembersArray = Array.isArray(assignedMembersValue)
-        ? assignedMembersValue
-        : typeof assignedMembersValue === "string" && assignedMembersValue.trim()
-        ? assignedMembersValue.split(",").map((m: string) => m.trim()).filter((m: string) => m.length > 0)
-        : [];
+      if (Array.isArray(assignedMembersValue)) {
+        assignedMembersString = assignedMembersValue.join(", ");
+      } else if (typeof assignedMembersValue === "string") {
+        assignedMembersString = assignedMembersValue;
+      }
 
       await updateLiveProjectMutation.mutateAsync({
         liveProjectId: liveProject.id,
         liveProjectData: {
           ...values,
-          assignedMembers: assignedMembersArray,
-        } as Partial<LiveProject>,
+          assignedMembers: assignedMembersString,
+        } as Partial<LiveProject & { assignedMembers: string }>,
       });
       onClose();
     } catch (error: unknown) {

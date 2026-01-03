@@ -149,7 +149,7 @@ export const useCreateLiveProject = () => {
       projectBudget?: number;
       hourlyRate?: number;
       paidAmount?: number;
-      assignedMembers: string[];
+      assignedMembers: string; // API expects comma-separated string
       projectStatus?: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
       dailyNotes?: Array<{ note: string; createdAt: string }>;
       nextActions?: string;
