@@ -138,18 +138,39 @@ export const updateLiveProjectSchema = z.object({
   clientName: z.string().min(1, "Client name is required").optional(),
   clientLocation: z.string().min(1, "Client location is required").optional(),
   projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]).optional(),
-  projectBudget: z.preprocess(
-    (val) => (typeof val === "string" ? parseFloat(val) : val),
-    z.number().positive("Project budget must be a positive number").optional()
-  ),
-  hourlyRate: z.preprocess(
-    (val) => (typeof val === "string" ? parseFloat(val) : val),
-    z.number().positive("Hourly rate must be a positive number").optional()
-  ),
-  paidAmount: z.preprocess(
-    (val) => (typeof val === "string" ? parseFloat(val) : val),
-    z.number().min(0, "Paid amount cannot be negative").optional()
-  ),
+  projectBudget: z
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      const num = typeof val === "string" ? parseFloat(val) : val;
+      return typeof num === "number" && !isNaN(num) ? num : undefined;
+    })
+    .refine(
+      (val) => val === undefined || (typeof val === "number" && val > 0),
+      "Project budget must be a positive number"
+    ) as z.ZodType<number | undefined>,
+  hourlyRate: z
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      const num = typeof val === "string" ? parseFloat(val) : val;
+      return typeof num === "number" && !isNaN(num) ? num : undefined;
+    })
+    .refine(
+      (val) => val === undefined || (typeof val === "number" && val > 0),
+      "Hourly rate must be a positive number"
+    ) as z.ZodType<number | undefined>,
+  paidAmount: z
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === "string" && val.trim() === "") return undefined;
+      const num = typeof val === "string" ? parseFloat(val) : val;
+      return typeof num === "number" && !isNaN(num) ? num : undefined;
+    })
+    .refine(
+      (val) => val === undefined || (typeof val === "number" && val >= 0),
+      "Paid amount cannot be negative"
+    ) as z.ZodType<number | undefined>,
   assignedMembers: z.array(z.string()).optional(),
   projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).optional(),
   dailyNotes: z.array(z.object({
