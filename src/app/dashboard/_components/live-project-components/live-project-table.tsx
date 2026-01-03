@@ -39,7 +39,7 @@ import {
 } from "@/hooks/useLiveProjectMutations";
 import { LiveProject } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MoreVertical, Pencil, Plus, Trash } from "lucide-react";
+import { Eye, MoreVertical, Pencil, Plus, Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UpdateLiveProject from "./UpdateLiveProject";
@@ -90,6 +90,7 @@ export const LiveProjectTable = () => {
   const [addLiveProjectModalOpen, setAddLiveProjectModalOpen] = useState(false);
   const [updateLiveProjectModalOpen, setUpdateLiveProjectModalOpen] =
     useState(false);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
   const [selectedLiveProject, setSelectedLiveProject] =
     useState<LiveProject | null>(null);
   const [liveProjectId, setLiveProjectId] = useState<string | undefined>("");
@@ -386,7 +387,7 @@ export const LiveProjectTable = () => {
     );
   }
 
-  // Table columns
+  // Table columns - simplified view
   const columns = [
     {
       header: "Client Name",
@@ -417,104 +418,25 @@ export const LiveProjectTable = () => {
         getProjectTypeBadge(row.original.projectType),
     },
     {
-      header: "Budget / Rate",
-      accessorKey: "budgetOrRate",
+      header: "Next Action",
+      accessorKey: "nextActions",
       cell: ({ row }: { row: { original: LiveProject } }) => {
-        const project = row.original;
-        if (project.projectType === "HOURLY" && project.hourlyRate) {
-          return (
-            <div className="font-medium">
-              ${project.hourlyRate.toLocaleString()}/hr
-            </div>
-          );
-        } else if (project.projectBudget) {
-          return (
-            <div className="font-medium">
-              ${project.projectBudget.toLocaleString()}
-            </div>
-          );
-        }
-        return <span className="text-muted-foreground">-</span>;
-      },
-    },
-    {
-      header: "Paid",
-      accessorKey: "paidAmount",
-      cell: ({ row }: { row: { original: LiveProject } }) => {
-        const paidAmount = row.original.paidAmount ?? 0;
-        return (
-          <div className="font-medium text-green-600">
-            ${paidAmount.toLocaleString()}
-          </div>
-        );
-      },
-    },
-    {
-      header: "Remaining",
-      accessorKey: "remaining",
-      cell: ({ row }: { row: { original: LiveProject } }) => {
-        const project = row.original;
-        
-        // Only show remaining for non-hourly projects
-        if (project.projectType === "HOURLY") {
+        const nextActions = row.original.nextActions;
+        if (!nextActions || nextActions.trim() === "") {
           return <span className="text-muted-foreground">-</span>;
         }
-        
-        const budget = project.projectBudget || 0;
-        const paidAmount = project.paidAmount ?? 0;
-        const remaining = budget - paidAmount;
-        
         return (
-          <div className={`font-medium ${remaining > 0 ? "text-orange-600" : "text-green-600"}`}>
-            ${remaining.toLocaleString()}
+          <div className="max-w-[250px] truncate" title={nextActions}>
+            {nextActions}
           </div>
         );
       },
     },
     {
-      header: "Members",
-      accessorKey: "assignedMembers",
-      cell: ({ row }: { row: { original: LiveProject } }) => {
-        // Handle both array and string formats (API might return either)
-        const membersValue = row.original.assignedMembers as string[] | string | undefined;
-        let members: string[] = [];
-        
-        if (Array.isArray(membersValue)) {
-          members = membersValue;
-        } else if (typeof membersValue === "string" && membersValue.trim()) {
-          // If it's a string, split by comma and trim
-          members = membersValue
-            .split(",")
-            .map((m: string) => m.trim())
-            .filter((m: string) => m.length > 0);
-        }
-        
-        if (members.length === 0) {
-          return <span className="text-muted-foreground">-</span>;
-        }
-        
-        // If members are IDs, show count. If they're names, show them
-        const displayText = members.length > 3 
-          ? `${members.slice(0, 3).join(", ")} +${members.length - 3} more`
-          : members.join(", ");
-        return (
-          <div className="max-w-[200px] truncate" title={members.join(", ")}>
-            {displayText}
-          </div>
-        );
-      },
-    },
-    {
-      header: "Status",
-      accessorKey: "projectStatus",
+      header: "Updated At",
+      accessorKey: "updatedAt",
       cell: ({ row }: { row: { original: LiveProject } }) =>
-        getStatusBadge(row.original.projectStatus),
-    },
-    {
-      header: "Created At",
-      accessorKey: "createdAt",
-      cell: ({ row }: { row: { original: LiveProject } }) =>
-        formatDateHelper(row.original.createdAt),
+        formatDateHelper(row.original.updatedAt),
     },
     {
       id: "actions",
@@ -528,6 +450,15 @@ export const LiveProjectTable = () => {
               <MoreVertical className="h-4 w-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-36">
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedLiveProject(row.original);
+                  setViewModalOpen(true);
+                }}
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                <span>View</span>
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   setUpdateLiveProjectModalOpen(true);
@@ -945,6 +876,125 @@ export const LiveProjectTable = () => {
         }}
         liveProject={selectedLiveProject}
       />
+
+      {/* View Live Project Modal */}
+      <Modal
+        isOpen={viewModalOpen}
+        onClose={() => {
+          setViewModalOpen(false);
+          setSelectedLiveProject(null);
+        }}
+        title="Live Project Details"
+      >
+        {selectedLiveProject && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                  Client Name
+                </h4>
+                <p className="text-base font-medium">{selectedLiveProject.clientName}</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                  Location
+                </h4>
+                <p className="text-base">{selectedLiveProject.clientLocation}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                  Project Type
+                </h4>
+                <div className="mt-1">
+                  {getProjectTypeBadge(selectedLiveProject.projectType)}
+                </div>
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                  Status
+                </h4>
+                <div className="mt-1">
+                  {getStatusBadge(selectedLiveProject.projectStatus)}
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t pt-4">
+              <h4 className="font-semibold text-sm text-muted-foreground mb-3">
+                Financial Information
+              </h4>
+              <div className="grid grid-cols-3 gap-4">
+                {selectedLiveProject.projectType === "HOURLY" ? (
+                  <>
+                    <div>
+                      <h5 className="text-xs text-muted-foreground mb-1">Hourly Rate</h5>
+                      <p className="text-lg font-semibold">
+                        ${selectedLiveProject.hourlyRate?.toLocaleString() || "0"}/hr
+                      </p>
+                    </div>
+                    <div className="col-span-2">
+                      <h5 className="text-xs text-muted-foreground mb-1">Note</h5>
+                      <p className="text-sm text-muted-foreground">
+                        Paid amount is not applicable for hourly projects
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <h5 className="text-xs text-muted-foreground mb-1">Budget</h5>
+                      <p className="text-lg font-semibold">
+                        ${(selectedLiveProject.projectBudget || 0).toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <h5 className="text-xs text-muted-foreground mb-1">Paid Amount</h5>
+                      <p className="text-lg font-semibold text-green-600">
+                        ${(selectedLiveProject.paidAmount ?? 0).toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <h5 className="text-xs text-muted-foreground mb-1">Remaining</h5>
+                      <p className={`text-lg font-semibold ${
+                        ((selectedLiveProject.projectBudget || 0) - (selectedLiveProject.paidAmount ?? 0)) > 0 
+                          ? "text-orange-600" 
+                          : "text-green-600"
+                      }`}>
+                        ${((selectedLiveProject.projectBudget || 0) - (selectedLiveProject.paidAmount ?? 0)).toLocaleString()}
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {selectedLiveProject.nextActions && (
+              <div className="border-t pt-4">
+                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                  Next Actions
+                </h4>
+                <p className="text-base whitespace-pre-wrap">{selectedLiveProject.nextActions}</p>
+              </div>
+            )}
+
+            <div className="border-t pt-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <h4 className="font-semibold text-muted-foreground mb-1">Created At</h4>
+                  <p>{formatDateHelper(selectedLiveProject.createdAt)}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-muted-foreground mb-1">Updated At</h4>
+                  <p>{formatDateHelper(selectedLiveProject.updatedAt)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
     </>
   );
 };
