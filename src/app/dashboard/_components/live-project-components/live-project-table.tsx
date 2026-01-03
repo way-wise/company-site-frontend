@@ -23,12 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalTitle,
-} from "@/components/ui/modal";
+import { CustomModal as Modal } from "@/components/ui/modal";
 import {
   Select,
   SelectContent,
@@ -216,10 +211,9 @@ export const LiveProjectTable = () => {
     }
   };
 
-  // Extract data from API response
-  const liveProjects =
-    liveProjectsData?.data?.result || liveProjectsData?.data?.data || [];
-  const meta = liveProjectsData?.data?.meta || liveProjectsData?.meta;
+  // Extract data from API response (matching blogs pattern)
+  const liveProjects = liveProjectsData?.data || [];
+  const meta = liveProjectsData?.meta;
   const totalItems = meta?.total || 0;
 
   // Check if we have data
@@ -492,13 +486,11 @@ export const LiveProjectTable = () => {
 
       {/* Live Project Creation Modal */}
       <Modal
-        open={addLiveProjectModalOpen}
-        onOpenChange={setAddLiveProjectModalOpen}
+        isOpen={addLiveProjectModalOpen}
+        onClose={() => setAddLiveProjectModalOpen(false)}
+        title="Add Live Project"
+        isPending={createLiveProjectMutation.isPending}
       >
-        <ModalContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <ModalHeader>
-            <ModalTitle>Add Live Project</ModalTitle>
-          </ModalHeader>
           <Form {...addLiveProjectForm}>
             <form
               onSubmit={addLiveProjectForm.handleSubmit(handleAddLiveProject)}
@@ -738,42 +730,36 @@ export const LiveProjectTable = () => {
               </FormFieldset>
             </form>
           </Form>
-        </ModalContent>
-      </Modal>
 
       {/* Delete Live Project Modal */}
-      <Modal open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
-        <ModalContent>
-          <ModalHeader>
-            <ModalTitle>Delete Live Project</ModalTitle>
-          </ModalHeader>
-          <Form {...deleteForm}>
-            <form onSubmit={deleteForm.handleSubmit(handleDeleteLiveProject)}>
-              <FormFieldset disabled={deleteLiveProjectMutation.isPending}>
-                <p className="text-muted-foreground">
-                  This action cannot be undone. This will permanently delete the
-                  live project and remove associated data.
-                </p>
-                <div className="flex justify-end gap-3 py-5">
-                  <Button
-                    type="button"
-                    onClick={() => setDeleteModalOpen(false)}
-                    variant="secondary"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="destructive"
-                    isLoading={deleteLiveProjectMutation.isPending}
-                  >
-                    Continue
-                  </Button>
-                </div>
-              </FormFieldset>
-            </form>
-          </Form>
-        </ModalContent>
+      <Modal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        title="Delete Live Project"
+        isPending={deleteLiveProjectMutation.isPending}
+      >
+        <div className="space-y-4">
+          <p>
+            Are you sure you want to delete this live project? This action cannot be
+            undone.
+          </p>
+          {selectedLiveProject && (
+            <div className="rounded bg-gray-50 p-3">
+              <h4 className="font-medium">{selectedLiveProject.clientName}</h4>
+              <p className="text-sm text-gray-600">
+                {selectedLiveProject.clientLocation}
+              </p>
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteLiveProject}>
+              Delete
+            </Button>
+          </div>
+        </div>
       </Modal>
 
       <UpdateLiveProject

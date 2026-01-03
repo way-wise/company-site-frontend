@@ -15,12 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalTitle,
-} from "@/components/ui/modal";
+import { CustomModal as Modal } from "@/components/ui/modal";
 import {
   Select,
   SelectContent,
@@ -103,12 +98,13 @@ const UpdateLiveProject = ({
   };
 
   return (
-    <Modal open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <ModalContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <ModalHeader>
-          <ModalTitle>Update Live Project</ModalTitle>
-        </ModalHeader>
-        <Form {...form}>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Update Live Project"
+      isPending={updateLiveProjectMutation.isPending}
+    >
+      <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <FormFieldset disabled={updateLiveProjectMutation.isPending}>
               <div className="space-y-4">
@@ -336,9 +332,8 @@ const UpdateLiveProject = ({
                 </Button>
               </div>
             </FormFieldset>
-          </form>
-        </Form>
-      </ModalContent>
+        </form>
+      </Form>
     </Modal>
   );
 };

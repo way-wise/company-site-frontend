@@ -135,11 +135,12 @@ export const useDeleteLiveProject = () => {
   return useMutation({
     mutationFn: (liveProjectId: string) =>
       liveProjectService.deleteLiveProject(liveProjectId),
-    onSuccess: (data) => {
+    onSuccess: (data, liveProjectId) => {
       if (data.success) {
         toast.success("Live project deleted successfully");
         queryClient.invalidateQueries({ queryKey: liveProjectQueryKeys.lists() });
         queryClient.invalidateQueries({ queryKey: liveProjectQueryKeys.stats() });
+        queryClient.removeQueries({ queryKey: liveProjectQueryKeys.detail(liveProjectId) });
       } else {
         toast.error(data.message || "Failed to delete live project");
       }

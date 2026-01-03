@@ -3,18 +3,24 @@
 import apiClient from "@/lib/axios";
 import {
   ApiResponse,
-  PaginatedResponse,
   LiveProject,
   LiveProjectsQueryParams,
 } from "@/types";
 
 export type { LiveProjectsQueryParams };
 
+export interface LiveProjectsResponse {
+  success: boolean;
+  message: string;
+  data: LiveProject[];
+  meta: { page: number; limit: number; total: number; totalPages: number };
+}
+
 export const liveProjectService = {
   // Get all live projects with pagination and search
   getAllLiveProjects: async (
     params: LiveProjectsQueryParams
-  ): Promise<ApiResponse<PaginatedResponse<LiveProject>>> => {
+  ): Promise<LiveProjectsResponse> => {
     const { page, limit, search, projectStatus, projectType, clientName } = params;
     let url = `/live-projects?page=${page}&limit=${limit}`;
 
@@ -65,7 +71,7 @@ export const liveProjectService = {
     liveProjectId: string,
     liveProjectData: Partial<LiveProject>
   ): Promise<ApiResponse<LiveProject>> => {
-    const response = await apiClient.patch(
+    const response = await apiClient.put(
       `/live-projects/${liveProjectId}`,
       liveProjectData
     );
