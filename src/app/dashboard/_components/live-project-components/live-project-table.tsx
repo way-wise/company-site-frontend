@@ -138,7 +138,7 @@ export const LiveProjectTable = () => {
       projectBudget: 0,
       hourlyRate: 0,
       paidAmount: 0,
-      assignedMembers: "",
+      assignedMembers: [],
       projectStatus: "PENDING",
       nextActions: "",
     },
