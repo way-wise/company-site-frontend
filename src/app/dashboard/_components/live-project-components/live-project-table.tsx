@@ -303,7 +303,14 @@ export const LiveProjectTable = () => {
             <h2 className="text-2xl font-bold">Live Projects</h2>
             <p className="text-gray-600">Manage your live projects</p>
           </div>
-          <Button onClick={() => setAddLiveProjectModalOpen(true)}>
+          <Button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setAddLiveProjectModalOpen(true);
+            }}
+            type="button"
+          >
             <Plus className="mr-2 h-4 w-4" />
             Add Live Project
           </Button>
@@ -339,7 +346,14 @@ export const LiveProjectTable = () => {
             <h2 className="text-2xl font-bold">Live Projects</h2>
             <p className="text-gray-600">Manage your live projects</p>
           </div>
-          <Button onClick={() => setAddLiveProjectModalOpen(true)}>
+          <Button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setAddLiveProjectModalOpen(true);
+            }}
+            type="button"
+          >
             <Plus className="mr-2 h-4 w-4" />
             Add Live Project
           </Button>
@@ -536,7 +550,14 @@ export const LiveProjectTable = () => {
     <>
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-medium">Live Projects</h1>
-        <Button onClick={() => setAddLiveProjectModalOpen(true)}>
+        <Button 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setAddLiveProjectModalOpen(true);
+          }}
+          type="button"
+        >
           <Plus className="mr-2 h-4 w-4" />
           <span>Add Live Project</span>
         </Button>
