@@ -64,6 +64,18 @@ const UpdateLiveProject = ({
   // Update form values when live project changes
   useEffect(() => {
     if (liveProject) {
+      // Handle assignedMembers - convert to array if it's a string
+      let assignedMembersValue: string[] = [];
+      const assignedMembers = liveProject.assignedMembers as string[] | string | undefined;
+      if (Array.isArray(assignedMembers)) {
+        assignedMembersValue = assignedMembers;
+      } else if (typeof assignedMembers === "string" && assignedMembers.trim()) {
+        assignedMembersValue = assignedMembers
+          .split(",")
+          .map((m: string) => m.trim())
+          .filter((m: string) => m.length > 0);
+      }
+      
       form.reset({
         clientName: liveProject.clientName,
         clientLocation: liveProject.clientLocation,
@@ -71,7 +83,7 @@ const UpdateLiveProject = ({
         projectBudget: liveProject.projectBudget || 0,
         hourlyRate: liveProject.hourlyRate || 0,
         paidAmount: liveProject.paidAmount,
-        assignedMembers: liveProject.assignedMembers || [],
+        assignedMembers: assignedMembersValue,
         projectStatus: liveProject.projectStatus,
         nextActions: liveProject.nextActions || "",
       });
@@ -82,9 +94,20 @@ const UpdateLiveProject = ({
     if (!liveProject?.id) return;
 
     try {
+      // Ensure assignedMembers is always an array
+      const assignedMembersValue = values.assignedMembers as string[] | string | undefined;
+      const assignedMembersArray = Array.isArray(assignedMembersValue)
+        ? assignedMembersValue
+        : typeof assignedMembersValue === "string" && assignedMembersValue.trim()
+        ? assignedMembersValue.split(",").map((m: string) => m.trim()).filter((m: string) => m.length > 0)
+        : [];
+
       await updateLiveProjectMutation.mutateAsync({
         liveProjectId: liveProject.id,
-        liveProjectData: values as Partial<LiveProject>,
+        liveProjectData: {
+          ...values,
+          assignedMembers: assignedMembersArray,
+        } as Partial<LiveProject>,
       });
       onClose();
     } catch (error: unknown) {

@@ -162,6 +162,13 @@ export const LiveProjectTable = () => {
   // Handle Add Live Project
   const handleAddLiveProject = async (values: CreateLiveProjectFormData) => {
     try {
+      // Ensure assignedMembers is always an array
+      const assignedMembersArray = Array.isArray(values.assignedMembers)
+        ? values.assignedMembers
+        : typeof values.assignedMembers === "string" && values.assignedMembers.trim()
+        ? values.assignedMembers.split(",").map((m) => m.trim()).filter((m) => m.length > 0)
+        : [];
+
       const payload: {
         clientName: string;
         clientLocation: string;
@@ -177,7 +184,7 @@ export const LiveProjectTable = () => {
         clientLocation: values.clientLocation,
         projectType: values.projectType,
         paidAmount: values.paidAmount ?? 0,
-        assignedMembers: values.assignedMembers,
+        assignedMembers: assignedMembersArray,
         projectStatus: values.projectStatus || "PENDING",
         nextActions: values.nextActions || undefined,
       };
@@ -438,10 +445,24 @@ export const LiveProjectTable = () => {
       header: "Members",
       accessorKey: "assignedMembers",
       cell: ({ row }: { row: { original: LiveProject } }) => {
-        const members = row.original.assignedMembers || [];
+        // Handle both array and string formats (API might return either)
+        const membersValue = row.original.assignedMembers as string[] | string | undefined;
+        let members: string[] = [];
+        
+        if (Array.isArray(membersValue)) {
+          members = membersValue;
+        } else if (typeof membersValue === "string" && membersValue.trim()) {
+          // If it's a string, split by comma and trim
+          members = membersValue
+            .split(",")
+            .map((m: string) => m.trim())
+            .filter((m: string) => m.length > 0);
+        }
+        
         if (members.length === 0) {
           return <span className="text-muted-foreground">-</span>;
         }
+        
         // If members are IDs, show count. If they're names, show them
         const displayText = members.length > 3 
           ? `${members.slice(0, 3).join(", ")} +${members.length - 3} more`
