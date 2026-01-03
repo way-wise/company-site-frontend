@@ -711,7 +711,7 @@ export const LiveProjectTable = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className={`grid gap-4 ${projectType === "HOURLY" ? "grid-cols-1" : "grid-cols-2"}`}>
                     {projectType === "HOURLY" ? (
                       <FormField
                         control={addLiveProjectForm.control}
@@ -736,51 +736,53 @@ export const LiveProjectTable = () => {
                         )}
                       />
                     ) : (
-                      <FormField
-                        control={addLiveProjectForm.control}
-                        name="projectBudget"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Project Budget</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                placeholder="50000"
-                                {...field}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
-                                }}
-                                value={field.value ?? ""}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    )}
+                      <>
+                        <FormField
+                          control={addLiveProjectForm.control}
+                          name="projectBudget"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Project Budget</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  placeholder="50000"
+                                  {...field}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                  }}
+                                  value={field.value ?? ""}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
 
-                    <FormField
-                      control={addLiveProjectForm.control}
-                      name="paidAmount"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Paid Amount</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder="0"
-                              {...field}
-                              onChange={(e) =>
-                                field.onChange(parseFloat(e.target.value) || 0)
-                              }
-                              value={field.value || 0}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        <FormField
+                          control={addLiveProjectForm.control}
+                          name="paidAmount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Paid Amount</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  placeholder="0"
+                                  {...field}
+                                  onChange={(e) =>
+                                    field.onChange(parseFloat(e.target.value) || 0)
+                                  }
+                                  value={field.value || 0}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </>
+                    )}
                   </div>
 
                   <FormField

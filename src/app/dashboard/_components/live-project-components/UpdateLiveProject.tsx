@@ -238,7 +238,7 @@ const UpdateLiveProject = ({
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className={`grid gap-4 ${projectType === "HOURLY" ? "grid-cols-1" : "grid-cols-2"}`}>
                   {projectType === "HOURLY" ? (
                     <FormField
                       control={form.control}
@@ -263,52 +263,54 @@ const UpdateLiveProject = ({
                       )}
                     />
                   ) : (
-                    <FormField
-                      control={form.control}
-                      name="projectBudget"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Project Budget</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder="50000"
-                              {...field}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
-                              }}
-                              value={field.value ?? ""}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="projectBudget"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Project Budget</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="50000"
+                                {...field}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                }}
+                                value={field.value ?? ""}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name="paidAmount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Paid Amount</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0"
-                            {...field}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
-                            }}
-                            value={field.value ?? ""}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <FormField
+                        control={form.control}
+                        name="paidAmount"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Paid Amount</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="0"
+                                {...field}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                }}
+                                value={field.value ?? ""}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
                 </div>
 
                 <FormField
