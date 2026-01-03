@@ -6,6 +6,7 @@ import {
 	FileQuestionMarkIcon,
 	FileText,
 	FolderKanban,
+	Globe,
 	Handshake,
 	Home,
 	Key,
@@ -128,13 +129,13 @@ export const menuConfig: MenuItem[] = [
 		url: "/dashboard/feedback",
 		permissions: ["read_contact"],
 	},
-
 	{
-		title: "Feedback",
-		icon: MessageSquareHeart,
-		url: "/dashboard/feedback",
+		title: "Live Projects",
+		icon: Globe,
+		url: "/dashboard/live-projects",
+		// Temporarily visible to all authenticated users for testing
+		// permissions: ["read_live_project", "create_live_project"],
 	},
-
 	{
 		title: "Settings",
 		icon: Settings,

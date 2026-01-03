@@ -102,3 +102,53 @@ export const addCommentSchema = z.object({
 export type CreateTaskFormData = z.infer<typeof createTaskSchema>;
 export type UpdateTaskFormData = z.infer<typeof updateTaskSchema>;
 export type AddCommentFormData = z.infer<typeof addCommentSchema>;
+
+// Live Project Schemas
+export const createLiveProjectSchema = z
+  .object({
+    clientName: z.string().min(1, "Client name is required"),
+    clientLocation: z.string().min(1, "Client location is required"),
+    projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]),
+    projectBudget: z.coerce.number().positive("Project budget must be a positive number").optional(),
+    hourlyRate: z.coerce.number().positive("Hourly rate must be a positive number").optional(),
+    paidAmount: z.coerce.number().min(0, "Paid amount cannot be negative").default(0).optional(),
+    assignedMembers: z.array(z.string()).min(1, "At least one member must be assigned"),
+    projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).default("PENDING"),
+    dailyNotes: z.array(z.object({
+      note: z.string(),
+      createdAt: z.string(),
+    })).optional(),
+    nextActions: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.projectType === "HOURLY") {
+        return data.hourlyRate !== undefined && data.hourlyRate > 0;
+      } else {
+        return data.projectBudget !== undefined && data.projectBudget > 0;
+      }
+    },
+    {
+      message: "Project budget is required for non-hourly projects, or hourly rate is required for hourly projects",
+      path: ["projectBudget"],
+    }
+  );
+
+export const updateLiveProjectSchema = z.object({
+  clientName: z.string().min(1, "Client name is required").optional(),
+  clientLocation: z.string().min(1, "Client location is required").optional(),
+  projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]).optional(),
+  projectBudget: z.coerce.number().positive("Project budget must be a positive number").optional(),
+  hourlyRate: z.coerce.number().positive("Hourly rate must be a positive number").optional(),
+  paidAmount: z.coerce.number().min(0, "Paid amount cannot be negative").optional(),
+  assignedMembers: z.array(z.string()).optional(),
+  projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).optional(),
+  dailyNotes: z.array(z.object({
+    note: z.string(),
+    createdAt: z.string(),
+  })).optional(),
+  nextActions: z.string().optional(),
+});
+
+export type CreateLiveProjectFormData = z.infer<typeof createLiveProjectSchema>;
+export type UpdateLiveProjectFormData = z.infer<typeof updateLiveProjectSchema>;

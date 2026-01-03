@@ -1,0 +1,783 @@
+"use client";
+
+import {
+  CreateLiveProjectFormData,
+  createLiveProjectSchema,
+} from "@/components/modules/admin/projectValidation";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormFieldset,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalTitle,
+} from "@/components/ui/modal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  useCreateLiveProject,
+  useDeleteLiveProject,
+  useLiveProjects,
+} from "@/hooks/useLiveProjectMutations";
+import { formatDate } from "@/lib/date-format";
+import { LiveProject } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MoreVertical, Pencil, Plus, Trash } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import UpdateLiveProject from "./UpdateLiveProject";
+
+// Helper function to format date
+const formatDateHelper = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString();
+};
+
+const getStatusBadge = (status: string) => {
+  const colors: Record<string, string> = {
+    PENDING: "bg-yellow-100 text-yellow-800",
+    ACTIVE: "bg-green-100 text-green-800",
+    COMPLETED: "bg-blue-100 text-blue-800",
+    CANCELLED: "bg-red-100 text-red-800",
+    ON_HOLD: "bg-gray-100 text-gray-800",
+  };
+  return (
+    <Badge
+      className={colors[status] || "bg-gray-100 text-gray-800"}
+      variant="outline"
+    >
+      {status}
+    </Badge>
+  );
+};
+
+const getProjectTypeBadge = (type: string) => {
+  const colors: Record<string, string> = {
+    FIXED: "bg-purple-100 text-purple-800",
+    HOURLY: "bg-blue-100 text-blue-800",
+    MONTHLY: "bg-indigo-100 text-indigo-800",
+    CUSTOM: "bg-pink-100 text-pink-800",
+  };
+  return (
+    <Badge
+      className={colors[type] || "bg-gray-100 text-gray-800"}
+      variant="outline"
+    >
+      {type}
+    </Badge>
+  );
+};
+
+export const LiveProjectTable = () => {
+  // Modal states
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [addLiveProjectModalOpen, setAddLiveProjectModalOpen] = useState(false);
+  const [updateLiveProjectModalOpen, setUpdateLiveProjectModalOpen] =
+    useState(false);
+  const [selectedLiveProject, setSelectedLiveProject] =
+    useState<LiveProject | null>(null);
+  const [liveProjectId, setLiveProjectId] = useState<string | undefined>("");
+
+  // Pagination and search states
+  const [pagination, setPagination] = useState({
+    pageIndex: 1,
+    pageSize: 10,
+  });
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Get live projects data using TanStack Query
+  const {
+    data: liveProjectsData,
+    isLoading,
+    error,
+    isError,
+  } = useLiveProjects({
+    page: pagination.pageIndex,
+    limit: pagination.pageSize,
+    search: debouncedSearch || undefined,
+    projectStatus: statusFilter !== "all" ? statusFilter : undefined,
+    projectType: typeFilter !== "all" ? typeFilter : undefined,
+  });
+
+  // Add Live Project Form
+  const addLiveProjectForm = useForm<CreateLiveProjectFormData>({
+    resolver: zodResolver(createLiveProjectSchema),
+    defaultValues: {
+      clientName: "",
+      clientLocation: "",
+      projectType: "FIXED",
+      projectBudget: 0,
+      hourlyRate: 0,
+      paidAmount: 0,
+      assignedMembers: [],
+      projectStatus: "PENDING",
+      nextActions: "",
+    },
+  });
+
+  // Watch project type to show/hide appropriate fields
+  const projectType = addLiveProjectForm.watch("projectType");
+
+  // Delete Form
+  const deleteForm = useForm();
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setPagination({
+      pageIndex: 1,
+      pageSize: 10,
+    });
+  };
+
+  // Custom hooks for mutations
+  const createLiveProjectMutation = useCreateLiveProject();
+  const deleteLiveProjectMutation = useDeleteLiveProject();
+
+  // Handle Add Live Project
+  const handleAddLiveProject = async (values: CreateLiveProjectFormData) => {
+    try {
+      const payload: any = {
+        clientName: values.clientName,
+        clientLocation: values.clientLocation,
+        projectType: values.projectType,
+        paidAmount: values.paidAmount || 0,
+        assignedMembers: values.assignedMembers,
+        projectStatus: values.projectStatus || "PENDING",
+        nextActions: values.nextActions || undefined,
+      };
+
+      // Add budget or hourly rate based on project type
+      if (values.projectType === "HOURLY") {
+        payload.hourlyRate = values.hourlyRate;
+      } else {
+        payload.projectBudget = values.projectBudget;
+      }
+
+      await createLiveProjectMutation.mutateAsync(payload);
+      setAddLiveProjectModalOpen(false);
+      addLiveProjectForm.reset();
+    } catch {
+      // Error is handled by the mutation hook
+    }
+  };
+
+  // Handle Live Project Deletion
+  const handleDeleteLiveProject = async () => {
+    if (!liveProjectId) return;
+
+    try {
+      await deleteLiveProjectMutation.mutateAsync(liveProjectId);
+      setDeleteModalOpen(false);
+    } catch {
+      // Error is handled by the mutation hook
+    }
+  };
+
+  // Extract data from API response
+  const liveProjects =
+    liveProjectsData?.data?.result || liveProjectsData?.data?.data || [];
+  const meta = liveProjectsData?.data?.meta || liveProjectsData?.meta;
+  const totalItems = meta?.total || 0;
+
+  // Check if we have data
+  const hasData = liveProjects.length > 0;
+
+  // Table columns
+  const columns = [
+    {
+      header: "Client Name",
+      accessorKey: "clientName",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        return (
+          <div className="font-medium max-w-[200px] truncate" title={row.original.clientName}>
+            {row.original.clientName}
+          </div>
+        );
+      },
+    },
+    {
+      header: "Location",
+      accessorKey: "clientLocation",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        return (
+          <div className="max-w-[150px] truncate" title={row.original.clientLocation}>
+            {row.original.clientLocation}
+          </div>
+        );
+      },
+    },
+    {
+      header: "Type",
+      accessorKey: "projectType",
+      cell: ({ row }: { row: { original: LiveProject } }) =>
+        getProjectTypeBadge(row.original.projectType),
+    },
+    {
+      header: "Budget / Rate",
+      accessorKey: "budgetOrRate",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        const project = row.original;
+        if (project.projectType === "HOURLY" && project.hourlyRate) {
+          return (
+            <div className="font-medium">
+              ${project.hourlyRate.toLocaleString()}/hr
+            </div>
+          );
+        } else if (project.projectBudget) {
+          return (
+            <div className="font-medium">
+              ${project.projectBudget.toLocaleString()}
+            </div>
+          );
+        }
+        return <span className="text-muted-foreground">-</span>;
+      },
+    },
+    {
+      header: "Paid",
+      accessorKey: "paidAmount",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        return (
+          <div className="font-medium text-green-600">
+            ${row.original.paidAmount.toLocaleString()}
+          </div>
+        );
+      },
+    },
+    {
+      header: "Remaining",
+      accessorKey: "remaining",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        const project = row.original;
+        const budget = project.projectBudget || 0;
+        const remaining = budget - project.paidAmount;
+        
+        // Only show remaining for non-hourly projects
+        if (project.projectType === "HOURLY") {
+          return <span className="text-muted-foreground">-</span>;
+        }
+        
+        return (
+          <div className={`font-medium ${remaining > 0 ? "text-orange-600" : "text-green-600"}`}>
+            ${remaining.toLocaleString()}
+          </div>
+        );
+      },
+    },
+    {
+      header: "Members",
+      accessorKey: "assignedMembers",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        const members = row.original.assignedMembers || [];
+        if (members.length === 0) {
+          return <span className="text-muted-foreground">-</span>;
+        }
+        // If members are IDs, show count. If they're names, show them
+        const displayText = members.length > 3 
+          ? `${members.slice(0, 3).join(", ")} +${members.length - 3} more`
+          : members.join(", ");
+        return (
+          <div className="max-w-[200px] truncate" title={members.join(", ")}>
+            {displayText}
+          </div>
+        );
+      },
+    },
+    {
+      header: "Status",
+      accessorKey: "projectStatus",
+      cell: ({ row }: { row: { original: LiveProject } }) =>
+        getStatusBadge(row.original.projectStatus),
+    },
+    {
+      header: "Created At",
+      accessorKey: "createdAt",
+      cell: ({ row }: { row: { original: LiveProject } }) =>
+        formatDateHelper(row.original.createdAt),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        const { id } = row.original;
+
+        return (
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger>
+              <MoreVertical className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-36">
+              <DropdownMenuItem
+                onClick={() => {
+                  setUpdateLiveProjectModalOpen(true);
+                  setSelectedLiveProject(row.original);
+                }}
+              >
+                <Pencil className="mr-2 h-4 w-4" />
+                <span>Edit</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={() => {
+                  setLiveProjectId(id);
+                  setDeleteModalOpen(true);
+                }}
+              >
+                <Trash className="mr-2 h-4 w-4" />
+                <span>Delete</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+
+  return (
+    <>
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-2xl font-medium">Live Projects</h1>
+        <Button onClick={() => setAddLiveProjectModalOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          <span>Add Live Project</span>
+        </Button>
+      </div>
+      <div className="rounded-xl border bg-card p-6">
+        <div className="flex items-center justify-between gap-4 pb-6">
+          <div className="flex items-center gap-4">
+            <Input
+              type="search"
+              placeholder="Search live projects..."
+              className="max-w-xs"
+              value={search}
+              onChange={handleSearchChange}
+            />
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="PENDING">Pending</SelectItem>
+                <SelectItem value="ACTIVE">Active</SelectItem>
+                <SelectItem value="COMPLETED">Completed</SelectItem>
+                <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                <SelectItem value="ON_HOLD">On Hold</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Filter by type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="FIXED">Fixed</SelectItem>
+                <SelectItem value="HOURLY">Hourly</SelectItem>
+                <SelectItem value="MONTHLY">Monthly</SelectItem>
+                <SelectItem value="CUSTOM">Custom</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Error State */}
+        {isError && (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="mb-4 text-destructive">
+              <p className="text-lg font-medium">Failed to load live projects</p>
+              <p className="text-sm text-muted-foreground">
+                {error instanceof Error
+                  ? error.message
+                  : "Something went wrong"}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {isLoading && !liveProjectsData && (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+              </div>
+              <p className="text-muted-foreground">Loading live projects...</p>
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !isError && !hasData && (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <p className="text-lg font-medium text-muted-foreground">
+              No live projects found
+            </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Get started by creating your first live project
+            </p>
+            <Button
+              onClick={() => setAddLiveProjectModalOpen(true)}
+              className="mt-4"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Create Live Project
+            </Button>
+          </div>
+        )}
+
+        {/* Data Table */}
+        {!isLoading && !isError && hasData && (
+          <DataTable
+            data={liveProjects}
+            columns={columns}
+            isPending={isLoading}
+            pagination={{
+              pageIndex: pagination.pageIndex - 1,
+              pageSize: pagination.pageSize,
+              total: totalItems,
+            }}
+            onPaginationChange={(newPagination) => {
+              setPagination({
+                pageIndex: newPagination.pageIndex + 1,
+                pageSize: newPagination.pageSize,
+              });
+            }}
+          />
+        )}
+      </div>
+
+      {/* Live Project Creation Modal */}
+      <Modal
+        open={addLiveProjectModalOpen}
+        onOpenChange={setAddLiveProjectModalOpen}
+      >
+        <ModalContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <ModalHeader>
+            <ModalTitle>Add Live Project</ModalTitle>
+          </ModalHeader>
+          <Form {...addLiveProjectForm}>
+            <form
+              onSubmit={addLiveProjectForm.handleSubmit(handleAddLiveProject)}
+            >
+              <FormFieldset disabled={createLiveProjectMutation.isPending}>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={addLiveProjectForm.control}
+                      name="clientName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Client Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Acme Corporation" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={addLiveProjectForm.control}
+                      name="clientLocation"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Client Location</FormLabel>
+                          <FormControl>
+                            <Input placeholder="New York, USA" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={addLiveProjectForm.control}
+                      name="projectType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Project Type</FormLabel>
+                          <Select
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              // Clear the opposite field when switching types
+                              if (value === "HOURLY") {
+                                addLiveProjectForm.setValue("projectBudget", undefined);
+                              } else {
+                                addLiveProjectForm.setValue("hourlyRate", undefined);
+                              }
+                            }}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select project type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="FIXED">Fixed</SelectItem>
+                              <SelectItem value="HOURLY">Hourly</SelectItem>
+                              <SelectItem value="MONTHLY">Monthly</SelectItem>
+                              <SelectItem value="CUSTOM">Custom</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={addLiveProjectForm.control}
+                      name="projectStatus"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Project Status</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="PENDING">Pending</SelectItem>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="COMPLETED">Completed</SelectItem>
+                              <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                              <SelectItem value="ON_HOLD">On Hold</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {projectType === "HOURLY" ? (
+                      <FormField
+                        control={addLiveProjectForm.control}
+                        name="hourlyRate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Hourly Rate</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="50"
+                                {...field}
+                                onChange={(e) =>
+                                  field.onChange(parseFloat(e.target.value) || 0)
+                                }
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    ) : (
+                      <FormField
+                        control={addLiveProjectForm.control}
+                        name="projectBudget"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Project Budget</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="50000"
+                                {...field}
+                                onChange={(e) =>
+                                  field.onChange(parseFloat(e.target.value) || 0)
+                                }
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+
+                    <FormField
+                      control={addLiveProjectForm.control}
+                      name="paidAmount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Paid Amount</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="0"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(parseFloat(e.target.value) || 0)
+                              }
+                              value={field.value || 0}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={addLiveProjectForm.control}
+                    name="assignedMembers"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Assigned Members</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Habib, Arif, Robin"
+                            {...field}
+                            value={Array.isArray(field.value) ? field.value.join(", ") : field.value}
+                            onChange={(e) => {
+                              const names = e.target.value
+                                .split(",")
+                                .map((name) => name.trim())
+                                .filter((name) => name.length > 0);
+                              field.onChange(names);
+                            }}
+                          />
+                        </FormControl>
+                        <p className="text-xs text-muted-foreground">
+                          Enter member names separated by commas
+                        </p>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={addLiveProjectForm.control}
+                    name="nextActions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Next Actions</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Review design mockups and provide feedback"
+                            rows={3}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="flex justify-end gap-3 py-5">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setAddLiveProjectModalOpen(false);
+                      addLiveProjectForm.reset();
+                    }}
+                    variant="secondary"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    isLoading={createLiveProjectMutation.isPending}
+                  >
+                    Add Live Project
+                  </Button>
+                </div>
+              </FormFieldset>
+            </form>
+          </Form>
+        </ModalContent>
+      </Modal>
+
+      {/* Delete Live Project Modal */}
+      <Modal open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+        <ModalContent>
+          <ModalHeader>
+            <ModalTitle>Delete Live Project</ModalTitle>
+          </ModalHeader>
+          <Form {...deleteForm}>
+            <form onSubmit={deleteForm.handleSubmit(handleDeleteLiveProject)}>
+              <FormFieldset disabled={deleteLiveProjectMutation.isPending}>
+                <p className="text-muted-foreground">
+                  This action cannot be undone. This will permanently delete the
+                  live project and remove associated data.
+                </p>
+                <div className="flex justify-end gap-3 py-5">
+                  <Button
+                    type="button"
+                    onClick={() => setDeleteModalOpen(false)}
+                    variant="secondary"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="destructive"
+                    isLoading={deleteLiveProjectMutation.isPending}
+                  >
+                    Continue
+                  </Button>
+                </div>
+              </FormFieldset>
+            </form>
+          </Form>
+        </ModalContent>
+      </Modal>
+
+      <UpdateLiveProject
+        isOpen={updateLiveProjectModalOpen}
+        onClose={() => {
+          setUpdateLiveProjectModalOpen(false);
+          setSelectedLiveProject(null);
+        }}
+        liveProject={selectedLiveProject}
+      />
+    </>
+  );
+};
+
+export { LiveProjectTable };
+export default LiveProjectTable;

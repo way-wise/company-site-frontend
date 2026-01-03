@@ -278,6 +278,59 @@ export interface ProjectsQueryParams {
 	userProfileId?: string;
 }
 
+// Live Project Types
+export interface DailyNote {
+	note: string;
+	createdAt: string;
+}
+
+export interface LiveProject {
+	id: string;
+	clientName: string;
+	clientLocation: string;
+	projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
+	projectBudget?: number;
+	hourlyRate?: number;
+	paidAmount: number;
+	assignedMembers: string[];
+	projectStatus: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
+	dailyNotes?: DailyNote[];
+	nextActions?: string;
+	createdAt: string;
+	updatedAt: string;
+	// Optional relations
+	assignedMembersDetails?: Array<{
+		id: string;
+		user: {
+			id: string;
+			name: string;
+			email: string;
+		};
+	}>;
+}
+
+export interface LiveProjectFormData {
+	clientName: string;
+	clientLocation: string;
+	projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
+	projectBudget?: number;
+	hourlyRate?: number;
+	paidAmount?: number;
+	assignedMembers: string[];
+	projectStatus?: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
+	dailyNotes?: DailyNote[];
+	nextActions?: string;
+}
+
+export interface LiveProjectsQueryParams {
+	page: number;
+	limit: number;
+	search?: string;
+	projectStatus?: string;
+	projectType?: string;
+	clientName?: string;
+}
+
 // Milestone Types
 export interface Milestone {
 	id: string;
