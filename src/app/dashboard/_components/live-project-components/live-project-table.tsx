@@ -42,7 +42,6 @@ import {
   useDeleteLiveProject,
   useLiveProjects,
 } from "@/hooks/useLiveProjectMutations";
-import { formatDate } from "@/lib/date-format";
 import { LiveProject } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MoreVertical, Pencil, Plus, Trash } from "lucide-react";
@@ -170,7 +169,17 @@ export const LiveProjectTable = () => {
   // Handle Add Live Project
   const handleAddLiveProject = async (values: CreateLiveProjectFormData) => {
     try {
-      const payload: any = {
+      const payload: {
+        clientName: string;
+        clientLocation: string;
+        projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
+        paidAmount: number;
+        assignedMembers: string[];
+        projectStatus: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
+        nextActions?: string;
+        projectBudget?: number;
+        hourlyRate?: number;
+      } = {
         clientName: values.clientName,
         clientLocation: values.clientLocation,
         projectType: values.projectType,
