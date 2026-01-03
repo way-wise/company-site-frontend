@@ -138,9 +138,18 @@ export const updateLiveProjectSchema = z.object({
   clientName: z.string().min(1, "Client name is required").optional(),
   clientLocation: z.string().min(1, "Client location is required").optional(),
   projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]).optional(),
-  projectBudget: z.coerce.number().positive("Project budget must be a positive number").optional(),
-  hourlyRate: z.coerce.number().positive("Hourly rate must be a positive number").optional(),
-  paidAmount: z.coerce.number().min(0, "Paid amount cannot be negative").optional(),
+  projectBudget: z.preprocess(
+    (val) => (typeof val === "string" ? parseFloat(val) : val),
+    z.number().positive("Project budget must be a positive number").optional()
+  ),
+  hourlyRate: z.preprocess(
+    (val) => (typeof val === "string" ? parseFloat(val) : val),
+    z.number().positive("Hourly rate must be a positive number").optional()
+  ),
+  paidAmount: z.preprocess(
+    (val) => (typeof val === "string" ? parseFloat(val) : val),
+    z.number().min(0, "Paid amount cannot be negative").optional()
+  ),
   assignedMembers: z.array(z.string()).optional(),
   projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).optional(),
   dailyNotes: z.array(z.object({
