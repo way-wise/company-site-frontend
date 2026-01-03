@@ -174,7 +174,7 @@ export const LiveProjectTable = () => {
         clientName: string;
         clientLocation: string;
         projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
-        paidAmount: number;
+        paidAmount?: number;
         assignedMembers: string; // API expects string, not array
         projectStatus: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
         nextActions?: string;
@@ -184,7 +184,6 @@ export const LiveProjectTable = () => {
         clientName: values.clientName,
         clientLocation: values.clientLocation,
         projectType: values.projectType,
-        paidAmount: values.paidAmount ?? 0,
         assignedMembers: assignedMembersString,
         projectStatus: values.projectStatus || "PENDING",
         nextActions: values.nextActions || undefined,
@@ -193,8 +192,10 @@ export const LiveProjectTable = () => {
       // Add budget or hourly rate based on project type
       if (values.projectType === "HOURLY") {
         payload.hourlyRate = values.hourlyRate;
+        // Don't include paidAmount for HOURLY projects
       } else {
         payload.projectBudget = values.projectBudget;
+        payload.paidAmount = values.paidAmount ?? 0;
       }
 
       await createLiveProjectMutation.mutateAsync(payload);

@@ -103,12 +103,20 @@ const UpdateLiveProject = ({
         assignedMembersString = assignedMembersValue;
       }
 
+      // Build update payload - exclude paidAmount for HOURLY projects
+      const updateData: Record<string, unknown> = {
+        ...values,
+        assignedMembers: assignedMembersString,
+      };
+
+      // Remove paidAmount if project type is HOURLY
+      if (values.projectType === "HOURLY" || liveProject.projectType === "HOURLY") {
+        delete updateData.paidAmount;
+      }
+
       await updateLiveProjectMutation.mutateAsync({
         liveProjectId: liveProject.id,
-        liveProjectData: {
-          ...values,
-          assignedMembers: assignedMembersString,
-        } as Partial<LiveProject & { assignedMembers: string }>,
+        liveProjectData: updateData as Partial<LiveProject>,
       });
       onClose();
     } catch (error: unknown) {
