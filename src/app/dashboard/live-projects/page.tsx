@@ -1,6 +1,8 @@
+"use client";
+
 import { LiveProjectTable } from "../_components/live-project-components/live-project-table";
 
-const LiveProjectsPage = async () => {
+const LiveProjectsPage = () => {
   return <LiveProjectTable />;
 };
 

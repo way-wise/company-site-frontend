@@ -40,7 +40,7 @@ import {
 import { LiveProject } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MoreVertical, Pencil, Plus, Trash } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UpdateLiveProject from "./UpdateLiveProject";
 
@@ -93,6 +93,15 @@ export const LiveProjectTable = () => {
   const [selectedLiveProject, setSelectedLiveProject] =
     useState<LiveProject | null>(null);
   const [liveProjectId, setLiveProjectId] = useState<string | undefined>("");
+
+  // Handler for opening add modal - wrapped to ensure it works in production
+  const handleOpenAddModal = React.useCallback((e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setAddLiveProjectModalOpen(true);
+  }, []);
 
   // Pagination and search states
   const [pagination, setPagination] = useState({
@@ -551,11 +560,7 @@ export const LiveProjectTable = () => {
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-medium">Live Projects</h1>
         <Button 
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setAddLiveProjectModalOpen(true);
-          }}
+          onClick={handleOpenAddModal}
           type="button"
         >
           <Plus className="mr-2 h-4 w-4" />
@@ -620,7 +625,8 @@ export const LiveProjectTable = () => {
               Get started by creating your first live project
             </p>
             <Button
-              onClick={() => setAddLiveProjectModalOpen(true)}
+              onClick={handleOpenAddModal}
+              type="button"
               className="mt-4"
             >
               <Plus className="mr-2 h-4 w-4" />
