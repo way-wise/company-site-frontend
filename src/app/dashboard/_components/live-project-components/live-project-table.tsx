@@ -138,7 +138,7 @@ export const LiveProjectTable = () => {
       projectBudget: 0,
       hourlyRate: 0,
       paidAmount: 0,
-      assignedMembers: [],
+      assignedMembers: "",
       projectStatus: "PENDING",
       nextActions: "",
     },
@@ -544,8 +544,6 @@ export const LiveProjectTable = () => {
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="FIXED">Fixed</SelectItem>
                 <SelectItem value="HOURLY">Hourly</SelectItem>
-                <SelectItem value="MONTHLY">Monthly</SelectItem>
-                <SelectItem value="CUSTOM">Custom</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -673,8 +671,6 @@ export const LiveProjectTable = () => {
                             <SelectContent>
                               <SelectItem value="FIXED">Fixed</SelectItem>
                               <SelectItem value="HOURLY">Hourly</SelectItem>
-                              <SelectItem value="MONTHLY">Monthly</SelectItem>
-                              <SelectItem value="CUSTOM">Custom</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />

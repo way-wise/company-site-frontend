@@ -112,7 +112,7 @@ export const createLiveProjectSchema = z
     projectBudget: z.number().positive("Project budget must be a positive number").optional(),
     hourlyRate: z.number().positive("Hourly rate must be a positive number").optional(),
     paidAmount: z.number().min(0, "Paid amount cannot be negative").default(0).optional(),
-    assignedMembers: z.array(z.string()).min(1, "At least one member must be assigned"),
+    assignedMembers: z.string().min(1, "Assigned members are required"),
     projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).optional(),
     dailyNotes: z.array(z.object({
       note: z.string(),
