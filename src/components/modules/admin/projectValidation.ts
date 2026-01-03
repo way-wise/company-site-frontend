@@ -109,11 +109,11 @@ export const createLiveProjectSchema = z
     clientName: z.string().min(1, "Client name is required"),
     clientLocation: z.string().min(1, "Client location is required"),
     projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]),
-    projectBudget: z.coerce.number().positive("Project budget must be a positive number").optional(),
-    hourlyRate: z.coerce.number().positive("Hourly rate must be a positive number").optional(),
-    paidAmount: z.coerce.number().min(0, "Paid amount cannot be negative").default(0).optional(),
+    projectBudget: z.number().positive("Project budget must be a positive number").optional(),
+    hourlyRate: z.number().positive("Hourly rate must be a positive number").optional(),
+    paidAmount: z.number().min(0, "Paid amount cannot be negative").default(0).optional(),
     assignedMembers: z.array(z.string()).min(1, "At least one member must be assigned"),
-    projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).default("PENDING"),
+    projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).optional(),
     dailyNotes: z.array(z.object({
       note: z.string(),
       createdAt: z.string(),
@@ -138,39 +138,9 @@ export const updateLiveProjectSchema = z.object({
   clientName: z.string().min(1, "Client name is required").optional(),
   clientLocation: z.string().min(1, "Client location is required").optional(),
   projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]).optional(),
-  projectBudget: z
-    .union([z.number(), z.string()])
-    .transform((val) => {
-      if (typeof val === "string" && val.trim() === "") return undefined;
-      const num = typeof val === "string" ? parseFloat(val) : val;
-      return typeof num === "number" && !isNaN(num) ? num : undefined;
-    })
-    .refine(
-      (val) => val === undefined || (typeof val === "number" && val > 0),
-      "Project budget must be a positive number"
-    ) as z.ZodType<number | undefined>,
-  hourlyRate: z
-    .union([z.number(), z.string()])
-    .transform((val) => {
-      if (typeof val === "string" && val.trim() === "") return undefined;
-      const num = typeof val === "string" ? parseFloat(val) : val;
-      return typeof num === "number" && !isNaN(num) ? num : undefined;
-    })
-    .refine(
-      (val) => val === undefined || (typeof val === "number" && val > 0),
-      "Hourly rate must be a positive number"
-    ) as z.ZodType<number | undefined>,
-  paidAmount: z
-    .union([z.number(), z.string()])
-    .transform((val) => {
-      if (typeof val === "string" && val.trim() === "") return undefined;
-      const num = typeof val === "string" ? parseFloat(val) : val;
-      return typeof num === "number" && !isNaN(num) ? num : undefined;
-    })
-    .refine(
-      (val) => val === undefined || (typeof val === "number" && val >= 0),
-      "Paid amount cannot be negative"
-    ) as z.ZodType<number | undefined>,
+  projectBudget: z.number().positive("Project budget must be a positive number").optional(),
+  hourlyRate: z.number().positive("Hourly rate must be a positive number").optional(),
+  paidAmount: z.number().min(0, "Paid amount cannot be negative").optional(),
   assignedMembers: z.array(z.string()).optional(),
   projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).optional(),
   dailyNotes: z.array(z.object({

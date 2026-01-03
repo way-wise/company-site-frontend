@@ -216,10 +216,11 @@ const UpdateLiveProject = ({
                               type="number"
                               placeholder="50"
                               {...field}
-                              onChange={(e) =>
-                                field.onChange(parseFloat(e.target.value) || 0)
-                              }
-                              value={field.value || 0}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                              }}
+                              value={field.value ?? ""}
                             />
                           </FormControl>
                           <FormMessage />
@@ -238,10 +239,11 @@ const UpdateLiveProject = ({
                               type="number"
                               placeholder="50000"
                               {...field}
-                              onChange={(e) =>
-                                field.onChange(parseFloat(e.target.value) || 0)
-                              }
-                              value={field.value || 0}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                              }}
+                              value={field.value ?? ""}
                             />
                           </FormControl>
                           <FormMessage />
@@ -261,10 +263,11 @@ const UpdateLiveProject = ({
                             type="number"
                             placeholder="0"
                             {...field}
-                            onChange={(e) =>
-                              field.onChange(parseFloat(e.target.value) || 0)
-                            }
-                            value={field.value || 0}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                            }}
+                            value={field.value ?? ""}
                           />
                         </FormControl>
                         <FormMessage />

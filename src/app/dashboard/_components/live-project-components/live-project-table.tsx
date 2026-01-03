@@ -146,9 +146,6 @@ export const LiveProjectTable = () => {
   // Watch project type to show/hide appropriate fields
   const projectType = addLiveProjectForm.watch("projectType");
 
-  // Delete Form
-  const deleteForm = useForm();
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setPagination({
@@ -178,7 +175,7 @@ export const LiveProjectTable = () => {
         clientName: values.clientName,
         clientLocation: values.clientLocation,
         projectType: values.projectType,
-        paidAmount: values.paidAmount || 0,
+        paidAmount: values.paidAmount ?? 0,
         assignedMembers: values.assignedMembers,
         projectStatus: values.projectStatus || "PENDING",
         nextActions: values.nextActions || undefined,
@@ -605,10 +602,11 @@ export const LiveProjectTable = () => {
                                 type="number"
                                 placeholder="50"
                                 {...field}
-                                onChange={(e) =>
-                                  field.onChange(parseFloat(e.target.value) || 0)
-                                }
-                                value={field.value || 0}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                }}
+                                value={field.value ?? ""}
                               />
                             </FormControl>
                             <FormMessage />
@@ -627,10 +625,11 @@ export const LiveProjectTable = () => {
                                 type="number"
                                 placeholder="50000"
                                 {...field}
-                                onChange={(e) =>
-                                  field.onChange(parseFloat(e.target.value) || 0)
-                                }
-                                value={field.value || 0}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                }}
+                                value={field.value ?? ""}
                               />
                             </FormControl>
                             <FormMessage />
@@ -730,6 +729,7 @@ export const LiveProjectTable = () => {
               </FormFieldset>
             </form>
           </Form>
+      </Modal>
 
       {/* Delete Live Project Modal */}
       <Modal
@@ -773,6 +773,3 @@ export const LiveProjectTable = () => {
     </>
   );
 };
-
-export { LiveProjectTable };
-export default LiveProjectTable;
