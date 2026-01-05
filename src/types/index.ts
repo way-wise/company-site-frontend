@@ -286,6 +286,7 @@ export interface DailyNote {
 
 export interface LiveProject {
 	id: string;
+	projectName: string;
 	clientName: string;
 	clientLocation: string;
 	projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
@@ -310,6 +311,7 @@ export interface LiveProject {
 }
 
 export interface LiveProjectFormData {
+	projectName: string;
 	clientName: string;
 	clientLocation: string;
 	projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";

@@ -92,6 +92,7 @@ export const formatValidationErrors = (errors: ValidationError[]): {
     
     // Convert field names to more readable labels
     const fieldLabels: Record<string, string> = {
+      projectName: "Project Name",
       projectType: "Project Type",
       projectStatus: "Project Status",
       clientName: "Client Name",
@@ -143,6 +144,7 @@ export const useCreateLiveProject = () => {
 
   return useMutation({
     mutationFn: (liveProjectData: {
+      projectName: string;
       clientName: string;
       clientLocation: string;
       projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";

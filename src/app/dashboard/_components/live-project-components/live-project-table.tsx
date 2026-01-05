@@ -142,6 +142,7 @@ export const LiveProjectTable = () => {
   const addLiveProjectForm = useForm<CreateLiveProjectFormData>({
     resolver: zodResolver(createLiveProjectSchema),
     defaultValues: {
+      projectName: "",
       clientName: "",
       clientLocation: "",
       projectType: "FIXED",
@@ -181,17 +182,8 @@ export const LiveProjectTable = () => {
       }
 
       // Build payload based on project type
-      const payload: {
-        clientName: string;
-        clientLocation: string;
-        projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
-        assignedMembers: string; // API expects string, not array
-        projectStatus: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
-        nextActions?: string;
-        projectBudget?: number;
-        hourlyRate?: number;
-        paidAmount?: number;
-      } = {
+      const basePayload = {
+        projectName: values.projectName,
         clientName: values.clientName,
         clientLocation: values.clientLocation,
         projectType: values.projectType,
@@ -202,15 +194,20 @@ export const LiveProjectTable = () => {
 
       // Add fields based on project type
       if (values.projectType === "HOURLY") {
-        payload.hourlyRate = values.hourlyRate;
-        // Explicitly exclude paidAmount for HOURLY projects (don't include it at all)
+        const payload = {
+          ...basePayload,
+          hourlyRate: values.hourlyRate,
+        };
+        await createLiveProjectMutation.mutateAsync(payload);
       } else {
         // For FIXED and other types, paidAmount is required
-        payload.projectBudget = values.projectBudget;
-        payload.paidAmount = typeof values.paidAmount === "number" ? values.paidAmount : 0;
+        const payload = {
+          ...basePayload,
+          projectBudget: values.projectBudget,
+          paidAmount: typeof values.paidAmount === "number" ? values.paidAmount : 0,
+        };
+        await createLiveProjectMutation.mutateAsync(payload);
       }
-
-      await createLiveProjectMutation.mutateAsync(payload);
       setAddLiveProjectModalOpen(false);
       addLiveProjectForm.reset();
     } catch (error: unknown) {
@@ -389,6 +386,17 @@ export const LiveProjectTable = () => {
 
   // Table columns - simplified view
   const columns = [
+    {
+      header: "Project Name",
+      accessorKey: "projectName",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        return (
+          <div className="font-medium max-w-[200px] truncate" title={row.original.projectName}>
+            {row.original.projectName}
+          </div>
+        );
+      },
+    },
     {
       header: "Client Name",
       accessorKey: "clientName",
@@ -600,6 +608,20 @@ export const LiveProjectTable = () => {
             >
               <FormFieldset disabled={createLiveProjectMutation.isPending}>
                 <div className="space-y-4">
+                  <FormField
+                    control={addLiveProjectForm.control}
+                    name="projectName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Project Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Website Redesign Project" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={addLiveProjectForm.control}
@@ -888,6 +910,13 @@ export const LiveProjectTable = () => {
       >
         {selectedLiveProject && (
           <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                Project Name
+              </h4>
+              <p className="text-base font-medium">{selectedLiveProject.projectName}</p>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <h4 className="font-semibold text-sm text-muted-foreground mb-1">

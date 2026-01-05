@@ -106,6 +106,7 @@ export type AddCommentFormData = z.infer<typeof addCommentSchema>;
 // Live Project Schemas
 export const createLiveProjectSchema = z
   .object({
+    projectName: z.string().min(1, "Project name is required"),
     clientName: z.string().min(1, "Client name is required"),
     clientLocation: z.string().min(1, "Client location is required"),
     projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]),
@@ -139,6 +140,7 @@ export const createLiveProjectSchema = z
   );
 
 export const updateLiveProjectSchema = z.object({
+  projectName: z.string().min(1, "Project name is required").optional(),
   clientName: z.string().min(1, "Client name is required").optional(),
   clientLocation: z.string().min(1, "Client location is required").optional(),
   projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]).optional(),

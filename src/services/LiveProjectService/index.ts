@@ -51,6 +51,7 @@ export const liveProjectService = {
 
   // Create new live project
   createLiveProject: async (liveProjectData: {
+    projectName: string;
     clientName: string;
     clientLocation: string;
     projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
