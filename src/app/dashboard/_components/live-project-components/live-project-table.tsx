@@ -141,13 +141,15 @@ export const LiveProjectTable = () => {
   // Add Live Project Form
   const addLiveProjectForm = useForm<CreateLiveProjectFormData>({
     resolver: zodResolver(createLiveProjectSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       projectName: "",
       clientName: "",
       clientLocation: "",
       projectType: "FIXED",
-      projectBudget: 0,
-      hourlyRate: 0,
+      projectBudget: undefined,
+      hourlyRate: undefined,
       paidAmount: 0,
       assignedMembers: [],
       projectStatus: "PENDING",
@@ -201,6 +203,14 @@ export const LiveProjectTable = () => {
         await createLiveProjectMutation.mutateAsync(payload);
       } else {
         // For FIXED and other types, paidAmount is required
+        // Ensure projectBudget is defined (validation should ensure this, but add safety check)
+        if (!values.projectBudget || values.projectBudget <= 0) {
+          addLiveProjectForm.setError("projectBudget", {
+            type: "manual",
+            message: "Project budget must be a positive number",
+          });
+          return;
+        }
         const payload = {
           ...basePayload,
           projectBudget: values.projectBudget,
@@ -665,8 +675,10 @@ export const LiveProjectTable = () => {
                               // Clear the opposite field when switching types
                               if (value === "HOURLY") {
                                 addLiveProjectForm.setValue("projectBudget", undefined);
+                                addLiveProjectForm.clearErrors("projectBudget");
                               } else {
                                 addLiveProjectForm.setValue("hourlyRate", undefined);
+                                addLiveProjectForm.clearErrors("hourlyRate");
                               }
                             }}
                             defaultValue={field.value}
