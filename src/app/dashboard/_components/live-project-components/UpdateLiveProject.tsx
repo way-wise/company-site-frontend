@@ -87,19 +87,34 @@ const UpdateLiveProject = ({
         return date.toISOString().split("T")[0];
       };
 
+      // Helper to ensure numeric values are numbers, not strings
+      const ensureNumber = (value: unknown, defaultValue?: number): number | undefined => {
+        if (value === null || value === undefined) {
+          return defaultValue;
+        }
+        if (typeof value === "number") {
+          return value;
+        }
+        if (typeof value === "string") {
+          const num = parseFloat(value);
+          return isNaN(num) ? defaultValue : num;
+        }
+        return defaultValue;
+      };
+
       form.reset({
         projectName: liveProject.projectName,
         clientName: liveProject.clientName,
         clientLocation: liveProject.clientLocation ?? "",
         projectType: liveProject.projectType,
-        projectBudget: liveProject.projectBudget ?? undefined,
-        hourlyRate: liveProject.hourlyRate ?? undefined,
-        paidAmount: liveProject.paidAmount ?? 0,
-        dueAmount: liveProject.dueAmount ?? 0,
+        projectBudget: ensureNumber(liveProject.projectBudget),
+        hourlyRate: ensureNumber(liveProject.hourlyRate),
+        paidAmount: ensureNumber(liveProject.paidAmount, 0),
+        dueAmount: ensureNumber(liveProject.dueAmount, 0),
         assignedMembers: assignedMembersValue,
         projectStatus: liveProject.projectStatus,
         deadline: formatDateForInput(liveProject.deadline),
-        progress: liveProject.progress ?? undefined,
+        progress: ensureNumber(liveProject.progress),
         nextActions: liveProject.nextActions || "",
       });
     }
@@ -157,9 +172,17 @@ const UpdateLiveProject = ({
       };
 
       // Helper function to get a number value, defaulting to 0
+      // Handles strings that can be converted to numbers
       const getNumberValue = (value: unknown, defaultValue: number = 0): number => {
         if (isValidNumber(value)) {
           return value;
+        }
+        // Try to convert string to number
+        if (typeof value === "string" && value.trim() !== "") {
+          const numValue = parseFloat(value);
+          if (!isNaN(numValue) && isFinite(numValue)) {
+            return numValue;
+          }
         }
         return defaultValue;
       };
@@ -167,13 +190,15 @@ const UpdateLiveProject = ({
       // Add fields based on project type
       if (currentProjectType === "HOURLY") {
         // For HOURLY: include hourlyRate only if it's a valid number
-        if (isValidNumber(values.hourlyRate)) {
-          updateData.hourlyRate = values.hourlyRate;
+        const hourlyRateValue = getNumberValue(values.hourlyRate);
+        if (hourlyRateValue > 0) {
+          updateData.hourlyRate = hourlyRateValue;
         }
       } else {
         // For FIXED and other types: include projectBudget, paidAmount, dueAmount
-        if (isValidNumber(values.projectBudget)) {
-          updateData.projectBudget = values.projectBudget;
+        const projectBudgetValue = getNumberValue(values.projectBudget);
+        if (projectBudgetValue > 0) {
+          updateData.projectBudget = projectBudgetValue;
         } else if (values.projectBudget === undefined && liveProject.projectBudget !== null && liveProject.projectBudget !== undefined) {
           // If field was cleared (undefined) but original had a value, don't include it (keep original)
           // This prevents sending invalid values
