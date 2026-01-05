@@ -282,21 +282,26 @@ export interface ProjectsQueryParams {
 export interface DailyNote {
 	note: string;
 	createdAt: string;
+	userId: string;
+	userName: string;
+	type?: "note" | "action";
 }
 
 export interface LiveProject {
 	id: string;
 	projectName: string;
 	clientName: string;
-	clientLocation: string;
+	clientLocation?: string | null; // Nullable in schema
 	projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
-	projectBudget?: number;
-	hourlyRate?: number;
-	paidAmount: number;
-	assignedMembers: string[];
+	projectBudget?: number | null; // Nullable for HOURLY projects
+	paidAmount?: number | null; // Nullable for HOURLY projects
+	dueAmount?: number | null; // Nullable for HOURLY projects
+	assignedMembers: string; // String in schema (comma-separated)
 	projectStatus: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
-	dailyNotes?: DailyNote[];
-	nextActions?: string;
+	deadline?: string | null; // DateTime as string
+	progress?: number | null; // Progress percentage (0-100)
+	dailyNotes?: DailyNote[] | null; // Json array
+	nextActions?: string | null; // Text field
 	createdAt: string;
 	updatedAt: string;
 	// Optional relations
@@ -313,13 +318,15 @@ export interface LiveProject {
 export interface LiveProjectFormData {
 	projectName: string;
 	clientName: string;
-	clientLocation: string;
+	clientLocation?: string;
 	projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
 	projectBudget?: number;
-	hourlyRate?: number;
 	paidAmount?: number;
+	dueAmount?: number;
 	assignedMembers: string[];
 	projectStatus?: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
+	deadline?: string;
+	progress?: number;
 	dailyNotes?: DailyNote[];
 	nextActions?: string;
 }

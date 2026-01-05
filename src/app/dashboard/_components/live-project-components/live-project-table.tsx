@@ -36,6 +36,7 @@ import {
   useCreateLiveProject,
   useDeleteLiveProject,
   useLiveProjects,
+  useUpdateLiveProject,
 } from "@/hooks/useLiveProjectMutations";
 import { LiveProject } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,6 +44,7 @@ import { Eye, MoreVertical, Pencil, Plus, Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UpdateLiveProject from "./UpdateLiveProject";
+import { useAuth } from "@/context/UserContext";
 
 // Helper function to format date
 const formatDateHelper = (dateString: string) => {
@@ -85,12 +87,16 @@ const getProjectTypeBadge = (type: string) => {
 };
 
 export const LiveProjectTable = () => {
+  // Get current user for notes
+  const { user } = useAuth();
+  
   // Modal states
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addLiveProjectModalOpen, setAddLiveProjectModalOpen] = useState(false);
   const [updateLiveProjectModalOpen, setUpdateLiveProjectModalOpen] =
     useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [notesModalOpen, setNotesModalOpen] = useState(false);
   const [selectedLiveProject, setSelectedLiveProject] =
     useState<LiveProject | null>(null);
   const [liveProjectId, setLiveProjectId] = useState<string | undefined>("");
@@ -149,10 +155,12 @@ export const LiveProjectTable = () => {
       clientLocation: "",
       projectType: "FIXED",
       projectBudget: undefined,
-      hourlyRate: undefined,
-      paidAmount: 0,
+      paidAmount: undefined,
+      dueAmount: undefined,
       assignedMembers: [],
       projectStatus: "PENDING",
+      deadline: undefined,
+      progress: undefined,
       nextActions: "",
     },
   });
@@ -171,6 +179,7 @@ export const LiveProjectTable = () => {
   // Custom hooks for mutations
   const createLiveProjectMutation = useCreateLiveProject();
   const deleteLiveProjectMutation = useDeleteLiveProject();
+  const updateLiveProjectMutation = useUpdateLiveProject();
 
   // Handle Add Live Project
   const handleAddLiveProject = async (values: CreateLiveProjectFormData) => {
@@ -187,23 +196,21 @@ export const LiveProjectTable = () => {
       const basePayload = {
         projectName: values.projectName,
         clientName: values.clientName,
-        clientLocation: values.clientLocation,
+        clientLocation: values.clientLocation ? values.clientLocation : undefined,
         projectType: values.projectType,
         assignedMembers: assignedMembersString,
         projectStatus: values.projectStatus || "PENDING",
         nextActions: values.nextActions || undefined,
+        ...(values.deadline && { deadline: values.deadline }),
+        ...(values.progress !== undefined && { progress: values.progress }),
       };
 
       // Add fields based on project type
       if (values.projectType === "HOURLY") {
-        const payload = {
-          ...basePayload,
-          hourlyRate: values.hourlyRate,
-        };
-        await createLiveProjectMutation.mutateAsync(payload);
+        // For HOURLY projects, budget/paid/due amounts are not included
+        await createLiveProjectMutation.mutateAsync(basePayload);
       } else {
-        // For FIXED and other types, paidAmount is required
-        // Ensure projectBudget is defined (validation should ensure this, but add safety check)
+        // For FIXED and other types, projectBudget is required
         if (!values.projectBudget || values.projectBudget <= 0) {
           addLiveProjectForm.setError("projectBudget", {
             type: "manual",
@@ -214,7 +221,8 @@ export const LiveProjectTable = () => {
         const payload = {
           ...basePayload,
           projectBudget: values.projectBudget,
-          paidAmount: typeof values.paidAmount === "number" ? values.paidAmount : 0,
+          ...(values.paidAmount !== undefined && { paidAmount: values.paidAmount }),
+          ...(values.dueAmount !== undefined && { dueAmount: values.dueAmount }),
         };
         await createLiveProjectMutation.mutateAsync(payload);
       }
@@ -401,7 +409,7 @@ export const LiveProjectTable = () => {
       accessorKey: "projectName",
       cell: ({ row }: { row: { original: LiveProject } }) => {
         return (
-          <div className="font-medium max-w-[200px] truncate" title={row.original.projectName}>
+          <div className="font-medium max-w-[120px] truncate" title={row.original.projectName}>
             {row.original.projectName}
           </div>
         );
@@ -412,7 +420,7 @@ export const LiveProjectTable = () => {
       accessorKey: "clientName",
       cell: ({ row }: { row: { original: LiveProject } }) => {
         return (
-          <div className="font-medium max-w-[200px] truncate" title={row.original.clientName}>
+          <div className="font-medium max-w-[150px] truncate" title={row.original.clientName}>
             {row.original.clientName}
           </div>
         );
@@ -422,9 +430,10 @@ export const LiveProjectTable = () => {
       header: "Location",
       accessorKey: "clientLocation",
       cell: ({ row }: { row: { original: LiveProject } }) => {
+        const location = row.original.clientLocation || "N/A";
         return (
-          <div className="max-w-[150px] truncate" title={row.original.clientLocation}>
-            {row.original.clientLocation}
+          <div className="max-w-[120px] truncate" title={location}>
+            {location}
           </div>
         );
       },
@@ -439,22 +448,72 @@ export const LiveProjectTable = () => {
       header: "Next Action",
       accessorKey: "nextActions",
       cell: ({ row }: { row: { original: LiveProject } }) => {
-        const nextActions = row.original.nextActions;
-        if (!nextActions || nextActions.trim() === "") {
+        const project = row.original;
+        // Get last note from dailyNotes or fallback to nextActions
+        let lastNote = "";
+        if (project.dailyNotes && Array.isArray(project.dailyNotes) && project.dailyNotes.length > 0) {
+          // Sort by createdAt (newest first) and get the first one
+          const sortedNotes = [...project.dailyNotes].sort((a, b) => 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          lastNote = sortedNotes[0].note;
+        } else if (project.nextActions) {
+          lastNote = project.nextActions;
+        }
+        
+        if (!lastNote || lastNote.trim() === "") {
           return <span className="text-muted-foreground">-</span>;
         }
+        
         return (
-          <div className="max-w-[250px] truncate" title={nextActions}>
-            {nextActions}
+          <div 
+            className="max-w-[250px] truncate cursor-pointer hover:text-primary transition-colors" 
+            title={lastNote}
+            onClick={() => {
+              setSelectedLiveProject(project);
+              setNotesModalOpen(true);
+            }}
+          >
+            {lastNote}
           </div>
         );
       },
     },
     {
-      header: "Updated At",
-      accessorKey: "updatedAt",
-      cell: ({ row }: { row: { original: LiveProject } }) =>
-        formatDateHelper(row.original.updatedAt),
+      header: "Deadline",
+      accessorKey: "deadline",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        const deadline = row.original.deadline;
+        if (!deadline) {
+          return <span className="text-muted-foreground">-</span>;
+        }
+        return (
+          <div className="text-sm">
+            {new Date(deadline).toLocaleDateString()}
+          </div>
+        );
+      },
+    },
+    {
+      header: "Progress",
+      accessorKey: "progress",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        const progress = row.original.progress;
+        if (progress === undefined || progress === null) {
+          return <span className="text-muted-foreground">-</span>;
+        }
+        return (
+          <div className="flex items-center gap-2 min-w-[100px]">
+            <div className="flex-1 bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-primary h-2 rounded-full"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <span className="text-sm font-medium w-10">{progress}%</span>
+          </div>
+        );
+      },
     },
     {
       id: "actions",
@@ -672,13 +731,12 @@ export const LiveProjectTable = () => {
                           <Select
                             onValueChange={(value) => {
                               field.onChange(value);
-                              // Clear the opposite field when switching types
+                              // Clear budget/paid/due fields when switching to HOURLY
                               if (value === "HOURLY") {
                                 addLiveProjectForm.setValue("projectBudget", undefined);
+                                addLiveProjectForm.setValue("paidAmount", undefined);
+                                addLiveProjectForm.setValue("dueAmount", undefined);
                                 addLiveProjectForm.clearErrors("projectBudget");
-                              } else {
-                                addLiveProjectForm.setValue("hourlyRate", undefined);
-                                addLiveProjectForm.clearErrors("hourlyRate");
                               }
                             }}
                             defaultValue={field.value}
@@ -727,31 +785,8 @@ export const LiveProjectTable = () => {
                     />
                   </div>
 
-                  <div className={`grid gap-4 ${projectType === "HOURLY" ? "grid-cols-1" : "grid-cols-2"}`}>
-                    {projectType === "HOURLY" ? (
-                      <FormField
-                        control={addLiveProjectForm.control}
-                        name="hourlyRate"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Hourly Rate</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                placeholder="50"
-                                {...field}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
-                                }}
-                                value={field.value ?? ""}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    ) : (
+                  <div className={`grid gap-4 ${projectType === "HOURLY" ? "grid-cols-1" : "grid-cols-3"}`}>
+                    {projectType !== "HOURLY" && (
                       <>
                         <FormField
                           control={addLiveProjectForm.control}
@@ -787,10 +822,34 @@ export const LiveProjectTable = () => {
                                   type="number"
                                   placeholder="0"
                                   {...field}
-                                  onChange={(e) =>
-                                    field.onChange(parseFloat(e.target.value) || 0)
-                                  }
-                                  value={field.value || 0}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                  }}
+                                  value={field.value ?? ""}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={addLiveProjectForm.control}
+                          name="dueAmount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Due Amount</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  placeholder="0"
+                                  {...field}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                  }}
+                                  value={field.value ?? ""}
                                 />
                               </FormControl>
                               <FormMessage />
@@ -799,6 +858,51 @@ export const LiveProjectTable = () => {
                         />
                       </>
                     )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={addLiveProjectForm.control}
+                      name="deadline"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Deadline</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="date"
+                              {...field}
+                              value={field.value || ""}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={addLiveProjectForm.control}
+                      name="progress"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Progress (%)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="100"
+                              placeholder="0"
+                              {...field}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(value === "" ? undefined : parseInt(value) || undefined);
+                              }}
+                              value={field.value ?? ""}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
 
                   <FormField
@@ -911,6 +1015,198 @@ export const LiveProjectTable = () => {
         liveProject={selectedLiveProject}
       />
 
+      {/* Notes Modal */}
+      <Modal
+        isOpen={notesModalOpen}
+        onClose={() => {
+          setNotesModalOpen(false);
+          setSelectedLiveProject(null);
+        }}
+        title={`Notes & Actions - ${selectedLiveProject?.projectName || ""}`}
+        isPending={updateLiveProjectMutation.isPending}
+      >
+        {selectedLiveProject && (
+          <div className="space-y-4">
+            {/* All Notes History */}
+            <div>
+              <h4 className="font-semibold text-sm text-muted-foreground mb-3">
+                Previous Notes & Actions
+              </h4>
+              <div className="max-h-[300px] overflow-y-auto space-y-3 border rounded-lg p-4 bg-gray-50">
+                {selectedLiveProject.dailyNotes && 
+                 Array.isArray(selectedLiveProject.dailyNotes) && 
+                 selectedLiveProject.dailyNotes.length > 0 ? (
+                  [...selectedLiveProject.dailyNotes]
+                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    .map((note, index) => {
+                      // Create a unique key for each note using createdAt and userId
+                      const noteKey = `${note.createdAt}-${note.userId}-${index}`;
+                      
+                      return (
+                        <div key={noteKey} className="border-b pb-3 last:border-b-0 last:pb-0 group hover:bg-gray-100 rounded p-2 transition-colors">
+                          <div className="flex items-start justify-between mb-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-sm">{note.userName}</span>
+                              {note.type && (
+                                <Badge variant="outline" className="text-xs">
+                                  {note.type}
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-muted-foreground">
+                                {new Date(note.createdAt).toLocaleString()}
+                              </span>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-red-600 hover:text-red-700 hover:bg-red-50"
+                                onClick={async () => {
+                                  if (!selectedLiveProject) return;
+                                  
+                                  try {
+                                    // Remove the note from the array
+                                    const updatedNotes = selectedLiveProject.dailyNotes?.filter(
+                                      (n) => !(
+                                        n.createdAt === note.createdAt &&
+                                        n.userId === note.userId &&
+                                        n.note === note.note
+                                      )
+                                    ) || [];
+
+                                    // Update nextActions to the latest note if we're deleting the current nextAction
+                                    let updatedNextActions = selectedLiveProject.nextActions;
+                                    if (selectedLiveProject.nextActions === note.note && updatedNotes.length > 0) {
+                                      // Get the most recent note
+                                      const sortedNotes = [...updatedNotes].sort(
+                                        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                                      );
+                                      updatedNextActions = sortedNotes[0]?.note || null;
+                                    } else if (selectedLiveProject.nextActions === note.note && updatedNotes.length === 0) {
+                                      updatedNextActions = null;
+                                    }
+
+                                    // Update the project
+                                    const response = await updateLiveProjectMutation.mutateAsync({
+                                      liveProjectId: selectedLiveProject.id,
+                                      liveProjectData: {
+                                        dailyNotes: updatedNotes,
+                                        nextActions: updatedNextActions,
+                                      },
+                                    });
+
+                                    // Update selected project with the response data
+                                    if (response.success && response.data) {
+                                      setSelectedLiveProject(response.data);
+                                    }
+                                  } catch (error) {
+                                    // Error is handled by the mutation hook
+                                  }
+                                }}
+                                disabled={updateLiveProjectMutation.isPending}
+                              >
+                                <Trash className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                          <p className="text-sm text-gray-700 whitespace-pre-wrap mt-1">
+                            {note.note}
+                          </p>
+                        </div>
+                      );
+                    })
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    No notes yet. Add your first note below.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Add New Note Input */}
+            <div>
+              <h4 className="font-semibold text-sm text-muted-foreground mb-2">
+                Add New Note or Action
+              </h4>
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (!user || !selectedLiveProject) return;
+
+                  const formData = new FormData(e.currentTarget);
+                  const newNote = formData.get("newNote") as string;
+
+                  if (!newNote || newNote.trim() === "") {
+                    return;
+                  }
+
+                  try {
+                    // Get existing notes or create empty array
+                    const existingNotes = selectedLiveProject.dailyNotes || [];
+                    const updatedNotes = [
+                      ...existingNotes,
+                      {
+                        note: newNote.trim(),
+                        createdAt: new Date().toISOString(),
+                        userId: user.id,
+                        userName: user.name || user.email || "Unknown User",
+                        type: "action" as const,
+                      },
+                    ];
+
+                    // Update the project with new notes and nextActions
+                    const response = await updateLiveProjectMutation.mutateAsync({
+                      liveProjectId: selectedLiveProject.id,
+                      liveProjectData: {
+                        dailyNotes: updatedNotes,
+                        nextActions: newNote.trim(),
+                      },
+                    });
+
+                    // Update selected project with the response data
+                    if (response.success && response.data) {
+                      setSelectedLiveProject(response.data);
+                    }
+
+                    // Clear the input
+                    e.currentTarget.reset();
+                  } catch (error) {
+                    // Error is handled by the mutation hook
+                  }
+                }}
+              >
+                <Textarea
+                  name="newNote"
+                  placeholder="Enter your note or action here..."
+                  rows={4}
+                  className="bg-black text-white placeholder:text-gray-400"
+                  required
+                />
+                <div className="flex justify-end gap-2 mt-3">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => {
+                      setNotesModalOpen(false);
+                      setSelectedLiveProject(null);
+                    }}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    type="submit"
+                    isLoading={updateLiveProjectMutation.isPending}
+                  >
+                    Save Note
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </Modal>
+
       {/* View Live Project Modal */}
       <Modal
         isOpen={viewModalOpen}
@@ -940,7 +1236,7 @@ export const LiveProjectTable = () => {
                 <h4 className="font-semibold text-sm text-muted-foreground mb-1">
                   Location
                 </h4>
-                <p className="text-base">{selectedLiveProject.clientLocation}</p>
+                <p className="text-base">{selectedLiveProject.clientLocation || "N/A"}</p>
               </div>
             </div>
 
@@ -963,54 +1259,75 @@ export const LiveProjectTable = () => {
               </div>
             </div>
 
-            <div className="border-t pt-4">
-              <h4 className="font-semibold text-sm text-muted-foreground mb-3">
-                Financial Information
-              </h4>
-              <div className="grid grid-cols-3 gap-4">
-                {selectedLiveProject.projectType === "HOURLY" ? (
-                  <>
-                    <div>
-                      <h5 className="text-xs text-muted-foreground mb-1">Hourly Rate</h5>
-                      <p className="text-lg font-semibold">
-                        ${selectedLiveProject.hourlyRate?.toLocaleString() || "0"}/hr
-                      </p>
-                    </div>
-                    <div className="col-span-2">
-                      <h5 className="text-xs text-muted-foreground mb-1">Note</h5>
-                      <p className="text-sm text-muted-foreground">
-                        Paid amount is not applicable for hourly projects
-                      </p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <h5 className="text-xs text-muted-foreground mb-1">Budget</h5>
-                      <p className="text-lg font-semibold">
-                        ${(selectedLiveProject.projectBudget || 0).toLocaleString()}
-                      </p>
-                    </div>
-                    <div>
-                      <h5 className="text-xs text-muted-foreground mb-1">Paid Amount</h5>
-                      <p className="text-lg font-semibold text-green-600">
-                        ${(selectedLiveProject.paidAmount ?? 0).toLocaleString()}
-                      </p>
-                    </div>
-                    <div>
-                      <h5 className="text-xs text-muted-foreground mb-1">Remaining</h5>
-                      <p className={`text-lg font-semibold ${
-                        ((selectedLiveProject.projectBudget || 0) - (selectedLiveProject.paidAmount ?? 0)) > 0 
-                          ? "text-orange-600" 
-                          : "text-green-600"
-                      }`}>
-                        ${((selectedLiveProject.projectBudget || 0) - (selectedLiveProject.paidAmount ?? 0)).toLocaleString()}
-                      </p>
-                    </div>
-                  </>
-                )}
+            {selectedLiveProject.projectType !== "HOURLY" && (
+              <div className="border-t pt-4">
+                <h4 className="font-semibold text-sm text-muted-foreground mb-3">
+                  Financial Information
+                </h4>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <h5 className="text-xs text-muted-foreground mb-1">Budget</h5>
+                    <p className="text-lg font-semibold">
+                      ${(selectedLiveProject.projectBudget || 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <div>
+                    <h5 className="text-xs text-muted-foreground mb-1">Paid Amount</h5>
+                    <p className="text-lg font-semibold text-green-600">
+                      ${(selectedLiveProject.paidAmount ?? 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <div>
+                    <h5 className="text-xs text-muted-foreground mb-1">Due Amount</h5>
+                    <p className="text-lg font-semibold text-orange-600">
+                      ${(selectedLiveProject.dueAmount ?? 0).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t">
+                  <h5 className="text-xs text-muted-foreground mb-1">Remaining</h5>
+                  <p className={`text-lg font-semibold ${
+                    ((selectedLiveProject.projectBudget || 0) - (selectedLiveProject.paidAmount ?? 0)) > 0 
+                      ? "text-orange-600" 
+                      : "text-green-600"
+                  }`}>
+                    ${((selectedLiveProject.projectBudget || 0) - (selectedLiveProject.paidAmount ?? 0)).toLocaleString()}
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
+
+            {(selectedLiveProject.deadline || selectedLiveProject.progress !== undefined) && (
+              <div className="border-t pt-4">
+                <h4 className="font-semibold text-sm text-muted-foreground mb-3">
+                  Project Timeline & Progress
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  {selectedLiveProject.deadline && (
+                    <div>
+                      <h5 className="text-xs text-muted-foreground mb-1">Deadline</h5>
+                      <p className="text-base">
+                        {new Date(selectedLiveProject.deadline).toLocaleDateString()}
+                      </p>
+                    </div>
+                  )}
+                  {selectedLiveProject.progress !== undefined && selectedLiveProject.progress !== null && (
+                    <div>
+                      <h5 className="text-xs text-muted-foreground mb-1">Progress</h5>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-primary h-2 rounded-full"
+                            style={{ width: `${selectedLiveProject.progress}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-medium">{selectedLiveProject.progress}%</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {selectedLiveProject.nextActions && (
               <div className="border-t pt-4">

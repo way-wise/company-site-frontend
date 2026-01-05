@@ -53,14 +53,16 @@ export const liveProjectService = {
   createLiveProject: async (liveProjectData: {
     projectName: string;
     clientName: string;
-    clientLocation: string;
+    clientLocation?: string | null;
     projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
     projectBudget?: number;
-    hourlyRate?: number;
     paidAmount?: number;
+    dueAmount?: number;
     assignedMembers: string; // API expects comma-separated string
     projectStatus?: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
-    dailyNotes?: Array<{ note: string; createdAt: string }>;
+    deadline?: string; // ISO date string
+    progress?: number; // 0-100
+    dailyNotes?: Array<{ note: string; createdAt: string; userId: string; userName: string; type?: "note" | "action" }>;
     nextActions?: string;
   }): Promise<ApiResponse<LiveProject>> => {
     const response = await apiClient.post("/live-projects", liveProjectData);

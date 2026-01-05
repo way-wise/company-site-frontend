@@ -108,33 +108,39 @@ export const createLiveProjectSchema = z
   .object({
     projectName: z.string().min(1, "Project name is required"),
     clientName: z.string().min(1, "Client name is required"),
-    clientLocation: z.string().min(1, "Client location is required"),
+    clientLocation: z.string().optional(),
     projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]),
     projectBudget: z.number().positive("Project budget must be a positive number").optional(),
-    hourlyRate: z.number().positive("Hourly rate must be a positive number").optional(),
-    paidAmount: z.number().min(0, "Paid amount cannot be negative").default(0).optional(),
+    paidAmount: z.number().min(0, "Paid amount cannot be negative").optional(),
+    dueAmount: z.number().min(0, "Due amount cannot be negative").optional(),
     // Accept both string and array (form stores as array, but we validate both)
     assignedMembers: z.union([
       z.string().min(1, "Assigned members are required"),
       z.array(z.string()).min(1, "At least one member is required"),
     ]),
     projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).optional(),
+    deadline: z.string().optional(), // ISO date string
+    progress: z.number().min(0).max(100, "Progress must be between 0 and 100").optional(),
     dailyNotes: z.array(z.object({
       note: z.string(),
       createdAt: z.string(),
+      userId: z.string(),
+      userName: z.string(),
+      type: z.enum(["note", "action"]).optional(),
     })).optional(),
     nextActions: z.string().optional(),
   })
   .refine(
     (data) => {
-      if (data.projectType === "HOURLY") {
-        return data.hourlyRate !== undefined && data.hourlyRate > 0;
-      } else {
+      // For non-hourly projects, projectBudget is required
+      if (data.projectType !== "HOURLY") {
         return data.projectBudget !== undefined && data.projectBudget > 0;
       }
+      // For HOURLY projects, budget/paid/due amounts are not required
+      return true;
     },
     {
-      message: "Project budget is required for non-hourly projects, or hourly rate is required for hourly projects",
+      message: "Project budget is required for non-hourly projects",
       path: ["projectBudget"],
     }
   );
@@ -142,16 +148,21 @@ export const createLiveProjectSchema = z
 export const updateLiveProjectSchema = z.object({
   projectName: z.string().min(1, "Project name is required").optional(),
   clientName: z.string().min(1, "Client name is required").optional(),
-  clientLocation: z.string().min(1, "Client location is required").optional(),
+  clientLocation: z.string().optional(),
   projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]).optional(),
   projectBudget: z.number().positive("Project budget must be a positive number").optional(),
-  hourlyRate: z.number().positive("Hourly rate must be a positive number").optional(),
   paidAmount: z.number().min(0, "Paid amount cannot be negative").optional(),
+  dueAmount: z.number().min(0, "Due amount cannot be negative").optional(),
   assignedMembers: z.array(z.string()).optional(),
   projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCELLED", "ON_HOLD"]).optional(),
+  deadline: z.string().optional(), // ISO date string
+  progress: z.number().min(0).max(100, "Progress must be between 0 and 100").optional(),
   dailyNotes: z.array(z.object({
     note: z.string(),
     createdAt: z.string(),
+    userId: z.string(),
+    userName: z.string(),
+    type: z.enum(["note", "action"]).optional(),
   })).optional(),
   nextActions: z.string().optional(),
 });

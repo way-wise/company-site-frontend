@@ -146,14 +146,16 @@ export const useCreateLiveProject = () => {
     mutationFn: (liveProjectData: {
       projectName: string;
       clientName: string;
-      clientLocation: string;
+      clientLocation?: string | null;
       projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
       projectBudget?: number;
-      hourlyRate?: number;
       paidAmount?: number;
+      dueAmount?: number;
       assignedMembers: string; // API expects comma-separated string
       projectStatus?: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED" | "ON_HOLD";
-      dailyNotes?: Array<{ note: string; createdAt: string }>;
+      deadline?: string;
+      progress?: number;
+      dailyNotes?: Array<{ note: string; createdAt: string; userId: string; userName: string; type?: "note" | "action" }>;
       nextActions?: string;
     }) => liveProjectService.createLiveProject(liveProjectData),
     onSuccess: (data) => {

@@ -50,11 +50,13 @@ const UpdateLiveProject = ({
       clientName: "",
       clientLocation: "",
       projectType: "FIXED",
-      projectBudget: 0,
-      hourlyRate: 0,
-      paidAmount: 0,
+      projectBudget: undefined,
+      paidAmount: undefined,
+      dueAmount: undefined,
       assignedMembers: [],
       projectStatus: "PENDING",
+      deadline: undefined,
+      progress: undefined,
       nextActions: "",
     },
   });
@@ -77,16 +79,25 @@ const UpdateLiveProject = ({
           .filter((m: string) => m.length > 0);
       }
       
+      // Format deadline for date input (YYYY-MM-DD)
+      const formatDateForInput = (dateString?: string | null) => {
+        if (!dateString) return undefined;
+        const date = new Date(dateString);
+        return date.toISOString().split("T")[0];
+      };
+
       form.reset({
         projectName: liveProject.projectName,
         clientName: liveProject.clientName,
-        clientLocation: liveProject.clientLocation,
+        clientLocation: liveProject.clientLocation ?? "",
         projectType: liveProject.projectType,
-        projectBudget: liveProject.projectBudget || 0,
-        hourlyRate: liveProject.hourlyRate || 0,
-        paidAmount: liveProject.paidAmount,
+        projectBudget: liveProject.projectBudget ?? undefined,
+        paidAmount: liveProject.paidAmount ?? undefined,
+        dueAmount: liveProject.dueAmount ?? undefined,
         assignedMembers: assignedMembersValue,
         projectStatus: liveProject.projectStatus,
+        deadline: formatDateForInput(liveProject.deadline),
+        progress: liveProject.progress ?? undefined,
         nextActions: liveProject.nextActions || "",
       });
     }
@@ -108,31 +119,40 @@ const UpdateLiveProject = ({
       // Determine the project type (use form value if changed, otherwise use existing)
       const currentProjectType = values.projectType || liveProject.projectType;
 
-      // Build update payload - handle paidAmount based on project type
+      // Build update payload - handle fields based on project type
       const updateData: Record<string, unknown> = {
         projectName: values.projectName || liveProject.projectName,
         clientName: values.clientName || liveProject.clientName,
-        clientLocation: values.clientLocation || liveProject.clientLocation,
+        clientLocation: values.clientLocation ? values.clientLocation : (liveProject.clientLocation ?? undefined),
         projectType: currentProjectType,
         assignedMembers: assignedMembersString,
         projectStatus: values.projectStatus || liveProject.projectStatus,
         nextActions: values.nextActions || liveProject.nextActions || undefined,
       };
 
+      // Add optional fields
+      if (values.deadline) {
+        updateData.deadline = values.deadline;
+      }
+      if (values.progress !== undefined) {
+        updateData.progress = values.progress;
+      }
+
       // Add fields based on project type
       if (currentProjectType === "HOURLY") {
-        // For HOURLY: include hourlyRate, exclude paidAmount completely
-        if (values.hourlyRate !== undefined) {
-          updateData.hourlyRate = values.hourlyRate;
-        }
-        // Explicitly do NOT include paidAmount for HOURLY projects
+        // For HOURLY: exclude budget/paid/due amounts completely
+        // No financial fields for HOURLY projects
       } else {
-        // For FIXED and other types: include projectBudget and paidAmount (required)
+        // For FIXED and other types: include projectBudget, paidAmount, dueAmount
         if (values.projectBudget !== undefined) {
           updateData.projectBudget = values.projectBudget;
         }
-        // paidAmount is required for FIXED projects
-        updateData.paidAmount = typeof values.paidAmount === "number" ? values.paidAmount : (liveProject.paidAmount ?? 0);
+        if (values.paidAmount !== undefined) {
+          updateData.paidAmount = values.paidAmount;
+        }
+        if (values.dueAmount !== undefined) {
+          updateData.dueAmount = values.dueAmount;
+        }
       }
 
       await updateLiveProjectMutation.mutateAsync({
@@ -250,11 +270,12 @@ const UpdateLiveProject = ({
                         <Select
                           onValueChange={(value) => {
                             field.onChange(value);
-                            // Clear the opposite field when switching types
+                            // Clear budget/paid/due fields when switching to HOURLY
                             if (value === "HOURLY") {
                               form.setValue("projectBudget", undefined);
-                            } else {
-                              form.setValue("hourlyRate", undefined);
+                              form.setValue("paidAmount", undefined);
+                              form.setValue("dueAmount", undefined);
+                              form.clearErrors("projectBudget");
                             }
                           }}
                           value={field.value}
@@ -303,31 +324,8 @@ const UpdateLiveProject = ({
                   />
                 </div>
 
-                <div className={`grid gap-4 ${projectType === "HOURLY" ? "grid-cols-1" : "grid-cols-2"}`}>
-                  {projectType === "HOURLY" ? (
-                    <FormField
-                      control={form.control}
-                      name="hourlyRate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Hourly Rate</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder="50"
-                              {...field}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
-                              }}
-                              value={field.value ?? ""}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  ) : (
+                <div className={`grid gap-4 ${projectType === "HOURLY" ? "grid-cols-1" : "grid-cols-3"}`}>
+                  {projectType !== "HOURLY" && (
                     <>
                       <FormField
                         control={form.control}
@@ -374,8 +372,76 @@ const UpdateLiveProject = ({
                           </FormItem>
                         )}
                       />
+
+                      <FormField
+                        control={form.control}
+                        name="dueAmount"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Due Amount</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="0"
+                                {...field}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                }}
+                                value={field.value ?? ""}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </>
                   )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="deadline"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Deadline</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="date"
+                            {...field}
+                            value={field.value || ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="progress"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Progress (%)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            min="0"
+                            max="100"
+                            placeholder="0"
+                            {...field}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              field.onChange(value === "" ? undefined : parseInt(value) || undefined);
+                            }}
+                            value={field.value ?? ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 <FormField
