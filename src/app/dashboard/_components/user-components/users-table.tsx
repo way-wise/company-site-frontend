@@ -45,7 +45,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useRoles } from "@/hooks/useRoleMutations";
+import {
+  useAssignRoleToUser,
+  useRemoveRoleFromUser,
+  useRoles,
+  useUserRoles,
+} from "@/hooks/useRoleMutations";
 import {
   useBanUser,
   useCreateAdmin,
@@ -65,6 +70,7 @@ import {
   Lock,
   Mail,
   MoreVertical,
+  Pencil,
   Phone,
   Plus,
   Trash,
@@ -118,6 +124,8 @@ export const UsersTable = () => {
   const [addAdminModalOpen, setAddAdminModalOpen] = useState(false);
   const [addEmployeeModalOpen, setAddEmployeeModalOpen] = useState(false);
   const [roleUpdateModalOpen, setRoleUpdateModalOpen] = useState(false);
+  const [editRolesModalOpen, setEditRolesModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [userId, setUserId] = useState<string | undefined>("");
 
   // Pagination and search states
@@ -240,6 +248,13 @@ export const UsersTable = () => {
   const banUserMutation = useBanUser();
   const unbanUserMutation = useUnbanUser();
   const deleteUserMutation = useDeleteUser();
+  const assignRoleMutation = useAssignRoleToUser();
+  const removeRoleMutation = useRemoveRoleFromUser();
+
+  // Get user roles when editing
+  const { data: userRolesData } = useUserRoles(selectedUser?.id || "");
+  const userRoles = userRolesData?.data || [];
+  const assignedRoleIds = userRoles.map((ur) => ur.roleId);
 
   // Handle Add User
   const handleAddClient = (values: CreateClientFormData) => {
@@ -461,6 +476,16 @@ export const UsersTable = () => {
                     <Eye />
                     <span>View</span>
                   </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedUser(row.original);
+                    setEditRolesModalOpen(true);
+                  }}
+                >
+                  <Pencil />
+                  <span>Edit Roles</span>
                 </DropdownMenuItem>
 
                 {status !== "ACTIVE" ? (
@@ -1266,6 +1291,104 @@ export const UsersTable = () => {
               </FormFieldset>
             </form>
           </Form>
+        </ModalContent>
+      </Modal>
+
+      {/* Edit User Roles Modal */}
+      <Modal
+        open={editRolesModalOpen}
+        onOpenChange={(open) => {
+          setEditRolesModalOpen(open);
+          if (!open) {
+            setSelectedUser(null);
+          }
+        }}
+      >
+        <ModalContent className="max-w-2xl">
+          <ModalHeader>
+            <ModalTitle>Edit User Roles</ModalTitle>
+          </ModalHeader>
+          {selectedUser && (
+            <div className="space-y-4 p-4">
+              <div>
+                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
+                  User
+                </h4>
+                <p className="text-base font-medium">{selectedUser.name}</p>
+                <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
+              </div>
+
+              <div className="border-t pt-4">
+                <h4 className="font-semibold text-sm text-muted-foreground mb-3">
+                  Available Roles
+                </h4>
+                <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                  {allRoles.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No roles available</p>
+                  ) : (
+                    allRoles.map((role) => {
+                      const isAssigned = assignedRoleIds.includes(role.id);
+                      const isPending =
+                        assignRoleMutation.isPending || removeRoleMutation.isPending;
+
+                      return (
+                        <div
+                          key={role.id}
+                          className="flex items-center justify-between rounded-md border p-3 hover:bg-muted/50"
+                        >
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="checkbox"
+                              checked={isAssigned}
+                              disabled={isPending}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  assignRoleMutation.mutate({
+                                    userId: selectedUser.id,
+                                    roleId: role.id,
+                                  });
+                                } else {
+                                  removeRoleMutation.mutate({
+                                    userId: selectedUser.id,
+                                    roleId: role.id,
+                                  });
+                                }
+                              }}
+                              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                            />
+                            <div>
+                              <p className="font-medium">{role.name}</p>
+                              {role.description && (
+                                <p className="text-xs text-muted-foreground">
+                                  {role.description}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          {isAssigned && (
+                            <Badge variant="secondary">Assigned</Badge>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4 border-t">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => {
+                    setEditRolesModalOpen(false);
+                    setSelectedUser(null);
+                  }}
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
         </ModalContent>
       </Modal>
     </>
