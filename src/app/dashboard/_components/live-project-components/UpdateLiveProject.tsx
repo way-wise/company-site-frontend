@@ -151,21 +151,32 @@ const UpdateLiveProject = ({
         updateData.progress = values.progress;
       }
 
+      // Helper function to check if a value is a valid number
+      const isValidNumber = (value: unknown): value is number => {
+        return value !== undefined && value !== null && typeof value === "number" && !isNaN(value) && isFinite(value);
+      };
+
       // Add fields based on project type
       if (currentProjectType === "HOURLY") {
-        // For HOURLY: include hourlyRate
-        if (values.hourlyRate !== undefined) {
+        // For HOURLY: include hourlyRate only if it's a valid number
+        if (isValidNumber(values.hourlyRate)) {
           updateData.hourlyRate = values.hourlyRate;
         }
       } else {
-        // For FIXED and other types: include projectBudget, paidAmount, dueAmount
-        if (values.projectBudget !== undefined) {
+        // For FIXED and other types: include projectBudget, paidAmount, dueAmount only if they're valid numbers
+        // Only include if they're different from original or if original was null/undefined
+        if (isValidNumber(values.projectBudget)) {
           updateData.projectBudget = values.projectBudget;
+        } else if (values.projectBudget === undefined && liveProject.projectBudget !== null && liveProject.projectBudget !== undefined) {
+          // If field was cleared (undefined) but original had a value, don't include it (keep original)
+          // This prevents sending invalid values
         }
-        if (values.paidAmount !== undefined) {
+        
+        if (isValidNumber(values.paidAmount)) {
           updateData.paidAmount = values.paidAmount;
         }
-        if (values.dueAmount !== undefined) {
+        
+        if (isValidNumber(values.dueAmount)) {
           updateData.dueAmount = values.dueAmount;
         }
       }
