@@ -245,11 +245,15 @@ export const LiveProjectTable = () => {
           });
           return;
         }
+        // Ensure paidAmount and dueAmount are always numbers (including 0) for FIXED projects
+        const paidAmountValue = typeof values.paidAmount === "number" ? values.paidAmount : 0;
+        const dueAmountValue = typeof values.dueAmount === "number" ? values.dueAmount : 0;
+        
         const payload = {
           ...basePayload,
           projectBudget: values.projectBudget,
-          paidAmount: values.paidAmount !== undefined ? values.paidAmount : 0,
-          dueAmount: values.dueAmount !== undefined ? values.dueAmount : 0,
+          paidAmount: paidAmountValue,
+          dueAmount: dueAmountValue,
         };
         await createLiveProjectMutation.mutateAsync(payload);
       }
@@ -859,7 +863,7 @@ export const LiveProjectTable = () => {
                                     const value = e.target.value;
                                     field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
                                   }}
-                                  value={field.value ?? ""}
+                                  value={field.value !== undefined && field.value !== null ? field.value : ""}
                                 />
                               </FormControl>
                               <FormMessage />
@@ -889,7 +893,7 @@ export const LiveProjectTable = () => {
                                       field.onChange(isNaN(numValue) ? 0 : numValue);
                                     }
                                   }}
-                                  value={field.value ?? ""}
+                                  value={field.value !== undefined && field.value !== null ? field.value : ""}
                                 />
                               </FormControl>
                               <FormMessage />
@@ -919,7 +923,7 @@ export const LiveProjectTable = () => {
                                       field.onChange(isNaN(numValue) ? 0 : numValue);
                                     }
                                   }}
-                                  value={field.value ?? ""}
+                                  value={field.value !== undefined && field.value !== null ? field.value : ""}
                                 />
                               </FormControl>
                               <FormMessage />

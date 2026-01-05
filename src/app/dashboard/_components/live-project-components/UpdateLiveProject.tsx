@@ -151,9 +151,17 @@ const UpdateLiveProject = ({
         updateData.progress = values.progress;
       }
 
-      // Helper function to check if a value is a valid number
+      // Helper function to check if a value is a valid number (including 0)
       const isValidNumber = (value: unknown): value is number => {
         return value !== undefined && value !== null && typeof value === "number" && !isNaN(value) && isFinite(value);
+      };
+
+      // Helper function to get a number value, defaulting to 0
+      const getNumberValue = (value: unknown, defaultValue: number = 0): number => {
+        if (isValidNumber(value)) {
+          return value;
+        }
+        return defaultValue;
       };
 
       // Add fields based on project type
@@ -163,8 +171,7 @@ const UpdateLiveProject = ({
           updateData.hourlyRate = values.hourlyRate;
         }
       } else {
-        // For FIXED and other types: include projectBudget, paidAmount, dueAmount only if they're valid numbers
-        // Only include if they're different from original or if original was null/undefined
+        // For FIXED and other types: include projectBudget, paidAmount, dueAmount
         if (isValidNumber(values.projectBudget)) {
           updateData.projectBudget = values.projectBudget;
         } else if (values.projectBudget === undefined && liveProject.projectBudget !== null && liveProject.projectBudget !== undefined) {
@@ -172,18 +179,14 @@ const UpdateLiveProject = ({
           // This prevents sending invalid values
         }
         
-        // paidAmount and dueAmount default to 0 if not provided or invalid
-        if (isValidNumber(values.paidAmount)) {
-          updateData.paidAmount = values.paidAmount;
-        } else {
-          updateData.paidAmount = 0;
-        }
+        // paidAmount and dueAmount are always required for FIXED projects
+        // Always send them as numbers, defaulting to 0 if not a valid number (including 0 as valid)
+        // This ensures the backend receives the required fields
+        const paidAmountValue = getNumberValue(values.paidAmount, 0);
+        const dueAmountValue = getNumberValue(values.dueAmount, 0);
         
-        if (isValidNumber(values.dueAmount)) {
-          updateData.dueAmount = values.dueAmount;
-        } else {
-          updateData.dueAmount = 0;
-        }
+        updateData.paidAmount = paidAmountValue;
+        updateData.dueAmount = dueAmountValue;
       }
 
       await updateLiveProjectMutation.mutateAsync({
@@ -402,7 +405,7 @@ const UpdateLiveProject = ({
                                   const value = e.target.value;
                                   field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
                                 }}
-                                value={field.value ?? ""}
+                                value={field.value !== undefined && field.value !== null ? field.value : ""}
                               />
                             </FormControl>
                             <FormMessage />
@@ -432,7 +435,7 @@ const UpdateLiveProject = ({
                                     field.onChange(isNaN(numValue) ? 0 : numValue);
                                   }
                                 }}
-                                value={field.value ?? ""}
+                                value={field.value !== undefined && field.value !== null ? field.value : ""}
                               />
                             </FormControl>
                             <FormMessage />
@@ -462,7 +465,7 @@ const UpdateLiveProject = ({
                                     field.onChange(isNaN(numValue) ? 0 : numValue);
                                   }
                                 }}
-                                value={field.value ?? ""}
+                                value={field.value !== undefined && field.value !== null ? field.value : ""}
                               />
                             </FormControl>
                             <FormMessage />
