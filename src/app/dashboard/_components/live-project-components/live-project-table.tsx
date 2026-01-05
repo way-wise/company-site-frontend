@@ -530,18 +530,20 @@ export const LiveProjectTable = () => {
       accessorKey: "progress",
       cell: ({ row }: { row: { original: LiveProject } }) => {
         const progress = row.original.progress;
-        if (progress === undefined || progress === null) {
-          return <span className="text-muted-foreground">-</span>;
-        }
+        // Default to 0 if null/undefined, but still show the progress bar
+        const progressValue = progress === undefined || progress === null ? 0 : progress;
+        
         return (
           <div className="flex items-center gap-2 min-w-[100px]">
-            <div className="flex-1 bg-gray-200 rounded-full h-2">
+            <div className="flex-1 bg-gray-200 rounded-full h-2 border border-gray-300">
               <div
-                className="bg-primary h-2 rounded-full"
-                style={{ width: `${progress}%` }}
+                className="bg-primary h-2 rounded-full transition-all"
+                style={{ width: `${Math.max(0, Math.min(100, progressValue))}%` }}
               />
             </div>
-            <span className="text-sm font-medium w-10">{progress}%</span>
+            <span className="text-sm font-medium w-10">
+              {progressValue}%
+            </span>
           </div>
         );
       },
