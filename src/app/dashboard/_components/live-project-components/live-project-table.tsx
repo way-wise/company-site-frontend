@@ -156,8 +156,8 @@ export const LiveProjectTable = () => {
       projectType: "FIXED",
       projectBudget: undefined,
       hourlyRate: undefined,
-      paidAmount: undefined,
-      dueAmount: undefined,
+      paidAmount: 0,
+      dueAmount: 0,
       assignedMembers: [],
       projectStatus: "PENDING",
       deadline: undefined,
@@ -248,8 +248,8 @@ export const LiveProjectTable = () => {
         const payload = {
           ...basePayload,
           projectBudget: values.projectBudget,
-          ...(values.paidAmount !== undefined && { paidAmount: values.paidAmount }),
-          ...(values.dueAmount !== undefined && { dueAmount: values.dueAmount }),
+          paidAmount: values.paidAmount !== undefined ? values.paidAmount : 0,
+          dueAmount: values.dueAmount !== undefined ? values.dueAmount : 0,
         };
         await createLiveProjectMutation.mutateAsync(payload);
       }
@@ -877,10 +877,17 @@ export const LiveProjectTable = () => {
                                 <Input
                                   type="number"
                                   placeholder="0"
+                                  min="0"
                                   {...field}
                                   onChange={(e) => {
                                     const value = e.target.value;
-                                    field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                    // Allow empty string (will default to 0), or parse the number (including 0)
+                                    if (value === "") {
+                                      field.onChange(0);
+                                    } else {
+                                      const numValue = parseFloat(value);
+                                      field.onChange(isNaN(numValue) ? 0 : numValue);
+                                    }
                                   }}
                                   value={field.value ?? ""}
                                 />
@@ -900,10 +907,17 @@ export const LiveProjectTable = () => {
                                 <Input
                                   type="number"
                                   placeholder="0"
+                                  min="0"
                                   {...field}
                                   onChange={(e) => {
                                     const value = e.target.value;
-                                    field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                    // Allow empty string (will default to 0), or parse the number (including 0)
+                                    if (value === "") {
+                                      field.onChange(0);
+                                    } else {
+                                      const numValue = parseFloat(value);
+                                      field.onChange(isNaN(numValue) ? 0 : numValue);
+                                    }
                                   }}
                                   value={field.value ?? ""}
                                 />

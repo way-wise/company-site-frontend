@@ -52,8 +52,8 @@ const UpdateLiveProject = ({
       projectType: "FIXED",
       projectBudget: undefined,
       hourlyRate: undefined,
-      paidAmount: undefined,
-      dueAmount: undefined,
+      paidAmount: 0,
+      dueAmount: 0,
       assignedMembers: [],
       projectStatus: "PENDING",
       deadline: undefined,
@@ -94,8 +94,8 @@ const UpdateLiveProject = ({
         projectType: liveProject.projectType,
         projectBudget: liveProject.projectBudget ?? undefined,
         hourlyRate: liveProject.hourlyRate ?? undefined,
-        paidAmount: liveProject.paidAmount ?? undefined,
-        dueAmount: liveProject.dueAmount ?? undefined,
+        paidAmount: liveProject.paidAmount ?? 0,
+        dueAmount: liveProject.dueAmount ?? 0,
         assignedMembers: assignedMembersValue,
         projectStatus: liveProject.projectStatus,
         deadline: formatDateForInput(liveProject.deadline),
@@ -172,12 +172,17 @@ const UpdateLiveProject = ({
           // This prevents sending invalid values
         }
         
+        // paidAmount and dueAmount default to 0 if not provided or invalid
         if (isValidNumber(values.paidAmount)) {
           updateData.paidAmount = values.paidAmount;
+        } else {
+          updateData.paidAmount = 0;
         }
         
         if (isValidNumber(values.dueAmount)) {
           updateData.dueAmount = values.dueAmount;
+        } else {
+          updateData.dueAmount = 0;
         }
       }
 
@@ -415,10 +420,17 @@ const UpdateLiveProject = ({
                               <Input
                                 type="number"
                                 placeholder="0"
+                                min="0"
                                 {...field}
                                 onChange={(e) => {
                                   const value = e.target.value;
-                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                  // Allow empty string (will default to 0), or parse the number (including 0)
+                                  if (value === "") {
+                                    field.onChange(0);
+                                  } else {
+                                    const numValue = parseFloat(value);
+                                    field.onChange(isNaN(numValue) ? 0 : numValue);
+                                  }
                                 }}
                                 value={field.value ?? ""}
                               />
@@ -438,10 +450,17 @@ const UpdateLiveProject = ({
                               <Input
                                 type="number"
                                 placeholder="0"
+                                min="0"
                                 {...field}
                                 onChange={(e) => {
                                   const value = e.target.value;
-                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                  // Allow empty string (will default to 0), or parse the number (including 0)
+                                  if (value === "") {
+                                    field.onChange(0);
+                                  } else {
+                                    const numValue = parseFloat(value);
+                                    field.onChange(isNaN(numValue) ? 0 : numValue);
+                                  }
                                 }}
                                 value={field.value ?? ""}
                               />
