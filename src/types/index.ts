@@ -294,6 +294,7 @@ export interface LiveProject {
 	clientLocation?: string | null; // Nullable in schema
 	projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
 	projectBudget?: number | null; // Nullable for HOURLY projects
+	hourlyRate?: number | null; // For HOURLY projects
 	paidAmount?: number | null; // Nullable for HOURLY projects
 	dueAmount?: number | null; // Nullable for HOURLY projects
 	assignedMembers: string; // String in schema (comma-separated)
@@ -321,6 +322,7 @@ export interface LiveProjectFormData {
 	clientLocation?: string;
 	projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
 	projectBudget?: number;
+	hourlyRate?: number;
 	paidAmount?: number;
 	dueAmount?: number;
 	assignedMembers: string[];

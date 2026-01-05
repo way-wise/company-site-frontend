@@ -51,6 +51,7 @@ const UpdateLiveProject = ({
       clientLocation: "",
       projectType: "FIXED",
       projectBudget: undefined,
+      hourlyRate: undefined,
       paidAmount: undefined,
       dueAmount: undefined,
       assignedMembers: [],
@@ -92,6 +93,7 @@ const UpdateLiveProject = ({
         clientLocation: liveProject.clientLocation ?? "",
         projectType: liveProject.projectType,
         projectBudget: liveProject.projectBudget ?? undefined,
+        hourlyRate: liveProject.hourlyRate ?? undefined,
         paidAmount: liveProject.paidAmount ?? undefined,
         dueAmount: liveProject.dueAmount ?? undefined,
         assignedMembers: assignedMembersValue,
@@ -132,7 +134,18 @@ const UpdateLiveProject = ({
 
       // Add optional fields
       if (values.deadline) {
-        updateData.deadline = values.deadline;
+        // Convert deadline from date string to ISO datetime string
+        let deadlineISO: string;
+        const dateStr = values.deadline;
+        if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          // It's a date string, convert to ISO datetime
+          // Set time to end of day (23:59:59) in UTC
+          deadlineISO = new Date(dateStr + "T23:59:59.000Z").toISOString();
+        } else {
+          // Already an ISO string, use as-is
+          deadlineISO = dateStr;
+        }
+        updateData.deadline = deadlineISO;
       }
       if (values.progress !== undefined) {
         updateData.progress = values.progress;
@@ -140,8 +153,10 @@ const UpdateLiveProject = ({
 
       // Add fields based on project type
       if (currentProjectType === "HOURLY") {
-        // For HOURLY: exclude budget/paid/due amounts completely
-        // No financial fields for HOURLY projects
+        // For HOURLY: include hourlyRate
+        if (values.hourlyRate !== undefined) {
+          updateData.hourlyRate = values.hourlyRate;
+        }
       } else {
         // For FIXED and other types: include projectBudget, paidAmount, dueAmount
         if (values.projectBudget !== undefined) {
@@ -276,6 +291,12 @@ const UpdateLiveProject = ({
                               form.setValue("paidAmount", undefined);
                               form.setValue("dueAmount", undefined);
                               form.clearErrors("projectBudget");
+                              form.clearErrors("paidAmount");
+                              form.clearErrors("dueAmount");
+                            } else {
+                              // Clear hourlyRate when switching from HOURLY
+                              form.setValue("hourlyRate", undefined);
+                              form.clearErrors("hourlyRate");
                             }
                           }}
                           value={field.value}
@@ -325,7 +346,30 @@ const UpdateLiveProject = ({
                 </div>
 
                 <div className={`grid gap-4 ${projectType === "HOURLY" ? "grid-cols-1" : "grid-cols-3"}`}>
-                  {projectType !== "HOURLY" && (
+                  {projectType === "HOURLY" ? (
+                    <FormField
+                      control={form.control}
+                      name="hourlyRate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Hourly Rate</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="50"
+                              {...field}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                              }}
+                              value={field.value ?? ""}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ) : (
                     <>
                       <FormField
                         control={form.control}

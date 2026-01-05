@@ -149,6 +149,7 @@ export const useCreateLiveProject = () => {
       clientLocation?: string | null;
       projectType: "FIXED" | "HOURLY" | "MONTHLY" | "CUSTOM";
       projectBudget?: number;
+      hourlyRate?: number;
       paidAmount?: number;
       dueAmount?: number;
       assignedMembers: string; // API expects comma-separated string

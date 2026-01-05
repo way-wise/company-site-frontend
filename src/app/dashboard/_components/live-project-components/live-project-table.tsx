@@ -155,6 +155,7 @@ export const LiveProjectTable = () => {
       clientLocation: "",
       projectType: "FIXED",
       projectBudget: undefined,
+      hourlyRate: undefined,
       paidAmount: undefined,
       dueAmount: undefined,
       assignedMembers: [],
@@ -192,6 +193,21 @@ export const LiveProjectTable = () => {
         assignedMembersString = values.assignedMembers;
       }
 
+      // Convert deadline from date string to ISO datetime string
+      let deadlineISO: string | undefined = undefined;
+      if (values.deadline) {
+        // If deadline is just a date (YYYY-MM-DD), convert to ISO datetime
+        // Set time to end of day (23:59:59) in UTC
+        const dateStr = values.deadline;
+        if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          // It's a date string, convert to ISO datetime
+          deadlineISO = new Date(dateStr + "T23:59:59.000Z").toISOString();
+        } else {
+          // Already an ISO string, use as-is
+          deadlineISO = dateStr;
+        }
+      }
+
       // Build payload based on project type
       const basePayload = {
         projectName: values.projectName,
@@ -201,14 +217,25 @@ export const LiveProjectTable = () => {
         assignedMembers: assignedMembersString,
         projectStatus: values.projectStatus || "PENDING",
         nextActions: values.nextActions || undefined,
-        ...(values.deadline && { deadline: values.deadline }),
+        ...(deadlineISO && { deadline: deadlineISO }),
         ...(values.progress !== undefined && { progress: values.progress }),
       };
 
       // Add fields based on project type
       if (values.projectType === "HOURLY") {
-        // For HOURLY projects, budget/paid/due amounts are not included
-        await createLiveProjectMutation.mutateAsync(basePayload);
+        // For HOURLY projects, hourlyRate is required
+        if (!values.hourlyRate || values.hourlyRate <= 0) {
+          addLiveProjectForm.setError("hourlyRate", {
+            type: "manual",
+            message: "Hourly rate must be a positive number",
+          });
+          return;
+        }
+        const payload = {
+          ...basePayload,
+          hourlyRate: values.hourlyRate,
+        };
+        await createLiveProjectMutation.mutateAsync(payload);
       } else {
         // For FIXED and other types, projectBudget is required
         if (!values.projectBudget || values.projectBudget <= 0) {
@@ -737,6 +764,12 @@ export const LiveProjectTable = () => {
                                 addLiveProjectForm.setValue("paidAmount", undefined);
                                 addLiveProjectForm.setValue("dueAmount", undefined);
                                 addLiveProjectForm.clearErrors("projectBudget");
+                                addLiveProjectForm.clearErrors("paidAmount");
+                                addLiveProjectForm.clearErrors("dueAmount");
+                              } else {
+                                // Clear hourlyRate when switching from HOURLY
+                                addLiveProjectForm.setValue("hourlyRate", undefined);
+                                addLiveProjectForm.clearErrors("hourlyRate");
                               }
                             }}
                             defaultValue={field.value}
@@ -786,7 +819,30 @@ export const LiveProjectTable = () => {
                   </div>
 
                   <div className={`grid gap-4 ${projectType === "HOURLY" ? "grid-cols-1" : "grid-cols-3"}`}>
-                    {projectType !== "HOURLY" && (
+                    {projectType === "HOURLY" ? (
+                      <FormField
+                        control={addLiveProjectForm.control}
+                        name="hourlyRate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Hourly Rate</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="50"
+                                {...field}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.onChange(value === "" ? undefined : parseFloat(value) || undefined);
+                                }}
+                                value={field.value ?? ""}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    ) : (
                       <>
                         <FormField
                           control={addLiveProjectForm.control}

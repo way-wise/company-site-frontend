@@ -111,6 +111,7 @@ export const createLiveProjectSchema = z
     clientLocation: z.string().optional(),
     projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]),
     projectBudget: z.number().positive("Project budget must be a positive number").optional(),
+    hourlyRate: z.number().positive("Hourly rate must be a positive number").optional(),
     paidAmount: z.number().min(0, "Paid amount cannot be negative").optional(),
     dueAmount: z.number().min(0, "Due amount cannot be negative").optional(),
     // Accept both string and array (form stores as array, but we validate both)
@@ -136,12 +137,28 @@ export const createLiveProjectSchema = z
       if (data.projectType !== "HOURLY") {
         return data.projectBudget !== undefined && data.projectBudget > 0;
       }
-      // For HOURLY projects, budget/paid/due amounts are not required
+      // For HOURLY projects, hourlyRate is required
+      if (data.projectType === "HOURLY") {
+        return data.hourlyRate !== undefined && data.hourlyRate > 0;
+      }
       return true;
     },
     {
       message: "Project budget is required for non-hourly projects",
       path: ["projectBudget"],
+    }
+  )
+  .refine(
+    (data) => {
+      // For HOURLY projects, hourlyRate is required
+      if (data.projectType === "HOURLY") {
+        return data.hourlyRate !== undefined && data.hourlyRate > 0;
+      }
+      return true;
+    },
+    {
+      message: "Hourly rate is required for hourly projects",
+      path: ["hourlyRate"],
     }
   );
 
@@ -151,6 +168,7 @@ export const updateLiveProjectSchema = z.object({
   clientLocation: z.string().optional(),
   projectType: z.enum(["FIXED", "HOURLY", "MONTHLY", "CUSTOM"]).optional(),
   projectBudget: z.number().positive("Project budget must be a positive number").optional(),
+  hourlyRate: z.number().positive("Hourly rate must be a positive number").optional(),
   paidAmount: z.number().min(0, "Paid amount cannot be negative").optional(),
   dueAmount: z.number().min(0, "Due amount cannot be negative").optional(),
   assignedMembers: z.array(z.string()).optional(),
