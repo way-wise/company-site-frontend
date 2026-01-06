@@ -313,11 +313,11 @@ export const LiveProjectTable = () => {
 
   // Extract data from API response (matching blogs pattern)
   const liveProjectsRaw = liveProjectsData?.data || [];
-  // Sort by updatedAt descending (newest first)
+  // Sort by updatedAt ascending (oldest first, newest last)
   const liveProjects = [...liveProjectsRaw].sort((a, b) => {
     const dateA = new Date(a.updatedAt || a.createdAt).getTime();
     const dateB = new Date(b.updatedAt || b.createdAt).getTime();
-    return dateB - dateA; // Descending order (newest first)
+    return dateA - dateB; // Ascending order (oldest first, newest last)
   });
   const meta = liveProjectsData?.meta;
   const totalItems = meta?.total || 0;
