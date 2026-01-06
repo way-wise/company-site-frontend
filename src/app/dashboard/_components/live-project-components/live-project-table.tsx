@@ -118,7 +118,7 @@ export const LiveProjectTable = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("FIXED");
 
   // Debounce search input
   useEffect(() => {
@@ -312,7 +312,13 @@ export const LiveProjectTable = () => {
   };
 
   // Extract data from API response (matching blogs pattern)
-  const liveProjects = liveProjectsData?.data || [];
+  const liveProjectsRaw = liveProjectsData?.data || [];
+  // Sort by updatedAt descending (newest first)
+  const liveProjects = [...liveProjectsRaw].sort((a, b) => {
+    const dateA = new Date(a.updatedAt || a.createdAt).getTime();
+    const dateB = new Date(b.updatedAt || b.createdAt).getTime();
+    return dateB - dateA; // Descending order (newest first)
+  });
   const meta = liveProjectsData?.meta;
   const totalItems = meta?.total || 0;
 
