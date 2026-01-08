@@ -1140,7 +1140,7 @@ export const LiveProjectTable = () => {
             : null;
           
           // Combine all notes - include nextActions if it's not already in dailyNotes
-          let allNotes = [...dailyNotes];
+          const allNotes = [...dailyNotes];
           if (selectedLiveProject.nextActions && !nextActionsNote) {
             // Add nextActions as a note if it's not already in the list
             allNotes.push({
