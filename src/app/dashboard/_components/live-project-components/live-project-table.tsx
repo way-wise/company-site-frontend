@@ -557,7 +557,7 @@ export const LiveProjectTable = () => {
       },
     },
     {
-      header: "Price",
+      header: "Paid / Project Budget",
       accessorKey: "price",
       cell: ({ row }: { row: { original: LiveProject } }) => {
         const project = row.original;
@@ -575,7 +575,7 @@ export const LiveProjectTable = () => {
         
         return (
           <div className="font-medium">
-           Paid Amount: ${paidAmount.toLocaleString()} <br /> Project Budget: ${projectBudget.toLocaleString()}
+           ${paidAmount.toLocaleString()} / ${projectBudget.toLocaleString()}
           </div>
         );
       },
