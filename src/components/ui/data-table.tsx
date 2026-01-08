@@ -36,6 +36,7 @@ interface DataTableProps<TData, TValue> {
     pageIndex: number;
     pageSize: number;
   }) => void;
+  hidePagination?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -44,6 +45,7 @@ export function DataTable<TData, TValue>({
   isPending,
   pagination,
   onPaginationChange,
+  hidePagination = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -150,38 +152,40 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between py-4">
-        <div className="text-sm text-muted-foreground">
-          {isServerSide ? (
-            <>
-              Showing {(pageIndex - 1) * pageSize + 1} to{" "}
-              {Math.min(pageIndex * pageSize, total)} of {total} entries
-            </>
-          ) : (
-            <>
-              Showing {table.getRowModel().rows.length} of {data.length} entries
-            </>
-          )}
+      {!hidePagination && (
+        <div className="flex items-center justify-between py-4">
+          <div className="text-sm text-muted-foreground">
+            {isServerSide ? (
+              <>
+                Showing {(pageIndex - 1) * pageSize + 1} to{" "}
+                {Math.min(pageIndex * pageSize, total)} of {total} entries
+              </>
+            ) : (
+              <>
+                Showing {table.getRowModel().rows.length} of {data.length} entries
+              </>
+            )}
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

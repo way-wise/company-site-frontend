@@ -8,12 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Form,
   FormControl,
   FormField,
@@ -40,11 +34,12 @@ import {
 } from "@/hooks/useLiveProjectMutations";
 import { LiveProject } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, MoreVertical, Pencil, Plus, Trash } from "lucide-react";
+import { Eye, Pencil, Plus, Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import UpdateLiveProject from "./UpdateLiveProject";
 import { useAuth } from "@/context/UserContext";
+import { useRouter } from "next/navigation";
 
 // Helper function to format date
 const formatDateHelper = (dateString: string) => {
@@ -89,13 +84,13 @@ const getProjectTypeBadge = (type: string) => {
 export const LiveProjectTable = () => {
   // Get current user for notes
   const { user } = useAuth();
+  const router = useRouter();
   
   // Modal states
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addLiveProjectModalOpen, setAddLiveProjectModalOpen] = useState(false);
   const [updateLiveProjectModalOpen, setUpdateLiveProjectModalOpen] =
     useState(false);
-  const [viewModalOpen, setViewModalOpen] = useState(false);
   const [notesModalOpen, setNotesModalOpen] = useState(false);
   const [selectedLiveProject, setSelectedLiveProject] =
     useState<LiveProject | null>(null);
@@ -110,11 +105,7 @@ export const LiveProjectTable = () => {
     setAddLiveProjectModalOpen(true);
   }, []);
 
-  // Pagination and search states
-  const [pagination, setPagination] = useState({
-    pageIndex: 1,
-    pageSize: 10,
-  });
+  // Search states (no pagination - show all items)
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -129,7 +120,7 @@ export const LiveProjectTable = () => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // Get live projects data using TanStack Query
+  // Get live projects data using TanStack Query (fetch all items - no pagination)
   const {
     data: liveProjectsData,
     isLoading,
@@ -137,8 +128,8 @@ export const LiveProjectTable = () => {
     isError,
     refetch,
   } = useLiveProjects({
-    page: pagination.pageIndex,
-    limit: pagination.pageSize,
+    page: 1,
+    limit: 10000, // Fetch all items
     search: debouncedSearch || undefined,
     projectStatus: statusFilter !== "all" ? statusFilter : undefined,
     projectType: typeFilter !== "all" ? typeFilter : undefined,
@@ -171,10 +162,6 @@ export const LiveProjectTable = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-    setPagination({
-      pageIndex: 1,
-      pageSize: 10,
-    });
   };
 
   // Custom hooks for mutations
@@ -463,23 +450,38 @@ export const LiveProjectTable = () => {
         );
       },
     },
-    {
-      header: "Location",
-      accessorKey: "clientLocation",
-      cell: ({ row }: { row: { original: LiveProject } }) => {
-        const location = row.original.clientLocation || "N/A";
-        return (
-          <div className="max-w-[120px] truncate" title={location}>
-            {location}
-          </div>
-        );
-      },
-    },
+    // {
+    //   header: "Location",
+    //   accessorKey: "clientLocation",
+    //   cell: ({ row }: { row: { original: LiveProject } }) => {
+    //     const location = row.original.clientLocation || "N/A";
+    //     return (
+    //       <div className="max-w-[120px] truncate" title={location}>
+    //         {location}
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       header: "Type",
       accessorKey: "projectType",
       cell: ({ row }: { row: { original: LiveProject } }) =>
         getProjectTypeBadge(row.original.projectType),
+    },
+    {
+      header: "Assigned Members",
+      accessorKey: "assignedMembers",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        const members = row.original.assignedMembers;
+        if (!members || members.trim() === "") {
+          return <span className="text-muted-foreground">-</span>;
+        }
+        return (
+          <div className="max-w-[200px] truncate" title={members}>
+            {members}
+          </div>
+        );
+      },
     },
     {
       header: "Next Action",
@@ -555,48 +557,76 @@ export const LiveProjectTable = () => {
       },
     },
     {
+      header: "Price",
+      accessorKey: "price",
+      cell: ({ row }: { row: { original: LiveProject } }) => {
+        const project = row.original;
+        // Only show price for non-HOURLY projects
+        if (project.projectType === "HOURLY") {
+          return <span className="text-muted-foreground">-</span>;
+        }
+        
+        const paidAmount = project.paidAmount ?? 0;
+        const projectBudget = project.projectBudget ?? 0;
+        
+        if (projectBudget === 0) {
+          return <span className="text-muted-foreground">-</span>;
+        }
+        
+        return (
+          <div className="font-medium">
+           Paid Amount: ${paidAmount.toLocaleString()} <br /> Project Budget: ${projectBudget.toLocaleString()}
+          </div>
+        );
+      },
+    },
+    {
       id: "actions",
       header: "Actions",
       cell: ({ row }: { row: { original: LiveProject } }) => {
         const { id } = row.original;
 
         return (
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger>
-              <MoreVertical className="h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-36">
-              <DropdownMenuItem
-                onClick={() => {
-                  setSelectedLiveProject(row.original);
-                  setViewModalOpen(true);
-                }}
-              >
-                <Eye className="mr-2 h-4 w-4" />
-                <span>View</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setUpdateLiveProjectModalOpen(true);
-                  setSelectedLiveProject(row.original);
-                }}
-              >
-                <Pencil className="mr-2 h-4 w-4" />
-                <span>Edit</span>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={() => {
-                  setLiveProjectId(id);
-                  setDeleteModalOpen(true);
-                }}
-              >
-                <Trash className="mr-2 h-4 w-4" />
-                <span>Delete</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+              onClick={() => {
+                router.push(`/dashboard/live-projects/${id}`);
+              }}
+              title="View"
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0"
+              onClick={() => {
+                setUpdateLiveProjectModalOpen(true);
+                setSelectedLiveProject(row.original);
+              }}
+              title="Edit"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+              onClick={() => {
+                setLiveProjectId(id);
+                setDeleteModalOpen(true);
+              }}
+              title="Delete"
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          </div>
         );
       },
     },
@@ -688,17 +718,7 @@ export const LiveProjectTable = () => {
             data={liveProjects}
             columns={columns}
             isPending={isLoading}
-            pagination={{
-              pageIndex: pagination.pageIndex - 1,
-              pageSize: pagination.pageSize,
-              total: totalItems,
-            }}
-            onPaginationChange={(newPagination) => {
-              setPagination({
-                pageIndex: newPagination.pageIndex + 1,
-                pageSize: newPagination.pageSize,
-              });
-            }}
+            hidePagination={true}
           />
         )}
       </div>
@@ -1104,23 +1124,47 @@ export const LiveProjectTable = () => {
           setNotesModalOpen(false);
           setSelectedLiveProject(null);
         }}
-        title={`Notes & Actions - ${selectedLiveProject?.projectName || ""}`}
+        title={`Notes - ${selectedLiveProject?.projectName || ""}`}
         isPending={updateLiveProjectMutation.isPending}
+        className="max-w-4xl"
       >
-        {selectedLiveProject && (
-          <div className="space-y-4">
-            {/* All Notes History */}
-            <div>
-              <h4 className="font-semibold text-sm text-muted-foreground mb-3">
-                Previous Notes & Actions
-              </h4>
-              <div className="max-h-[300px] overflow-y-auto space-y-3 border rounded-lg p-4 bg-gray-50">
-                {selectedLiveProject.dailyNotes && 
-                 Array.isArray(selectedLiveProject.dailyNotes) && 
-                 selectedLiveProject.dailyNotes.length > 0 ? (
-                  [...selectedLiveProject.dailyNotes]
-                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                    .map((note, index) => {
+        {selectedLiveProject && (() => {
+          // Get all notes from dailyNotes
+          const dailyNotes = selectedLiveProject.dailyNotes && Array.isArray(selectedLiveProject.dailyNotes) 
+            ? selectedLiveProject.dailyNotes 
+            : [];
+          
+          // Check if nextActions exists and is not already in dailyNotes
+          const nextActionsNote = selectedLiveProject.nextActions 
+            ? dailyNotes.find(note => note.note === selectedLiveProject.nextActions)
+            : null;
+          
+          // Combine all notes - include nextActions if it's not already in dailyNotes
+          let allNotes = [...dailyNotes];
+          if (selectedLiveProject.nextActions && !nextActionsNote) {
+            // Add nextActions as a note if it's not already in the list
+            allNotes.push({
+              note: selectedLiveProject.nextActions,
+              createdAt: new Date().toISOString(), // Use current time as fallback
+              userId: user?.id || "system",
+              userName: "System",
+              type: "action" as const,
+            });
+          }
+          
+          // Sort by createdAt (newest first)
+          allNotes.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          
+          return (
+            <div className="space-y-4">
+              {/* All Notes History */}
+              <div>
+                <h4 className="font-semibold text-sm text-muted-foreground mb-3">
+                  Previous Notes
+                </h4>
+                <div className="max-h-[400px] overflow-y-auto space-y-3 border rounded-lg p-4 bg-gray-50">
+                  {allNotes.length > 0 ? (
+                    allNotes.map((note, index) => {
                       // Create a unique key for each note using createdAt and userId
                       const noteKey = `${note.createdAt}-${note.userId}-${index}`;
                       
@@ -1198,19 +1242,19 @@ export const LiveProjectTable = () => {
                         </div>
                       );
                     })
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No notes yet. Add your first note below.
-                  </p>
-                )}
+                  ) : (
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      No notes yet. Add your first note below.
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* Add New Note Input */}
-            <div>
-              <h4 className="font-semibold text-sm text-muted-foreground mb-2">
-                Add New Note or Action
-              </h4>
+              {/* Add New Note Input */}
+              <div>
+                <h4 className="font-semibold text-sm text-muted-foreground mb-2">
+                  Add New Note
+                </h4>
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
@@ -1284,157 +1328,12 @@ export const LiveProjectTable = () => {
                   </Button>
                 </div>
               </form>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </Modal>
 
-      {/* View Live Project Modal */}
-      <Modal
-        isOpen={viewModalOpen}
-        onClose={() => {
-          setViewModalOpen(false);
-          setSelectedLiveProject(null);
-        }}
-        title="Live Project Details"
-      >
-        {selectedLiveProject && (
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-semibold text-sm text-muted-foreground mb-1">
-                Project Name
-              </h4>
-              <p className="text-base font-medium">{selectedLiveProject.projectName}</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
-                  Client Name
-                </h4>
-                <p className="text-base font-medium">{selectedLiveProject.clientName}</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
-                  Location
-                </h4>
-                <p className="text-base">{selectedLiveProject.clientLocation || "N/A"}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
-                  Project Type
-                </h4>
-                <div className="mt-1">
-                  {getProjectTypeBadge(selectedLiveProject.projectType)}
-                </div>
-              </div>
-              <div>
-                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
-                  Status
-                </h4>
-                <div className="mt-1">
-                  {getStatusBadge(selectedLiveProject.projectStatus)}
-                </div>
-              </div>
-            </div>
-
-            {selectedLiveProject.projectType !== "HOURLY" && (
-              <div className="border-t pt-4">
-                <h4 className="font-semibold text-sm text-muted-foreground mb-3">
-                  Financial Information
-                </h4>
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <h5 className="text-xs text-muted-foreground mb-1">Budget</h5>
-                    <p className="text-lg font-semibold">
-                      ${(selectedLiveProject.projectBudget || 0).toLocaleString()}
-                    </p>
-                  </div>
-                  <div>
-                    <h5 className="text-xs text-muted-foreground mb-1">Paid Amount</h5>
-                    <p className="text-lg font-semibold text-green-600">
-                      ${(selectedLiveProject.paidAmount ?? 0).toLocaleString()}
-                    </p>
-                  </div>
-                  <div>
-                    <h5 className="text-xs text-muted-foreground mb-1">Due Amount</h5>
-                    <p className="text-lg font-semibold text-orange-600">
-                      ${(selectedLiveProject.dueAmount ?? 0).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-3 pt-3 border-t">
-                  <h5 className="text-xs text-muted-foreground mb-1">Remaining</h5>
-                  <p className={`text-lg font-semibold ${
-                    ((selectedLiveProject.projectBudget || 0) - (selectedLiveProject.paidAmount ?? 0)) > 0 
-                      ? "text-orange-600" 
-                      : "text-green-600"
-                  }`}>
-                    ${((selectedLiveProject.projectBudget || 0) - (selectedLiveProject.paidAmount ?? 0)).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {(selectedLiveProject.deadline || selectedLiveProject.progress !== undefined) && (
-              <div className="border-t pt-4">
-                <h4 className="font-semibold text-sm text-muted-foreground mb-3">
-                  Project Timeline & Progress
-                </h4>
-                <div className="grid grid-cols-2 gap-4">
-                  {selectedLiveProject.deadline && (
-                    <div>
-                      <h5 className="text-xs text-muted-foreground mb-1">Deadline</h5>
-                      <p className="text-base">
-                        {new Date(selectedLiveProject.deadline).toLocaleDateString()}
-                      </p>
-                    </div>
-                  )}
-                  {selectedLiveProject.progress !== undefined && selectedLiveProject.progress !== null && (
-                    <div>
-                      <h5 className="text-xs text-muted-foreground mb-1">Progress</h5>
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-primary h-2 rounded-full"
-                            style={{ width: `${selectedLiveProject.progress}%` }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium">{selectedLiveProject.progress}%</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {selectedLiveProject.nextActions && (
-              <div className="border-t pt-4">
-                <h4 className="font-semibold text-sm text-muted-foreground mb-1">
-                  Next Actions
-                </h4>
-                <p className="text-base whitespace-pre-wrap">{selectedLiveProject.nextActions}</p>
-              </div>
-            )}
-
-            <div className="border-t pt-4">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <h4 className="font-semibold text-muted-foreground mb-1">Created At</h4>
-                  <p>{formatDateHelper(selectedLiveProject.createdAt)}</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-muted-foreground mb-1">Updated At</h4>
-                  <p>{formatDateHelper(selectedLiveProject.updatedAt)}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal>
     </>
   );
 };

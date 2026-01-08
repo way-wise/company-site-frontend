@@ -116,12 +116,13 @@ interface CustomModalProps {
   description?: string;
   children: React.ReactNode;
   isPending?: boolean;
+  className?: string;
 }
 
-const CustomModal = ({ isOpen, onClose, title, description, children }: CustomModalProps) => {
+const CustomModal = ({ isOpen, onClose, title, description, children, className }: CustomModalProps) => {
   return (
     <DialogPrimitive.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <ModalContent>
+      <ModalContent className={className}>
         {title && (
           <ModalHeader>
             <ModalTitle>{title}</ModalTitle>
