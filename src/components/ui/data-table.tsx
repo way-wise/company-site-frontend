@@ -53,7 +53,7 @@ export function DataTable<TData, TValue>({
   );
 
   const pageIndex = pagination?.pageIndex ?? 1;
-  const pageSize = pagination?.pageSize ?? 10;
+  const pageSize = hidePagination ? data.length : (pagination?.pageSize ?? 10);
   const total = pagination?.total ?? data.length;
 
   const isServerSide = pagination?.total !== undefined;
@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: isServerSide ? undefined : getPaginationRowModel(),
+    getPaginationRowModel: hidePagination || isServerSide ? undefined : getPaginationRowModel(),
     manualPagination: isServerSide,
     pageCount: isServerSide ? Math.ceil(total / pageSize) : undefined,
     onSortingChange: setSorting,
