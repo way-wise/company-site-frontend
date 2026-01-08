@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { liveProjectQueryKeys } from "@/hooks/useLiveProjectMutations";
+import { liveProjectService } from "@/services/LiveProjectService";
 
 // Helper function to format date
 const formatDateHelper = (dateString: string) => {
@@ -73,6 +74,7 @@ export default function LiveProjectDetails({
   const refetchProject = async () => {
     const data = await queryClient.fetchQuery({
       queryKey: liveProjectQueryKeys.detail(liveProject.id),
+      queryFn: () => liveProjectService.getLiveProjectById(liveProject.id),
     });
     if (data?.success && data.data) {
       setLiveProject(data.data);
