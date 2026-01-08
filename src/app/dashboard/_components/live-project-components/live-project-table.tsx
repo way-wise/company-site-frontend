@@ -1306,7 +1306,7 @@ export const LiveProjectTable = () => {
                   name="newNote"
                   placeholder="Enter your note or action here..."
                   rows={4}
-                  className="bg-black text-white placeholder:text-gray-400"
+                  className="bg-white text-black placeholder:text-gray-900"
                   required
                 />
                 <div className="flex justify-end gap-2 mt-3">
