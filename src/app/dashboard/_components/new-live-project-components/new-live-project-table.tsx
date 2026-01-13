@@ -169,8 +169,8 @@ export const NewLiveProjectTable = () => {
   // Search states
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("pending_active"); // Default: PENDING and ACTIVE
+  const [typeFilter, setTypeFilter] = useState<string>("FIXED"); // Default: FIXED
 
   // Debounce search input
   useEffect(() => {
@@ -181,6 +181,7 @@ export const NewLiveProjectTable = () => {
   }, [search]);
 
   // Get new live projects data
+  // For default filter (pending_active), we'll fetch all and filter on frontend
   const {
     data: projectsData,
     isLoading,
@@ -191,7 +192,7 @@ export const NewLiveProjectTable = () => {
     page: 1,
     limit: 10000, // Show all items
     search: debouncedSearch || undefined,
-    projectStatus: statusFilter !== "all" ? statusFilter : undefined,
+    projectStatus: statusFilter !== "all" && statusFilter !== "pending_active" ? statusFilter : undefined,
     projectType: typeFilter !== "all" ? typeFilter : undefined,
   });
 
@@ -388,7 +389,14 @@ export const NewLiveProjectTable = () => {
   };
 
   // Get projects list - handle both response structures
-  const projects = projectsData?.data?.data || projectsData?.data || [];
+  let projects = projectsData?.data?.data || projectsData?.data || [];
+  
+  // Apply frontend filtering for default "pending_active" status filter
+  if (statusFilter === "pending_active") {
+    projects = projects.filter((project: NewLiveProject) => 
+      project.projectStatus === "PENDING" || project.projectStatus === "ACTIVE"
+    );
+  }
   
   // Debug: Log first project to check structure
   React.useEffect(() => {
@@ -792,6 +800,7 @@ export const NewLiveProjectTable = () => {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="pending_active">Pending & Active</SelectItem>
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="PENDING">Pending</SelectItem>
             <SelectItem value="ACTIVE">Active</SelectItem>
@@ -805,9 +814,9 @@ export const NewLiveProjectTable = () => {
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
             <SelectItem value="FIXED">Fixed</SelectItem>
             <SelectItem value="HOURLY">Hourly</SelectItem>
+            <SelectItem value="all">All Types</SelectItem>
           </SelectContent>
         </Select>
       </div>
