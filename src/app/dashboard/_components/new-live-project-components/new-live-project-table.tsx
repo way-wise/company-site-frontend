@@ -106,7 +106,7 @@ const NextActionCell = ({ project, onViewActions }: { project: NewLiveProject; o
   
   if (allActions && Array.isArray(allActions) && allActions.length > 0) {
     // Sort by actionDate or createdAt descending to get the most recent
-    const sortedActions = [...allActions].sort((a: any, b: any) => {
+    const sortedActions = [...allActions].sort((a: { actionDate?: string; createdAt?: string; date?: string }, b: { actionDate?: string; createdAt?: string; date?: string }) => {
       const dateA = new Date(a.actionDate || a.createdAt || a.date || 0).getTime();
       const dateB = new Date(b.actionDate || b.createdAt || b.date || 0).getTime();
       return dateB - dateA;
@@ -420,7 +420,7 @@ export const NewLiveProjectTable = () => {
 
   // Helper function to create sortable header
   const createSortableHeader = (label: string) => {
-    return ({ column }: { column: { getIsSorted: () => false | "asc" | "desc"; toggleSorting: (desc?: boolean) => void } }) => {
+    const SortableHeader = ({ column }: { column: { getIsSorted: () => false | "asc" | "desc"; toggleSorting: (desc?: boolean) => void } }) => {
       const isSorted = column.getIsSorted();
       return (
         <div className="flex items-center gap-2 cursor-pointer select-none" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -435,6 +435,8 @@ export const NewLiveProjectTable = () => {
         </div>
       );
     };
+    SortableHeader.displayName = `SortableHeader-${label}`;
+    return SortableHeader;
   };
 
   // Table columns
@@ -623,13 +625,13 @@ export const NewLiveProjectTable = () => {
       header: createSortableHeader("Progress"),
       accessorKey: "progress",
       enableSorting: true,
-      sortingFn: (rowA: { original: NewLiveProject }, rowB: { original: NewLiveProject }) => {
+      sortingFn: (_rowA: { original: NewLiveProject }, _rowB: { original: NewLiveProject }) => {
         // Note: NewLiveProject doesn't have progress in schema, but we can sort by 0 for now
         const progressA = 0; // TODO: Add progress tracking
         const progressB = 0;
         return progressA - progressB;
       },
-      cell: ({ row }: { row: { original: NewLiveProject } }) => {
+      cell: ({ row: _row }: { row: { original: NewLiveProject } }) => {
         // Note: NewLiveProject doesn't have progress in schema, but we can show 0% for now
         const progress = 0; // TODO: Add progress tracking
         
