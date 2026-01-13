@@ -16,6 +16,7 @@ import {
   Upload,
   ArrowUp,
   ArrowDown,
+  Clock,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -57,6 +58,8 @@ import {
   useAddProjectAction,
   useUploadDocument,
 } from "@/hooks/useNewLiveProjectMutations";
+import { useQueries } from "@tanstack/react-query";
+import { newLiveProjectService } from "@/services/NewLiveProjectService";
 import UpdateNewLiveProject from "./UpdateNewLiveProject";
 
 const getStatusBadge = (status: string) => {
@@ -147,6 +150,7 @@ export const NewLiveProjectTable = () => {
   const [deadlineModalOpen, setDeadlineModalOpen] = useState(false);
   const [actionsModalOpen, setActionsModalOpen] = useState(false);
   const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
+  const [todaysActionsModalOpen, setTodaysActionsModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<NewLiveProject | null>(null);
   const [projectId, setProjectId] = useState<string | undefined>("");
   const [newActionText, setNewActionText] = useState("");
@@ -417,6 +421,69 @@ export const NewLiveProjectTable = () => {
   const sortedProjects = [...projects].sort((a, b) => 
     new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
+
+  // Fetch actions for all projects when modal is open
+  const actionsQueries = useQueries({
+    queries: todaysActionsModalOpen
+      ? sortedProjects.map((project) => ({
+          queryKey: ["new-live-project-actions", project.id],
+          queryFn: () => newLiveProjectService.getProjectActions(project.id),
+          enabled: todaysActionsModalOpen,
+          staleTime: 1 * 60 * 1000,
+        }))
+      : [],
+  });
+
+  // Get today's actions for all projects
+  const getTodaysActions = (): Array<{
+    project: NewLiveProject;
+    action: { actionText: string; actionDate: string; createdAt: string; creator?: { user: { name: string } } };
+  }> => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const todaysActions: Array<{
+      project: NewLiveProject;
+      action: { actionText: string; actionDate: string; createdAt: string; creator?: { user: { name: string } } };
+    }> = [];
+
+    sortedProjects.forEach((project, index) => {
+      // Try to get actions from fetched queries first
+      const fetchedActions = actionsQueries[index]?.data?.data || [];
+      // Fallback to actions in project object
+      const projectActions = project.actions || [];
+      const allActions = fetchedActions.length > 0 ? fetchedActions : projectActions;
+
+      if (allActions.length > 0) {
+        // Get the most recent action
+        const sortedActions = [...allActions].sort((a: { actionDate?: string; createdAt?: string }, b: { actionDate?: string; createdAt?: string }) => {
+          const dateA = new Date(a.actionDate || a.createdAt || 0).getTime();
+          const dateB = new Date(b.actionDate || b.createdAt || 0).getTime();
+          return dateB - dateA;
+        });
+        const lastAction = sortedActions[0];
+        if (lastAction) {
+          const actionDate = new Date(lastAction.actionDate || lastAction.createdAt || 0);
+          // Check if action is from today
+          if (actionDate >= today && actionDate < tomorrow) {
+            todaysActions.push({
+              project,
+              action: lastAction as { actionText: string; actionDate: string; createdAt: string; creator?: { user: { name: string } } },
+            });
+          }
+        }
+      }
+    });
+
+    // Sort by action date (most recent first)
+    return todaysActions.sort((a, b) => {
+      const dateA = new Date(a.action.actionDate || a.action.createdAt || 0).getTime();
+      const dateB = new Date(b.action.actionDate || b.action.createdAt || 0).getTime();
+      return dateB - dateA;
+    });
+  };
 
   // Helper function to create sortable header
   const createSortableHeader = (label: string) => {
@@ -780,13 +847,23 @@ export const NewLiveProjectTable = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">New Live Projects</h2>
-        <Button
-          onClick={handleOpenAddModal}
-          type="button"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add New Project
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => setTodaysActionsModalOpen(true)}
+            type="button"
+            variant="outline"
+          >
+            <Clock className="mr-2 h-4 w-4" />
+            Today's Actions
+          </Button>
+          <Button
+            onClick={handleOpenAddModal}
+            type="button"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add New Project
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -1466,6 +1543,89 @@ export const NewLiveProjectTable = () => {
               )}
             </div>
           </div>
+        </div>
+      </Modal>
+
+      {/* Today's Actions Modal */}
+      <Modal
+        isOpen={todaysActionsModalOpen}
+        onClose={() => setTodaysActionsModalOpen(false)}
+        title="Today's Actions"
+        className="max-w-4xl"
+      >
+        <div className="space-y-4">
+          {(() => {
+            // Check if queries are still loading
+            const isLoadingActions = actionsQueries.some((query) => query.isLoading);
+            
+            if (isLoadingActions) {
+              return (
+                <div className="text-center py-12">
+                  <div className="text-muted-foreground">Loading today's actions...</div>
+                </div>
+              );
+            }
+
+            const todaysActions = getTodaysActions();
+            if (todaysActions.length > 0) {
+              return (
+                <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                  {todaysActions.map((item: { project: NewLiveProject; action: { actionText: string; actionDate: string; createdAt: string; creator?: { user: { name: string } } } }, index: number) => (
+                    <div
+                      key={`${item.project.id}-${index}`}
+                      className="border rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h4 className="font-semibold text-sm text-gray-900">
+                              {item.project.projectName}
+                            </h4>
+                            <Badge variant="outline" className="text-xs">
+                              {item.project.projectStatus}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-gray-700 mb-2">
+                            {item.action.actionText}
+                          </p>
+                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              {new Date(item.action.actionDate || item.action.createdAt).toLocaleString()}
+                            </span>
+                            {item.action.creator?.user?.name && (
+                              <span className="flex items-center gap-1">
+                                <MessageSquare className="h-3 w-3" />
+                                {item.action.creator.user.name}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setTodaysActionsModalOpen(false);
+                            router.push(`/dashboard/new-live-projects/${item.project.id}`);
+                          }}
+                          title="View Project"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            }
+            return (
+              <div className="text-center py-12">
+                <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">No actions recorded today</p>
+              </div>
+            );
+          })()}
         </div>
       </Modal>
     </div>
