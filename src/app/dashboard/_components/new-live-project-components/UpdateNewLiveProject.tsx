@@ -44,6 +44,7 @@ const UpdateNewLiveProject = ({
 
   const form = useForm<UpdateNewLiveProjectFormData>({
     resolver: zodResolver(updateNewLiveProjectSchema),
+    mode: "onChange",
     defaultValues: {
       projectName: "",
       clientName: "",
@@ -90,6 +91,22 @@ const UpdateNewLiveProject = ({
         return date.toISOString().slice(0, 16);
       };
 
+      // Normalize targetedDeadline to match schema
+      let normalizedTargetedDeadline: { backend?: string; frontend?: string; ui?: string } | undefined = undefined;
+      if (project.targetedDeadline) {
+        if (typeof project.targetedDeadline === 'object') {
+          normalizedTargetedDeadline = {
+            backend: (project.targetedDeadline as any).backend || undefined,
+            frontend: (project.targetedDeadline as any).frontend || undefined,
+            ui: (project.targetedDeadline as any).ui || undefined,
+          };
+          // Remove if all properties are undefined
+          if (!normalizedTargetedDeadline.backend && !normalizedTargetedDeadline.frontend && !normalizedTargetedDeadline.ui) {
+            normalizedTargetedDeadline = undefined;
+          }
+        }
+      }
+
       form.reset({
         projectName: project.projectName || "",
         clientName: project.clientName || "",
@@ -99,20 +116,25 @@ const UpdateNewLiveProject = ({
         paidAmount: ensureNumber(project.paidAmount, 0),
         dueAmount: ensureNumber(project.dueAmount),
         weeklyLimit: ensureNumber(project.weeklyLimit),
-        hourlyRate: ensureNumber((project as any).hourlyRate),
+        hourlyRate: ensureNumber(project.hourlyRate),
         assignedMembers: Array.isArray(project.assignedMembers)
           ? project.assignedMembers
           : [],
         projectStatus: project.projectStatus,
         committedDeadline: formatDateTimeForInput(project.committedDeadline),
-        targetedDeadline: project.targetedDeadline || undefined,
+        targetedDeadline: normalizedTargetedDeadline,
         documents: project.documents || undefined,
       });
     }
   }, [project, form]);
 
   const handleSubmit = async (data: UpdateNewLiveProjectFormData) => {
-    if (!project) return;
+    console.log("handleSubmit called", { data, project });
+    
+    if (!project) {
+      console.error("No project selected for update");
+      return;
+    }
 
     try {
       const payload: Partial<NewLiveProject> = {};
@@ -122,20 +144,40 @@ const UpdateNewLiveProject = ({
         return typeof value === "number" && !isNaN(value);
       };
 
-      if (data.projectName !== undefined) payload.projectName = data.projectName;
-      if (data.clientName !== undefined) payload.clientName = data.clientName;
-      if (data.clientLocation !== undefined) payload.clientLocation = data.clientLocation;
-      if (data.projectType !== undefined) payload.projectType = data.projectType;
-      if (data.projectStatus !== undefined) payload.projectStatus = data.projectStatus;
-      if (data.assignedMembers !== undefined) payload.assignedMembers = data.assignedMembers;
+      // Always include projectName (required field)
+      if (data.projectName) {
+        payload.projectName = data.projectName;
+      }
+      
+      // Include optional fields if they have values
+      if (data.clientName !== undefined) {
+        payload.clientName = data.clientName || null;
+      }
+      
+      if (data.clientLocation !== undefined) {
+        payload.clientLocation = data.clientLocation || null;
+      }
+      
+      if (data.projectType) {
+        payload.projectType = data.projectType;
+      }
+      
+      if (data.projectStatus) {
+        payload.projectStatus = data.projectStatus;
+      }
+      
+      if (data.assignedMembers !== undefined) {
+        payload.assignedMembers = data.assignedMembers;
+      }
 
+      // Type-specific fields
       if (data.projectType === "FIXED") {
         if (isValidNumber(data.projectBudget)) {
           payload.projectBudget = data.projectBudget;
         }
         if (isValidNumber(data.paidAmount)) {
           payload.paidAmount = data.paidAmount;
-        } else {
+        } else if (data.paidAmount !== undefined) {
           payload.paidAmount = 0;
         }
         if (isValidNumber(data.dueAmount)) {
@@ -146,14 +188,16 @@ const UpdateNewLiveProject = ({
           payload.weeklyLimit = data.weeklyLimit;
         }
         if (isValidNumber(data.hourlyRate)) {
-          (payload as any).hourlyRate = data.hourlyRate;
+          payload.hourlyRate = data.hourlyRate;
         }
       }
 
       if (data.committedDeadline) {
         // Convert to ISO datetime string
         const deadlineDate = new Date(data.committedDeadline);
-        payload.committedDeadline = deadlineDate.toISOString();
+        if (!isNaN(deadlineDate.getTime())) {
+          payload.committedDeadline = deadlineDate.toISOString();
+        }
       }
 
       if (data.targetedDeadline) {
@@ -168,16 +212,43 @@ const UpdateNewLiveProject = ({
         projectId: project.id,
         projectData: payload,
       });
+      
       onClose();
     } catch (error) {
       console.error("Error updating project:", error);
+      // Error is already handled by the mutation hook which shows toast
     }
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Update New Live Project">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Form submit event", {
+              formState: form.formState,
+              errors: form.formState.errors,
+              isValid: form.formState.isValid,
+            });
+            form.handleSubmit(
+              (data) => {
+                console.log("Validation passed, submitting", data);
+                handleSubmit(data);
+              },
+              (errors) => {
+                console.error("Validation failed:", errors);
+                // Show first error
+                const firstError = Object.values(errors)[0];
+                if (firstError?.message) {
+                  console.error("First error:", firstError.message);
+                }
+              }
+            )();
+          }} 
+          className="space-y-4"
+        >
           <FormField
             control={form.control}
             name="projectName"
@@ -457,7 +528,10 @@ const UpdateNewLiveProject = ({
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" disabled={updateProjectMutation.isPending}>
+            <Button 
+              type="submit" 
+              disabled={updateProjectMutation.isPending}
+            >
               {updateProjectMutation.isPending ? "Updating..." : "Update Project"}
             </Button>
           </div>

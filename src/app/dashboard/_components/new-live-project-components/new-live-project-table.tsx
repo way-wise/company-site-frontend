@@ -662,8 +662,7 @@ export const NewLiveProjectTable = () => {
       showForType: "HOURLY",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
         const project = row.original;
-        // Note: hourlyRate might not be in schema yet, showing placeholder
-        const hourlyRate = (project as any).hourlyRate;
+        const hourlyRate = project.hourlyRate;
         return (
           <div className="font-medium">
             {hourlyRate ? `$${hourlyRate.toLocaleString()}/hr` : <span className="text-muted-foreground">-</span>}
@@ -915,10 +914,12 @@ export const NewLiveProjectTable = () => {
   ];
 
   // Filter columns based on project type filter
+  type ColumnWithType = typeof allColumns[number] & { showForType?: "FIXED" | "HOURLY" };
   const columns = allColumns.filter((col) => {
     // If column has showForType, only include it if typeFilter matches
-    if ((col as any).showForType) {
-      return typeFilter === (col as any).showForType || typeFilter === "all";
+    const columnWithType = col as ColumnWithType;
+    if (columnWithType.showForType) {
+      return typeFilter === columnWithType.showForType || typeFilter === "all";
     }
     // Always show columns without showForType (common columns)
     return true;

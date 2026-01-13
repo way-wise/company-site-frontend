@@ -404,6 +404,7 @@ export interface NewLiveProject {
 	paidAmount?: number | null; // Required for FIXED, null for HOURLY
 	dueAmount?: number | null; // Auto-calculated: projectBudget - paidAmount (for FIXED)
 	weeklyLimit?: number | null; // Required for HOURLY, null for FIXED
+	hourlyRate?: number | null; // Required for HOURLY, null for FIXED
 	committedDeadline?: string | null; // ISO date string
 	targetedDeadline?: TargetedDeadline | null; // JSON object
 	documents?: ProjectDocument[] | null; // JSON array
@@ -434,6 +435,7 @@ export interface NewLiveProjectFormData {
 	paidAmount?: number; // Required for FIXED
 	dueAmount?: number; // Auto-calculated
 	weeklyLimit?: number; // Required for HOURLY
+	hourlyRate?: number; // Required for HOURLY
 	committedDeadline?: string; // ISO date string
 	targetedDeadline?: TargetedDeadline;
 	documents?: ProjectDocument[];

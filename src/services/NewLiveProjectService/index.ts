@@ -63,6 +63,7 @@ export const newLiveProjectService = {
     paidAmount?: number; // Required for FIXED
     dueAmount?: number;
     weeklyLimit?: number; // Required for HOURLY
+    hourlyRate?: number; // Required for HOURLY
     committedDeadline?: string; // ISO date string
     targetedDeadline?: {
       backend?: string;
