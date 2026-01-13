@@ -1,10 +1,11 @@
 "use client";
 
-import { LiveProjectTable } from "../_components/live-project-components/live-project-table";
+import { NewLiveProjectTable } from "@/app/dashboard/_components/new-live-project-components/new-live-project-table";
 
-const LiveProjectsPage = () => {
-  return <LiveProjectTable />;
-};
-
-export default LiveProjectsPage;
-
+export default function NewLiveProjectsPage() {
+  return (
+    <div className="px-8 py-6">
+      <NewLiveProjectTable />
+    </div>
+  );
+}

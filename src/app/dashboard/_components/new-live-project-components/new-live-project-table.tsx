@@ -807,7 +807,7 @@ export const NewLiveProjectTable = () => {
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">New Live Projects</h2>
+          <h2 className="text-2xl font-bold">Live Projects</h2>
           <Button
             onClick={handleOpenAddModal}
             type="button"
@@ -846,7 +846,7 @@ export const NewLiveProjectTable = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">New Live Projects</h2>
+        <h2 className="text-2xl font-bold">Live Projects</h2>
         <div className="flex gap-2">
           <Button
             onClick={() => setTodaysActionsModalOpen(true)}
@@ -854,7 +854,7 @@ export const NewLiveProjectTable = () => {
             variant="outline"
           >
             <Clock className="mr-2 h-4 w-4" />
-            Today's Actions
+            Today&apos;s Actions
           </Button>
           <Button
             onClick={handleOpenAddModal}
@@ -1561,7 +1561,7 @@ export const NewLiveProjectTable = () => {
             if (isLoadingActions) {
               return (
                 <div className="text-center py-12">
-                  <div className="text-muted-foreground">Loading today's actions...</div>
+                  <div className="text-muted-foreground">Loading today&apos;s actions...</div>
                 </div>
               );
             }

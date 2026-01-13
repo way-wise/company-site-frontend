@@ -1,40 +1,43 @@
 "use client";
 
-import { PermissionGuard } from "@/components/auth/PermissionGuard";
-import { useLiveProject } from "@/hooks/useLiveProjectMutations";
+import NewLiveProjectDetails from "@/app/dashboard/_components/new-live-project-components/new-live-project-details";
+import { useNewLiveProject } from "@/hooks/useNewLiveProjectMutations";
 import { useParams } from "next/navigation";
-import LiveProjectDetails from "@/app/dashboard/_components/live-project-components/live-project-details";
 
-export default function LiveProjectDetailsPage() {
+export default function NewLiveProjectDetailsPage() {
   const params = useParams();
-  const liveProjectId = params.id as string;
+  const projectId = params.id as string;
 
-  const { data: liveProjectData, isLoading } = useLiveProject(liveProjectId);
+  const { data, isLoading, isError } = useNewLiveProject(projectId);
 
   if (isLoading) {
     return (
-      <PermissionGuard permissions={["read_live_project"]} requireAll={false}>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Loading live project details...</div>
+      <div className="container mx-auto py-6">
+        <div className="flex items-center justify-center p-8">
+          <div className="text-muted-foreground">Loading project...</div>
         </div>
-      </PermissionGuard>
+      </div>
     );
   }
 
-  if (!liveProjectData?.data) {
+  if (isError || !data?.success || !data.data) {
     return (
-      <PermissionGuard permissions={["read_live_project"]} requireAll={false}>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Live project not found</div>
+      <div className="container mx-auto py-6">
+        <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-800">
+          <p className="font-medium">Failed to load project</p>
+          <p className="text-sm mt-1">
+            {!data?.success
+              ? data?.message || "Project not found"
+              : "An error occurred while loading the project"}
+          </p>
         </div>
-      </PermissionGuard>
+      </div>
     );
   }
 
   return (
-    <PermissionGuard permissions={["read_live_project"]} requireAll={false}>
-      <LiveProjectDetails liveProject={liveProjectData.data} />
-    </PermissionGuard>
+    <div className="container mx-auto py-6">
+      <NewLiveProjectDetails project={data.data} />
+    </div>
   );
 }
-

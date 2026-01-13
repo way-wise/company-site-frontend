@@ -130,16 +130,16 @@ export const menuConfig: MenuItem[] = [
 		permissions: ["read_contact"],
 	},
 	{
-		title: "Live Projects",
+		title: "Old Live Projects",
 		icon: Globe,
-		url: "/dashboard/live-projects",
+		url: "/dashboard/old-live-projects",
 		// Temporarily visible to all authenticated users for testing
 		// permissions: ["read_live_project", "create_live_project"],
 	},
 	{
-		title: "New Live Projects",
+		title: "Live Projects",
 		icon: FolderKanban,
-		url: "/dashboard/new-live-projects",
+		url: "/dashboard/live-projects",
 		roles: ["SUPER_ADMIN"], // Visible to super admins
 		permissions: ["read_new_live_project", "create_new_live_project"], // Or users with these permissions
 	},
