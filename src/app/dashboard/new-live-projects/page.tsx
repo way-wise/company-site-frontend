@@ -4,7 +4,7 @@ import { NewLiveProjectTable } from "@/app/dashboard/_components/new-live-projec
 
 export default function NewLiveProjectsPage() {
   return (
-    <div className="container mx-auto py-6">
+    <div className="px-8 py-6">
       <NewLiveProjectTable />
     </div>
   );

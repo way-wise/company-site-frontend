@@ -123,7 +123,7 @@ const NextActionCell = ({ project, onViewActions }: { project: NewLiveProject; o
         type="button"
         variant="ghost"
         size="sm"
-        className="h-8 px-2 hover:bg-blue-50"
+        className="h-8 !p-0 hover:bg-transparent"
         onClick={onViewActions}
         title={lastAction ? `View all actions - Last: ${displayText}` : "View all actions"}
       >
@@ -544,7 +544,7 @@ export const NewLiveProjectTable = () => {
             type="button"
             variant="ghost"
             size="sm"
-            className="h-8 px-2 hover:bg-blue-50"
+            className="h-8 !p-0 hover:bg-transparent"
             onClick={() => {
               setSelectedProject(project);
               setDeadlineModalOpen(true);
@@ -581,7 +581,7 @@ export const NewLiveProjectTable = () => {
             type="button"
             variant="ghost"
             size="sm"
-            className="h-8 px-2 hover:bg-blue-50"
+            className="h-8 !p-0 hover:bg-transparent"
             onClick={() => {
               setSelectedProject(project);
               setProjectId(project.id);
@@ -598,7 +598,7 @@ export const NewLiveProjectTable = () => {
       },
     },
     {
-      header: "Price",
+      header: "Paid / Project Budget",
       accessorKey: "price",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
         const project = row.original;
