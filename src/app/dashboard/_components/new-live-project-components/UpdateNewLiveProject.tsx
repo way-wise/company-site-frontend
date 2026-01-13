@@ -94,11 +94,12 @@ const UpdateNewLiveProject = ({
       // Normalize targetedDeadline to match schema
       let normalizedTargetedDeadline: { backend?: string; frontend?: string; ui?: string } | undefined = undefined;
       if (project.targetedDeadline) {
-        if (typeof project.targetedDeadline === 'object') {
+        if (typeof project.targetedDeadline === 'object' && project.targetedDeadline !== null) {
+          const deadline = project.targetedDeadline as Record<string, unknown>;
           normalizedTargetedDeadline = {
-            backend: (project.targetedDeadline as any).backend || undefined,
-            frontend: (project.targetedDeadline as any).frontend || undefined,
-            ui: (project.targetedDeadline as any).ui || undefined,
+            backend: typeof deadline.backend === 'string' ? deadline.backend : undefined,
+            frontend: typeof deadline.frontend === 'string' ? deadline.frontend : undefined,
+            ui: typeof deadline.ui === 'string' ? deadline.ui : undefined,
           };
           // Remove if all properties are undefined
           if (!normalizedTargetedDeadline.backend && !normalizedTargetedDeadline.frontend && !normalizedTargetedDeadline.ui) {
