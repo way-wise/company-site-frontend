@@ -222,7 +222,7 @@ const UpdateNewLiveProject = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Update New Live Project">
+    <Modal isOpen={isOpen} onClose={onClose} title="Update New Live Project" className="max-w-5xl">
       <Form {...form}>
         <form 
           onSubmit={(e) => {
@@ -250,6 +250,7 @@ const UpdateNewLiveProject = ({
           }} 
           className="space-y-4"
         >
+          <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="projectName"
@@ -354,9 +355,10 @@ const UpdateNewLiveProject = ({
               </FormItem>
             )}
           />
+          </div>
 
           {projectType === "FIXED" && (
-            <FormFieldset>
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="projectBudget"
@@ -425,11 +427,11 @@ const UpdateNewLiveProject = ({
                   </FormItem>
                 )}
               />
-            </FormFieldset>
+            </div>
           )}
 
           {projectType === "HOURLY" && (
-            <>
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="hourlyRate"
@@ -474,56 +476,58 @@ const UpdateNewLiveProject = ({
                   </FormItem>
                 )}
               />
-            </>
+            </div>
           )}
 
-          <FormField
-            control={form.control}
-            name="assignedMembers"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Assigned Members</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    value={field.value?.join(", ") || ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      const members = value
-                        .split(",")
-                        .map((m) => m.trim())
-                        .filter((m) => m.length > 0);
-                      field.onChange(members);
-                    }}
-                    placeholder="Enter member names (comma-separated)"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="assignedMembers"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Assigned Members</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={field.value?.join(", ") || ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        const members = value
+                          .split(",")
+                          .map((m) => m.trim())
+                          .filter((m) => m.length > 0);
+                        field.onChange(members);
+                      }}
+                      placeholder="Enter member names (comma-separated)"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="committedDeadline"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Committed Deadline</FormLabel>
-                <FormControl>
-                  <Input
-                    type="datetime-local"
-                    {...field}
-                    value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      field.onChange(value ? new Date(value).toISOString() : undefined);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="committedDeadline"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Committed Deadline</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      {...field}
+                      value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value ? new Date(value).toISOString() : undefined);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={onClose}>

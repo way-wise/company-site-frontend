@@ -1068,91 +1068,94 @@ export const NewLiveProjectTable = () => {
           addProjectForm.reset();
         }}
         title="Add New Live Project"
+        className="max-w-5xl"
       >
         <Form {...addProjectForm}>
           <form
             onSubmit={addProjectForm.handleSubmit(handleAddProject)}
             className="space-y-4"
           >
-            <FormField
-              control={addProjectForm.control}
-              name="projectName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Project Name *</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Enter project name" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={addProjectForm.control}
-              name="clientName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Client Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Enter client name" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={addProjectForm.control}
-              name="clientLocation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Client Location</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Enter client location" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={addProjectForm.control}
-              name="projectType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Project Type *</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // Clear related fields when type changes
-                      if (value === "FIXED") {
-                        addProjectForm.setValue("weeklyLimit", undefined);
-                      } else {
-                        addProjectForm.setValue("projectBudget", undefined);
-                        addProjectForm.setValue("paidAmount", 0);
-                        addProjectForm.setValue("dueAmount", undefined);
-                      }
-                    }}
-                    defaultValue={field.value}
-                  >
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={addProjectForm.control}
+                name="projectName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Name *</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select project type" />
-                      </SelectTrigger>
+                      <Input {...field} placeholder="Enter project name" />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="FIXED">Fixed</SelectItem>
-                      <SelectItem value="HOURLY">Hourly</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={addProjectForm.control}
+                name="clientName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Client Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Enter client name" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={addProjectForm.control}
+                name="clientLocation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Client Location</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Enter client location" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={addProjectForm.control}
+                name="projectType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Type *</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        // Clear related fields when type changes
+                        if (value === "FIXED") {
+                          addProjectForm.setValue("weeklyLimit", undefined);
+                        } else {
+                          addProjectForm.setValue("projectBudget", undefined);
+                          addProjectForm.setValue("paidAmount", 0);
+                          addProjectForm.setValue("dueAmount", undefined);
+                        }
+                      }}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select project type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="FIXED">Fixed</SelectItem>
+                        <SelectItem value="HOURLY">Hourly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {addProjectForm.watch("projectType") === "FIXED" && (
-              <FormFieldset>
+              <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={addProjectForm.control}
                   name="projectBudget"
@@ -1221,11 +1224,11 @@ export const NewLiveProjectTable = () => {
                     </FormItem>
                   )}
                 />
-              </FormFieldset>
+              </div>
             )}
 
             {addProjectForm.watch("projectType") === "HOURLY" && (
-              <>
+              <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={addProjectForm.control}
                   name="hourlyRate"
@@ -1270,57 +1273,59 @@ export const NewLiveProjectTable = () => {
                     </FormItem>
                   )}
                 />
-              </>
+              </div>
             )}
 
-            <FormField
-              control={addProjectForm.control}
-              name="assignedMembers"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Assigned Members *</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      value={field.value?.join(", ") || ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        // Split by comma and trim each member
-                        const members = value
-                          .split(",")
-                          .map((m) => m.trim())
-                          .filter((m) => m.length > 0);
-                        field.onChange(members);
-                      }}
-                      placeholder="Enter member names (comma-separated)"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={addProjectForm.control}
+                name="assignedMembers"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Assigned Members *</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value?.join(", ") || ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // Split by comma and trim each member
+                          const members = value
+                            .split(",")
+                            .map((m) => m.trim())
+                            .filter((m) => m.length > 0);
+                          field.onChange(members);
+                        }}
+                        placeholder="Enter member names (comma-separated)"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={addProjectForm.control}
-              name="committedDeadline"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Committed Deadline</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="datetime-local"
-                      {...field}
-                      value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(value ? new Date(value).toISOString() : undefined);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={addProjectForm.control}
+                name="committedDeadline"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Committed Deadline</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="datetime-local"
+                        {...field}
+                        value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value ? new Date(value).toISOString() : undefined);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <div className="flex justify-end gap-2 pt-4">
               <Button
