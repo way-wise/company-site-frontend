@@ -113,7 +113,7 @@ const NextActionCell = ({ project, onViewActions }: { project: NewLiveProject; o
     });
     lastAction = sortedActions[0];
     if (lastAction) {
-      displayText = lastAction.actionText || lastAction.note || lastAction.text || "Action";
+      displayText = lastAction.actionText || "Action";
     }
   }
 
@@ -388,8 +388,8 @@ export const NewLiveProjectTable = () => {
     }
   };
 
-  // Get projects list - handle both response structures
-  let projects = projectsData?.data?.data || projectsData?.data || [];
+  // Get projects list
+  let projects = projectsData?.data || [];
   
   // Apply frontend filtering for default "pending_active" status filter
   if (statusFilter === "pending_active") {
