@@ -53,6 +53,7 @@ import {
   useUpdateNewLiveProject,
   useProjectActions,
   useAddProjectAction,
+  useUploadDocument,
 } from "@/hooks/useNewLiveProjectMutations";
 import UpdateNewLiveProject from "./UpdateNewLiveProject";
 
@@ -103,7 +104,6 @@ export const NewLiveProjectTable = () => {
   const [selectedProject, setSelectedProject] = useState<NewLiveProject | null>(null);
   const [projectId, setProjectId] = useState<string | undefined>("");
   const [newActionText, setNewActionText] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
   
   // Deadline editing states
   const [editingDeadlines, setEditingDeadlines] = useState(false);
@@ -174,6 +174,7 @@ export const NewLiveProjectTable = () => {
   const createProject = useCreateNewLiveProject();
   const deleteProject = useDeleteNewLiveProject();
   const addAction = useAddProjectAction();
+  const uploadDocument = useUploadDocument();
 
   // Get project actions for the selected project
   const { data: actionsData, refetch: refetchActions } = useProjectActions(projectId || "");
@@ -226,44 +227,16 @@ export const NewLiveProjectTable = () => {
     const file = e.target.files?.[0];
     if (!file || !selectedProject) return;
 
-    setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const response = await apiClient.post("/blogs/upload-image", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      await uploadDocument.mutateAsync({
+        projectId: selectedProject.id,
+        file: file,
       });
-
-      if (response.data.success) {
-        const fileUrl = response.data.data.url;
-        
-        const newDocument = {
-          fileName: file.name,
-          fileUrl: fileUrl,
-          fileType: file.type,
-          fileSize: file.size,
-          uploadedBy: user?.name || "Unknown",
-          uploadedAt: new Date().toISOString(),
-        };
-
-        const existingDocs = selectedProject.documents || [];
-        const updatedDocs = [...(Array.isArray(existingDocs) ? existingDocs : []), newDocument];
-
-        await updateProject.mutateAsync({
-          projectId: selectedProject.id,
-          projectData: {
-            documents: updatedDocs,
-          },
-        });
-        await refetch();
-        toast.success("Document uploaded successfully");
-      }
+      await refetch();
     } catch (error) {
       console.error("Error uploading document:", error);
-      toast.error("Failed to upload document");
     } finally {
-      setIsUploading(false);
+      e.target.value = "";
     }
   };
 
@@ -1117,10 +1090,10 @@ export const NewLiveProjectTable = () => {
               <Input
                 type="file"
                 onChange={handleDocumentUpload}
-                disabled={isUploading}
+                disabled={uploadDocument.isPending}
                 className="cursor-pointer"
               />
-              {isUploading && <span className="text-xs text-blue-500">Uploading...</span>}
+              {uploadDocument.isPending && <span className="text-xs text-blue-500">Uploading...</span>}
             </div>
             <p className="text-xs text-muted-foreground">Supported formats: PDF, Images, Docx</p>
           </div>

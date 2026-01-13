@@ -94,6 +94,26 @@ export const newLiveProjectService = {
     return response.data;
   },
 
+  // Upload document
+  uploadDocument: async (
+    projectId: string,
+    file: File
+  ): Promise<ApiResponse<NewLiveProject>> => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await apiClient.post(
+      `/new-live-projects/${projectId}/documents`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  },
+
   // Delete new live project
   deleteNewLiveProject: async (
     projectId: string

@@ -479,3 +479,36 @@ export const useDeleteHourLog = () => {
     },
   });
 };
+
+// Hook to upload document
+export const useUploadDocument = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      file,
+    }: {
+      projectId: string;
+      file: File;
+    }) => newLiveProjectService.uploadDocument(projectId, file),
+    onSuccess: (data, variables) => {
+      if (data.success) {
+        toast.success("Document uploaded successfully");
+        queryClient.invalidateQueries({
+          queryKey: newLiveProjectQueryKeys.detail(variables.projectId),
+        });
+      } else {
+        toast.error(data.message || "Failed to upload document");
+      }
+    },
+    onError: (error: Error) => {
+      const apiError = error as ApiError;
+      const errorMessage =
+        apiError.response?.data?.message ||
+        error.message ||
+        "Failed to upload document";
+      toast.error(errorMessage);
+    },
+  });
+};
