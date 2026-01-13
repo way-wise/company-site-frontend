@@ -57,6 +57,8 @@ import {
   useProjectActions,
   useAddProjectAction,
   useUploadDocument,
+  useHourLogs,
+  useAddHourLog,
 } from "@/hooks/useNewLiveProjectMutations";
 import { useQueries } from "@tanstack/react-query";
 import { newLiveProjectService } from "@/services/NewLiveProjectService";
@@ -99,14 +101,14 @@ const getProjectTypeBadge = (type: string) => {
 const NextActionCell = ({ project, onViewActions }: { project: NewLiveProject; onViewActions: () => void }) => {
   const { data: actionsData } = useProjectActions(project.id);
   const actions = actionsData?.data || [];
-  
+
   // Also check if actions are already in the project object
   const projectActions = project.actions || [];
   const allActions = actions.length > 0 ? actions : projectActions;
-  
+
   let lastAction = null;
   let displayText = "No actions";
-  
+
   if (allActions && Array.isArray(allActions) && allActions.length > 0) {
     // Sort by actionDate or createdAt descending to get the most recent
     const sortedActions = [...allActions].sort((a: { actionDate?: string; createdAt?: string; date?: string }, b: { actionDate?: string; createdAt?: string; date?: string }) => {
@@ -139,6 +141,46 @@ const NextActionCell = ({ project, onViewActions }: { project: NewLiveProject; o
   );
 };
 
+// Component to display today's hour entry for a project
+const TodayEntryCell = ({ project, onViewHourLogs }: { project: NewLiveProject; onViewHourLogs: () => void }) => {
+  const { data: hourLogsData } = useHourLogs(project.id);
+  const fetchedHourLogs = hourLogsData?.data || [];
+  
+  // Also check if hourLogs are already in the project object
+  const projectHourLogs = project.hourLogs || [];
+  const allHourLogs = fetchedHourLogs.length > 0 ? fetchedHourLogs : projectHourLogs;
+  
+  // Calculate today's hours
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  const todayHours = allHourLogs
+    .filter((log) => {
+      const logDate = new Date(log.date);
+      logDate.setHours(0, 0, 0, 0);
+      return logDate >= today && logDate < tomorrow;
+    })
+    .reduce((sum, log) => sum + Number(log.submittedHours), 0);
+  
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      className="h-8 !p-0 hover:bg-transparent"
+      onClick={onViewHourLogs}
+      title="View all hour logs"
+    >
+      <Clock className="h-4 w-4 mr-1" />
+      <span className="text-sm font-medium">
+        {todayHours > 0 ? `${todayHours.toFixed(1)}h` : "0h"}
+      </span>
+    </Button>
+  );
+};
+
 export const NewLiveProjectTable = () => {
   const { user } = useAuth();
   const router = useRouter();
@@ -151,9 +193,12 @@ export const NewLiveProjectTable = () => {
   const [actionsModalOpen, setActionsModalOpen] = useState(false);
   const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
   const [todaysActionsModalOpen, setTodaysActionsModalOpen] = useState(false);
+  const [hourLogsModalOpen, setHourLogsModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<NewLiveProject | null>(null);
   const [projectId, setProjectId] = useState<string | undefined>("");
   const [newActionText, setNewActionText] = useState("");
+  const [newHourEntry, setNewHourEntry] = useState<string>("");
+  const [hourEntryDate, setHourEntryDate] = useState<string>("");
   
   // Deadline editing states
   const [editingDeadlines, setEditingDeadlines] = useState(false);
@@ -214,6 +259,7 @@ export const NewLiveProjectTable = () => {
       paidAmount: 0,
       dueAmount: undefined,
       weeklyLimit: undefined,
+      hourlyRate: undefined,
       assignedMembers: [],
       projectStatus: "PENDING",
       committedDeadline: undefined,
@@ -230,6 +276,54 @@ export const NewLiveProjectTable = () => {
   // Get project actions for the selected project
   const { data: actionsData, refetch: refetchActions } = useProjectActions(projectId || "");
   const projectActions = actionsData?.data || [];
+  
+  // Get hour logs for the selected project (only when modal is open)
+  const { data: hourLogsData, isLoading: isLoadingHourLogs, refetch: refetchHourLogs } = useHourLogs(
+    hourLogsModalOpen && projectId ? projectId : ""
+  );
+  const hourLogs = hourLogsData?.data || [];
+  
+  // Add hour log mutation
+  const addHourLog = useAddHourLog();
+  
+  // Handle adding hour entry
+  const handleAddHourEntry = async () => {
+    if (!projectId || !newHourEntry.trim()) {
+      toast.error("Please enter hours");
+      return;
+    }
+    
+    const hours = parseFloat(newHourEntry);
+    if (isNaN(hours) || hours <= 0) {
+      toast.error("Please enter a valid number of hours");
+      return;
+    }
+    
+    // Use selected date or today's date
+    const entryDate = hourEntryDate || new Date().toISOString().split("T")[0];
+    const dateISO = new Date(entryDate).toISOString();
+    
+    try {
+      await addHourLog.mutateAsync({
+        projectId,
+        date: dateISO,
+        submittedHours: hours,
+      });
+      setNewHourEntry("");
+      setHourEntryDate("");
+      await refetchHourLogs();
+      await refetch(); // Refresh the main project list to update today's entry
+    } catch (error) {
+      console.error("Error adding hour entry:", error);
+    }
+  };
+  
+  // Set default date to today when modal opens
+  useEffect(() => {
+    if (hourLogsModalOpen && !hourEntryDate) {
+      setHourEntryDate(new Date().toISOString().split("T")[0]);
+    }
+  }, [hourLogsModalOpen, hourEntryDate]);
 
   // Handle adding a new action
   const handleAddAction = async () => {
@@ -336,6 +430,7 @@ export const NewLiveProjectTable = () => {
         paidAmount?: number;
         dueAmount?: number;
         weeklyLimit?: number;
+        hourlyRate?: number;
         committedDeadline?: string;
         targetedDeadline?: TargetedDeadline;
         documents?: ProjectDocument[];
@@ -354,6 +449,7 @@ export const NewLiveProjectTable = () => {
         payload.dueAmount = data.dueAmount;
       } else if (data.projectType === "HOURLY") {
         payload.weeklyLimit = data.weeklyLimit;
+        payload.hourlyRate = data.hourlyRate;
       }
 
       if (data.committedDeadline) {
@@ -506,8 +602,8 @@ export const NewLiveProjectTable = () => {
     return SortableHeader;
   };
 
-  // Table columns
-  const columns = [
+  // Define all possible columns
+  const allColumns = [
     {
       header: "Project Name",
       accessorKey: "projectName",
@@ -559,9 +655,59 @@ export const NewLiveProjectTable = () => {
         );
       },
     },
+    // Hourly columns - only show for HOURLY projects
+    {
+      header: "Hourly Rate",
+      accessorKey: "hourlyRate",
+      showForType: "HOURLY",
+      cell: ({ row }: { row: { original: NewLiveProject } }) => {
+        const project = row.original;
+        // Note: hourlyRate might not be in schema yet, showing placeholder
+        const hourlyRate = (project as any).hourlyRate;
+        return (
+          <div className="font-medium">
+            {hourlyRate ? `$${hourlyRate.toLocaleString()}/hr` : <span className="text-muted-foreground">-</span>}
+          </div>
+        );
+      },
+    },
+    {
+      header: "Weekly Limit",
+      accessorKey: "weeklyLimit",
+      showForType: "HOURLY",
+      cell: ({ row }: { row: { original: NewLiveProject } }) => {
+        const project = row.original;
+        const weeklyLimit = project.weeklyLimit;
+        return (
+          <div className="font-medium">
+            {weeklyLimit ? `${weeklyLimit} hrs/week` : <span className="text-muted-foreground">-</span>}
+          </div>
+        );
+      },
+    },
+    {
+      header: "Today's Entry",
+      accessorKey: "todayEntry",
+      showForType: "HOURLY",
+      cell: ({ row }: { row: { original: NewLiveProject } }) => {
+        const project = row.original;
+        return (
+          <TodayEntryCell 
+            project={project} 
+            onViewHourLogs={() => {
+              setSelectedProject(project);
+              setProjectId(project.id);
+              setHourLogsModalOpen(true);
+            }} 
+          />
+        );
+      },
+    },
+    // Fixed columns - only show for FIXED projects
     {
       header: createSortableHeader("Deadline"),
       accessorKey: "committedDeadline",
+      showForType: "FIXED",
       enableSorting: true,
       sortingFn: (rowA: { original: NewLiveProject }, rowB: { original: NewLiveProject }) => {
         const projectA = rowA.original as NewLiveProject;
@@ -667,13 +813,9 @@ export const NewLiveProjectTable = () => {
     {
       header: "Paid / Project Budget",
       accessorKey: "price",
+      showForType: "FIXED",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
         const project = row.original;
-        // Only show price for FIXED projects
-        if (project.projectType === "HOURLY") {
-          return <span className="text-muted-foreground">-</span>;
-        }
-        
         const paidAmount = project.paidAmount ?? 0;
         const projectBudget = project.projectBudget ?? 0;
         
@@ -771,6 +913,16 @@ export const NewLiveProjectTable = () => {
       },
     },
   ];
+
+  // Filter columns based on project type filter
+  const columns = allColumns.filter((col) => {
+    // If column has showForType, only include it if typeFilter matches
+    if ((col as any).showForType) {
+      return typeFilter === (col as any).showForType || typeFilter === "all";
+    }
+    // Always show columns without showForType (common columns)
+    return true;
+  });
 
   if (isLoading) {
     return (
@@ -1072,28 +1224,52 @@ export const NewLiveProjectTable = () => {
             )}
 
             {addProjectForm.watch("projectType") === "HOURLY" && (
-              <FormField
-                control={addProjectForm.control}
-                name="weeklyLimit"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Weekly Limit (hours) *</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        value={field.value ?? ""}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          field.onChange(value === "" ? undefined : parseFloat(value));
-                        }}
-                        placeholder="Enter weekly limit"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <>
+                <FormField
+                  control={addProjectForm.control}
+                  name="hourlyRate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Hourly Rate ($) *</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value === "" ? undefined : parseFloat(value));
+                          }}
+                          placeholder="Enter hourly rate"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={addProjectForm.control}
+                  name="weeklyLimit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Weekly Limit (hours) *</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value === "" ? undefined : parseFloat(value));
+                          }}
+                          placeholder="Enter weekly limit"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
             )}
 
             <FormField
@@ -1544,6 +1720,196 @@ export const NewLiveProjectTable = () => {
             </div>
           </div>
         </div>
+      </Modal>
+
+      {/* Hour Logs Modal */}
+      <Modal
+        isOpen={hourLogsModalOpen}
+        onClose={() => {
+          setHourLogsModalOpen(false);
+          setSelectedProject(null);
+          setProjectId("");
+          setNewHourEntry("");
+          setHourEntryDate("");
+        }}
+        title={`Hour Logs - ${selectedProject?.projectName || ""}`}
+        className="max-w-4xl"
+      >
+        {isLoadingHourLogs ? (
+          <div className="text-center py-12">
+            <div className="text-muted-foreground">Loading hour logs...</div>
+          </div>
+        ) : (
+          (() => {
+            // Calculate totals
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            // Get start of week (Monday)
+            const startOfWeek = new Date(today);
+            const day = startOfWeek.getDay();
+            const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+            startOfWeek.setDate(diff);
+            startOfWeek.setHours(0, 0, 0, 0);
+            
+            // Get start of month
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            startOfMonth.setHours(0, 0, 0, 0);
+            
+            // Calculate totals
+            const todayHours = hourLogs
+              .filter((log) => {
+                const logDate = new Date(log.date);
+                logDate.setHours(0, 0, 0, 0);
+                return logDate >= today && logDate < tomorrow;
+              })
+              .reduce((sum, log) => sum + Number(log.submittedHours), 0);
+            
+            const weekHours = hourLogs
+              .filter((log) => {
+                const logDate = new Date(log.date);
+                logDate.setHours(0, 0, 0, 0);
+                return logDate >= startOfWeek;
+              })
+              .reduce((sum, log) => sum + Number(log.submittedHours), 0);
+            
+            const monthHours = hourLogs
+              .filter((log) => {
+                const logDate = new Date(log.date);
+                logDate.setHours(0, 0, 0, 0);
+                return logDate >= startOfMonth;
+              })
+              .reduce((sum, log) => sum + Number(log.submittedHours), 0);
+            
+            // Sort logs by date (most recent first)
+            const sortedLogs = [...hourLogs].sort((a, b) => {
+              const dateA = new Date(a.date).getTime();
+              const dateB = new Date(b.date).getTime();
+              return dateB - dateA;
+            });
+            
+            return (
+              <div className="space-y-6">
+                {/* Summary Cards */}
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div className="text-sm text-blue-600 font-medium mb-1">Today</div>
+                    <div className="text-2xl font-bold text-blue-900">{todayHours.toFixed(1)}h</div>
+                  </div>
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <div className="text-sm text-green-600 font-medium mb-1">This Week</div>
+                    <div className="text-2xl font-bold text-green-900">{weekHours.toFixed(1)}h</div>
+                  </div>
+                  <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                    <div className="text-sm text-purple-600 font-medium mb-1">This Month</div>
+                    <div className="text-2xl font-bold text-purple-900">{monthHours.toFixed(1)}h</div>
+                  </div>
+                </div>
+                
+                {/* Add Hour Entry Form */}
+                <div className="border-t pt-4">
+                  <h4 className="text-sm font-medium mb-3">Add Hour Entry</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">Date</label>
+                      <Input
+                        type="date"
+                        value={hourEntryDate}
+                        onChange={(e) => setHourEntryDate(e.target.value)}
+                        className="w-full"
+                        max={new Date().toISOString().split("T")[0]} // Can't select future dates
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">Hours</label>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        min="0.1"
+                        value={newHourEntry}
+                        onChange={(e) => setNewHourEntry(e.target.value)}
+                        placeholder="e.g., 8.5"
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setNewHourEntry("");
+                        setHourEntryDate(new Date().toISOString().split("T")[0]);
+                      }}
+                    >
+                      Clear
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={handleAddHourEntry}
+                      disabled={!newHourEntry.trim() || addHourLog.isPending}
+                    >
+                      {addHourLog.isPending ? "Adding..." : "Add Entry"}
+                    </Button>
+                  </div>
+                </div>
+                
+                {/* Previous Days Entries */}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">Previous Days Entries</h4>
+                  <div className="max-h-[400px] overflow-y-auto space-y-2 border rounded-lg p-4">
+                    {sortedLogs.length > 0 ? (
+                      sortedLogs.map((log) => {
+                        const logDate = new Date(log.date);
+                        const isToday = logDate >= today && logDate < tomorrow;
+                        
+                        return (
+                          <div
+                            key={log.id}
+                            className={`flex items-center justify-between p-3 rounded-lg ${
+                              isToday ? "bg-blue-50 border border-blue-200" : "bg-gray-50"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <Calendar className="h-4 w-4 text-muted-foreground" />
+                              <div>
+                                <div className="text-sm font-medium">
+                                  {logDate.toLocaleDateString("en-US", {
+                                    weekday: "short",
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
+                                  {isToday && (
+                                    <Badge className="ml-2 bg-blue-500 text-white">Today</Badge>
+                                  )}
+                                </div>
+                                {log.user?.user?.name && (
+                                  <div className="text-xs text-muted-foreground">
+                                    By: {log.user.user.name}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="text-lg font-bold">
+                              {Number(log.submittedHours).toFixed(1)}h
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="text-center py-8 border-2 border-dashed rounded-lg">
+                        <p className="text-sm text-muted-foreground">No hour logs recorded yet</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()
+        )}
       </Modal>
 
       {/* Today's Actions Modal */}

@@ -24,7 +24,7 @@ export const newLiveProjectService = {
     params: NewLiveProjectsQueryParams
   ): Promise<NewLiveProjectsResponse> => {
     const { page, limit, search, projectStatus, projectType, clientName } = params;
-    let url = `/new-live-projects?page=${page}&limit=${limit}&include=actions`;
+    let url = `/new-live-projects?page=${page}&limit=${limit}&include=actions,hourLogs`;
 
     if (search?.trim()) {
       url += `&q=${encodeURIComponent(search.trim())}`;

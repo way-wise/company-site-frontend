@@ -199,6 +199,7 @@ export const createNewLiveProjectSchema = z
     paidAmount: z.number().min(0, "Paid amount cannot be negative").optional(),
     dueAmount: z.number().min(0, "Due amount cannot be negative").optional(),
     weeklyLimit: z.number().positive("Weekly limit must be a positive number").optional(),
+    hourlyRate: z.number().positive("Hourly rate must be a positive number").optional(),
     assignedMembers: z.array(z.string()).min(1, "At least one member is required"),
     projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCEL", "ARCHIVED"]).optional(),
     committedDeadline: z.string().optional(), // ISO date string
@@ -266,6 +267,7 @@ export const updateNewLiveProjectSchema = z
     paidAmount: z.number().min(0, "Paid amount cannot be negative").optional(),
     dueAmount: z.number().min(0, "Due amount cannot be negative").optional(),
     weeklyLimit: z.number().positive("Weekly limit must be a positive number").optional(),
+    hourlyRate: z.number().positive("Hourly rate must be a positive number").optional(),
     assignedMembers: z.array(z.string()).optional(),
     projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCEL", "ARCHIVED"]).optional(),
     committedDeadline: z.string().optional(), // ISO date string

@@ -53,6 +53,7 @@ const UpdateNewLiveProject = ({
       paidAmount: 0,
       dueAmount: undefined,
       weeklyLimit: undefined,
+      hourlyRate: undefined,
       assignedMembers: [],
       projectStatus: "PENDING",
       committedDeadline: undefined,
@@ -98,6 +99,7 @@ const UpdateNewLiveProject = ({
         paidAmount: ensureNumber(project.paidAmount, 0),
         dueAmount: ensureNumber(project.dueAmount),
         weeklyLimit: ensureNumber(project.weeklyLimit),
+        hourlyRate: ensureNumber((project as any).hourlyRate),
         assignedMembers: Array.isArray(project.assignedMembers)
           ? project.assignedMembers
           : [],
@@ -142,6 +144,9 @@ const UpdateNewLiveProject = ({
       } else if (data.projectType === "HOURLY") {
         if (isValidNumber(data.weeklyLimit)) {
           payload.weeklyLimit = data.weeklyLimit;
+        }
+        if (isValidNumber(data.hourlyRate)) {
+          (payload as any).hourlyRate = data.hourlyRate;
         }
       }
 
@@ -352,28 +357,52 @@ const UpdateNewLiveProject = ({
           )}
 
           {projectType === "HOURLY" && (
-            <FormField
-              control={form.control}
-              name="weeklyLimit"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Weekly Limit (hours)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(value === "" ? undefined : parseFloat(value));
-                      }}
-                      placeholder="Enter weekly limit"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <>
+              <FormField
+                control={form.control}
+                name="hourlyRate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Hourly Rate ($)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? undefined : parseFloat(value));
+                        }}
+                        placeholder="Enter hourly rate"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="weeklyLimit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Weekly Limit (hours)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? undefined : parseFloat(value));
+                        }}
+                        placeholder="Enter weekly limit"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
           )}
 
           <FormField
