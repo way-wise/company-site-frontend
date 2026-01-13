@@ -41,7 +41,7 @@ import {
 
 import { useAuth } from "@/context/UserContext";
 import apiClient from "@/lib/axios";
-import { NewLiveProject } from "@/types";
+import { NewLiveProject, TargetedDeadline, ProjectDocument } from "@/types";
 import {
   CreateNewLiveProjectFormData,
   createNewLiveProjectSchema,
@@ -202,7 +202,7 @@ export const NewLiveProjectTable = () => {
   const handleSaveDeadlines = async () => {
     if (!selectedProject) return;
     try {
-      const targetedDeadline: any = {};
+      const targetedDeadline: Partial<TargetedDeadline> = {};
       if (tempBackendDeadline) targetedDeadline.backend = new Date(tempBackendDeadline).toISOString();
       if (tempFrontendDeadline) targetedDeadline.frontend = new Date(tempFrontendDeadline).toISOString();
       if (tempUiDeadline) targetedDeadline.ui = new Date(tempUiDeadline).toISOString();
@@ -243,7 +243,21 @@ export const NewLiveProjectTable = () => {
   // Handle form submission
   const handleAddProject = async (data: CreateNewLiveProjectFormData) => {
     try {
-      const payload: any = {
+      const payload: {
+        projectName: string;
+        clientName?: string;
+        clientLocation?: string;
+        projectType: "FIXED" | "HOURLY";
+        assignedMembers: string[];
+        projectStatus?: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCEL" | "ARCHIVED";
+        projectBudget?: number;
+        paidAmount?: number;
+        dueAmount?: number;
+        weeklyLimit?: number;
+        committedDeadline?: string;
+        targetedDeadline?: TargetedDeadline;
+        documents?: ProjectDocument[];
+      } = {
         projectName: data.projectName,
         clientName: data.clientName || undefined,
         clientLocation: data.clientLocation || undefined,
@@ -571,7 +585,16 @@ export const NewLiveProjectTable = () => {
 
 
   if (isError) {
-    const apiError = error as any;
+    interface ApiError extends Error {
+      response?: {
+        data?: {
+          message?: string;
+          error?: string | unknown[];
+        };
+        status?: number;
+      };
+    }
+    const apiError = error as ApiError;
     const apiErrorMessage =
       apiError?.response?.data?.message ||
       apiError?.message ||
@@ -1102,7 +1125,7 @@ export const NewLiveProjectTable = () => {
             <h4 className="text-sm font-medium">Uploaded Documents</h4>
             <div className="max-h-[300px] overflow-y-auto space-y-2">
               {selectedProject?.documents && selectedProject.documents.length > 0 ? (
-                selectedProject.documents.map((doc: any, index: number) => (
+                selectedProject.documents.map((doc: ProjectDocument, index: number) => (
                   <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                     <div className="flex items-center gap-3 overflow-hidden">
                       <FileText className="h-8 w-8 text-blue-500 flex-shrink-0" />

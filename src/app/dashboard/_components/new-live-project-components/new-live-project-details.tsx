@@ -80,8 +80,8 @@ export default function NewLiveProjectDetails({
   const { data: actionsData } = useProjectActions(project.id);
   const { data: hourLogsData } = useHourLogs(project.id);
 
-  const actions = actionsData?.data?.data || [];
-  const hourLogs = hourLogsData?.data?.data || [];
+  const actions = actionsData?.data || [];
+  const hourLogs = hourLogsData?.data || [];
 
   // Refetch project data when it might have changed
   const refetchProject = async () => {

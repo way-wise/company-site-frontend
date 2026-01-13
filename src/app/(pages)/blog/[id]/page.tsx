@@ -1,4 +1,4 @@
-import { Blog } from "@/schema/blogSchema";
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogDetail } from "../../_components/blogs/blog-detail";

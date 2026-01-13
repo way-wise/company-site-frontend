@@ -41,7 +41,7 @@ export default function LeavePage() {
         queryClient.refetchQueries({ queryKey: leaveBalanceQueryKeys.all }),
       ]);
       toast.success("Data refreshed successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to refresh data");
     } finally {
       setIsRefreshing(false);

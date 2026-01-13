@@ -33,11 +33,9 @@ const stripeKey = getStripeKey();
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 function AddCardFormContent({
-	clientSecret,
 	setupIntentId,
 	onSuccess,
 }: {
-	clientSecret: string;
 	setupIntentId: string;
 	onSuccess: () => void;
 }) {
@@ -93,6 +91,7 @@ function AddCardFormContent({
 
 	return (
 		<form onSubmit={handleSubmit} className="space-y-4">
+			{error && <div className="text-red-500 text-sm">{error}</div>}
 			<PaymentElement />
 			<Button
 				type="submit"
@@ -172,7 +171,6 @@ function AddCardForm({ onSuccess }: { onSuccess: () => void }) {
 					Please add a payment method to continue.
 				</p>
 				<AddCardFormContent
-					clientSecret={clientSecret}
 					setupIntentId={setupIntentId}
 					onSuccess={onSuccess}
 				/>

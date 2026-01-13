@@ -113,7 +113,7 @@ const UpdateNewLiveProject = ({
     if (!project) return;
 
     try {
-      const payload: any = {};
+      const payload: Partial<NewLiveProject> = {};
 
       // Helper to check if a number is valid
       const isValidNumber = (value: unknown): value is number => {

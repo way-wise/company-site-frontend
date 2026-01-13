@@ -73,7 +73,7 @@ function EditBlogForm() {
         content: blog.content || "",
         excerpt: blog.excerpt || "",
         featuredImage: blog.featuredImage || "",
-        status: blog.status || "DRAFT",
+        status: statusValue,
         tags: blog.tags || [],
         metaTitle: blog.metaTitle || "",
         metaDescription: blog.metaDescription || "",

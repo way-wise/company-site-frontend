@@ -1,7 +1,7 @@
 import { Blog } from "@/schema/blogSchema";
 import type { Metadata } from "next";
 import { BlogList } from "../_components/blogs/blog-list";
-import { BlogHero } from "../_components/blogs/blog-hero";
+
 import { BlogFilters } from "../_components/blogs/blog-filters";
 import { Newsletter } from "../_components/blogs/newsletter";
 
