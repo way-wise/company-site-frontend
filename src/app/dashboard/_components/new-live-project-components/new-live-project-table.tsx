@@ -14,6 +14,8 @@ import {
   MessageSquare,
   FileText,
   Upload,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -87,6 +89,50 @@ const getProjectTypeBadge = (type: string) => {
     >
       {type}
     </Badge>
+  );
+};
+
+// Component to display last action for a project
+const NextActionCell = ({ project, onViewActions }: { project: NewLiveProject; onViewActions: () => void }) => {
+  const { data: actionsData } = useProjectActions(project.id);
+  const actions = actionsData?.data || [];
+  
+  // Also check if actions are already in the project object
+  const projectActions = project.actions || [];
+  const allActions = actions.length > 0 ? actions : projectActions;
+  
+  let lastAction = null;
+  let displayText = "No actions";
+  
+  if (allActions && Array.isArray(allActions) && allActions.length > 0) {
+    // Sort by actionDate or createdAt descending to get the most recent
+    const sortedActions = [...allActions].sort((a: any, b: any) => {
+      const dateA = new Date(a.actionDate || a.createdAt || a.date || 0).getTime();
+      const dateB = new Date(b.actionDate || b.createdAt || b.date || 0).getTime();
+      return dateB - dateA;
+    });
+    lastAction = sortedActions[0];
+    if (lastAction) {
+      displayText = lastAction.actionText || lastAction.note || lastAction.text || "Action";
+    }
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="h-8 px-2 hover:bg-blue-50"
+        onClick={onViewActions}
+        title={lastAction ? `View all actions - Last: ${displayText}` : "View all actions"}
+      >
+        <MessageSquare className="h-4 w-4 mr-1" />
+        <span className={`max-w-[150px] truncate text-xs ${lastAction ? "" : "text-muted-foreground"}`}>
+          {displayText}
+        </span>
+      </Button>
+    </div>
   );
 };
 
@@ -203,22 +249,53 @@ export const NewLiveProjectTable = () => {
     if (!selectedProject) return;
     try {
       const targetedDeadline: Partial<TargetedDeadline> = {};
-      if (tempBackendDeadline) targetedDeadline.backend = new Date(tempBackendDeadline).toISOString();
-      if (tempFrontendDeadline) targetedDeadline.frontend = new Date(tempFrontendDeadline).toISOString();
-      if (tempUiDeadline) targetedDeadline.ui = new Date(tempUiDeadline).toISOString();
+      if (tempBackendDeadline && tempBackendDeadline !== "") {
+        const backendDate = new Date(tempBackendDeadline);
+        if (!isNaN(backendDate.getTime())) {
+          targetedDeadline.backend = backendDate.toISOString();
+        }
+      }
+      if (tempFrontendDeadline && tempFrontendDeadline !== "") {
+        const frontendDate = new Date(tempFrontendDeadline);
+        if (!isNaN(frontendDate.getTime())) {
+          targetedDeadline.frontend = frontendDate.toISOString();
+        }
+      }
+      if (tempUiDeadline && tempUiDeadline !== "") {
+        const uiDate = new Date(tempUiDeadline);
+        if (!isNaN(uiDate.getTime())) {
+          targetedDeadline.ui = uiDate.toISOString();
+        }
+      }
+
+      const updateData: Partial<NewLiveProject> = {};
+      if (tempCommittedDeadline && tempCommittedDeadline !== "") {
+        const committedDate = new Date(tempCommittedDeadline);
+        if (!isNaN(committedDate.getTime())) {
+          updateData.committedDeadline = committedDate.toISOString();
+        }
+      } else {
+        updateData.committedDeadline = null;
+      }
+
+      if (Object.keys(targetedDeadline).length > 0) {
+        updateData.targetedDeadline = targetedDeadline as TargetedDeadline;
+      } else {
+        updateData.targetedDeadline = null;
+      }
 
       await updateProject.mutateAsync({
         projectId: selectedProject.id,
-        projectData: {
-          committedDeadline: tempCommittedDeadline ? new Date(tempCommittedDeadline).toISOString() : undefined,
-          targetedDeadline: Object.keys(targetedDeadline).length > 0 ? targetedDeadline : undefined,
-        },
+        projectData: updateData,
       });
       setEditingDeadlines(false);
       setDeadlineModalOpen(false);
+      setSelectedProject(null);
       await refetch();
+      toast.success("Deadlines updated successfully");
     } catch (error) {
       console.error("Error saving deadlines:", error);
+      toast.error("Failed to update deadlines");
     }
   };
 
@@ -310,21 +387,47 @@ export const NewLiveProjectTable = () => {
     }
   };
 
-  // Get projects list
-  const projects = projectsData?.data || [];
+  // Get projects list - handle both response structures
+  const projects = projectsData?.data?.data || projectsData?.data || [];
   
-  // Debug: Check if actions are included
+  // Debug: Log first project to check structure
   React.useEffect(() => {
     if (projects.length > 0) {
-      console.log("First project data:", projects[0]);
-      console.log("Does first project have actions?", projects[0]?.actions);
+      const firstProject = projects[0];
+      console.log("First project structure:", firstProject);
+      console.log("Has actions?", !!firstProject?.actions);
+      console.log("Actions:", firstProject?.actions);
+      console.log("All project keys:", Object.keys(firstProject));
+      // Check if actions are nested somewhere else
+      if (!firstProject?.actions) {
+        console.log("Actions not found in project, checking nested structures...");
+      }
     }
   }, [projects]);
   
-  // Sort by createdAt ascending (oldest first, newest last)
+  // Sort by createdAt ascending (oldest first, newest last) - default sort
   const sortedProjects = [...projects].sort((a, b) => 
     new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
+
+  // Helper function to create sortable header
+  const createSortableHeader = (label: string) => {
+    return ({ column }: { column: { getIsSorted: () => false | "asc" | "desc"; toggleSorting: (desc?: boolean) => void } }) => {
+      const isSorted = column.getIsSorted();
+      return (
+        <div className="flex items-center gap-2 cursor-pointer select-none" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          <span>{label}</span>
+          {isSorted === "asc" ? (
+            <ArrowUp className="h-4 w-4 text-primary" />
+          ) : isSorted === "desc" ? (
+            <ArrowDown className="h-4 w-4 text-primary" />
+          ) : (
+            <ArrowUp className="h-4 w-4 text-muted-foreground opacity-50" />
+          )}
+        </div>
+      );
+    };
+  };
 
   // Table columns
   const columns = [
@@ -356,42 +459,12 @@ export const NewLiveProjectTable = () => {
       accessorKey: "nextActions",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
         const project = row.original;
-        const lastAction = project.actions && project.actions.length > 0
-          ? project.actions[project.actions.length - 1]
-          : null;
-
-        return (
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-8 px-2 hover:bg-blue-50"
-              onClick={() => {
-                setSelectedProject(project);
-                setProjectId(project.id);
-                setActionsModalOpen(true);
-              }}
-              title="View all actions"
-            >
-              <MessageSquare className="h-4 w-4 mr-1" />
-              {lastAction ? (
-                <span className="max-w-[150px] truncate text-xs">
-                  {lastAction.actionText}
-                </span>
-              ) : (
-                <span className="text-muted-foreground text-xs">No actions</span>
-              )}
-            </Button>
-          </div>
-        );
+        return <NextActionCell project={project} onViewActions={() => {
+          setSelectedProject(project);
+          setProjectId(project.id);
+          setActionsModalOpen(true);
+        }} />;
       },
-    },
-    {
-      header: "Status",
-      accessorKey: "projectStatus",
-      cell: ({ row }: { row: { original: NewLiveProject } }) =>
-        getStatusBadge(row.original.projectStatus),
     },
     {
       header: "Assigned Members",
@@ -410,13 +483,51 @@ export const NewLiveProjectTable = () => {
       },
     },
     {
-      header: "Deadline",
+      header: createSortableHeader("Deadline"),
       accessorKey: "committedDeadline",
+      enableSorting: true,
+      sortingFn: (rowA: { original: NewLiveProject }, rowB: { original: NewLiveProject }) => {
+        const projectA = rowA.original as NewLiveProject;
+        const projectB = rowB.original as NewLiveProject;
+        
+        // Get the earliest deadline (committed or targeted)
+        const getEarliestDeadline = (project: NewLiveProject): number => {
+          const deadlines: number[] = [];
+          if (project.committedDeadline) {
+            deadlines.push(new Date(project.committedDeadline).getTime());
+          }
+          if (project.targetedDeadline) {
+            if (project.targetedDeadline.backend) {
+              deadlines.push(new Date(project.targetedDeadline.backend).getTime());
+            }
+            if (project.targetedDeadline.frontend) {
+              deadlines.push(new Date(project.targetedDeadline.frontend).getTime());
+            }
+            if (project.targetedDeadline.ui) {
+              deadlines.push(new Date(project.targetedDeadline.ui).getTime());
+            }
+          }
+          return deadlines.length > 0 ? Math.min(...deadlines) : Infinity;
+        };
+        
+        const deadlineA = getEarliestDeadline(projectA);
+        const deadlineB = getEarliestDeadline(projectB);
+        
+        return deadlineA - deadlineB;
+      },
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
         const project = row.original;
         const deadline = project.committedDeadline;
-        const hasTargetedDeadlines = project.targetedDeadline && 
-          (project.targetedDeadline.backend || project.targetedDeadline.frontend || project.targetedDeadline.ui);
+        const targetedDeadline = project.targetedDeadline;
+        
+        // Get all deadline labels
+        const deadlineLabels: string[] = [];
+        if (deadline) {
+          deadlineLabels.push("Committed");
+        }
+        if (targetedDeadline?.backend) deadlineLabels.push("Backend");
+        if (targetedDeadline?.frontend) deadlineLabels.push("Frontend");
+        if (targetedDeadline?.ui) deadlineLabels.push("UI");
 
         return (
           <Button
@@ -438,8 +549,10 @@ export const NewLiveProjectTable = () => {
             ) : (
               <span className="text-muted-foreground text-sm">Not set</span>
             )}
-            {hasTargetedDeadlines && (
-              <span className="ml-1 text-xs text-blue-600">+</span>
+            {deadlineLabels.length > 1 && (
+              <span className="ml-1 text-xs text-blue-600" title={deadlineLabels.join(", ")}>
+                +{deadlineLabels.length - 1}
+              </span>
             )}
           </Button>
         );
@@ -499,8 +612,15 @@ export const NewLiveProjectTable = () => {
       },
     },
     {
-      header: "Progress",
+      header: createSortableHeader("Progress"),
       accessorKey: "progress",
+      enableSorting: true,
+      sortingFn: (rowA: { original: NewLiveProject }, rowB: { original: NewLiveProject }) => {
+        // Note: NewLiveProject doesn't have progress in schema, but we can sort by 0 for now
+        const progressA = 0; // TODO: Add progress tracking
+        const progressB = 0;
+        return progressA - progressB;
+      },
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
         // Note: NewLiveProject doesn't have progress in schema, but we can show 0% for now
         const progress = 0; // TODO: Add progress tracking
@@ -1009,12 +1129,169 @@ export const NewLiveProjectTable = () => {
         onClose={() => {
           setDeadlineModalOpen(false);
           setSelectedProject(null);
+          setEditingDeadlines(false);
+          setTempCommittedDeadline("");
+          setTempBackendDeadline("");
+          setTempFrontendDeadline("");
+          setTempUiDeadline("");
         }}
-        title="Deadline Details"
+        title="Deadline Management"
+        className="max-w-2xl"
       >
-        <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">Deadline management coming soon...</p>
-          <Button onClick={() => setDeadlineModalOpen(false)}>Close</Button>
+        <div className="space-y-6">
+          {selectedProject && (
+            <>
+              {/* Committed Deadline */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Committed Deadline</label>
+                {editingDeadlines ? (
+                  <Input
+                    type="datetime-local"
+                    value={tempCommittedDeadline && tempCommittedDeadline !== "" 
+                      ? new Date(tempCommittedDeadline).toISOString().slice(0, 16) 
+                      : ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setTempCommittedDeadline(value ? new Date(value).toISOString() : "");
+                    }}
+                  />
+                ) : (
+                  <div className="text-sm p-2 bg-gray-50 rounded">
+                    {selectedProject.committedDeadline
+                      ? new Date(selectedProject.committedDeadline).toLocaleString()
+                      : "Not set"}
+                  </div>
+                )}
+              </div>
+
+              {/* Targeted Deadlines */}
+              <div className="space-y-4">
+                <label className="text-sm font-medium">Targeted Deadlines</label>
+                
+                {/* Backend Deadline */}
+                <div className="space-y-2">
+                  <label className="text-xs text-muted-foreground">Backend</label>
+                  {editingDeadlines ? (
+                    <Input
+                      type="datetime-local"
+                      value={tempBackendDeadline && tempBackendDeadline !== ""
+                        ? new Date(tempBackendDeadline).toISOString().slice(0, 16)
+                        : ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setTempBackendDeadline(value ? new Date(value).toISOString() : "");
+                      }}
+                    />
+                  ) : (
+                    <div className="text-sm p-2 bg-gray-50 rounded">
+                      {selectedProject.targetedDeadline?.backend
+                        ? new Date(selectedProject.targetedDeadline.backend).toLocaleString()
+                        : "Not set"}
+                    </div>
+                  )}
+                </div>
+
+                {/* Frontend Deadline */}
+                <div className="space-y-2">
+                  <label className="text-xs text-muted-foreground">Frontend</label>
+                  {editingDeadlines ? (
+                    <Input
+                      type="datetime-local"
+                      value={tempFrontendDeadline && tempFrontendDeadline !== ""
+                        ? new Date(tempFrontendDeadline).toISOString().slice(0, 16)
+                        : ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setTempFrontendDeadline(value ? new Date(value).toISOString() : "");
+                      }}
+                    />
+                  ) : (
+                    <div className="text-sm p-2 bg-gray-50 rounded">
+                      {selectedProject.targetedDeadline?.frontend
+                        ? new Date(selectedProject.targetedDeadline.frontend).toLocaleString()
+                        : "Not set"}
+                    </div>
+                  )}
+                </div>
+
+                {/* UI Deadline */}
+                <div className="space-y-2">
+                  <label className="text-xs text-muted-foreground">UI</label>
+                  {editingDeadlines ? (
+                    <Input
+                      type="datetime-local"
+                      value={tempUiDeadline && tempUiDeadline !== ""
+                        ? new Date(tempUiDeadline).toISOString().slice(0, 16)
+                        : ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setTempUiDeadline(value ? new Date(value).toISOString() : "");
+                      }}
+                    />
+                  ) : (
+                    <div className="text-sm p-2 bg-gray-50 rounded">
+                      {selectedProject.targetedDeadline?.ui
+                        ? new Date(selectedProject.targetedDeadline.ui).toLocaleString()
+                        : "Not set"}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-2 pt-4 border-t">
+                {editingDeadlines ? (
+                  <>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setEditingDeadlines(false);
+                        // Reset temp values to current values
+                        setTempCommittedDeadline(selectedProject.committedDeadline || "");
+                        setTempBackendDeadline(selectedProject.targetedDeadline?.backend || "");
+                        setTempFrontendDeadline(selectedProject.targetedDeadline?.frontend || "");
+                        setTempUiDeadline(selectedProject.targetedDeadline?.ui || "");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={handleSaveDeadlines}
+                      disabled={updateProject.isPending}
+                    >
+                      {updateProject.isPending ? "Saving..." : "Save Changes"}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setDeadlineModalOpen(false)}
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setEditingDeadlines(true);
+                        // Initialize temp values with current values
+                        setTempCommittedDeadline(selectedProject.committedDeadline || "");
+                        setTempBackendDeadline(selectedProject.targetedDeadline?.backend || "");
+                        setTempFrontendDeadline(selectedProject.targetedDeadline?.frontend || "");
+                        setTempUiDeadline(selectedProject.targetedDeadline?.ui || "");
+                      }}
+                    >
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Edit Deadlines
+                    </Button>
+                  </>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </Modal>
 
