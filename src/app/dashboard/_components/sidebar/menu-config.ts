@@ -137,6 +137,13 @@ export const menuConfig: MenuItem[] = [
 		// permissions: ["read_live_project", "create_live_project"],
 	},
 	{
+		title: "New Live Projects",
+		icon: FolderKanban,
+		url: "/dashboard/new-live-projects",
+		roles: ["SUPER_ADMIN"], // Visible to super admins
+		permissions: ["read_new_live_project", "create_new_live_project"], // Or users with these permissions
+	},
+	{
 		title: "Settings",
 		icon: Settings,
 		url: "/dashboard/settings",

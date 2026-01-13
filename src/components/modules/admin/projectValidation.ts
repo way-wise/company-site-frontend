@@ -187,3 +187,139 @@ export const updateLiveProjectSchema = z.object({
 
 export type CreateLiveProjectFormData = z.infer<typeof createLiveProjectSchema>;
 export type UpdateLiveProjectFormData = z.infer<typeof updateLiveProjectSchema>;
+
+// New Live Project Schemas
+export const createNewLiveProjectSchema = z
+  .object({
+    projectName: z.string().min(1, "Project name is required"),
+    clientName: z.string().optional(),
+    clientLocation: z.string().optional(),
+    projectType: z.enum(["FIXED", "HOURLY"]),
+    projectBudget: z.number().positive("Project budget must be a positive number").optional(),
+    paidAmount: z.number().min(0, "Paid amount cannot be negative").optional(),
+    dueAmount: z.number().min(0, "Due amount cannot be negative").optional(),
+    weeklyLimit: z.number().positive("Weekly limit must be a positive number").optional(),
+    assignedMembers: z.array(z.string()).min(1, "At least one member is required"),
+    projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCEL", "ARCHIVED"]).optional(),
+    committedDeadline: z.string().optional(), // ISO date string
+    targetedDeadline: z.object({
+      backend: z.string().optional(),
+      frontend: z.string().optional(),
+      ui: z.string().optional(),
+    }).optional(),
+    documents: z.array(z.object({
+      fileName: z.string(),
+      fileUrl: z.string(),
+      fileType: z.string(),
+      fileSize: z.number(),
+      uploadedBy: z.string(),
+      uploadedAt: z.string(),
+    })).optional(),
+  })
+  .refine(
+    (data) => {
+      // For FIXED projects, projectBudget is required
+      if (data.projectType === "FIXED") {
+        return data.projectBudget !== undefined && data.projectBudget > 0;
+      }
+      return true;
+    },
+    {
+      message: "Project budget is required for FIXED projects",
+      path: ["projectBudget"],
+    }
+  )
+  .refine(
+    (data) => {
+      // For FIXED projects, paidAmount should be provided (can be 0)
+      if (data.projectType === "FIXED") {
+        return data.paidAmount !== undefined && data.paidAmount >= 0;
+      }
+      return true;
+    },
+    {
+      message: "Paid amount is required for FIXED projects (can be 0)",
+      path: ["paidAmount"],
+    }
+  )
+  .refine(
+    (data) => {
+      // For HOURLY projects, weeklyLimit is required
+      if (data.projectType === "HOURLY") {
+        return data.weeklyLimit !== undefined && data.weeklyLimit > 0;
+      }
+      return true;
+    },
+    {
+      message: "Weekly limit is required for HOURLY projects",
+      path: ["weeklyLimit"],
+    }
+  );
+
+export const updateNewLiveProjectSchema = z
+  .object({
+    projectName: z.string().min(1, "Project name is required").optional(),
+    clientName: z.string().optional(),
+    clientLocation: z.string().optional(),
+    projectType: z.enum(["FIXED", "HOURLY"]).optional(),
+    projectBudget: z.number().positive("Project budget must be a positive number").optional(),
+    paidAmount: z.number().min(0, "Paid amount cannot be negative").optional(),
+    dueAmount: z.number().min(0, "Due amount cannot be negative").optional(),
+    weeklyLimit: z.number().positive("Weekly limit must be a positive number").optional(),
+    assignedMembers: z.array(z.string()).optional(),
+    projectStatus: z.enum(["PENDING", "ACTIVE", "COMPLETED", "CANCEL", "ARCHIVED"]).optional(),
+    committedDeadline: z.string().optional(), // ISO date string
+    targetedDeadline: z.object({
+      backend: z.string().optional(),
+      frontend: z.string().optional(),
+      ui: z.string().optional(),
+    }).optional(),
+    documents: z.array(z.object({
+      fileName: z.string(),
+      fileUrl: z.string(),
+      fileType: z.string(),
+      fileSize: z.number(),
+      uploadedBy: z.string(),
+      uploadedAt: z.string(),
+    })).optional(),
+  })
+  .refine(
+    (data) => {
+      // For FIXED projects, projectBudget is required if projectType is set
+      if (data.projectType === "FIXED") {
+        return data.projectBudget !== undefined && data.projectBudget > 0;
+      }
+      return true;
+    },
+    {
+      message: "Project budget is required for FIXED projects",
+      path: ["projectBudget"],
+    }
+  )
+  .refine(
+    (data) => {
+      // For HOURLY projects, weeklyLimit is required if projectType is set
+      if (data.projectType === "HOURLY") {
+        return data.weeklyLimit !== undefined && data.weeklyLimit > 0;
+      }
+      return true;
+    },
+    {
+      message: "Weekly limit is required for HOURLY projects",
+      path: ["weeklyLimit"],
+    }
+  );
+
+export const addProjectActionSchema = z.object({
+  actionText: z.string().min(1, "Action text is required"),
+});
+
+export const addHourLogSchema = z.object({
+  date: z.string().min(1, "Date is required"), // ISO date string
+  submittedHours: z.number().positive("Submitted hours must be a positive number"),
+});
+
+export type CreateNewLiveProjectFormData = z.infer<typeof createNewLiveProjectSchema>;
+export type UpdateNewLiveProjectFormData = z.infer<typeof updateNewLiveProjectSchema>;
+export type AddProjectActionFormData = z.infer<typeof addProjectActionSchema>;
+export type AddHourLogFormData = z.infer<typeof addHourLogSchema>;

@@ -8,16 +8,23 @@ import MenuItem from "../shared/sidebar/menu-item";
 import { menuConfig } from "./menu-config";
 
 const DynamicSidebarMenu = () => {
-  const { hasPermission, hasAnyPermission } = useAuth();
+  const { hasPermission, hasAnyPermission, hasAnyRole } = useAuth();
 
-  // Filter menu items based on user permissions
+  // Filter menu items based on user permissions and roles
   const visibleMenuItems = menuConfig.filter((menu) => {
-    // If no permission required, show to everyone
-    if (!menu.permissions && !menu.permission) {
+    // If no permission or role required, show to everyone
+    if (!menu.permissions && !menu.permission && !menu.roles) {
       return true;
     }
 
-    // Check for new permissions array format first
+    // Check roles first (if specified)
+    if (menu.roles && menu.roles.length > 0) {
+      if (hasAnyRole(menu.roles)) {
+        return true;
+      }
+    }
+
+    // Check for new permissions array format
     if (menu.permissions && menu.permissions.length > 0) {
       return hasAnyPermission(menu.permissions);
     }

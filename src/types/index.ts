@@ -342,6 +342,112 @@ export interface LiveProjectsQueryParams {
 	clientName?: string;
 }
 
+// New Live Project Types
+export interface TargetedDeadline {
+	backend?: string; // ISO date string
+	frontend?: string; // ISO date string
+	ui?: string; // ISO date string
+}
+
+export interface ProjectDocument {
+	fileName: string;
+	fileUrl: string;
+	fileType: string;
+	fileSize: number;
+	uploadedBy: string;
+	uploadedAt: string; // ISO date string
+}
+
+export interface NewProjectAction {
+	id: string;
+	projectId: string;
+	actionText: string;
+	actionDate: string; // ISO date string
+	createdBy: string;
+	createdAt: string; // ISO date string
+	creator?: {
+		id: string;
+		user: {
+			id: string;
+			name: string;
+			email: string;
+		};
+	};
+}
+
+export interface NewHourLog {
+	id: string;
+	projectId: string;
+	userId: string;
+	date: string; // ISO date string
+	submittedHours: number;
+	createdAt: string; // ISO date string
+	user?: {
+		id: string;
+		user: {
+			id: string;
+			name: string;
+			email: string;
+		};
+	};
+}
+
+export interface NewLiveProject {
+	id: string;
+	projectName: string;
+	clientName?: string | null;
+	clientLocation?: string | null;
+	assignedMembers: string[]; // Array of strings
+	projectStatus: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCEL" | "ARCHIVED";
+	projectType: "FIXED" | "HOURLY";
+	projectBudget?: number | null; // Required for FIXED, null for HOURLY
+	paidAmount?: number | null; // Required for FIXED, null for HOURLY
+	dueAmount?: number | null; // Auto-calculated: projectBudget - paidAmount (for FIXED)
+	weeklyLimit?: number | null; // Required for HOURLY, null for FIXED
+	committedDeadline?: string | null; // ISO date string
+	targetedDeadline?: TargetedDeadline | null; // JSON object
+	documents?: ProjectDocument[] | null; // JSON array
+	createdBy: string;
+	createdAt: string; // ISO date string
+	updatedAt: string; // ISO date string
+	// Relations
+	actions?: NewProjectAction[];
+	hourLogs?: NewHourLog[];
+	creator?: {
+		id: string;
+		user: {
+			id: string;
+			name: string;
+			email: string;
+		};
+	};
+}
+
+export interface NewLiveProjectFormData {
+	projectName: string;
+	clientName?: string;
+	clientLocation?: string;
+	assignedMembers: string[]; // Array of strings
+	projectStatus?: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCEL" | "ARCHIVED";
+	projectType: "FIXED" | "HOURLY";
+	projectBudget?: number; // Required for FIXED
+	paidAmount?: number; // Required for FIXED
+	dueAmount?: number; // Auto-calculated
+	weeklyLimit?: number; // Required for HOURLY
+	committedDeadline?: string; // ISO date string
+	targetedDeadline?: TargetedDeadline;
+	documents?: ProjectDocument[];
+}
+
+export interface NewLiveProjectsQueryParams {
+	page: number;
+	limit: number;
+	search?: string;
+	projectStatus?: string;
+	projectType?: string;
+	clientName?: string;
+}
+
 // Milestone Types
 export interface Milestone {
 	id: string;
