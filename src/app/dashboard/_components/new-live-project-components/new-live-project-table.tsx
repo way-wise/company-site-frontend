@@ -17,6 +17,8 @@ import {
   ArrowUp,
   ArrowDown,
   Clock,
+  Check,
+  X,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -56,6 +58,8 @@ import {
   useUpdateNewLiveProject,
   useProjectActions,
   useAddProjectAction,
+  useUpdateProjectAction,
+  useDeleteProjectAction,
   useUploadDocument,
   useHourLogs,
   useAddHourLog,
@@ -197,6 +201,8 @@ export const NewLiveProjectTable = () => {
   const [selectedProject, setSelectedProject] = useState<NewLiveProject | null>(null);
   const [projectId, setProjectId] = useState<string | undefined>("");
   const [newActionText, setNewActionText] = useState("");
+  const [editingActionId, setEditingActionId] = useState<string | null>(null);
+  const [editingActionText, setEditingActionText] = useState("");
   const [newHourEntry, setNewHourEntry] = useState<string>("");
   const [hourEntryDate, setHourEntryDate] = useState<string>("");
   
@@ -272,6 +278,8 @@ export const NewLiveProjectTable = () => {
   const createProject = useCreateNewLiveProject();
   const deleteProject = useDeleteNewLiveProject();
   const addAction = useAddProjectAction();
+  const updateAction = useUpdateProjectAction();
+  const deleteAction = useDeleteProjectAction();
   const uploadDocument = useUploadDocument();
 
   // Get project actions for the selected project
@@ -338,6 +346,47 @@ export const NewLiveProjectTable = () => {
       await refetchActions();
     } catch (error) {
       console.error("Error adding action:", error);
+    }
+  };
+
+  // Handle editing an action
+  const handleStartEdit = (actionId: string, currentText: string) => {
+    setEditingActionId(actionId);
+    setEditingActionText(currentText);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingActionId(null);
+    setEditingActionText("");
+  };
+
+  const handleUpdateAction = async (actionId: string) => {
+    if (!projectId || !editingActionText.trim()) return;
+    try {
+      await updateAction.mutateAsync({
+        projectId,
+        actionId,
+        actionText: editingActionText.trim(),
+      });
+      setEditingActionId(null);
+      setEditingActionText("");
+      await refetchActions();
+    } catch (error) {
+      console.error("Error updating action:", error);
+    }
+  };
+
+  // Handle deleting an action
+  const handleDeleteAction = async (actionId: string) => {
+    if (!projectId) return;
+    try {
+      await deleteAction.mutateAsync({
+        projectId,
+        actionId,
+      });
+      await refetchActions();
+    } catch (error) {
+      console.error("Error deleting action:", error);
     }
   };
 
@@ -1653,6 +1702,8 @@ export const NewLiveProjectTable = () => {
           setSelectedProject(null);
           setProjectId("");
           setNewActionText("");
+          setEditingActionId(null);
+          setEditingActionText("");
         }}
         title="Project Actions & Notes"
       >
@@ -1663,20 +1714,82 @@ export const NewLiveProjectTable = () => {
               projectActions.map((action) => (
                 <div
                   key={action.id}
-                  className="border rounded-lg p-3 bg-gray-50"
+                  className="flex items-start justify-between border rounded-lg p-3 bg-gray-50"
                 >
-                  <p className="text-sm">{action.actionText}</p>
-                  <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-                    <span>
-                      {new Date(action.actionDate).toLocaleDateString()}
-                    </span>
-                    {action.creator && (
-                      <>
-                        <span>•</span>
-                        <span>{action.creator.user.name}</span>
-                      </>
-                    )}
-                  </div>
+                  {editingActionId === action.id ? (
+                    // Edit Mode
+                    <div className="flex-1 space-y-2">
+                      <Textarea
+                        value={editingActionText}
+                        onChange={(e) => setEditingActionText(e.target.value)}
+                        rows={3}
+                        className="text-sm"
+                        autoFocus
+                      />
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleUpdateAction(action.id)}
+                          disabled={!editingActionText.trim() || updateAction.isPending}
+                          className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                        >
+                          <Check className="h-4 w-4 mr-1" />
+                          {updateAction.isPending ? "Saving..." : "Save"}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleCancelEdit}
+                          disabled={updateAction.isPending}
+                          className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
+                        >
+                          <X className="h-4 w-4 mr-1" />
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    // View Mode
+                    <>
+                      <div className="flex-1">
+                        <p className="text-sm">{action.actionText}</p>
+                        <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+                          <span>
+                            {new Date(action.actionDate).toLocaleDateString()}
+                          </span>
+                          {action.creator && (
+                            <>
+                              <span>•</span>
+                              <span>{action.creator.user.name}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 ml-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                          onClick={() => handleStartEdit(action.id, action.actionText)}
+                          disabled={deleteAction.isPending || updateAction.isPending}
+                          title="Edit this action"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          onClick={() => handleDeleteAction(action.id)}
+                          disabled={deleteAction.isPending || updateAction.isPending}
+                          title="Delete this action"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))
             ) : (

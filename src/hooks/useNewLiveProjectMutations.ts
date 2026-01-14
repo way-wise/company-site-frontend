@@ -332,6 +332,44 @@ export const useAddProjectAction = () => {
   });
 };
 
+// Hook to update project action
+export const useUpdateProjectAction = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      actionId,
+      actionText,
+    }: {
+      projectId: string;
+      actionId: string;
+      actionText: string;
+    }) => newLiveProjectService.updateProjectAction(projectId, actionId, actionText),
+    onSuccess: (data, variables) => {
+      if (data.success) {
+        toast.success("Action updated successfully");
+        queryClient.invalidateQueries({
+          queryKey: newLiveProjectQueryKeys.actions(variables.projectId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: newLiveProjectQueryKeys.detail(variables.projectId),
+        });
+      } else {
+        toast.error(data.message || "Failed to update action");
+      }
+    },
+    onError: (error: Error) => {
+      const apiError = error as ApiError;
+      const errorMessage =
+        apiError.response?.data?.message ||
+        error.message ||
+        "Failed to update action";
+      toast.error(errorMessage);
+    },
+  });
+};
+
 // Hook to delete project action
 export const useDeleteProjectAction = () => {
   const queryClient = useQueryClient();

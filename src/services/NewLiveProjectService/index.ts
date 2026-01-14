@@ -143,6 +143,21 @@ export const newLiveProjectService = {
     return response.data;
   },
 
+  // Update project action
+  updateProjectAction: async (
+    projectId: string,
+    actionId: string,
+    actionText: string
+  ): Promise<ApiResponse<NewProjectAction>> => {
+    const response = await apiClient.put(
+      `/new-live-projects/${projectId}/actions/${actionId}`,
+      {
+        actionText,
+      }
+    );
+    return response.data;
+  },
+
   // Delete project action (if backend supports it)
   deleteProjectAction: async (
     projectId: string,
