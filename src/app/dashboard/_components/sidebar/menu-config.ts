@@ -129,13 +129,13 @@ export const menuConfig: MenuItem[] = [
 		url: "/dashboard/feedback",
 		permissions: ["read_contact"],
 	},
-	{
-		title: "Old Live Projects",
-		icon: Globe,
-		url: "/dashboard/old-live-projects",
-		// Temporarily visible to all authenticated users for testing
-		// permissions: ["read_live_project", "create_live_project"],
-	},
+	// {
+	// 	title: "Old Live Projects",
+	// 	icon: Globe,
+	// 	url: "/dashboard/old-live-projects",
+	// 	// Temporarily visible to all authenticated users for testing
+	// 	// permissions: ["read_live_project", "create_live_project"],
+	// },
 	{
 		title: "Live Projects",
 		icon: FolderKanban,
