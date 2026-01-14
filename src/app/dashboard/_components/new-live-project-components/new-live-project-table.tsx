@@ -874,7 +874,7 @@ export const NewLiveProjectTable = () => {
               size="sm"
               className="h-8 w-8 p-0"
               onClick={() => {
-                router.push(`/dashboard/new-live-projects/${id}`);
+                router.push(`/dashboard/live-projects/${id}`);
               }}
               title="View"
             >
@@ -1979,7 +1979,7 @@ export const NewLiveProjectTable = () => {
                           size="sm"
                           onClick={() => {
                             setTodaysActionsModalOpen(false);
-                            router.push(`/dashboard/new-live-projects/${item.project.id}`);
+                            router.push(`/dashboard/live-projects/${item.project.id}`);
                           }}
                           title="View Project"
                         >

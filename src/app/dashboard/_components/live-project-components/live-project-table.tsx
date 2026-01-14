@@ -594,7 +594,7 @@ export const LiveProjectTable = () => {
               size="sm"
               className="h-8 w-8 p-0"
               onClick={() => {
-                router.push(`/dashboard/live-projects/${id}`);
+                router.push(`/dashboard/old-live-projects/${id}`);
               }}
               title="View"
             >
