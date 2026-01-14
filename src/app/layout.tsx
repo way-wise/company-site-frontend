@@ -115,6 +115,7 @@ export default function RootLayout({
 					href="https://assets.calendly.com/assets/external/widget.css"
 					rel="stylesheet"
 				/>
+				<meta name="p:domain_verify" content="1a0ec79e5c7c26286091b5167b64a39d"/>
 			</head>
 			<body className={`${inter.variable} font-sans antialiased`}>
 				{/* Google Tag Manager (noscript) */}
