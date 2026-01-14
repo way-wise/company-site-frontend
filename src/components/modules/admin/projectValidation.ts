@@ -216,6 +216,7 @@ export const createNewLiveProjectSchema = z
       uploadedBy: z.string(),
       uploadedAt: z.string(),
     })).optional(),
+    progress: z.number().min(0).max(100, "Progress must be between 0 and 100").optional(),
   })
   .refine(
     (data) => {
@@ -284,6 +285,7 @@ export const updateNewLiveProjectSchema = z
       uploadedBy: z.string(),
       uploadedAt: z.string(),
     })).optional(),
+    progress: z.number().min(0).max(100, "Progress must be between 0 and 100").optional(),
   })
   .refine(
     (data) => {

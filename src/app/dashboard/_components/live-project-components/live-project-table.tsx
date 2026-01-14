@@ -545,7 +545,7 @@ export const LiveProjectTable = () => {
           <div className="flex items-center gap-2 min-w-[100px]">
             <div className="flex-1 bg-gray-200 rounded-full h-2 border border-gray-300">
               <div
-                className="bg-primary h-2 rounded-full transition-all"
+                className="!bg-balck h-2 rounded-full transition-all"
                 style={{ width: `${Math.max(0, Math.min(100, progressValue))}%` }}
               />
             </div>

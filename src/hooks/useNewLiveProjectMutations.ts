@@ -176,6 +176,8 @@ export const useCreateNewLiveProject = () => {
       paidAmount?: number;
       dueAmount?: number;
       weeklyLimit?: number;
+      hourlyRate?: number;
+      progress?: number;
       committedDeadline?: string;
       targetedDeadline?: {
         backend?: string;

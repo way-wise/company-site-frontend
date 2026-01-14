@@ -408,6 +408,7 @@ export interface NewLiveProject {
 	committedDeadline?: string | null; // ISO date string
 	targetedDeadline?: TargetedDeadline | null; // JSON object
 	documents?: ProjectDocument[] | null; // JSON array
+	progress?: number | null; // Progress percentage (0-100) for FIXED projects
 	createdBy: string;
 	createdAt: string; // ISO date string
 	updatedAt: string; // ISO date string

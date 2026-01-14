@@ -60,6 +60,7 @@ const UpdateNewLiveProject = ({
       committedDeadline: undefined,
       targetedDeadline: undefined,
       documents: undefined,
+      progress: undefined,
     },
   });
 
@@ -125,6 +126,7 @@ const UpdateNewLiveProject = ({
         committedDeadline: formatDateTimeForInput(project.committedDeadline),
         targetedDeadline: normalizedTargetedDeadline,
         documents: project.documents || undefined,
+        progress: ensureNumber(project.progress),
       });
     }
   }, [project, form]);
@@ -184,6 +186,13 @@ const UpdateNewLiveProject = ({
         if (isValidNumber(data.dueAmount)) {
           payload.dueAmount = data.dueAmount;
         }
+        // Progress: include if it's a valid number (including 0) or if it's explicitly undefined/null
+        if (data.progress !== undefined && data.progress !== null) {
+          const progressValue = typeof data.progress === "number" ? data.progress : parseFloat(String(data.progress));
+          if (!isNaN(progressValue) && progressValue >= 0 && progressValue <= 100) {
+            payload.progress = progressValue;
+          }
+        }
       } else if (data.projectType === "HOURLY") {
         if (isValidNumber(data.weeklyLimit)) {
           payload.weeklyLimit = data.weeklyLimit;
@@ -213,6 +222,9 @@ const UpdateNewLiveProject = ({
         projectId: project.id,
         projectData: payload,
       });
+      
+      // Wait a bit for the mutation to complete and queries to invalidate
+      await new Promise(resolve => setTimeout(resolve, 100));
       
       onClose();
     } catch (error) {
@@ -421,6 +433,31 @@ const UpdateNewLiveProject = ({
                           field.onChange(value === "" ? undefined : parseFloat(value));
                         }}
                         placeholder="Enter due amount"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="progress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Progress (%)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? undefined : parseFloat(value));
+                        }}
+                        placeholder="Enter progress (0-100)"
                       />
                     </FormControl>
                     <FormMessage />

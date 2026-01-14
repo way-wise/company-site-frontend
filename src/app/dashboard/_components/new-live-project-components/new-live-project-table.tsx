@@ -265,6 +265,7 @@ export const NewLiveProjectTable = () => {
       committedDeadline: undefined,
       targetedDeadline: undefined,
       documents: undefined,
+      progress: undefined,
     },
   });
 
@@ -434,6 +435,7 @@ export const NewLiveProjectTable = () => {
         committedDeadline?: string;
         targetedDeadline?: TargetedDeadline;
         documents?: ProjectDocument[];
+        progress?: number;
       } = {
         projectName: data.projectName,
         clientName: data.clientName || undefined,
@@ -447,6 +449,13 @@ export const NewLiveProjectTable = () => {
         payload.projectBudget = data.projectBudget;
         payload.paidAmount = data.paidAmount ?? 0;
         payload.dueAmount = data.dueAmount;
+        // Progress: include if it's a valid number (including 0) or if it's explicitly provided
+        if (data.progress !== undefined && data.progress !== null) {
+          const progressValue = typeof data.progress === "number" ? data.progress : parseFloat(String(data.progress));
+          if (!isNaN(progressValue) && progressValue >= 0 && progressValue <= 100) {
+            payload.progress = progressValue;
+          }
+        }
       } else if (data.projectType === "HOURLY") {
         payload.weeklyLimit = data.weeklyLimit;
         payload.hourlyRate = data.hourlyRate;
@@ -466,11 +475,19 @@ export const NewLiveProjectTable = () => {
         payload.documents = data.documents;
       }
 
-      await createProject.mutateAsync(payload);
+      const result = await createProject.mutateAsync(payload);
+      console.log("Create project result:", result);
+      console.log("Created project progress:", result?.data?.progress);
+      
       addProjectForm.reset();
       setAddProjectModalOpen(false);
-      // Manually refetch to ensure new projects appear
-      await refetch();
+      
+      // Wait a bit for the mutation to complete and queries to invalidate
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Manually refetch to ensure new projects appear with all data
+      const refetchResult = await refetch();
+      console.log("Refetch result - first project progress:", refetchResult?.data?.data?.[0]?.progress);
     } catch (error) {
       console.error("Error creating project:", error);
     }
@@ -833,23 +850,31 @@ export const NewLiveProjectTable = () => {
       header: createSortableHeader("Progress"),
       accessorKey: "progress",
       enableSorting: true,
-      sortingFn: (_rowA: { original: NewLiveProject }, _rowB: { original: NewLiveProject }) => {
-        // Note: NewLiveProject doesn't have progress in schema, but we can sort by 0 for now
-        const progressA = 0; // TODO: Add progress tracking
-        const progressB = 0;
+      sortingFn: (rowA: { original: NewLiveProject }, rowB: { original: NewLiveProject }) => {
+        const progressA = rowA.original.progress ?? 0;
+        const progressB = rowB.original.progress ?? 0;
         return progressA - progressB;
       },
-      cell: ({ row: _row }: { row: { original: NewLiveProject } }) => {
-        // Note: NewLiveProject doesn't have progress in schema, but we can show 0% for now
-        const progress = 0; // TODO: Add progress tracking
+      cell: ({ row }: { row: { original: NewLiveProject } }) => {
+        const project = row.original;
+        const progress = project.progress ?? 0;
+        
+        // Debug logging
+        if (project.projectName) {
+          console.log(`Progress for ${project.projectName}:`, {
+            raw: project.progress,
+            computed: progress,
+            type: typeof project.progress,
+          });
+        }
         
         return (
           <div className="w-full max-w-[100px]">
             <div className="flex items-center gap-2">
               <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-blue-500 transition-all"
-                  style={{ width: `${progress}%` }}
+                  className="h-full bg-black transition-all"
+                  style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
                 />
               </div>
               <span className="text-xs text-muted-foreground min-w-[35px]">
@@ -1152,6 +1177,34 @@ export const NewLiveProjectTable = () => {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={addProjectForm.control}
+                name="projectStatus"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Status</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select project status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="PENDING">Pending</SelectItem>
+                        <SelectItem value="ACTIVE">Active</SelectItem>
+                        <SelectItem value="COMPLETED">Completed</SelectItem>
+                        <SelectItem value="CANCEL">Cancel</SelectItem>
+                        <SelectItem value="ARCHIVED">Archived</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             {addProjectForm.watch("projectType") === "FIXED" && (
@@ -1218,6 +1271,31 @@ export const NewLiveProjectTable = () => {
                             field.onChange(value === "" ? undefined : parseFloat(value));
                           }}
                           placeholder="Enter due amount"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={addProjectForm.control}
+                  name="progress"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Progress (%)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="100"
+                          {...field}
+                          value={field.value ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value === "" ? undefined : parseFloat(value));
+                          }}
+                          placeholder="Enter progress (0-100)"
                         />
                       </FormControl>
                       <FormMessage />
@@ -1350,10 +1428,12 @@ export const NewLiveProjectTable = () => {
       {selectedProject && (
         <UpdateNewLiveProject
           isOpen={updateProjectModalOpen}
-          onClose={() => {
+          onClose={async () => {
             setUpdateProjectModalOpen(false);
             setSelectedProject(null);
             setProjectId("");
+            // Refetch to ensure updated data is shown
+            await refetch();
           }}
           project={selectedProject}
         />

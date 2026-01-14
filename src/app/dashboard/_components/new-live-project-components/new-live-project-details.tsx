@@ -230,6 +230,22 @@ export default function NewLiveProjectDetails({
                   <p className="text-sm font-medium text-muted-foreground">Project Status</p>
                   <div className="mt-1">{getStatusBadge(project.projectStatus)}</div>
                 </div>
+                {project.projectType === "FIXED" && project.progress !== undefined && project.progress !== null && (
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Progress</p>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-base font-semibold">{project.progress}%</span>
+                      </div>
+                      <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-black transition-all"
+                          style={{ width: `${project.progress}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -480,6 +496,22 @@ export default function NewLiveProjectDetails({
                     ).toLocaleString()}
                   </p>
                 </div>
+                {project.progress !== undefined && project.progress !== null && (
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">Progress</p>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-2xl font-bold">{project.progress}%</span>
+                      </div>
+                      <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-black transition-all"
+                          style={{ width: `${project.progress}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
