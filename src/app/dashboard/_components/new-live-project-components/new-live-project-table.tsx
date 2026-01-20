@@ -10,6 +10,7 @@ import {
   Pencil,
   Plus,
   Trash,
+  Trash2,
   Calendar,
   MessageSquare,
   FileText,
@@ -63,6 +64,8 @@ import {
   useUploadDocument,
   useHourLogs,
   useAddHourLog,
+  useUpdateHourLog,
+  useDeleteHourLog,
 } from "@/hooks/useNewLiveProjectMutations";
 import { useQueries } from "@tanstack/react-query";
 import { newLiveProjectService } from "@/services/NewLiveProjectService";
@@ -240,6 +243,9 @@ export const NewLiveProjectTable = () => {
   const [hourEntryDate, setHourEntryDate] = useState<string>("");
   const [paidHours, setPaidHours] = useState<string>("");
   const [editingPaidHours, setEditingPaidHours] = useState(false);
+  const [editingHourLogId, setEditingHourLogId] = useState<string | null>(null);
+  const [editingHourLogHours, setEditingHourLogHours] = useState<string>("");
+  const [editingHourLogDate, setEditingHourLogDate] = useState<string>("");
   
   // Deadline editing states
   const [editingDeadlines, setEditingDeadlines] = useState(false);
@@ -335,6 +341,8 @@ export const NewLiveProjectTable = () => {
   
   // Add hour log mutation
   const addHourLog = useAddHourLog();
+  const updateHourLog = useUpdateHourLog();
+  const deleteHourLog = useDeleteHourLog();
   
   // Handle adding hour entry
   const handleAddHourEntry = async () => {
@@ -384,6 +392,98 @@ export const NewLiveProjectTable = () => {
       setHourEntryDate(new Date().toISOString().split("T")[0]);
     }
   }, [hourLogsModalOpen, hourEntryDate]);
+
+  // Handle starting edit of hour log
+  const handleStartEditHourLog = (logId: string, currentHours: number, currentDate: string) => {
+    setEditingHourLogId(logId);
+    setEditingHourLogHours(currentHours.toString());
+    setEditingHourLogDate(new Date(currentDate).toISOString().split("T")[0]);
+  };
+
+  // Handle canceling edit of hour log
+  const handleCancelEditHourLog = () => {
+    setEditingHourLogId(null);
+    setEditingHourLogHours("");
+    setEditingHourLogDate("");
+  };
+
+  // Handle updating hour log
+  const handleUpdateHourLog = async (logId: string) => {
+    if (!projectId || !editingHourLogHours.trim() || !editingHourLogDate) {
+      toast.error("Please enter hours and date");
+      return;
+    }
+    
+    const hours = parseFloat(editingHourLogHours);
+    if (isNaN(hours) || hours <= 0) {
+      toast.error("Please enter a valid number of hours");
+      return;
+    }
+    
+    const dateISO = new Date(editingHourLogDate).toISOString();
+    
+    try {
+      await updateHourLog.mutateAsync({
+        projectId,
+        hourLogId: logId,
+        date: dateISO,
+        submittedHours: hours,
+      });
+      setEditingHourLogId(null);
+      setEditingHourLogHours("");
+      setEditingHourLogDate("");
+      await refetchHourLogs();
+      const refetchResult = await refetch();
+      
+      // Update selectedProject if Due Payment modal is open
+      if (duePaymentModalOpen && selectedProject && refetchResult.data?.data) {
+        const updatedProject = refetchResult.data.data.find(
+          (p: NewLiveProject) => p.id === selectedProject.id
+        );
+        if (updatedProject) {
+          setSelectedProject(updatedProject);
+        }
+      }
+      
+      toast.success("Hour log updated successfully");
+    } catch (error) {
+      console.error("Error updating hour log:", error);
+      toast.error("Failed to update hour log");
+    }
+  };
+
+  // Handle deleting hour log
+  const handleDeleteHourLog = async (logId: string) => {
+    if (!projectId) return;
+    
+    if (!confirm("Are you sure you want to delete this hour log entry?")) {
+      return;
+    }
+    
+    try {
+      await deleteHourLog.mutateAsync({
+        projectId,
+        hourLogId: logId,
+      });
+      await refetchHourLogs();
+      const refetchResult = await refetch();
+      
+      // Update selectedProject if Due Payment modal is open
+      if (duePaymentModalOpen && selectedProject && refetchResult.data?.data) {
+        const updatedProject = refetchResult.data.data.find(
+          (p: NewLiveProject) => p.id === selectedProject.id
+        );
+        if (updatedProject) {
+          setSelectedProject(updatedProject);
+        }
+      }
+      
+      toast.success("Hour log deleted successfully");
+    } catch (error) {
+      console.error("Error deleting hour log:", error);
+      toast.error("Failed to delete hour log");
+    }
+  };
 
   // Handle updating paid hours
   const handleUpdatePaidHours = async () => {
@@ -2190,38 +2290,109 @@ export const NewLiveProjectTable = () => {
                       sortedLogs.map((log) => {
                         const logDate = new Date(log.date);
                         const isToday = logDate >= today && logDate < tomorrow;
+                        const isEditing = editingHourLogId === log.id;
                         
                         return (
                           <div
                             key={log.id}
-                            className={`flex items-center justify-between p-3 rounded-lg ${
+                            className={`p-3 rounded-lg ${
                               isToday ? "bg-blue-50 border border-blue-200" : "bg-gray-50"
                             }`}
                           >
-                            <div className="flex items-center gap-3">
-                              <Calendar className="h-4 w-4 text-muted-foreground" />
-                              <div>
-                                <div className="text-sm font-medium">
-                                  {logDate.toLocaleDateString("en-US", {
-                                    weekday: "short",
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                  })}
-                                  {isToday && (
-                                    <Badge className="ml-2 bg-blue-500 text-white">Today</Badge>
-                                  )}
-                                </div>
-                                {log.user?.user?.name && (
-                                  <div className="text-xs text-muted-foreground">
-                                    By: {log.user.user.name}
+                            {isEditing ? (
+                              <div className="space-y-2">
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div>
+                                    <label className="text-xs text-muted-foreground mb-1 block">Date</label>
+                                    <Input
+                                      type="date"
+                                      value={editingHourLogDate}
+                                      onChange={(e) => setEditingHourLogDate(e.target.value)}
+                                      className="w-full h-9"
+                                      max={new Date().toISOString().split("T")[0]}
+                                    />
                                   </div>
-                                )}
+                                  <div>
+                                    <label className="text-xs text-muted-foreground mb-1 block">Hours</label>
+                                    <Input
+                                      type="number"
+                                      step="0.1"
+                                      min="0.1"
+                                      value={editingHourLogHours}
+                                      onChange={(e) => setEditingHourLogHours(e.target.value)}
+                                      placeholder="e.g., 8.5"
+                                      className="w-full h-9"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleCancelEditHourLog}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    onClick={() => handleUpdateHourLog(log.id)}
+                                    disabled={!editingHourLogHours.trim() || updateHourLog.isPending}
+                                  >
+                                    {updateHourLog.isPending ? "Saving..." : "Save"}
+                                  </Button>
+                                </div>
                               </div>
-                            </div>
-                            <div className="text-lg font-bold">
-                              {Number(log.submittedHours).toFixed(1)}h
-                            </div>
+                            ) : (
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                                  <div>
+                                    <div className="text-sm font-medium">
+                                      {logDate.toLocaleDateString("en-US", {
+                                        weekday: "short",
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "numeric",
+                                      })}
+                                      {isToday && (
+                                        <Badge className="ml-2 bg-blue-500 text-white">Today</Badge>
+                                      )}
+                                    </div>
+                                    {log.user?.user?.name && (
+                                      <div className="text-xs text-muted-foreground">
+                                        By: {log.user.user.name}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="text-lg font-bold">
+                                    {Number(log.submittedHours).toFixed(1)}h
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleStartEditHourLog(log.id, Number(log.submittedHours), log.date)}
+                                    className="h-8 w-8 p-0"
+                                  >
+                                    <Pencil className="h-3.5 w-3.5" />
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleDeleteHourLog(log.id)}
+                                    disabled={deleteHourLog.isPending}
+                                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         );
                       })
