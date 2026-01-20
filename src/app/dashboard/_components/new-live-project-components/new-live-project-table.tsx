@@ -168,6 +168,9 @@ const TodayEntryCell = ({ project, onViewHourLogs }: { project: NewLiveProject; 
     })
     .reduce((sum, log) => sum + Number(log.submittedHours), 0);
   
+  // Calculate total hours
+  const totalHours = allHourLogs.reduce((sum, log) => sum + Number(log.submittedHours), 0);
+  
   return (
     <Button
       type="button"
@@ -179,7 +182,36 @@ const TodayEntryCell = ({ project, onViewHourLogs }: { project: NewLiveProject; 
     >
       <Clock className="h-4 w-4 mr-1" />
       <span className="text-sm font-medium">
-        {todayHours > 0 ? `${todayHours.toFixed(1)}h` : "0h"}
+        {todayHours > 0 ? `${todayHours.toFixed(1)}h` : "0h"} / {totalHours > 0 ? `${totalHours.toFixed(1)}h` : "0h"}
+      </span>
+    </Button>
+  );
+};
+
+// Component to display due payment for a project
+const DuePaymentCell = ({ project, onViewPayment }: { project: NewLiveProject; onViewPayment: () => void }) => {
+  const { data: hourLogsData } = useHourLogs(project.id);
+  const fetchedHourLogs = hourLogsData?.data || [];
+  const projectHourLogs = project.hourLogs || [];
+  const allHourLogs = fetchedHourLogs.length > 0 ? fetchedHourLogs : projectHourLogs;
+  
+  const totalHours = allHourLogs.reduce((sum, log) => sum + Number(log.submittedHours), 0);
+  const hourlyRate = project.hourlyRate || 0;
+  const paidHours = Number(project.paidHours || 0);
+  const dueHours = totalHours - paidHours;
+  const duePayment = dueHours * hourlyRate;
+  
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      className="h-8 !p-0 hover:bg-transparent"
+      onClick={onViewPayment}
+      title="View payment details"
+    >
+      <span className="text-sm font-medium">
+        {duePayment > 0 ? `$${duePayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "$0.00"}
       </span>
     </Button>
   );
@@ -198,6 +230,7 @@ export const NewLiveProjectTable = () => {
   const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
   const [todaysActionsModalOpen, setTodaysActionsModalOpen] = useState(false);
   const [hourLogsModalOpen, setHourLogsModalOpen] = useState(false);
+  const [duePaymentModalOpen, setDuePaymentModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<NewLiveProject | null>(null);
   const [projectId, setProjectId] = useState<string | undefined>("");
   const [newActionText, setNewActionText] = useState("");
@@ -205,6 +238,8 @@ export const NewLiveProjectTable = () => {
   const [editingActionText, setEditingActionText] = useState("");
   const [newHourEntry, setNewHourEntry] = useState<string>("");
   const [hourEntryDate, setHourEntryDate] = useState<string>("");
+  const [paidHours, setPaidHours] = useState<string>("");
+  const [editingPaidHours, setEditingPaidHours] = useState(false);
   
   // Deadline editing states
   const [editingDeadlines, setEditingDeadlines] = useState(false);
@@ -292,6 +327,12 @@ export const NewLiveProjectTable = () => {
   );
   const hourLogs = hourLogsData?.data || [];
   
+  // Get hour logs for Due Payment modal
+  const { data: duePaymentHourLogsData } = useHourLogs(
+    duePaymentModalOpen && projectId ? projectId : ""
+  );
+  const duePaymentHourLogs = duePaymentHourLogsData?.data || [];
+  
   // Add hour log mutation
   const addHourLog = useAddHourLog();
   
@@ -333,6 +374,62 @@ export const NewLiveProjectTable = () => {
       setHourEntryDate(new Date().toISOString().split("T")[0]);
     }
   }, [hourLogsModalOpen, hourEntryDate]);
+
+  // Handle updating paid hours
+  const handleUpdatePaidHours = async () => {
+    if (!selectedProject || !paidHours.trim()) {
+      toast.error("Please enter paid hours");
+      return;
+    }
+    
+    const hours = parseFloat(paidHours);
+    if (isNaN(hours) || hours < 0) {
+      toast.error("Please enter a valid number of hours");
+      return;
+    }
+    
+    try {
+      console.log("Updating paid hours:", {
+        projectId: selectedProject.id,
+        paidHours: hours,
+        projectData: { paidHours: hours }
+      });
+      
+      const result = await updateProject.mutateAsync({
+        projectId: selectedProject.id,
+        projectData: { paidHours: hours },
+      });
+      
+      console.log("Update result:", result);
+      console.log("Update result data:", result.data);
+      console.log("Update result data.paidHours:", result.data?.paidHours);
+      
+      setEditingPaidHours(false);
+      setPaidHours("");
+      const refetchResult = await refetch();
+      
+      console.log("Refetch result:", refetchResult);
+      
+      // Update selectedProject with fresh data to reflect changes in the modal
+      if (refetchResult.data?.data) {
+        const updatedProject = refetchResult.data.data.find(
+          (p: NewLiveProject) => p.id === selectedProject.id
+        );
+        console.log("Updated project from refetch:", updatedProject);
+        console.log("Updated project paidHours:", updatedProject?.paidHours);
+        console.log("Type of paidHours:", typeof updatedProject?.paidHours);
+        if (updatedProject) {
+          setSelectedProject(updatedProject);
+          console.log("selectedProject state updated with paidHours:", updatedProject.paidHours);
+        }
+      }
+      
+      toast.success("Paid hours updated successfully");
+    } catch (error) {
+      console.error("Error updating paid hours:", error);
+      toast.error("Failed to update paid hours");
+    }
+  };
 
   // Handle adding a new action
   const handleAddAction = async () => {
@@ -751,7 +848,7 @@ export const NewLiveProjectTable = () => {
       },
     },
     {
-      header: "Today's Entry",
+      header: "Today's Entry / Total",
       accessorKey: "todayEntry",
       showForType: "HOURLY",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
@@ -763,6 +860,24 @@ export const NewLiveProjectTable = () => {
               setSelectedProject(project);
               setProjectId(project.id);
               setHourLogsModalOpen(true);
+            }} 
+          />
+        );
+      },
+    },
+    {
+      header: "Due Payment",
+      accessorKey: "duePayment",
+      showForType: "HOURLY",
+      cell: ({ row }: { row: { original: NewLiveProject } }) => {
+        const project = row.original;
+        return (
+          <DuePaymentCell 
+            project={project} 
+            onViewPayment={() => {
+              setSelectedProject(project);
+              setProjectId(project.id);
+              setDuePaymentModalOpen(true);
             }} 
           />
         );
@@ -849,6 +964,7 @@ export const NewLiveProjectTable = () => {
     {
       header: "Documents",
       accessorKey: "documents",
+      showForType: "FIXED",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
         const project = row.original;
         const documents = project.documents || [];
@@ -898,6 +1014,7 @@ export const NewLiveProjectTable = () => {
     {
       header: createSortableHeader("Progress"),
       accessorKey: "progress",
+      showForType: "FIXED",
       enableSorting: true,
       sortingFn: (rowA: { original: NewLiveProject }, rowB: { original: NewLiveProject }) => {
         const progressA = rowA.original.progress ?? 0;
@@ -2109,6 +2226,199 @@ export const NewLiveProjectTable = () => {
             );
           })()
         )}
+      </Modal>
+
+      {/* Due Payment Modal */}
+      <Modal
+        isOpen={duePaymentModalOpen}
+        onClose={() => {
+          setDuePaymentModalOpen(false);
+          setSelectedProject(null);
+          setProjectId("");
+          setPaidHours("");
+          setEditingPaidHours(false);
+        }}
+        title={`Payment Details - ${selectedProject?.projectName || ""}`}
+        className="max-w-4xl max-h-[85vh]"
+      >
+        {(() => {
+          if (!selectedProject) return null;
+          
+          const projectHourLogs = selectedProject.hourLogs || [];
+          const allHourLogs = duePaymentHourLogs.length > 0 ? duePaymentHourLogs : projectHourLogs;
+          
+          const hourlyRate = selectedProject.hourlyRate || 0;
+          const currentPaidHours = Number(selectedProject.paidHours || 0);
+          
+          // Calculate totals
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          
+          // Get start of week (Monday)
+          const startOfWeek = new Date(today);
+          const day = startOfWeek.getDay();
+          const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
+          startOfWeek.setDate(diff);
+          startOfWeek.setHours(0, 0, 0, 0);
+          
+          // Get start of month
+          const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+          startOfMonth.setHours(0, 0, 0, 0);
+          
+          // Calculate total hours
+          const totalHours = allHourLogs.reduce((sum, log) => sum + Number(log.submittedHours), 0);
+          
+          // Calculate week hours
+          const weekHours = allHourLogs
+            .filter((log) => {
+              const logDate = new Date(log.date);
+              logDate.setHours(0, 0, 0, 0);
+              return logDate >= startOfWeek;
+            })
+            .reduce((sum, log) => sum + Number(log.submittedHours), 0);
+          
+          // Calculate month hours
+          const monthHours = allHourLogs
+            .filter((log) => {
+              const logDate = new Date(log.date);
+              logDate.setHours(0, 0, 0, 0);
+              return logDate >= startOfMonth;
+            })
+            .reduce((sum, log) => sum + Number(log.submittedHours), 0);
+          
+          // Calculate payments
+          const totalDuePayment = totalHours * hourlyRate;
+          const paidPayment = currentPaidHours * hourlyRate;
+          const remainingDuePayment = (totalHours - currentPaidHours) * hourlyRate;
+          
+          const weekDuePayment = weekHours * hourlyRate;
+          const monthDuePayment = monthHours * hourlyRate;
+          
+          return (
+            <div className="space-y-4 max-h-[calc(85vh-120px)] overflow-y-auto pr-2">
+              {/* Project Info */}
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-lg border border-blue-200">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-xs text-gray-600 mb-0.5">Hourly Rate</div>
+                    <div className="text-xl font-bold text-gray-900">${hourlyRate.toLocaleString()}/hr</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-600 mb-0.5">Weekly Limit</div>
+                    <div className="text-xl font-bold text-gray-900">
+                      {selectedProject.weeklyLimit ? `${selectedProject.weeklyLimit} hrs/week` : "No limit"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Overall Summary */}
+              <div className="border rounded-lg p-3 bg-gray-50">
+                <h4 className="text-base font-semibold mb-2">Overall Summary</h4>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-white p-2.5 rounded-lg border">
+                    <div className="text-xs text-gray-600 mb-0.5">Total Hours</div>
+                    <div className="text-lg font-bold text-gray-900">{totalHours.toFixed(1)}h</div>
+                    <div className="text-xs text-green-600 mt-0.5">${totalDuePayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                  </div>
+                  <div className="bg-white p-2.5 rounded-lg border">
+                    <div className="text-xs text-gray-600 mb-0.5">Paid Hours</div>
+                    <div className="text-lg font-bold text-blue-900">{currentPaidHours.toFixed(1)}h</div>
+                    <div className="text-xs text-blue-600 mt-0.5">${paidPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                  </div>
+                  <div className="bg-white p-2.5 rounded-lg border">
+                    <div className="text-xs text-gray-600 mb-0.5">Due Payment</div>
+                    <div className="text-lg font-bold text-red-900">{(totalHours - currentPaidHours).toFixed(1)}h</div>
+                    <div className="text-xs text-red-600 mt-0.5 font-semibold">${remainingDuePayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Paid Hours Management */}
+              <div className="border-t pt-3">
+                <h4 className="text-sm font-medium mb-2">Manage Paid Hours</h4>
+                {editingPaidHours ? (
+                  <div className="space-y-2">
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">
+                        Enter Paid Hours (Current: {currentPaidHours.toFixed(1)}h)
+                      </label>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        value={paidHours}
+                        onChange={(e) => setPaidHours(e.target.value)}
+                        placeholder="e.g., 40.5"
+                        className="w-full h-9"
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setEditingPaidHours(false);
+                          setPaidHours("");
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={handleUpdatePaidHours}
+                        disabled={!paidHours.trim() || updateProject.isPending}
+                      >
+                        {updateProject.isPending ? "Updating..." : "Update"}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                    <div>
+                      <div className="text-xs text-gray-600">Current Paid Hours</div>
+                      <div className="text-lg font-bold text-gray-900">{currentPaidHours.toFixed(1)}h</div>
+                      <div className="text-xs text-gray-600 mt-0.5">
+                        Paid: ${paidPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => {
+                        setEditingPaidHours(true);
+                        setPaidHours(currentPaidHours.toString());
+                      }}
+                    >
+                      <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                      Edit
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Close Button */}
+              <div className="flex justify-end border-t pt-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setDuePaymentModalOpen(false);
+                    setSelectedProject(null);
+                    setProjectId("");
+                    setPaidHours("");
+                    setEditingPaidHours(false);
+                  }}
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          );
+        })()}
       </Modal>
 
       {/* Today's Actions Modal */}
