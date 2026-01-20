@@ -362,7 +362,17 @@ export const NewLiveProjectTable = () => {
       setNewHourEntry("");
       setHourEntryDate("");
       await refetchHourLogs();
-      await refetch(); // Refresh the main project list to update today's entry
+      const refetchResult = await refetch(); // Refresh the main project list to update today's entry
+      
+      // Update selectedProject if Due Payment modal is open
+      if (duePaymentModalOpen && selectedProject && refetchResult.data?.data) {
+        const updatedProject = refetchResult.data.data.find(
+          (p: NewLiveProject) => p.id === selectedProject.id
+        );
+        if (updatedProject) {
+          setSelectedProject(updatedProject);
+        }
+      }
     } catch (error) {
       console.error("Error adding hour entry:", error);
     }
