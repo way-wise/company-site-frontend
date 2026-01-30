@@ -163,6 +163,18 @@ const TodayEntryCell = ({ project, onViewHourLogs }: { project: NewLiveProject; 
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
   
+  // Calculate start of the week (Monday)
+  const startOfWeek = new Date(today);
+  const dayOfWeek = today.getDay();
+  const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  startOfWeek.setDate(today.getDate() - daysToMonday);
+  startOfWeek.setHours(0, 0, 0, 0);
+  
+  // Calculate end of work week (Friday end of day)
+  const endOfWorkWeek = new Date(startOfWeek);
+  endOfWorkWeek.setDate(startOfWeek.getDate() + 5); // Friday + 1 day for comparison
+  endOfWorkWeek.setHours(0, 0, 0, 0);
+  
   const todayHours = allHourLogs
     .filter((log) => {
       const logDate = new Date(log.date);
@@ -171,8 +183,14 @@ const TodayEntryCell = ({ project, onViewHourLogs }: { project: NewLiveProject; 
     })
     .reduce((sum, log) => sum + Number(log.submittedHours), 0);
   
-  // Calculate total hours
-  const totalHours = allHourLogs.reduce((sum, log) => sum + Number(log.submittedHours), 0);
+  // Calculate this week's hours (Monday to Friday only)
+  const weekHours = allHourLogs
+    .filter((log) => {
+      const logDate = new Date(log.date);
+      logDate.setHours(0, 0, 0, 0);
+      return logDate >= startOfWeek && logDate < endOfWorkWeek;
+    })
+    .reduce((sum, log) => sum + Number(log.submittedHours), 0);
   
   return (
     <Button
@@ -185,7 +203,7 @@ const TodayEntryCell = ({ project, onViewHourLogs }: { project: NewLiveProject; 
     >
       <Clock className="h-4 w-4 mr-1" />
       <span className="text-sm font-medium">
-        {todayHours > 0 ? `${todayHours.toFixed(1)}h` : "0h"} / {totalHours > 0 ? `${totalHours.toFixed(1)}h` : "0h"}
+        {todayHours > 0 ? `${todayHours.toFixed(1)}h` : "0h"} / {weekHours > 0 ? `${weekHours.toFixed(1)}h` : "0h"}
       </span>
     </Button>
   );
@@ -958,7 +976,7 @@ export const NewLiveProjectTable = () => {
       },
     },
     {
-      header: "Today's Entry / Total",
+      header: "Today's Entry / Week Total",
       accessorKey: "todayEntry",
       showForType: "HOURLY",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
