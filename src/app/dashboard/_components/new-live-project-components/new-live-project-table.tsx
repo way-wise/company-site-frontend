@@ -2117,7 +2117,7 @@ export const NewLiveProjectTable = () => {
                       <div className="min-w-0">
                         <p className="text-sm font-medium truncate" title={doc.fileName}>{doc.fileName}</p>
                         <p className="text-xs text-muted-foreground">
-                          {new Date(doc.uploadedAt).toLocaleDateString()} • {(doc.fileSize / 1024).toFixed(1)} KB
+                          {(doc.fileSize / 1024).toFixed(1)} KB
                         </p>
                       </div>
                     </div>
