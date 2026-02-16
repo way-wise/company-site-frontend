@@ -106,7 +106,7 @@ const getWeeksInMonth = (year: number, month: number): { start: Date; end: Date;
   const lastDay = new Date(year, month + 1, 0);
   
   // Find the Monday of the first week
-  let currentDate = new Date(firstDay);
+  const currentDate = new Date(firstDay);
   const dayOfWeek = currentDate.getDay();
   const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
   currentDate.setDate(currentDate.getDate() - daysToMonday);
@@ -261,10 +261,11 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
       if (onProjectUpdate) {
         await onProjectUpdate();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating paid hours:", error);
-      console.error("Error details:", error?.response?.data || error?.message);
-      toast.error(error?.response?.data?.message || "Failed to update paid hours");
+      const apiError = error as { response?: { data?: { message?: string } }; message?: string };
+      console.error("Error details:", apiError?.response?.data || apiError?.message);
+      toast.error(apiError?.response?.data?.message || "Failed to update paid hours");
     }
   };
 
