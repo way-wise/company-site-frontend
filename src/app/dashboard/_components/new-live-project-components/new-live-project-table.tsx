@@ -2036,7 +2036,7 @@ export const NewLiveProjectTable = () => {
         }}
         title="Project Documents"
       >
-        <div className="space-y-6">
+        <div className="space-y-6 overflow-hidden">
           <div className="space-y-2">
             <h4 className="text-sm font-medium">Upload Document</h4>
             <div className="flex gap-2 items-center">
@@ -2044,7 +2044,7 @@ export const NewLiveProjectTable = () => {
                 type="file"
                 onChange={handleDocumentUpload}
                 disabled={uploadDocument.isPending}
-                className="cursor-pointer"
+                className="cursor-pointer max-w-full"
               />
               {uploadDocument.isPending && <span className="text-xs text-blue-500">Uploading...</span>}
             </div>
@@ -2056,17 +2056,17 @@ export const NewLiveProjectTable = () => {
             <div className="max-h-[300px] overflow-y-auto space-y-2">
               {selectedProject?.documents && selectedProject.documents.length > 0 ? (
                 selectedProject.documents.map((doc: ProjectDocument, index: number) => (
-                  <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                    <div className="flex items-center gap-3 overflow-hidden">
+                  <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg gap-2">
+                    <div className="flex items-center gap-3 overflow-hidden min-w-0 flex-1">
                       <FileText className="h-8 w-8 text-blue-500 flex-shrink-0" />
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium truncate" title={doc.fileName}>{doc.fileName}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium truncate max-w-full" title={doc.fileName}>{doc.fileName}</p>
                         <p className="text-xs text-muted-foreground">
                           {(doc.fileSize / 1024).toFixed(1)} KB
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       <Button
                         variant="ghost"
                         size="sm"
