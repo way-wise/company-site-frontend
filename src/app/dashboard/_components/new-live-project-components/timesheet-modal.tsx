@@ -434,57 +434,60 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
     setSelectedMonth({ year: today.getFullYear(), month: today.getMonth() });
   };
 
-  // Calculate monthly summary with week-by-week breakdown
+  // Calculate monthly summary - only hours within the specific month
   const monthlyData = useMemo(() => {
-    const weeks = getWeeksInMonth(selectedMonth.year, selectedMonth.month);
     const hourlyRate = project?.hourlyRate || 0;
     const paidHours = currentPaidHours;
     
-    let cumulativeHours = 0;
-    
-    // Calculate cumulative hours before this month to determine payment status
+    // Get month boundaries
     const monthStart = new Date(selectedMonth.year, selectedMonth.month, 1);
+    const monthEnd = new Date(selectedMonth.year, selectedMonth.month + 1, 0, 23, 59, 59);
+    
+    // Calculate hours only within this month
+    const monthHours = hourLogs
+      .filter((log) => {
+        const logDate = new Date(log.date);
+        return logDate >= monthStart && logDate <= monthEnd;
+      })
+      .reduce((sum, log) => sum + Number(log.submittedHours), 0);
+    
+    const totalMonthEarned = monthHours * hourlyRate;
+    
+    // Calculate cumulative hours up to end of this month for payment status
+    const hoursUpToMonthEnd = hourLogs
+      .filter((log) => new Date(log.date) <= monthEnd)
+      .reduce((sum, log) => sum + Number(log.submittedHours), 0);
+    
     const hoursBeforeMonth = hourLogs
       .filter((log) => new Date(log.date) < monthStart)
       .reduce((sum, log) => sum + Number(log.submittedHours), 0);
     
-    cumulativeHours = hoursBeforeMonth;
+    // Determine payment status for this month's hours
+    let status: "paid" | "partial" | "unpaid" | "no-hours" = "no-hours";
+    if (monthHours === 0) {
+      status = "no-hours";
+    } else if (hoursUpToMonthEnd <= paidHours) {
+      status = "paid";
+    } else if (hoursBeforeMonth < paidHours && hoursUpToMonthEnd > paidHours) {
+      status = "partial";
+    } else if (hoursBeforeMonth >= paidHours) {
+      status = "unpaid";
+    }
     
-    const weeklyBreakdown = weeks.map((week) => {
-      const weekHours = calculateHoursForRange(hourLogs, week.start, week.end);
-      const weekEarned = weekHours * hourlyRate;
-      
-      // Determine payment status based on cumulative hours
-      const hoursAtWeekEnd = cumulativeHours + weekHours;
-      let status: "paid" | "partial" | "unpaid" | "no-hours" = "no-hours";
-      
-      if (weekHours === 0) {
-        status = "no-hours";
-      } else if (hoursAtWeekEnd <= paidHours) {
-        status = "paid";
-      } else if (cumulativeHours < paidHours && hoursAtWeekEnd > paidHours) {
-        status = "partial";
-      } else {
-        status = "unpaid";
-      }
-      
-      cumulativeHours = hoursAtWeekEnd;
-      
-      return {
-        ...week,
-        hours: weekHours,
-        earned: weekEarned,
-        status,
-      };
-    });
-    
-    const totalMonthHours = weeklyBreakdown.reduce((sum, w) => sum + w.hours, 0);
-    const totalMonthEarned = totalMonthHours * hourlyRate;
+    // Calculate paid/unpaid amounts for this month
+    const paidHoursForThisMonth = Math.max(0, Math.min(monthHours, paidHours - hoursBeforeMonth));
+    const unpaidHoursForThisMonth = monthHours - paidHoursForThisMonth;
+    const paidAmountThisMonth = paidHoursForThisMonth * hourlyRate;
+    const unpaidAmountThisMonth = unpaidHoursForThisMonth * hourlyRate;
     
     return {
-      weeks: weeklyBreakdown,
-      totalHours: totalMonthHours,
+      totalHours: monthHours,
       totalEarned: totalMonthEarned,
+      status,
+      paidHours: paidHoursForThisMonth,
+      unpaidHours: unpaidHoursForThisMonth,
+      paidAmount: paidAmountThisMonth,
+      unpaidAmount: unpaidAmountThisMonth,
     };
   }, [selectedMonth, hourLogs, project?.hourlyRate, currentPaidHours]);
 
@@ -839,79 +842,75 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
               </div>
             </div>
 
-            {/* Month Total */}
-            <div className="px-3 py-2 bg-gray-50 border-b">
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-xs text-gray-600">Month Total:</span>
-                  <span className="font-semibold text-sm ml-2">{formatHours(monthlyData.totalHours)}</span>
+            {/* Month Summary */}
+            <div className="p-4 space-y-4">
+              {monthlyData.totalHours === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Clock className="h-10 w-10 mx-auto mb-2 text-gray-300" />
+                  <p className="text-sm">No hours logged in {getMonthName(selectedMonth.month)} {selectedMonth.year}</p>
                 </div>
-                <div>
-                  <span className="text-xs text-gray-600">Earned:</span>
-                  <span className="font-semibold text-sm ml-2 text-green-600">
-                    ${monthlyData.totalEarned.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </span>
-                </div>
-              </div>
-            </div>
+              ) : (
+                <>
+                  {/* Total Hours & Earnings */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 rounded-lg p-4 text-center">
+                      <p className="text-xs text-blue-600 mb-1">Total Hours</p>
+                      <p className="text-2xl font-bold text-blue-700">{formatHours(monthlyData.totalHours)}</p>
+                    </div>
+                    <div className="bg-green-50 rounded-lg p-4 text-center">
+                      <p className="text-xs text-green-600 mb-1">Total Earned</p>
+                      <p className="text-2xl font-bold text-green-700">
+                        ${monthlyData.totalEarned.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </p>
+                    </div>
+                  </div>
 
-            {/* Weekly Breakdown Table */}
-            <div className="p-3">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-2 font-medium text-gray-600">Week</th>
-                    <th className="text-right py-2 font-medium text-gray-600">Hours</th>
-                    <th className="text-right py-2 font-medium text-gray-600">Earned</th>
-                    <th className="text-right py-2 font-medium text-gray-600">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {monthlyData.weeks.map((week) => {
-                    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                    const startStr = `${monthNames[week.start.getMonth()]} ${week.start.getDate()}`;
-                    const endDate = new Date(week.end);
-                    endDate.setDate(endDate.getDate() - 1);
-                    const endStr = `${monthNames[endDate.getMonth()]} ${endDate.getDate()}`;
+                  {/* Payment Status */}
+                  <div className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-medium text-gray-700">Payment Status</span>
+                      {monthlyData.status === "paid" && (
+                        <Badge className="bg-green-100 text-green-800">
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          Fully Paid
+                        </Badge>
+                      )}
+                      {monthlyData.status === "partial" && (
+                        <Badge className="bg-blue-100 text-blue-800">
+                          Partially Paid
+                        </Badge>
+                      )}
+                      {monthlyData.status === "unpaid" && (
+                        <Badge className="bg-red-100 text-red-800">
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          Unpaid
+                        </Badge>
+                      )}
+                    </div>
                     
-                    return (
-                      <tr key={week.weekNum} className="border-b last:border-b-0">
-                        <td className="py-2 text-gray-700">
-                          Week {week.weekNum}: {startStr} - {endStr}
-                        </td>
-                        <td className="py-2 text-right font-medium">
-                          {week.hours > 0 ? `${week.hours.toFixed(1)} hrs` : "-"}
-                        </td>
-                        <td className="py-2 text-right font-medium text-gray-900">
-                          {week.hours > 0 ? `$${week.earned.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : "-"}
-                        </td>
-                        <td className="py-2 text-right">
-                          {week.status === "paid" && (
-                            <Badge className="bg-green-100 text-green-800 text-xs">
-                              <CheckCircle2 className="h-3 w-3 mr-1" />
-                              Paid
-                            </Badge>
-                          )}
-                          {week.status === "partial" && (
-                            <Badge className="bg-blue-100 text-blue-800 text-xs">
-                              Partial
-                            </Badge>
-                          )}
-                          {week.status === "unpaid" && (
-                            <Badge className="bg-red-100 text-red-800 text-xs">
-                              <AlertCircle className="h-3 w-3 mr-1" />
-                              Due
-                            </Badge>
-                          )}
-                          {week.status === "no-hours" && (
-                            <span className="text-gray-400">-</span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="flex justify-between items-center py-2 px-3 bg-green-50 rounded">
+                        <span className="text-green-700">Paid</span>
+                        <div className="text-right">
+                          <span className="font-medium text-green-700">{monthlyData.paidHours.toFixed(1)} hrs</span>
+                          <span className="text-green-600 text-xs ml-2">
+                            (${monthlyData.paidAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center py-2 px-3 bg-red-50 rounded">
+                        <span className="text-red-700">Due</span>
+                        <div className="text-right">
+                          <span className="font-medium text-red-700">{monthlyData.unpaidHours.toFixed(1)} hrs</span>
+                          <span className="text-red-600 text-xs ml-2">
+                            (${monthlyData.unpaidAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
