@@ -20,12 +20,14 @@ import { NewLiveProject, NewHourLog } from "@/types";
 import { 
   useHourLogs, 
   useAddHourLog, 
+  useUpdateHourLog,
+  useDeleteHourLog,
   useUpdateNewLiveProject,
   newLiveProjectQueryKeys 
 } from "@/hooks/useNewLiveProjectMutations";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Check } from "lucide-react";
 
 interface TimesheetModalProps {
   project: NewLiveProject | null;
@@ -161,6 +163,11 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
   const [entryDate, setEntryDate] = useState<string>(() => new Date().toISOString().split("T")[0]);
   const [entryHours, setEntryHours] = useState<string>("");
 
+  // Edit time entry states
+  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+  const [editingEntryHours, setEditingEntryHours] = useState<string>("");
+  const [editingEntryDate, setEditingEntryDate] = useState<string>("");
+
   // Payment management states
   const [showEditPayment, setShowEditPayment] = useState(false);
   const [paidHoursInput, setPaidHoursInput] = useState<string>("");
@@ -179,6 +186,8 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
   // Mutations and query client
   const queryClient = useQueryClient();
   const addHourLog = useAddHourLog();
+  const updateHourLog = useUpdateHourLog();
+  const deleteHourLog = useDeleteHourLog();
   const updateProject = useUpdateNewLiveProject();
 
   // Fetch hour logs for the project
@@ -212,6 +221,68 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
       toast.success("Time entry added successfully");
     } catch (error) {
       console.error("Error adding time entry:", error);
+    }
+  };
+
+  // Handle starting edit of time entry
+  const handleStartEditEntry = (log: NewHourLog) => {
+    setEditingEntryId(log.id);
+    setEditingEntryHours(log.submittedHours.toString());
+    setEditingEntryDate(new Date(log.date).toISOString().split("T")[0]);
+  };
+
+  // Handle canceling edit of time entry
+  const handleCancelEditEntry = () => {
+    setEditingEntryId(null);
+    setEditingEntryHours("");
+    setEditingEntryDate("");
+  };
+
+  // Handle updating time entry
+  const handleUpdateTimeEntry = async (logId: string) => {
+    if (!project || !editingEntryHours.trim() || !editingEntryDate) {
+      toast.error("Please enter date and hours");
+      return;
+    }
+
+    const hours = parseFloat(editingEntryHours);
+    if (isNaN(hours) || hours <= 0) {
+      toast.error("Please enter valid hours");
+      return;
+    }
+
+    try {
+      await updateHourLog.mutateAsync({
+        projectId: project.id,
+        hourLogId: logId,
+        date: new Date(editingEntryDate).toISOString(),
+        submittedHours: hours,
+      });
+      setEditingEntryId(null);
+      setEditingEntryHours("");
+      setEditingEntryDate("");
+      await refetchHourLogs();
+    } catch (error) {
+      console.error("Error updating time entry:", error);
+    }
+  };
+
+  // Handle deleting time entry
+  const handleDeleteTimeEntry = async (logId: string) => {
+    if (!project) return;
+
+    if (!confirm("Are you sure you want to delete this time entry?")) {
+      return;
+    }
+
+    try {
+      await deleteHourLog.mutateAsync({
+        projectId: project.id,
+        hourLogId: logId,
+      });
+      await refetchHourLogs();
+    } catch (error) {
+      console.error("Error deleting time entry:", error);
     }
   };
 
@@ -321,7 +392,7 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
     };
   }, [hourLogs, project?.weeklyLimit]);
 
-  // Calculate hours per day for the selected week
+  // Calculate hours per day for the selected week (including individual entries)
   const dailyHours = useMemo(() => {
     return weekDates.map((date) => {
       const startOfDay = new Date(date);
@@ -331,7 +402,15 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
       endOfDay.setHours(0, 0, 0, 0);
 
       const hours = calculateHoursForRange(hourLogs, startOfDay, endOfDay);
-      return { date, hours };
+      
+      // Get individual entries for this day
+      const entries = hourLogs.filter((log) => {
+        const logDate = new Date(log.date);
+        logDate.setHours(0, 0, 0, 0);
+        return logDate >= startOfDay && logDate < endOfDay;
+      });
+      
+      return { date, hours, entries };
     });
   }, [weekDates, hourLogs]);
 
@@ -774,7 +853,7 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {dailyHours.map(({ date, hours }) => {
+                  {dailyHours.map(({ date, hours, entries }) => {
                     const dayNum = date.getDate();
                     const dayName = getDayName(date);
                     const isCurrentDay = isToday(date);
@@ -783,30 +862,100 @@ export const TimesheetModal: React.FC<TimesheetModalProps> = ({
                     return (
                       <div
                         key={date.toISOString()}
-                        className={`flex items-center gap-3 py-1.5 ${isCurrentDay ? "bg-blue-50 -mx-3 px-3 rounded" : ""}`}
+                        className={`group py-1.5 ${isCurrentDay ? "bg-blue-50 -mx-3 px-3 rounded" : ""}`}
                       >
-                        <div className="w-24 flex-shrink-0">
-                          <span className={`text-xs ${isCurrentDay ? "font-semibold text-blue-600" : "text-gray-700"}`}>
-                            {dayNum} {dayName}
-                          </span>
-                        </div>
-                        <div className="flex-1">
-                          <div className="h-5 bg-gray-100 rounded-full overflow-hidden">
-                            {hours > 0 && (
-                              <div
-                                className={`h-full rounded-full transition-all ${
-                                  isCurrentDay ? "bg-green-500" : "bg-green-400"
-                                }`}
-                                style={{ width: `${barWidth}%` }}
-                              />
-                            )}
+                        <div className="flex items-center gap-3">
+                          <div className="w-24 flex-shrink-0">
+                            <span className={`text-xs ${isCurrentDay ? "font-semibold text-blue-600" : "text-gray-700"}`}>
+                              {dayNum} {dayName}
+                            </span>
                           </div>
+                          <div className="flex-1">
+                            <div className="h-5 bg-gray-100 rounded-full overflow-hidden">
+                              {hours > 0 && (
+                                <div
+                                  className={`h-full rounded-full transition-all ${
+                                    isCurrentDay ? "bg-green-500" : "bg-green-400"
+                                  }`}
+                                  style={{ width: `${barWidth}%` }}
+                                />
+                              )}
+                            </div>
+                          </div>
+                          <div className="w-16 text-right">
+                            <span className={`text-xs font-medium ${hours > 0 ? "text-gray-900" : "text-gray-400"}`}>
+                              {hours > 0 ? `${hours.toFixed(2)} hrs` : "0:00 hrs"}
+                            </span>
+                          </div>
+                          {/* Edit/Delete buttons - visible on hover */}
+                          {entries.length > 0 && (
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              {entries.map((entry) => (
+                                <div key={entry.id} className="flex items-center gap-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleStartEditEntry(entry)}
+                                    className="h-5 w-5 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                    title="Edit entry"
+                                  >
+                                    <Pencil className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleDeleteTimeEntry(entry.id)}
+                                    disabled={deleteHourLog.isPending}
+                                    className="h-5 w-5 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                    title="Delete entry"
+                                  >
+                                    <Trash2 className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        <div className="w-16 text-right">
-                          <span className={`text-xs font-medium ${hours > 0 ? "text-gray-900" : "text-gray-400"}`}>
-                            {hours > 0 ? `${hours.toFixed(2)} hrs` : "0:00 hrs"}
-                          </span>
-                        </div>
+                        
+                        {/* Edit mode - inline form */}
+                        {entries.some(e => editingEntryId === e.id) && (
+                          <div className="ml-24 mt-2 flex items-center gap-2 text-xs bg-white border rounded px-2 py-1">
+                            <Input
+                              type="date"
+                              value={editingEntryDate}
+                              onChange={(e) => setEditingEntryDate(e.target.value)}
+                              className="h-6 text-xs w-28"
+                            />
+                            <Input
+                              type="number"
+                              step="0.5"
+                              min="0"
+                              value={editingEntryHours}
+                              onChange={(e) => setEditingEntryHours(e.target.value)}
+                              className="h-6 text-xs w-16"
+                            />
+                            <span className="text-gray-500">hrs</span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleUpdateTimeEntry(editingEntryId!)}
+                              disabled={updateHourLog.isPending}
+                              className="h-6 w-6 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                              title="Save"
+                            >
+                              <Check className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleCancelEditEntry}
+                              className="h-6 w-6 p-0 text-gray-500 hover:text-gray-700"
+                              title="Cancel"
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
