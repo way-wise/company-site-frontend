@@ -271,7 +271,7 @@ const Skills = () => {
     {
       title: "Our Web Development Skills",
       description:
-        "Modern web technologies and frameworks for building scalable, high-performance applications.",
+        "We use modern web technologies and powerful frameworks to build scalable, high-performance applications tailored to your business needs. From frontend and backend development to cloud, DevOps, AI/ML, and mobile solutions, our tech stack ensures secure, fast, and future-ready digital experiences.",
       skills: webDevelopmentSkills,
     },
     {
@@ -285,13 +285,9 @@ const Skills = () => {
   return (
     <section className="py-20 bg-gradient-to-t from-green-300 to-purple-500">
       <div className="container mx-auto px-4">
-        <div className="mb-16">
-          <SectionTitle
-            title="Our Core Skills & Technologies"
-            description="We leverage cutting-edge technologies and industry best practices to deliver exceptional digital solutions. Our expertise spans across modern web frameworks, cloud platforms, mobile development, Microsoft 365 services, enterprise security, and emerging technologies."
-            titleClass="text-white text-4xl pb-4 xl:text-[55px] font-bold"
-            descriptionClass="text-gray-100 text-base xl:text-[20px]"
-          />
+        <div className="mb-16 max-w-4xl mx-auto px-4 text-center space-y-2 sm:space-y-3 lg:space-y-4">
+          <h3 className="font-bold text-white text-4xl pb-4 xl:text-[55px]">Our Core Skills &amp; Technologies</h3>
+          <p className="leading-relaxed sm:leading-[30px] text-gray-100 text-base xl:text-[20px]">As a leading Web and Software Development Company in the USA, we leverage cutting-edge technologies and industry best practices to build scalable, high-performance digital solutions. Our expertise includes custom software development, modern web frameworks, cloud computing services, mobile app development, Microsoft 365 solutions, enterprise cybersecurity, and AI-driven technologies—ensuring secure, future-ready systems that drive real business growth.</p>
         </div>
 
         <div className="space-y-16 lg:space-y-20">
@@ -301,10 +297,10 @@ const Skills = () => {
               className="space-y-8 p-3 md:p-6 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20"
             >
               <div className="space-y-3">
-                <h3 className="text-2xl md:text-3xl xl:text-4xl font-bold text-black">
+                <h4 className="text-2xl md:text-3xl xl:text-4xl font-bold text-black">
                   {group.title}
-                </h3>
-                <p className="text-gray-900 text-base md:text-lg max-w-xl">
+                </h4>
+                <p className="text-gray-900 text-base md:text-lg max-w-4xl">
                   {group.description}
                 </p>
               </div>

@@ -81,8 +81,7 @@ const Projects = () => {
         <div className="mb-16 ">
           <SectionTitle
             title="Our Latest Web Development and Digital Innovation Projects"
-            description="At Way Wise Tech, America's leading web development company, we take pride in developing digital solutions that transform businesses. Our services, from custom websites and web applications to software development and UI/UX, exhibit innovation, precision, and performance. Our experienced experts combine creativity and the newest technology to design solutions that lead growth, enhance brand visibility, and optimize business processes for customers across the globe.
-"
+            description="At Way Wise Tech, America's leading web development company, we take pride in developing digital solutions that transform businesses. Our services, from custom websites and web applications to software development and UI/UX, exhibit innovation, precision, and performance. Our experienced experts combine creativity and the newest technology to design solutions that lead growth, enhance brand visibility, and optimize business processes for customers across the globe."
             titleClass="text-white text-4xl pb-4  xl:text-[55px] font-bold"
             descriptionClass="text-[#fff] text-base xltext-[20px]"
           />

@@ -14,8 +14,8 @@ const inter = Inter({
 
 const baseUrl =
 	process.env.NEXT_PUBLIC_BASE_URL ||
-	(process.env.VERCEL_URL
-		? `https://${process.env.VERCEL_URL}`
+	(process.env.NODE_ENV === "production"
+		? "https://www.waywisetech.com"
 		: "http://localhost:3000");
 
 export const metadata: Metadata = {

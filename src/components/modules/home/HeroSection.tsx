@@ -21,21 +21,17 @@ const HeroSection = () => {
 					{/* Main heading */}
 					<div className="mb-4 md:mb-8">
 						<div className="text-4xl lg:text-6xl  font-bold tracking-wide text-center md:text-left">
-							<h1 className="text-white ">WAY-WISE</h1>
-							<h2 className="text-transparent bg-gradient-to-r from-[#00D4FF] to-[#0099CC] bg-clip-text ">
+							<p className="text-white ">WAY-WISE</p>
+							<p className="text-transparent bg-gradient-to-r from-[#00D4FF] to-[#0099CC] bg-clip-text ">
 								TECHNOLOGY
-							</h2>
+							</p>
 						</div>
 					</div>
 					{/* <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">Microsoft M365 Customer Support Services</p> */}
 					{/* Description */}
-					<p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
-						<strong>Looking to Scale Your Business Faster?</strong>
-						<br />
-						We help companies generate millions in revenue with high-quality
-						software solutions and digital marketing services trusted by 100+
-						global partners. Guaranteed results. Unmatched delivery. Growth
-						engineered for your success.
+					<h1 className="text-md  lg:text-2xl text-white mb-2">Web and Software Development Company USA</h1>
+					<p className="text-white/80 text-md  lg:text-xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
+						Way Wise Tech is a leading Web and Software Development Company in the USA, helping businesses scale faster with high-quality custom software, web applications, and data-driven digital marketing solutions. Trusted by 100+ global partners, we engineer growth with guaranteed results, unmatched delivery, and technology built to drive real revenue.
 					</p>
 
 					{/* CTA Button */}

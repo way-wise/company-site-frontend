@@ -80,13 +80,9 @@ const Offers = () => {
   return (
     <section className="relative  bg-[url('@/assets/images/offers/offer-bg.png')] bg-cover bg-center bg-no-repeat">
       <div className="container relative z-10 py-10 lg:py-20 ">
-        <div className="mb-8 lg:mb-16">
-          <SectionTitle
-            title="What We Offer"
-            description="We deliver tailored IT services—from web development, App Development and graphic design to digital marketing, virtual assistance, data entry, and server deployment."
-            titleClass="text-white text-3xl sm:text-4xl lg:text-[55px] font-bold"
-            descriptionClass="text-white text-base sm:text-lg lg:text-[20px]"
-          />
+        <div className="max-w-4xl mx-auto px-4 text-center space-y-2 sm:space-y-3 lg:space-y-4 mb-12 lg:mb-16">
+          <h3 className="text-white text-3xl sm:text-4xl lg:text-[55px] font-bold">What We Offer</h3>
+          <p className="text-white text-base sm:text-lg lg:text-[20px]">We provide end-to-end IT solutions designed to help businesses grow and operate efficiently. From custom web and app development to graphic design, digital marketing, virtual assistance, data management, and secure server deployment, we deliver scalable solutions tailored to your goals.</p>
         </div>
 
         {/* Stack Scroll for All Devices */}
