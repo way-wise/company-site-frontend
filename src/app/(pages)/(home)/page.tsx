@@ -16,8 +16,7 @@ const baseUrl =
     : "http://localhost:3000");
 
 export const metadata: Metadata = {
-  title:
-    "Web Development Company USA | Custom Software Solutions | Way Wise Tech",
+  title: "Web and Software Development Company USA | Way Wise Tech",
   description:
     "Way Wise Tech is a top-rated web development company in the USA, providing custom software development, web app design, and digital solutions for global businesses seeking innovation and reliability.",
   keywords: [
