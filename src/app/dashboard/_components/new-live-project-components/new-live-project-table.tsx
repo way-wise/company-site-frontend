@@ -713,6 +713,22 @@ export const NewLiveProjectTable = () => {
     }
   };
 
+  // Handle move project up/down
+  const handleMoveProject = async (project: NewLiveProject, direction: 'up' | 'down') => {
+    const currentOrder = project.displayOrder ?? 0;
+    const newOrder = direction === 'up' ? currentOrder - 1 : currentOrder + 1;
+    
+    try {
+      await updateProject.mutateAsync({
+        projectId: project.id,
+        projectData: { displayOrder: newOrder },
+      });
+      await refetch();
+    } catch (error) {
+      console.error("Error moving project:", error);
+    }
+  };
+
   // Get projects list
   let projects = projectsData?.data || [];
   
@@ -738,10 +754,15 @@ export const NewLiveProjectTable = () => {
     }
   }, [projects]);
   
-  // Sort by createdAt ascending (oldest first, newest last) - default sort
-  const sortedProjects = [...projects].sort((a, b) => 
-    new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-  );
+  // Sort by displayOrder first (ascending), then by createdAt (oldest first)
+  const sortedProjects = [...projects].sort((a, b) => {
+    const orderA = a.displayOrder ?? 0;
+    const orderB = b.displayOrder ?? 0;
+    if (orderA !== orderB) {
+      return orderA - orderB;
+    }
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  });
 
   // Fetch actions for all projects when modal is open
   const actionsQueries = useQueries({
@@ -1129,14 +1150,40 @@ export const NewLiveProjectTable = () => {
       header: "Actions",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
         const { id } = row.original;
+        const project = row.original;
+        const isHourly = project.projectType === "HOURLY";
 
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            {isHourly && (
+              <>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0"
+                  onClick={() => handleMoveProject(project, 'up')}
+                  title="Move Up"
+                >
+                  <ArrowUp className="h-3 w-3" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0"
+                  onClick={() => handleMoveProject(project, 'down')}
+                  title="Move Down"
+                >
+                  <ArrowDown className="h-3 w-3" />
+                </Button>
+              </>
+            )}
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0"
+              className="h-7 w-7 p-0"
               onClick={() => {
                 router.push(`/dashboard/live-projects/${id}`);
               }}
@@ -1148,7 +1195,7 @@ export const NewLiveProjectTable = () => {
               type="button"
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0"
+              className="h-7 w-7 p-0"
               onClick={() => {
                 setSelectedProject(row.original);
                 setProjectId(id);
@@ -1162,7 +1209,7 @@ export const NewLiveProjectTable = () => {
               type="button"
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
               onClick={() => {
                 setProjectId(id);
                 setDeleteModalOpen(true);
