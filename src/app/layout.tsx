@@ -15,7 +15,7 @@ const inter = Inter({
 const baseUrl =
 	process.env.NEXT_PUBLIC_BASE_URL ||
 	(process.env.NODE_ENV === "production"
-		? "https://www.waywisetech.com"
+		? "https://waywisetech.com"
 		: "http://localhost:3000");
 
 export const metadata: Metadata = {

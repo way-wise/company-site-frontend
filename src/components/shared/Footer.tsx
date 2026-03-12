@@ -40,16 +40,7 @@ const Footer = () => {
 							</Link>
 
 							<p className=" md:mr-6 text-sm sm:text-base leading-relaxed text-gray-600 dark:text-white">
-								Way Wise Tech stands proud as one of the pinnacle software
-								development agencies within the US. We create revolutionary and
-								specific cutting-edge, custom software solutions around the
-								globe. Our skilled team of developers and industry professionals
-								specializes innovative web applications, mobile apps, and
-								enterprise systems needs of various organizations. We empower
-								groups to develop greater hastily and navigate their digital
-								transformation by way of handing over software program this is
-								dependable, results-oriented, and emphasizes excellent,
-								scalability, and normal performance.
+								Way Wise Tech is a leading Web and Software Development Company in the USA, delivering innovative custom software development solutions for businesses worldwide. Our experienced team specializes in web application development, mobile app development, and enterprise software solutions, helping organizations build scalable and high-performance digital products. Through modern technologies, cloud engineering services, and full-stack development expertise, we empower businesses to accelerate growth and achieve successful digital transformation with secure, reliable, and results-driven software solutions.
 							</p>
 
 							{/* Social Media Links */}
