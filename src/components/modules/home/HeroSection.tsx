@@ -1,6 +1,8 @@
 import mainBackground from "@/assets/images/home/full-bg.png";
 import heroLeftBg from "@/assets/images/home/hero-ai.png";
 import CalendlyButton from "@/components/shared/CalendlyButton";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import Image from "next/image";
 
 const HeroSection = () => {
@@ -36,15 +38,16 @@ const HeroSection = () => {
 
 					{/* CTA Button */}
 					<div>
-						<CalendlyButton
-							buttonText="Book a Strategy Call"
-							url="https://calendly.com/way-wise-tech/software-development-meeting"
-						/>
-						{/* <Link
-							href=""
+						{/* <CalendlyButton
+							buttonText="Get a Free Quote"
+							url="/contact-us"
+						/> */}
+						
+						<Link
+							href="/contact-us"
 							className="bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-white lg:px-8 lg:py-4 px-4 py-3 rounded-lg text-lg font-semibold hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105 flex items-center gap-2 text-left"
 						>
-							Book a Strategy Call
+							Get a Free Quote
 							<svg
 								width="20"
 								height="20"
@@ -61,7 +64,7 @@ const HeroSection = () => {
 									strokeLinejoin="round"
 								/>
 							</svg>
-						</Link> */}
+						</Link>
 					</div>
 				</div>
 				<div className="flex md:justify-end justify-center items-center pt-3">
