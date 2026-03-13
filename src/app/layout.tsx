@@ -95,7 +95,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<head>
 				{/* Google Tag Manager */}
 				<Script
@@ -117,7 +117,7 @@ export default function RootLayout({
 				/>
 				<meta name="p:domain_verify" content="1a0ec79e5c7c26286091b5167b64a39d"/>
 			</head>
-			<body className={`${inter.variable} font-sans antialiased`}>
+			<body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
 				{/* Google Tag Manager (noscript) */}
 				<noscript>
 					<iframe
