@@ -54,7 +54,7 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
         </div>
 
         {/* Know More button */}
-        <div className="mt-auto">
+        {/* <div className="mt-auto">
           <Link
             target="_blank"
             href={project.url}
@@ -63,7 +63,7 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
             View Live
             <MoveUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );
