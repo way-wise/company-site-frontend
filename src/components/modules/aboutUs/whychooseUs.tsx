@@ -74,16 +74,10 @@ const ChooseUs = () => {
                 in Tech Solutions
               </h1>
               <p className="text-lg sm:text-xl text-[#3d4e5c] leading-7 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:400ms]">
-                At Way-Wise Tech, a California-based software and web
-                development firm, we craft innovative digital solutions that
-                drive business growth.
+                At Way-Wise Tech, a California-based Web and Software Development Company in the USA, we deliver innovative digital solutions that help businesses grow and scale faster. Our expertise in custom software development, web application development, and mobile app development enables companies to build powerful, scalable digital products.
                 <br />
                 <br />
-                Our expert team of developers, designers, marketers, and IT
-                specialists deliver stunning websites, powerful applications,
-                and results-driven marketing strategies. We partner closely with
-                clients to transform visions into reality—blending creativity,
-                technical excellence, and industry insight.
+                Our team of skilled developers, designers, marketers, and IT specialists creates high-performing websites, enterprise software solutions, and data-driven digital marketing strategies. By combining full-stack development, cloud engineering services, and modern technology, we work closely with clients to transform ideas into secure, efficient, and growth-focused digital solutions. 
               </p>
             </div>
           </div>
