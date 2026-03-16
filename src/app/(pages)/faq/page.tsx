@@ -7,17 +7,25 @@ import {
 } from "@/components/ui/accordion";
 import { Card } from "@/components/ui/card";
 import { getAllFaqs } from "@/lib/api/faqs";
+import { getDynamicMetadata } from "@/lib/seo";
 import { Faq } from "@/schema/faqSchema";
 import type { Metadata } from "next";
 import { FaqAnswer } from "../_components/faq-answer";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_API;
-
-export const metadata: Metadata = {
-	alternates: {
-		canonical: `${baseUrl}/faq`,
-	},
-};
+export async function generateMetadata(): Promise<Metadata> {
+	return getDynamicMetadata("faq", {
+		title: "FAQ | Frequently Asked Questions | Way Wise Tech",
+		description:
+			"Find answers to commonly asked questions about our web development services, processes, pricing, and support.",
+		keywords: [
+			"FAQ",
+			"frequently asked questions",
+			"web development FAQ",
+			"software development questions",
+		],
+		path: "/faq",
+	});
+}
 
 const FaqPage = async () => {
 	const faqs = await getAllFaqs();

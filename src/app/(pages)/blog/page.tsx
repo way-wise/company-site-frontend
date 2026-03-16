@@ -1,3 +1,4 @@
+import { getDynamicMetadata } from "@/lib/seo";
 import { Blog } from "@/schema/blogSchema";
 import type { Metadata } from "next";
 import { BlogList } from "../_components/blogs/blog-list";
@@ -25,38 +26,24 @@ async function getAllBlogs(): Promise<Blog[]> {
 	}
 }
 
-// SEO Metadata
-export const metadata: Metadata = {
-	title: "Blog | Way-Wise - Insights, Tips & Industry News",
-	description:
-		"Stay updated with the latest insights, tips, and industry news from Way-Wise. Explore articles on business solutions, technology trends, and expert advice to help your business grow.",
-	keywords: [
-		"blog",
-		"business insights",
-		"industry news",
-		"business tips",
-		"technology trends",
-		"expert advice",
-		"Way-Wise blog",
-		"business solutions",
-	],
-	openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+	return getDynamicMetadata("blog", {
 		title: "Blog | Way-Wise - Insights, Tips & Industry News",
 		description:
-			"Stay updated with the latest insights, tips, and industry news from Way-Wise. Expert articles to help your business grow.",
-		type: "website",
-		url: "/blogs",
-	},
-	twitter: {
-		card: "summary_large_image",
-		title: "Blog | Way-Wise - Insights, Tips & Industry News",
-		description:
-			"Stay updated with the latest insights, tips, and industry news from Way-Wise. Expert articles to help your business grow.",
-	},
-	alternates: {
-		canonical: "/blogs",
-	},
-};
+			"Stay updated with the latest insights, tips, and industry news from Way-Wise. Explore articles on business solutions, technology trends, and expert advice to help your business grow.",
+		keywords: [
+			"blog",
+			"business insights",
+			"industry news",
+			"business tips",
+			"technology trends",
+			"expert advice",
+			"Way-Wise blog",
+			"business solutions",
+		],
+		path: "/blog",
+	});
+}
 
 const BlogsPage = async ({
 	searchParams,

@@ -3,41 +3,28 @@ import CategorySection from "@/components/modules/home/CategorySection";
 import ContactUs from "@/components/modules/home/ContactUs";
 import SuccessProjects from "@/components/modules/services/SuccessProjects";
 import PageHeader from "@/components/shared/PageHeader";
+import { getDynamicMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://www.waywisetech.com"
-    : "http://localhost:3000");
-
-export const metadata: Metadata = {
-  title: "About Way Wise Tech | Web & Software Development Company USA",
-  description:
-    "Learn about Way Wise Tech, Web & Software Development Company in the USA delivering custom software, web, mobile apps, and digital solutions.",
-  keywords: [
-    "About Way Wise Tech | Web & Software Development Company USA",
-    "custom software development company",
-    "custom software development company",
-    "web development company in USA",
-    "web application development services",
-    "mobile app development company",
-    "enterprise software solutions",
-    "full-stack development company",
-    "cloud engineering services",
-    "AI software development services"
-  ],
-  alternates: {
-    canonical: `${baseUrl}/about-us`,
-  },
-  openGraph: {
-    type: "website",
-    url: `${baseUrl}/about-us`,
-    title: "About Us | Web Development Company USA",
+export async function generateMetadata(): Promise<Metadata> {
+  return getDynamicMetadata("about-us", {
+    title: "About Way Wise Tech | Web & Software Development Company USA",
     description:
-      "Learn about Way Wise Tech, a leading web development company with expert engineers delivering innovative custom software solutions.",
-  },
-};
+      "Learn about Way Wise Tech, Web & Software Development Company in the USA delivering custom software, web, mobile apps, and digital solutions.",
+    keywords: [
+      "About Way Wise Tech | Web & Software Development Company USA",
+      "custom software development company",
+      "web development company in USA",
+      "web application development services",
+      "mobile app development company",
+      "enterprise software solutions",
+      "full-stack development company",
+      "cloud engineering services",
+      "AI software development services"
+    ],
+    path: "/about-us",
+  });
+}
 
 const AboutUs = () => {
   return (

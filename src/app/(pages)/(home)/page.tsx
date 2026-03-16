@@ -7,39 +7,27 @@ import Projects from "@/components/modules/home/Projects";
 import Services from "@/components/modules/home/Services";
 import Skills from "@/components/modules/home/Skills";
 import { servicesFirstData, servicesSecondData } from "@/datas/services";
+import { getDynamicMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://www.waywisetech.com"
-    : "http://localhost:3000");
-
-export const metadata: Metadata = {
-  title: "Web and Software Development Company USA | Way Wise Tech",
-  description:
-    "Way Wise Tech is a top-rated web development company in the USA, providing custom software development, web, app, and digital solutions for global businesses",
-  keywords: [
-    "Web and Software Development Company USA",
-    "custom software development services USA",
-    "website development company USA",
-    "mobile app development company USA",
-    "full-stack development company USA",
-    "custom web development firm",
-    "Best software firm",
-    "best website design firm"
-  ],
-  alternates: {
-    canonical: baseUrl,
-  },
-  openGraph: {
-    type: "website",
-    url: baseUrl,
-    title: "Web Development Company USA | Custom Software Solutions",
+export async function generateMetadata(): Promise<Metadata> {
+  return getDynamicMetadata("home", {
+    title: "Web and Software Development Company USA | Way Wise Tech",
     description:
-      "Way Wise Tech is a top-rated web development company in the USA, providing custom software development, web app design, and digital solutions for global businesses.",
-  },
-};
+      "Way Wise Tech is a top-rated web development company in the USA, providing custom software development, web, app, and digital solutions for global businesses",
+    keywords: [
+      "Web and Software Development Company USA",
+      "custom software development services USA",
+      "website development company USA",
+      "mobile app development company USA",
+      "full-stack development company USA",
+      "custom web development firm",
+      "Best software firm",
+      "best website design firm"
+    ],
+    path: "/",
+  });
+}
 
 const HomePage = () => {
   return (

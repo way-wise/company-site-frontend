@@ -1,17 +1,16 @@
 import PageHeader from "@/components/shared/PageHeader";
+import { getDynamicMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://www.waywisetech.com"
-    : "http://localhost:3000");
-
-export const metadata: Metadata = {
-  alternates: {
-    canonical: `${baseUrl}/terms-and-conditions`,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return getDynamicMetadata("terms-and-conditions", {
+    title: "Terms and Conditions | Way Wise Tech",
+    description:
+      "Read Way Wise Tech's Terms and Conditions for using our services and website.",
+    keywords: ["terms and conditions", "terms of service", "legal"],
+    path: "/terms-and-conditions",
+  });
+}
 
 const TermsAndConditionsPage = () => {
   return (

@@ -1,17 +1,16 @@
 import PageHeader from "@/components/shared/PageHeader";
+import { getDynamicMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://www.waywisetech.com"
-    : "http://localhost:3000");
-
-export const metadata: Metadata = {
-  alternates: {
-    canonical: `${baseUrl}/privacy-policy`,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return getDynamicMetadata("privacy-policy", {
+    title: "Privacy Policy | Way Wise Tech",
+    description:
+      "Read Way Wise Tech's Privacy Policy to understand how we collect, use, and protect your personal information.",
+    keywords: ["privacy policy", "data protection", "personal information"],
+    path: "/privacy-policy",
+  });
+}
 
 const PrivacyPolicyPage = () => {
   return (
