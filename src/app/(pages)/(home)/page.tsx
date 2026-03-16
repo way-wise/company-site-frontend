@@ -18,7 +18,7 @@ const baseUrl =
 export const metadata: Metadata = {
   title: "Web and Software Development Company USA | Way Wise Tech",
   description:
-    "Way Wise Tech is a top-rated web development company in the USA, providing custom software development, web app design, and digital solutions for global businesses seeking innovation and reliability.",
+    "Way Wise Tech is a top-rated web development company in the USA, providing custom software development, web, app, and digital solutions for global businesses",
   keywords: [
     "Web and Software Development Company USA",
     "custom software development services USA",

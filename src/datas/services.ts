@@ -30,7 +30,7 @@ export const servicesFirstData: ServiceDetail[] = [
 		title: "Web Application",
 		slug: "web-application",
 		description:
-			"Build responsive and scalable web applications that improve user engagement and business operations.",
+			"Get expert web application services in the USA from Way Wise Tech. We build secure, scalable, and custom web applications tailored to modern business needs.",
 		bgImage: webAppBg,
 		url: "/services/web-application",
 		icon: webIcon,
@@ -78,7 +78,7 @@ export const servicesFirstData: ServiceDetail[] = [
 		title: "Mobile Application",
 		slug: "mobile-application",
 		description:
-			"Develop intuitive mobile apps for iOS and Android to reach customers on the go and boost retention.",
+			"Get mobile application services in the USA. We build custom iOS, Android, and cross-platform apps that are scalable, secure, and designed for your business",
 		bgImage: mobileAppBg,
 		url: "/services/mobile-application",
 		icon: mobileIcon,

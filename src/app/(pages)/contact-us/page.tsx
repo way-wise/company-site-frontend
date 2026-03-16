@@ -12,7 +12,7 @@ const baseUrl =
 export const metadata: Metadata = {
 	title: "Contact Us | Web Development Company | Get Custom Software Quote",
 	description:
-		"Contact Way Wise Tech, trusted web development company, to discuss your project and get a custom software development quote for web, mobile, and digital solutions",
+		"Contact Way Wise Tech, trusted web development company, to discuss your project and get a custom software development quote for web, mobile",
 	keywords: [
 		"contact web development company",
 		"web development company contact",
