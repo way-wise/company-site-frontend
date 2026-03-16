@@ -15,6 +15,7 @@ import {
 	MessageCircle,
 	MessageSquare,
 	MessageSquareHeart,
+	Search,
 	Settings,
 	Shield,
 	UsersRound,
@@ -142,6 +143,12 @@ export const menuConfig: MenuItem[] = [
 		url: "/dashboard/live-projects",
 		roles: ["SUPER_ADMIN"], // Visible to super admins
 		permissions: ["read_new_live_project", "create_new_live_project"], // Or users with these permissions
+	},
+	{
+		title: "SEO",
+		icon: Search,
+		url: "/dashboard/seo",
+		permissions: ["manage_seo"],
 	},
 	{
 		title: "Settings",

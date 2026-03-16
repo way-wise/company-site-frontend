@@ -1,7 +1,18 @@
 import { Metadata } from "next";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API || process.env.NEXT_PUBLIC_API_URL || "http://localhost:7000/api/v1";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://www.waywisetech.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://waywisetech.com";
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
+function getCanonicalUrl(path?: string): string {
+  let url = path ? `${BASE_URL}${path}` : BASE_URL;
+  
+  if (IS_PRODUCTION) {
+    url = url.replace("://", "://www.").replace("://www.www.", "://www.");
+  }
+  
+  return url;
+}
 
 export interface SeoData {
   id: string;
@@ -54,8 +65,9 @@ export function generatePageMetadata(
     path?: string;
   }
 ): Metadata {
-  const baseUrl = BASE_URL;
   const siteName = "Way Wise Tech";
+
+  const canonicalUrlFallback = getCanonicalUrl(fallback.path);
 
   if (!seo) {
     return {
@@ -66,13 +78,13 @@ export function generatePageMetadata(
       creator: siteName,
       publisher: siteName,
       alternates: {
-        canonical: fallback.path ? `${baseUrl}${fallback.path}` : baseUrl,
+        canonical: canonicalUrlFallback,
       },
       openGraph: {
         type: "website",
         siteName: siteName,
         locale: "en_US",
-        url: fallback.path ? `${baseUrl}${fallback.path}` : baseUrl,
+        url: canonicalUrlFallback,
         title: fallback.title,
         description: fallback.description,
       },
@@ -97,7 +109,7 @@ export function generatePageMetadata(
     };
   }
 
-  const canonicalUrl = seo.canonicalUrl || (fallback.path ? `${baseUrl}${fallback.path}` : baseUrl);
+  const canonicalUrl = seo.canonicalUrl || canonicalUrlFallback;
 
   return {
     title: seo.metaTitle,
