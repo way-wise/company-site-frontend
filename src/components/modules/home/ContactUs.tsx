@@ -23,10 +23,8 @@ const ContactUs = () => {
                 Let&apos;s get started
               </h2>
 
-              <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-md">
-                We&apos;ll schedule a call to discuss your idea. After discovery
-                sessions, we&apos;ll send a proposal, and upon approval,
-                we&apos;ll get started.
+              <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-2xl">
+                Get in touch with Way Wise Tech, a trusted web development and custom software development company in the USA, to discuss your project and receive a tailored solution for your business. Our team specializes in web application development, mobile app development, and scalable digital solutions, helping startups and enterprises turn ideas into powerful, results-driven technology
               </p>
             </div>
 
