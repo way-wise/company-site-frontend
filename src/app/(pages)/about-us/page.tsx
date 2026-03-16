@@ -16,14 +16,16 @@ export const metadata: Metadata = {
   description:
     "Learn about Way Wise Tech, a leading web development company in the USA. Our expert team of 21+ engineers delivers innovative custom software solutions, web applications, and digital services for businesses worldwide.",
   keywords: [
-    "web development company about",
-    "web development firm team",
+    "About Way Wise Tech | Web & Software Development Company USA",
     "custom software development company",
-    "experienced web developers",
-    "web development company USA",
-    "software development team",
-    "web development experts",
-    "digital solutions company",
+    "custom software development company",
+    "web development company in USA",
+    "web application development services",
+    "mobile app development company",
+    "enterprise software solutions",
+    "full-stack development company",
+    "cloud engineering services",
+    "AI software development services"
   ],
   alternates: {
     canonical: `${baseUrl}/about-us`,
