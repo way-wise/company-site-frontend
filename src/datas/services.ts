@@ -22,6 +22,7 @@ import graphicsIcon from "@/assets/icons/services/graphics.svg";
 import internetIcon from "@/assets/icons/services/internet.svg";
 import mobileIcon from "@/assets/icons/services/mobile.svg";
 import webIcon from "@/assets/icons/services/web.png";
+import { de } from "zod/v4/locales";
 
 export const servicesFirstData: ServiceDetail[] = [
 	{
@@ -130,6 +131,7 @@ export const servicesFirstData: ServiceDetail[] = [
 		url: "/services/ai-integration",
 		icon: cloudIcon,
 		videoImage: aiImg,
+		detailedTitle: "AI/ML Services in USA | AI Integration Company",
 		detailedDescription:
 			"Unlock the power of connected devices with our advanced IoT solutions. We design and implement smart systems that collect, analyze, and act on real-time data from sensors and devices. From smart homes to industrial automation, our IoT expertise helps businesses optimize operations, reduce costs, and create innovative products. We work with cutting-edge technologies including Arduino, Raspberry Pi, AWS IoT, and Azure IoT to build scalable and secure IoT ecosystems.",
 		expertiseAreas: [
@@ -180,6 +182,7 @@ export const servicesSecondData: ServiceDetail[] = [
 		url: "/services/graphics-design",
 		icon: graphicsIcon,
 		videoImage: grpahicsImg,
+		detailedTitle: "Graphics Design Services in USA | Design Agency",
 		detailedDescription:
 			"Bring your brand to life with stunning visual designs that captivate and inspire. Our creative team specializes in crafting unique brand identities, eye-catching marketing materials, and engaging digital designs. From logos and branding to social media graphics and print materials, we ensure every design element reflects your brand's personality and values. We combine creativity with strategic thinking to deliver designs that not only look beautiful but also drive business results.",
 		expertiseAreas: [
@@ -227,6 +230,7 @@ export const servicesSecondData: ServiceDetail[] = [
 		url: "/services/digital-marketing",
 		icon: digitalIcon,
 		videoImage: digitalImg,
+		detailedTitle: "Digital Marketing Services in USA | Marketing Agency",
 		detailedDescription:
 			"Elevate your brand with data-driven digital marketing strategies that deliver real results. Our comprehensive approach combines SEO, social media marketing, content marketing, PPC advertising, and email campaigns to maximize your online presence. We analyze market trends, understand your target audience, and craft personalized campaigns that resonate with your customers. From increasing brand awareness to driving conversions, we help you achieve your business goals through strategic digital marketing.",
 		ctabutton: "Book Now",
@@ -275,6 +279,7 @@ export const servicesSecondData: ServiceDetail[] = [
 		url: "/services/cloud-engineering",
 		icon: internetIcon,
 		videoImage: cloudImg,
+		detailedTitle: "Cloud Engineering Services in USA | Cloud Solutions Company",
 		detailedDescription:
 			"Modernize your infrastructure with cloud engineering solutions that provide flexibility, scalability, and security. Our cloud experts help you migrate to the cloud, optimize existing cloud environments, and build cloud-native applications. We work with leading cloud platforms including AWS, Azure, and Google Cloud to design architectures that meet your performance, security, and budget requirements. From serverless computing to containerization, we leverage the latest cloud technologies to drive innovation.",
 		expertiseAreas: [
