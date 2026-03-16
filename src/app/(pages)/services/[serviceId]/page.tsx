@@ -90,7 +90,7 @@ export async function generateMetadata({
   const serviceKeywords = getServiceKeywords(service.title);
 
   return {
-    title: `${service.title} Services | Web Development Company | Way Wise Tech`,
+    title: `${service.title} Services | Web Development Company`,
     description: `${service.description} ${service.detailedDescription?.substring(0, 120) || ""} Expert ${service.title.toLowerCase()} services by Way Wise Tech, a leading web development company in the USA.`,
     keywords: [
       ...serviceKeywords,
