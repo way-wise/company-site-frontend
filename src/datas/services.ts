@@ -34,8 +34,9 @@ export const servicesFirstData: ServiceDetail[] = [
 		url: "/services/web-application",
 		icon: webIcon,
 		videoImage: webImg,
+		detailedTitle: "Web Application Services in USA | Website Development Company",
 		detailedDescription:
-			"At Way-Wise Tech, we transform your digital vision into reality through cutting-edge web development solutions. Our team of skilled developers crafts websites and web applications that not only look stunning but also deliver exceptional performance and user experience. We create tailor-made websites that perfectly align with your brand identity and business goals. From small online stores to large-scale marketplaces, we build robust e-commerce platforms that drive sales and enhance customer engagement. We develop easy-to-use CMS solutions that empower you to manage your website content effortlessly. Our PWAS combine the best of web and mobile apps, offering seamless experiences across all devices. We create and integrate APIs to enhance your website's functionality and connectivity with third-party services.",
+			"At Way Wise Tech, we provide professional web application services in the USA, helping businesses build powerful, scalable, and secure digital platforms. Our team specializes in custom web application development, delivering tailored solutions that streamline operations and improve user experience. As a trusted web application development company in the USA, we offer full-stack web application development, SaaS web application development, and enterprise web application solutions designed for startups and growing businesses. Using modern technologies, we build secure web application development solutions and cloud-based web applications that ensure performance, flexibility, and long-term scalability for your business.",
 		expertiseAreas: [
 			{
 				number: "01",
@@ -81,8 +82,9 @@ export const servicesFirstData: ServiceDetail[] = [
 		url: "/services/mobile-application",
 		icon: mobileIcon,
 		videoImage: appImg,
+		detailedTitle: "Mobile Application Services in USA | App Development Company",
 		detailedDescription:
-			"Transform your business with powerful mobile applications that engage users and drive growth. Our expert team develops native and cross-platform mobile apps for iOS and Android, ensuring seamless performance and exceptional user experiences. We leverage the latest technologies including React Native, Flutter, and Swift to create apps that are fast, reliable, and scalable. From concept to deployment, we handle every aspect of mobile app development with precision and creativity.",
+			"At Way Wise Tech, we deliver professional mobile application services in the USA, helping businesses create powerful, user-friendly mobile experiences. Our team specializes in custom mobile app development, building high-performance iOS and Android applications tailored to modern business needs. As a trusted mobile app development company in the USA, we provide cross-platform mobile app development, enterprise mobile application solutions, and scalable apps using technologies like React Native and Flutter. Our goal is to build secure, feature-rich mobile applications that enhance user engagement and support long-term business growth.",
 		expertiseAreas: [
 			{
 				number: "01",

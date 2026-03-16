@@ -164,6 +164,7 @@ export type ExpertiseArea = {
 };
 
 export type ServiceDetail = ServiceDisplay & {
+	detailedTitle?: string;
 	detailedDescription: string;
 	videoImage: StaticImageData;
 	expertiseAreas: ExpertiseArea[];

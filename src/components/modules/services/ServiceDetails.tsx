@@ -29,9 +29,9 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
 			</section>
 			<section className="py-8 md:py-16 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:800ms]">
 				<div className="max-w-[1170px] mx-auto px-4 md:px-8">
-					<h2 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-4 md:mb-8">
-						{service.title}
-					</h2>
+					<h1 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-4 md:mb-8">
+						{service.detailedTitle}
+					</h1>
 					<p className="text-base md:text-lg lg:text-xl text-[#3d4e5c] leading-6 md:leading-8 mb-4">
 						{service.detailedDescription}
 					</p>
