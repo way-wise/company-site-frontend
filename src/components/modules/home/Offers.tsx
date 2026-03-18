@@ -1,6 +1,7 @@
 "use client";
 import SectionTitle from "@/components/modules/home/SectionTitle";
 import { StaticImageData } from "next/image";
+import { useEffect, useState } from "react";
 import OffersCard from "./OffersCard";
 
 import offerLeftImg1 from "@/assets/images/offers/offer1.png";
@@ -21,7 +22,33 @@ export interface OfferData {
   imageAlt: string;
 }
 
+const getBreakpoint = (): "lg" | "sm" | "base" => {
+  if (typeof window === "undefined") return "base";
+  if (window.innerWidth >= 1024) return "lg";
+  if (window.innerWidth >= 640) return "sm";
+  return "base";
+};
+
+const getTopValue = (index: number, breakpoint: "lg" | "sm" | "base"): number => {
+  switch (breakpoint) {
+    case "lg":
+      return 160 + index * 20;
+    case "sm":
+      return 128 + index * 16;
+    default:
+      return 80 + index * 12;
+  }
+};
+
 const Offers = () => {
+  const [breakpoint, setBreakpoint] = useState<"lg" | "sm" | "base">("base");
+
+  useEffect(() => {
+    const updateBreakpoint = () => setBreakpoint(getBreakpoint());
+    updateBreakpoint();
+    window.addEventListener("resize", updateBreakpoint);
+    return () => window.removeEventListener("resize", updateBreakpoint);
+  }, []);
   const offers: OfferData[] = [
     {
       id: 1,
@@ -92,13 +119,7 @@ const Offers = () => {
               key={offer.id}
               className="sticky mb-4 sm:mb-6 lg:mb-0 transition-all duration-300"
               style={{
-                top: `${
-                  typeof window !== "undefined" && window.innerWidth >= 1024
-                    ? 160 + index * 20
-                    : typeof window !== "undefined" && window.innerWidth >= 640
-                    ? 128 + index * 16
-                    : 80 + index * 12
-                }px`,
+                top: `${getTopValue(index, breakpoint)}px`,
                 zIndex: index + 1,
               }}
             >
