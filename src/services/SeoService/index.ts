@@ -81,7 +81,8 @@ export const seoService = {
   },
 
   getSeoBySlug: async (slug: string): Promise<ApiResponse<SeoSetting>> => {
-    const response = await apiClient.get(`/seo/slug/${slug}`);
+    const encodedSlug = encodeURIComponent(slug);
+    const response = await apiClient.get(`/seo/slug/${encodedSlug}`);
     return response.data;
   },
 

@@ -40,8 +40,9 @@ interface SeoResponse {
 
 export async function getSeoBySlug(slug: string): Promise<SeoData | null> {
   try {
-    const response = await fetch(`${API_URL}/seo/slug/${slug}`, {
-      next: { revalidate: 60 },
+    const encodedSlug = encodeURIComponent(slug);
+    const response = await fetch(`${API_URL}/seo/slug/${encodedSlug}`, {
+      next: { revalidate: 10 },
     });
 
     if (!response.ok) {
