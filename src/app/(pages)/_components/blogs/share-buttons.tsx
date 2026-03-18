@@ -8,7 +8,7 @@ import {
 	Link as LinkIcon,
 	Check,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface ShareButtonsProps {
@@ -18,10 +18,11 @@ interface ShareButtonsProps {
 
 export const ShareButtons = ({ title, slug }: ShareButtonsProps) => {
 	const [copied, setCopied] = useState(false);
-	const url =
-		typeof window !== "undefined"
-			? `${window.location.origin}/blogs/${slug}`
-			: "";
+	const [url, setUrl] = useState("");
+
+	useEffect(() => {
+		setUrl(`${window.location.origin}/blogs/${slug}`);
+	}, [slug]);
 
 	const handleCopy = () => {
 		navigator.clipboard.writeText(url);
