@@ -35,8 +35,14 @@ export default function Navbar() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isUsersPortalOpen, setIsUsersPortalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { user } = useAuth();
   const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Prevent hydration mismatch by only rendering user-dependent content after mount
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -115,7 +121,10 @@ export default function Navbar() {
   const isDevelopment = !process.env.NEXT_PUBLIC_APP_MODE;
   const shouldUseDashboardDomain = isPublicMode() && !isDevelopment;
 
-  const usersPortalLinks = user
+  // Use isMounted to prevent hydration mismatch - always render logged-out state initially
+  const isLoggedIn = isMounted && user;
+
+  const usersPortalLinks = isLoggedIn
     ? [
       {
         label: "Profile",
@@ -384,7 +393,7 @@ export default function Navbar() {
                             </NavigationMenuLink>
                           </li>
                         ))}
-                        {user && (
+                        {isLoggedIn && (
                           <li>
                             <LogoutButton />
                           </li>
@@ -598,7 +607,7 @@ export default function Navbar() {
                             {item.label}
                           </a>
                         ))}
-                        {user && (
+                        {isLoggedIn && (
                           <div className="pt-2">
                             <LogoutButton />
                           </div>
