@@ -272,3 +272,38 @@
   list-style-type: none;
   padding-left: 0;
 }
+
+/* Fix heading border-bottom from MarkdownPreview wmde-markdown */
+.wmde-markdown h1,
+.wmde-markdown h2,
+.wmde-markdown h3,
+.wmde-markdown h4,
+.wmde-markdown h5,
+.wmde-markdown h6 {
+  border-bottom: none !important;
+  border-bottom-color: transparent !important;
+  padding-bottom: 0.3em !important;
+}
+
+/* Hide link icon from heading anchor links */
+.wmde-markdown h1 a[href^="#"],
+.wmde-markdown h2 a[href^="#"],
+.wmde-markdown h3 a[href^="#"],
+.wmde-markdown h4 a[href^="#"],
+.wmde-markdown h5 a[href^="#"],
+.wmde-markdown h6 a[href^="#"] {
+  display: none !important;
+}
+
+/* Also hide any anchor link icons */
+.wmde-markdown .anchor,
+.wmde-markdown .octicon-link,
+.wmde-markdown h1 .octicon-link,
+.wmde-markdown h2 .octicon-link,
+.wmde-markdown h3 .octicon-link,
+.wmde-markdown h4 .octicon-link,
+.wmde-markdown h5 .octicon-link,
+.wmde-markdown h6 .octicon-link {
+  display: none !important;
+  visibility: hidden !important;
+}

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
-import { MarkdownEditor } from "@/components/ui/markdown-editor";
+import { CKEditor } from "@/components/ui/ckeditor-editor";
 import {
   Select,
   SelectContent,
@@ -199,7 +199,7 @@ function CreateBlogForm() {
                       <FormLabel>Content</FormLabel>
                       <FormControl>
                         <div className="min-h-[500px]">
-                          <MarkdownEditor
+                          <CKEditor
                             value={field.value || ""}
                             onChange={field.onChange}
                             placeholder="Write your story here..."

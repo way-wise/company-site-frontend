@@ -1,5 +1,6 @@
 "use client";
 
+import { CKEditor } from "@/components/ui/ckeditor-editor";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -167,12 +168,12 @@ export const BlogForm = ({
               <FormItem>
                 <FormLabel>Content *</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="Enter blog content"
-                    {...field}
+                  <CKEditor
                     value={field.value || ""}
-                    rows={10}
+                    onChange={field.onChange}
+                    placeholder="Enter blog content"
                     disabled={isSubmitting}
+                    height={400}
                   />
                 </FormControl>
                 <FormMessage />

@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { formatDate } from "@/lib/date-format";
@@ -8,8 +7,10 @@ import { Blog } from "@/schema/blogSchema";
 import { Calendar } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { RelatedPosts } from "./related-posts";
 import { ShareButtons } from "./share-buttons";
+import "./blog-content.css";
 
 const MarkdownPreview = dynamic(() => import("@uiw/react-markdown-preview"), {
 	ssr: false,
@@ -20,33 +21,78 @@ interface BlogDetailProps {
 	relatedBlogs: Blog[];
 }
 
-const extractHeadings = (markdown: string) => {
-	const regex = /^(#{2,3})\s+(.+)$/gm;
-	const headings = [];
-	let match;
-	while ((match = regex.exec(markdown)) !== null) {
-		const text = match[2];
-		const id = text
-			.toLowerCase()
-			.trim()
-			.replace(/[^\w\s-]/g, "")
-			.replace(/[\s_-]+/g, "-")
-			.replace(/^-+|-+$/g, "");
+interface Heading {
+	level: number;
+	text: string;
+	id: string;
+}
 
-		headings.push({
-			level: match[1].length,
-			text,
-			id,
-		});
+const slugify = (text: string): string => {
+	return text
+		.toLowerCase()
+		.trim()
+		.replace(/[^\w\s-]/g, "")
+		.replace(/[\s_-]+/g, "-")
+		.replace(/^-+|-+$/g, "");
+};
+
+const extractHeadingsFromHtml = (html: string): Heading[] => {
+	const headings: Heading[] = [];
+	const seen = new Set<string>();
+
+	// Match h1-h6 tags with their content
+	const regex = /<h([1-6])[^>]*>(.*?)<\/h\1>/gi;
+	let match;
+
+	while ((match = regex.exec(html)) !== null) {
+		const level = parseInt(match[1], 10);
+		// Strip any HTML tags from the heading text
+		const text = match[2].replace(/<[^>]*>/g, "").trim();
+		let id = slugify(text);
+
+		// Handle duplicate IDs
+		let uniqueId = id;
+		let counter = 1;
+		while (seen.has(uniqueId)) {
+			uniqueId = `${id}-${counter}`;
+			counter++;
+		}
+		seen.add(uniqueId);
+
+		headings.push({ level, text, id: uniqueId });
 	}
+
 	return headings;
 };
 
 export const BlogDetail = ({ blog, relatedBlogs }: BlogDetailProps) => {
-	const authorName =
-		blog.author?.name || blog.userProfile?.user?.name || "Way-Wise Team";
+	const [headings, setHeadings] = useState<Heading[]>([]);
 
-	const headings = extractHeadings(blog.content);
+	// Extract headings from HTML content
+	useEffect(() => {
+		const extracted = extractHeadingsFromHtml(blog.content);
+		setHeadings(extracted);
+	}, [blog.content]);
+
+	// Assign IDs to rendered headings for TOC navigation
+	useEffect(() => {
+		const assignIdsToHeadings = () => {
+			const extracted = extractHeadingsFromHtml(blog.content);
+			const contentDiv = document.querySelector(".blog-content");
+			if (!contentDiv) return;
+
+			const headingElements = contentDiv.querySelectorAll("h1, h2, h3, h4, h5, h6");
+			headingElements.forEach((el, index) => {
+				if (extracted[index]) {
+					el.id = extracted[index].id;
+				}
+			});
+		};
+
+		// Small delay to ensure MarkdownPreview has rendered
+		const timer = setTimeout(assignIdsToHeadings, 500);
+		return () => clearTimeout(timer);
+	}, [blog.content]);
 
 	return (
 		<article className="mx-auto max-w-7xl">
@@ -83,17 +129,6 @@ export const BlogDetail = ({ blog, relatedBlogs }: BlogDetailProps) => {
 				{/* Meta Information */}
 				<div className="flex flex-wrap items-center justify-start gap-6 text-sm text-gray-600 dark:text-gray-400">
 					<div className="flex items-center gap-2">
-						<Avatar className="h-8 w-8">
-							<AvatarImage
-								src={`https://ui-avatars.com/api/?name=${authorName}&background=random`}
-							/>
-							<AvatarFallback>{authorName.charAt(0)}</AvatarFallback>
-						</Avatar>
-						<span className="font-medium text-gray-900 dark:text-gray-200">
-							{authorName}
-						</span>
-					</div>
-					<div className="flex items-center gap-2">
 						<Calendar className="h-4 w-4" />
 						<span>{formatDate(blog.publishedAt || blog.createdAt)}</span>
 					</div>
@@ -109,7 +144,7 @@ export const BlogDetail = ({ blog, relatedBlogs }: BlogDetailProps) => {
 					)}
 
 					{/* Blog Content */}
-					<div className="prose prose-lg prose-blue max-w-none dark:prose-invert">
+					<div className="blog-content prose prose-lg prose-blue max-w-none dark:prose-invert">
 						<MarkdownPreview
 							source={blog.content}
 							className="bg-transparent !text-gray-800 !dark:text-gray-200"
@@ -127,25 +162,9 @@ export const BlogDetail = ({ blog, relatedBlogs }: BlogDetailProps) => {
 						<ShareButtons title={blog.title} slug={blog.slug} />
 					</div>
 
-					{/* Author Card */}
-					<div className="mt-12 rounded-lg border bg-gray-50 p-6">
-						<div className="flex items-start gap-4">
-							<div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-200 text-lg font-semibold text-gray-700">
-								{authorName.charAt(0).toUpperCase()}
-							</div>
-							<div>
-								<h3 className="mb-1 text-lg font-semibold text-gray-900">
-									{authorName}
-								</h3>
-								<p className="text-sm text-gray-600">
-									Published on {formatDate(blog.publishedAt || blog.createdAt)}
-								</p>
-							</div>
-						</div>
-					</div>
 				</div>
 
-				{/* Table of Contents sidebar */}
+			{/* Table of Contents sidebar */}
 				<div className="hidden lg:block">
 					<div className="sticky top-24 max-h-[calc(100vh-100px)] overflow-y-auto">
 						<div className="rounded-xl border border-gray-100 bg-gray-50/50 p-6 dark:border-gray-800 dark:bg-gray-900/50">
