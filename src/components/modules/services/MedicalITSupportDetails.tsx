@@ -1,10 +1,11 @@
-import _24_7_calling from "@/assets/images/MedicalBilling/247_calling.png";
-import MedicalBillingServices from "@/assets/images/MedicalBilling/MedicalBillingServices.png";
-import fedearalCompliance from "@/assets/images/MedicalBilling/federalCompliance.png";
-import medicalbillingandcodingservicesinfographic from "@/assets/images/MedicalBilling/medicalbillingandcodingservicesinfographic.png";
-import providerCredentialing from "@/assets/images/MedicalBilling/providerCredentialing.png";
-import revenue_cycle from "@/assets/images/MedicalBilling/revenue_cycle.jpeg";
-import medicalBillingImage from "@/assets/images/services/billing-shape.png";
+// Public folder image paths
+const _24_7_calling = "/images/MedicalBilling/247_calling.png";
+const MedicalBillingServices = "/images/MedicalBilling/MedicalBillingServices.png";
+const fedearalCompliance = "/images/MedicalBilling/federalCompliance.png";
+const medicalbillingandcodingservicesinfographic = "/images/MedicalBilling/medicalbillingandcodingservicesinfographic.png";
+const providerCredentialing = "/images/MedicalBilling/providerCredentialing.png";
+const revenue_cycle = "/images/MedicalBilling/revenue_cycle.jpeg";
+const medicalBillingImage = "/images/services/billing-shape.png";
 import {
   Award,
   BarChart3,

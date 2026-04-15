@@ -1,7 +1,8 @@
 "use client";
-import Logo from "@/assets/images/shared/way-wise-logo.svg";
-import profileGuide from "@/assets/images/shared/way-wise-profile.jpg";
-import LogoText from "@/assets/images/shared/way-wise-text.png";
+// Public folder image paths
+const Logo = "/images/shared/way-wise-logo.svg";
+const profileGuide = "/images/shared/way-wise-profile.jpg";
+const LogoText = "/images/shared/way-wise-text.png";
 import { Button } from "@/components/ui/button";
 import {
   Collapsible,

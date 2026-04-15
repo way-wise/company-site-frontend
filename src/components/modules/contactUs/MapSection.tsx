@@ -1,10 +1,12 @@
-import image1 from "@/assets/images/contact/image1.svg";
-import image2 from "@/assets/images/contact/image2.svg";
-import image3 from "@/assets/images/contact/image3.svg";
-import image4 from "@/assets/images/contact/image4.svg";
 import { Card, CardContent } from "@/components/ui/card";
 import { Headset, MailOpen, MapPinCheck } from "lucide-react";
 import Image from "next/image";
+
+// Public folder image paths
+const image1 = "/images/contact/image1.svg";
+const image2 = "/images/contact/image2.svg";
+const image3 = "/images/contact/image3.svg";
+const image4 = "/images/contact/image4.svg";
 const contactCards = [
   {
     icon: "phone",
@@ -40,7 +42,7 @@ const MapSection = () => {
         <Image
           className="w-full h-full object-cover"
           alt="Map background"
-          src={image4.src}
+          src={image4}
           width={1200}
           height={598}
         />
@@ -58,7 +60,7 @@ const MapSection = () => {
                       <Image
                         className="w-full h-full rounded-[10px] object-cover"
                         alt={`Contact ${card.title}`}
-                        src={card.image.src}
+                        src={card.image}
                         width={100}
                         height={100}
                       />

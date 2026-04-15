@@ -1,5 +1,7 @@
-import microsoftSupportImage from "@/assets/images/services/microsoft-support.png";
-import supportDeliveryFramework from "@/assets/images/services/ms-support-flow-chart.png";
+// Public folder image paths
+const microsoftSupportImage = "/images/services/microsoft-support.png";
+const supportDeliveryFramework = "/images/services/ms-support-flow-chart.png";
+
 import {
   Award,
   Check,

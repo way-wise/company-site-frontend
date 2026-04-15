@@ -46,8 +46,7 @@ const ServiceCard = ({ service }: { service: ServiceDisplay }) => {
             </p>
 
             {/* Arrow Button */}
-            <Link
-              href={`/services/${service.slug}`}
+            <div
               className="self-end w-10 h-10  rounded-xl flex items-center justify-center hover:bg-white/30 transition-colors duration-200 group"
             >
               <svg
@@ -58,7 +57,7 @@ const ServiceCard = ({ service }: { service: ServiceDisplay }) => {
               >
                 <path d="M7 17L17 7M17 7H7M17 7V17" />
               </svg>
-            </Link>
+            </div>
           </div>
         </div>
 
@@ -67,6 +66,8 @@ const ServiceCard = ({ service }: { service: ServiceDisplay }) => {
           <Image
             src={service.bgImage}
             alt={service.title}
+            width={400}
+            height={300}
             className="w-full "
           />
         </div>

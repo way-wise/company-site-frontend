@@ -2,11 +2,11 @@
 import Image, { StaticImageData } from "next/image";
 
 interface Props {
-  image: StaticImageData;
+  image: StaticImageData | string;
   feedback: string;
   name: string;
   designation: string;
-  companyLogo: StaticImageData;
+  companyLogo: StaticImageData | string;
 }
 
 const FeadBackCard = ({
@@ -21,8 +21,8 @@ const FeadBackCard = ({
       {/* Client Image - Responsive layout */}
       <div className="flex-shrink-0 w-full sm:w-auto">
         <div className="bg-blue-100 rounded-lg overflow-hidden">
-          <Image
-            src={image}
+          <img
+            src={image as string}
             alt={name}
             className="h-[200px] sm:h-[250px] lg:h-[300px] xl:h-[350px] w-full sm:w-auto object-cover sm:object-cover object-top sm:object-center"
           />
@@ -62,8 +62,8 @@ const FeadBackCard = ({
             </p>
           </div>
           <div className="flex items-center">
-            <Image
-              src={companyLogo}
+            <img
+              src={companyLogo as string}
               alt="company logo"
               className="h-6 w-auto sm:h-7 lg:h-8"
             />

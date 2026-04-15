@@ -1,10 +1,12 @@
 "use client";
 
-import firoz from "@/assets/images/contact/firoz.svg";
-import lee from "@/assets/images/contact/lee1.png";
 import { CircleCheck } from "lucide-react";
 import Image from "next/image";
 import ContactForm from "./ContactForm";
+
+// Public folder image paths
+const firoz = "/images/contact/firoz.svg";
+const lee = "/images/contact/lee1.png";
 
 const ContactUs = () => {
   return (

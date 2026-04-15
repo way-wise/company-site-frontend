@@ -18,6 +18,8 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ project }) => {
           <Image
             src={project?.image}
             alt={project?.title}
+            width={600}
+            height={500}
             className="w-full h-48 sm:h-auto md:max-h-[500px] object-cover object-top md:object-center rounded-t-xl sm:rounded-l-2xl sm:rounded-r-none"
           />
         ) : (

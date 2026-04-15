@@ -1,16 +1,18 @@
-import mainBackground from "@/assets/images/home/full-bg.png";
-import heroLeftBg from "@/assets/images/home/hero-ai.png";
 import CalendlyButton from "@/components/shared/CalendlyButton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+
+// Public folder image paths
+const mainBackground = "/images/home/full-bg.png";
+const heroLeftBg = "/images/home/hero-ai.png";
 
 const HeroSection = () => {
 	return (
 		<section
 			className="w-full h-full py-8 lg:py-10 lg:h-[80vh] bg-left  md:bg-right lg:bg-center relative"
 			style={{
-				backgroundImage: `url(${mainBackground.src})`,
+				backgroundImage: `url(${mainBackground})`,
 				backgroundSize: "cover",
 
 				backgroundRepeat: "no-repeat",
@@ -70,7 +72,7 @@ const HeroSection = () => {
 				<div className="flex md:justify-end justify-center items-center pt-3">
 					<div className="animate-bounce-slow">
 						<Image
-							src={heroLeftBg.src}
+							src={heroLeftBg}
 							alt="hero left bg"
 							width={350}
 							height={350}

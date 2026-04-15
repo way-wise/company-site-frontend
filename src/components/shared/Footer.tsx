@@ -1,8 +1,10 @@
-import Logo from "@/assets/images/shared/way-wise-logo.svg";
-import LogoText from "@/assets/images/shared/way-wise-text.png";
 import Image from "next/image";
 import Link from "next/link";
 import CalendlyButton from "./CalendlyButton";
+
+// Public folder image paths
+const Logo = "/images/shared/way-wise-logo.svg";
+const LogoText = "/images/shared/way-wise-text.png";
 
 const Footer = () => {
 	return (

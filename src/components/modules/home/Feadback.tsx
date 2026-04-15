@@ -7,18 +7,21 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import FeadBackCard from "./FeadBackCard";
 
-import bulletImg from "@/assets/images/category/bullet.svg";
-import fiddenImg from "@/assets/images/category/fidden.svg";
-import searchforceIcon from "@/assets/images/category/searchforce.png";
-import seatWavesImg from "@/assets/images/category/seat-waves.svg";
-import weout from "@/assets/images/category/weout1.png";
-
-import fidden from "@/assets/images/feadback/fidden.jpg";
-import flyArzan from "@/assets/images/feadback/flyarjon.jpg";
-import clientImg from "@/assets/images/feadback/image1.png";
-import searchImg from "@/assets/images/feadback/search.jpg";
-import weoutImg from "@/assets/images/feadback/weout-jad.jpg";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+
+// Public folder image paths - Category
+const bulletImg = "/images/category/bullet.svg";
+const fiddenImg = "/images/category/fidden.svg";
+const searchforceIcon = "/images/category/searchforce.png";
+const seatWavesImg = "/images/category/seat-waves.svg";
+const weout = "/images/category/weout1.png";
+
+// Feedback images
+const fidden = "/images/feadback/fidden.jpg";
+const flyArzan = "/images/feadback/flyarjon.jpg";
+const clientImg = "/images/feadback/image1.png";
+const searchImg = "/images/feadback/search.jpg";
+const weoutImg = "/images/feadback/weout-jad.jpg";
 
 const Feadback = () => {
   const swiperRef = useRef<{

@@ -1,7 +1,9 @@
-import aboutMainPng from "@/assets/images/about-us/about-main.png";
-import aboutUs from "@/assets/images/about-us/about-us.svg";
 import CalendlyButton from "@/components/shared/CalendlyButton";
 import Image from "next/image";
+
+// Public folder image paths
+const aboutMainPng = "/images/about-us/about-main.png";
+const aboutUs = "/images/about-us/about-us.svg";
 
 const whyChooseUsItems = [
   {

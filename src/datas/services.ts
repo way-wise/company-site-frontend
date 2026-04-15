@@ -1,28 +1,28 @@
 import { ServiceDetail } from "@/types";
 
-// Import service images
-import cloudEngineeringBg from "@/assets/images/services/cloud-engineering.png";
-import digitalMarketingBg from "@/assets/images/services/digital-marketing.png";
-import graphicsDesignBg from "@/assets/images/services/graphics-design.png";
-import internetThingsBg from "@/assets/images/services/internetthings.png";
-import mobileAppBg from "@/assets/images/services/mobile-application.png";
-import webAppBg from "@/assets/images/services/web-application.png";
+// Service background images (public folder paths)
+const cloudEngineeringBg = "/images/services/cloud-engineering.png";
+const digitalMarketingBg = "/images/services/digital-marketing.png";
+const graphicsDesignBg = "/images/services/graphics-design.png";
+const internetThingsBg = "/images/services/internetthings.png";
+const mobileAppBg = "/images/services/mobile-application.png";
+const webAppBg = "/images/services/web-application.png";
 
-import aiImg from "@/assets/images/services/ai.jpg";
-import appImg from "@/assets/images/services/app.jpg";
-import cloudImg from "@/assets/images/services/cloud.jpg";
-import digitalImg from "@/assets/images/services/digital.jpg";
-import grpahicsImg from "@/assets/images/services/graphic.jpg";
-import webImg from "@/assets/images/services/web.jpg";
+// Service video/images
+const aiImg = "/images/services/ai.jpg";
+const appImg = "/images/services/app.jpg";
+const cloudImg = "/images/services/cloud.jpg";
+const digitalImg = "/images/services/digital.jpg";
+const grpahicsImg = "/images/services/graphic.jpg";
+const webImg = "/images/services/web.jpg";
 
-// Import service icons
-import cloudIcon from "@/assets/icons/services/cloud.svg";
-import digitalIcon from "@/assets/icons/services/digital.png";
-import graphicsIcon from "@/assets/icons/services/graphics.svg";
-import internetIcon from "@/assets/icons/services/internet.svg";
-import mobileIcon from "@/assets/icons/services/mobile.svg";
-import webIcon from "@/assets/icons/services/web.png";
-import { de } from "zod/v4/locales";
+// Service icons
+const cloudIcon = "/icons/services/cloud.svg";
+const digitalIcon = "/icons/services/digital.png";
+const graphicsIcon = "/icons/services/graphics.svg";
+const internetIcon = "/icons/services/internet.svg";
+const mobileIcon = "/icons/services/mobile.svg";
+const webIcon = "/icons/services/web.png";
 
 export const servicesFirstData: ServiceDetail[] = [
 	{

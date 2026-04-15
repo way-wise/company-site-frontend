@@ -1,9 +1,10 @@
-import fiddenImg from "@/assets/images/category/fidden.svg";
-import flyArzanImg from "@/assets/images/category/fly-arzan.svg";
-import penWiseImg from "@/assets/images/category/pen-wise.svg";
-import rnImg from "@/assets/images/category/r-n.svg";
-import seatWavesImg from "@/assets/images/category/seat-waves.svg";
-import weOutImg from "@/assets/images/category/weout.svg";
+// Category images (public folder paths)
+const fiddenImg = "/images/category/fidden.svg";
+const flyArzanImg = "/images/category/fly-arzan.svg";
+const penWiseImg = "/images/category/pen-wise.svg";
+const rnImg = "/images/category/r-n.svg";
+const seatWavesImg = "/images/category/seat-waves.svg";
+const weOutImg = "/images/category/weout.svg";
 
 export const categoryData = [
   {

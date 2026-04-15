@@ -4,10 +4,11 @@ import { StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
 import OffersCard from "./OffersCard";
 
-import offerLeftImg1 from "@/assets/images/offers/offer1.png";
-import offerLeftImg2 from "@/assets/images/offers/offer2.png";
-import offerLeftImg3 from "@/assets/images/offers/offer3.png";
-import offerLeftImg4 from "@/assets/images/offers/offer4.png";
+// Public folder image paths
+const offerLeftImg1 = "/images/offers/offer1.png";
+const offerLeftImg2 = "/images/offers/offer2.png";
+const offerLeftImg3 = "/images/offers/offer3.png";
+const offerLeftImg4 = "/images/offers/offer4.png";
 
 export interface OfferData {
   id: number;
@@ -18,7 +19,7 @@ export interface OfferData {
   backgroundColor: string;
   buttonColor: string;
   buttonHoverColor: string;
-  imageSrc: StaticImageData;
+  imageSrc: StaticImageData | string;
   imageAlt: string;
 }
 

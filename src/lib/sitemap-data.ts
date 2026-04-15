@@ -46,92 +46,92 @@ const publicPagesConfig: Array<{
 	{ path: "/sitemap-page", label: "Sitemap", priority: 0.5, changeFrequency: "monthly" },
 ];
 
-// Import images - Home
-import contactImg from "@/assets/images/home/contact.png";
-import mainBackground from "@/assets/images/home/full-bg.png";
-import heroLeftBg from "@/assets/images/home/hero-ai.png";
+// Public folder image paths - Home
+const contactImg = "/images/home/contact.png";
+const mainBackground = "/images/home/full-bg.png";
+const heroLeftBg = "/images/home/hero-ai.png";
 
 // About-us images
-import aboutMainPng from "@/assets/images/about-us/about-main.png";
-import aboutUsSvg from "@/assets/images/about-us/about-us.svg";
+const aboutMainPng = "/images/about-us/about-main.png";
+const aboutUsSvg = "/images/about-us/about-us.svg";
 
 // Contact images
-import contactFiroz from "@/assets/images/contact/firoz.svg";
-import contactImage1 from "@/assets/images/contact/image1.svg";
-import contactImage2 from "@/assets/images/contact/image2.svg";
-import contactImage3 from "@/assets/images/contact/image3.svg";
-import contactImage4 from "@/assets/images/contact/image4.svg";
-import contactLee1 from "@/assets/images/contact/lee1.png";
+const contactFiroz = "/images/contact/firoz.svg";
+const contactImage1 = "/images/contact/image1.svg";
+const contactImage2 = "/images/contact/image2.svg";
+const contactImage3 = "/images/contact/image3.svg";
+const contactImage4 = "/images/contact/image4.svg";
+const contactLee1 = "/images/contact/lee1.png";
 
 // Projects images
-import projectFidden from "@/assets/images/projects/fidden-io.png";
-import projectFly from "@/assets/images/projects/fly.png";
-import projectBg from "@/assets/images/projects/project-bg.png";
-import projectSearch from "@/assets/images/projects/search.png";
-import projectSeatWave from "@/assets/images/projects/seat-wave.png";
-import projectVoice from "@/assets/images/projects/voice.png";
-import projectWeout from "@/assets/images/projects/weout1.png";
+const projectFidden = "/images/projects/fidden-io.png";
+const projectFly = "/images/projects/fly.png";
+const projectBg = "/images/projects/project-bg.png";
+const projectSearch = "/images/projects/search.png";
+const projectSeatWave = "/images/projects/seat-wave.png";
+const projectVoice = "/images/projects/voice.png";
+const projectWeout = "/images/projects/weout1.png";
 
 // Offers images
-import offerBg from "@/assets/images/offers/offer-bg.png";
-import offer1 from "@/assets/images/offers/offer1.png";
-import offer2 from "@/assets/images/offers/offer2.png";
-import offer3 from "@/assets/images/offers/offer3.png";
-import offer4 from "@/assets/images/offers/offer4.png";
+const offerBg = "/images/offers/offer-bg.png";
+const offer1 = "/images/offers/offer1.png";
+const offer2 = "/images/offers/offer2.png";
+const offer3 = "/images/offers/offer3.png";
+const offer4 = "/images/offers/offer4.png";
 
 // Feedback images
-import feadbackBg from "@/assets/images/feadback/feadback-bg.png";
-import feadbackFidden from "@/assets/images/feadback/fidden.jpg";
-import feadbackFlyarjon from "@/assets/images/feadback/flyarjon.jpg";
-import feadbackImage1 from "@/assets/images/feadback/image1.png";
-import feadbackSearch from "@/assets/images/feadback/search.jpg";
-import feadbackWeout from "@/assets/images/feadback/weout-jad.jpg";
+const feadbackBg = "/images/feadback/feadback-bg.png";
+const feadbackFidden = "/images/feadback/fidden.jpg";
+const feadbackFlyarjon = "/images/feadback/flyarjon.jpg";
+const feadbackImage1 = "/images/feadback/image1.png";
+const feadbackSearch = "/images/feadback/search.jpg";
+const feadbackWeout = "/images/feadback/weout-jad.jpg";
 
 // Category images
-import categoryBullet from "@/assets/images/category/bullet.svg";
-import categoryFidden from "@/assets/images/category/fidden.svg";
-import categoryFlyArzan from "@/assets/images/category/fly-arzan.svg";
-import categoryPenWise from "@/assets/images/category/pen-wise.svg";
-import categoryRN from "@/assets/images/category/r-n.png";
-import categoryRNsvg from "@/assets/images/category/r-n.svg";
-import categorySearchforce from "@/assets/images/category/searchforce.png";
-import categorySeatWaves from "@/assets/images/category/seat-waves.svg";
-import categoryWeoutSvg from "@/assets/images/category/weout.svg";
-import categoryWeout from "@/assets/images/category/weout1.png";
+const categoryBullet = "/images/category/bullet.svg";
+const categoryFidden = "/images/category/fidden.svg";
+const categoryFlyArzan = "/images/category/fly-arzan.svg";
+const categoryPenWise = "/images/category/pen-wise.svg";
+const categoryRN = "/images/category/r-n.png";
+const categoryRNsvg = "/images/category/r-n.svg";
+const categorySearchforce = "/images/category/searchforce.png";
+const categorySeatWaves = "/images/category/seat-waves.svg";
+const categoryWeoutSvg = "/images/category/weout.svg";
+const categoryWeout = "/images/category/weout1.png";
 
 // Services images
-import microsoftSupportImg from "@/assets/images/services/microsoft-support.png";
-import msSupportFlowChart from "@/assets/images/services/ms-support-flow-chart.png";
-import msSupport from "@/assets/images/services/ms-support.png";
-import serviceBg from "@/assets/images/services/service-bg.png";
-import servicesBg from "@/assets/images/services/services-bg.png";
+const microsoftSupportImg = "/images/services/microsoft-support.png";
+const msSupportFlowChart = "/images/services/ms-support-flow-chart.png";
+const msSupport = "/images/services/ms-support.png";
+const serviceBg = "/images/services/service-bg.png";
+const servicesBg = "/images/services/services-bg.png";
 
 // Shared images
-import wayWiseLogo from "@/assets/images/shared/way-wise-logo.svg";
-import wayWiseProfile from "@/assets/images/shared/way-wise-profile.jpg";
-import wayWiseText from "@/assets/images/shared/way-wise-text.png";
+const wayWiseLogo = "/images/shared/way-wise-logo.svg";
+const wayWiseProfile = "/images/shared/way-wise-profile.jpg";
+const wayWiseText = "/images/shared/way-wise-text.png";
 
 // Service-specific images
-import cloudEngineeringBg from "@/assets/images/services/cloud-engineering.png";
-import digitalMarketingBg from "@/assets/images/services/digital-marketing.png";
-import graphicsDesignBg from "@/assets/images/services/graphics-design.png";
-import internetThingsBg from "@/assets/images/services/internetthings.png";
-import mobileAppBg from "@/assets/images/services/mobile-application.png";
-import webAppBg from "@/assets/images/services/web-application.png";
-import aiImg from "@/assets/images/services/ai.jpg";
-import appImg from "@/assets/images/services/app.jpg";
-import cloudImg from "@/assets/images/services/cloud.jpg";
-import digitalImg from "@/assets/images/services/digital.jpg";
-import grpahicsImg from "@/assets/images/services/graphic.jpg";
-import webImg from "@/assets/images/services/web.jpg";
+const cloudEngineeringBg = "/images/services/cloud-engineering.png";
+const digitalMarketingBg = "/images/services/digital-marketing.png";
+const graphicsDesignBg = "/images/services/graphics-design.png";
+const internetThingsBg = "/images/services/internetthings.png";
+const mobileAppBg = "/images/services/mobile-application.png";
+const webAppBg = "/images/services/web-application.png";
+const aiImg = "/images/services/ai.jpg";
+const appImg = "/images/services/app.jpg";
+const cloudImg = "/images/services/cloud.jpg";
+const digitalImg = "/images/services/digital.jpg";
+const grpahicsImg = "/images/services/graphic.jpg";
+const webImg = "/images/services/web.jpg";
 
 // Service icons
-import cloudIcon from "@/assets/icons/services/cloud.svg";
-import digitalIcon from "@/assets/icons/services/digital.png";
-import graphicsIcon from "@/assets/icons/services/graphics.svg";
-import internetIcon from "@/assets/icons/services/internet.svg";
-import mobileIcon from "@/assets/icons/services/mobile.svg";
-import webIcon from "@/assets/icons/services/web.png";
+const cloudIcon = "/icons/services/cloud.svg";
+const digitalIcon = "/icons/services/digital.png";
+const graphicsIcon = "/icons/services/graphics.svg";
+const internetIcon = "/icons/services/internet.svg";
+const mobileIcon = "/icons/services/mobile.svg";
+const webIcon = "/icons/services/web.png";
 
 // Collect all images
 const allImages = [

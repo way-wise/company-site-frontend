@@ -1,11 +1,13 @@
-import medicalBilling from "@/assets/images/services/billing-shape.png";
-import microsoftSupport from "@/assets/images/services/ms-support.png";
 import SectionTitle from "@/components/modules/home/SectionTitle";
 import { ServiceDisplay } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import ServiceCard from "./ServiceCard";
 import CalendlyButton from "@/components/shared/CalendlyButton";
+
+// Public folder image paths
+const medicalBilling = "/images/services/billing-shape.png";
+const microsoftSupport = "/images/services/ms-support.png";
 
 const Services = ({
   servicesFirstData,
@@ -53,6 +55,8 @@ const Services = ({
             <Image
               src={microsoftSupport}
               alt="Microsoft Support"
+              width={400}
+              height={400}
               className="lg:max-w-1/2 h-full w-full lg:w-auto lg:absolute right-0 bottom-0"
             />
           </div>
@@ -79,6 +83,8 @@ const Services = ({
             <Image
               src={medicalBilling}
               alt="Microsoft Support"
+              width={400}
+              height={400}
               className="lg:max-w-1/2 h-full w-full lg:w-auto lg:absolute right-0 bottom-0"
             />
           </div>

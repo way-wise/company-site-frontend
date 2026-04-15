@@ -2,13 +2,13 @@ import SectionTitle from "@/components/modules/home/SectionTitle";
 import { PortfolioProject } from "@/types";
 import ProjectsCard from "./ProjectsCard";
 
-// Import project images
-import fiddenImg from "@/assets/images/projects/fidden-io.png";
-import flyArzanImg from "@/assets/images/projects/fly.png";
-import searchImg from "@/assets/images/projects/search.png";
-import seatWavesImg from "@/assets/images/projects/seat-wave.png";
-import voiceImg from "@/assets/images/projects/voice.png";
-import weOutImg from "@/assets/images/projects/weout1.png";
+// Public folder image paths
+const fiddenImg = "/images/projects/fidden-io.png";
+const flyArzanImg = "/images/projects/fly.png";
+const searchImg = "/images/projects/search.png";
+const seatWavesImg = "/images/projects/seat-wave.png";
+const voiceImg = "/images/projects/voice.png";
+const weOutImg = "/images/projects/weout1.png";
 const Projects = () => {
   const projects: PortfolioProject[] = [
     {

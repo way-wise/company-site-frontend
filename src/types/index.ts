@@ -128,7 +128,7 @@ export type PortfolioProject = {
 	description: string;
 	tags: string[];
 	url: string;
-	image: StaticImageData;
+	image: StaticImageData | string;
 };
 
 // Service Types for API (matching backend Prisma model)
@@ -151,9 +151,9 @@ export type ServiceDisplay = {
 	id: number;
 	title: string;
 	description: string;
-	bgImage: StaticImageData;
+	bgImage: StaticImageData | string;
 	url: string;
-	icon: StaticImageData;
+	icon: StaticImageData | string;
 	slug: string;
 };
 
@@ -166,7 +166,7 @@ export type ExpertiseArea = {
 export type ServiceDetail = ServiceDisplay & {
 	detailedTitle?: string;
 	detailedDescription: string;
-	videoImage: StaticImageData;
+	videoImage: StaticImageData | string;
 	expertiseAreas: ExpertiseArea[];
 	serviceOutcomes: string[];
 	ctabutton?: string;
