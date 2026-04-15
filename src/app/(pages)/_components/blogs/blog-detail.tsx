@@ -48,7 +48,7 @@ const extractHeadingsFromHtml = (html: string): Heading[] => {
 		const level = parseInt(match[1], 10);
 		// Strip any HTML tags from the heading text
 		const text = match[2].replace(/<[^>]*>/g, "").trim();
-		let id = slugify(text);
+		const id = slugify(text);
 
 		// Handle duplicate IDs
 		let uniqueId = id;
