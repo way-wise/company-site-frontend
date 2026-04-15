@@ -317,6 +317,14 @@ const Footer = () => {
 											Terms and Conditions
 										</Link>
 									</li>
+									<li>
+										<Link
+											href="/sitemap-page"
+											className="inline-block text-sm sm:text-base text-black duration-300 hover:text-primary dark:text-gray-300 dark:hover:text-primary no-underline"
+										>
+											Sitemap
+										</Link>
+									</li>
 								</ul>
 							</nav>
 
