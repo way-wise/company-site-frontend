@@ -64,6 +64,8 @@ export function CKEditor({
         licenseKey: 'GPL',
         placeholder,
         language: 'en',
+        enterMode: 'paragraph',
+        shiftEnterMode: 'br',
         heading: {
           options: [
             { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -158,12 +160,25 @@ export function CKEditor({
           'sourceEditing'
         ],
       }}
-      onReady={(editor: unknown) => {
+      onReady={(editor: { getData: () => string; setData: (data: string) => void }) => {
         editorRef.current = editor;
         console.log('CKEditor is ready');
+        
+        // Fix existing content - convert <br> inside headings to proper paragraph breaks
+        const data = editor.getData();
+        if (data) {
+          // Replace <br><br> inside heading tags with proper paragraph closings
+          let fixedData = data.replace(/<(h[1-6])>([^<]*?)<br\s*\/?><br\s*\/?>(.*?)<\/\1>/gi, '<$1>$2</$1><p>$3</p>');
+          // Replace single <br> inside headings with paragraph breaks
+          fixedData = fixedData.replace(/<(h[1-6])>([^<]*?)<br\s*\/?>(.*?)<\/\1>/gi, '<$1>$2</$1><p>$3</p>');
+          if (fixedData !== data) {
+            editor.setData(fixedData);
+          }
+        }
       }}
       onChange={(_event: unknown, editor: { getData: () => string }) => {
         const data = editor.getData();
+        console.log('Editor HTML:', data);
         onChange(data);
       }}
     />
