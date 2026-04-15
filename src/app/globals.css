@@ -307,3 +307,124 @@
   display: none !important;
   visibility: hidden !important;
 }
+
+/* CKEditor Fix - Ensure proper block rendering */
+.ck-content h1,
+.ck-content h2,
+.ck-content h3,
+.ck-content h4,
+.ck-content h5,
+.ck-content h6 {
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* CKEditor Heading Styles - Match blog-content styles */
+.ck-content h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-top: 1.5em;
+}
+
+.ck-content h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin-top: 1.25em;
+}
+
+.ck-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1em;
+}
+
+.ck-content h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1em;
+}
+
+.ck-content h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 0.75em;
+}
+
+.ck-content h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.75em;
+}
+
+.ck-content p {
+  font-size: 1rem;
+  margin-bottom: 1em;
+}
+
+.ck-content ul,
+.ck-content ol {
+  display: block;
+  padding-left: 2rem;
+  margin: 0.5em 0;
+}
+
+.ck-content ul {
+  list-style-type: disc;
+}
+
+.ck-content ol {
+  list-style-type: decimal;
+}
+
+/* CKEditor Toolbar Fixes */
+
+/* Ensure dropdown panels are above other content */
+.ck.ck-dropdown__panel {
+  z-index: 9999 !important;
+  position: absolute !important;
+}
+
+/* Fix dropdown button display */
+.ck.ck-dropdown .ck-dropdown__button .ck-button__label {
+  width: auto;
+}
+
+/* Ensure toolbar is interactive */
+.ck.ck-toolbar {
+  position: relative;
+  z-index: 100;
+}
+
+/* Fix heading dropdown visibility */
+.ck.ck-dropdown__panel.ck-dropdown__panel-visible {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure editor editable area is properly formatted */
+.ck.ck-editor__editable {
+  min-height: 200px;
+}
+
+/* Fix list buttons in toolbar */
+.ck.ck-toolbar .ck.ck-button.ck-list__item {
+  display: flex;
+  align-items: center;
+}
+
+/* Ensure dropdown items are clickable */
+.ck.ck-dropdown__panel .ck.ck-list__item {
+  cursor: pointer;
+}
+
+/* Fix focus states for dropdown buttons */
+.ck.ck-dropdown__button.ck-on {
+  background: var(--ck-color-toolbar-button-on-background) !important;
+}
+
+/* Ensure heading dropdown reflects current selection */
+.ck.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
+  font-weight: 500;
+}

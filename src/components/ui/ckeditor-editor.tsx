@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface CKEditorProps {
   value: string;
@@ -24,6 +24,7 @@ export function CKEditor({
 }: CKEditorProps) {
   const [isReady, setIsReady] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const editorRef = useRef<unknown>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -62,6 +63,7 @@ export function CKEditor({
       config={{
         licenseKey: 'GPL',
         placeholder,
+        language: 'en',
         heading: {
           options: [
             { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
@@ -72,6 +74,47 @@ export function CKEditor({
             { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
             { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
           ]
+        },
+        list: {
+          properties: {
+            styles: true,
+            startIndex: true,
+            reversed: true
+          }
+        },
+        fontSize: {
+          options: [
+            9,
+            11,
+            13,
+            'default',
+            17,
+            19,
+            21,
+            24,
+            27,
+            30,
+            32,
+            36,
+            40,
+            48,
+            72
+          ],
+          supportAllValues: true
+        },
+        fontFamily: {
+          options: [
+            'default',
+            'Arial, Helvetica, sans-serif',
+            'Courier New, Courier, monospace',
+            'Georgia, serif',
+            'Lucida Sans Unicode, Lucida Grande, sans-serif',
+            'Tahoma, Geneva, sans-serif',
+            'Times New Roman, Times, serif',
+            'Trebuchet MS, Helvetica, sans-serif',
+            'Verdana, Geneva, sans-serif'
+          ],
+          supportAllValues: true
         },
         toolbar: [
           'heading',
@@ -115,7 +158,8 @@ export function CKEditor({
           'sourceEditing'
         ],
       }}
-      onReady={() => {
+      onReady={(editor: unknown) => {
+        editorRef.current = editor;
         console.log('CKEditor is ready');
       }}
       onChange={(_event: unknown, editor: { getData: () => string }) => {
