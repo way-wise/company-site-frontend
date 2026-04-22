@@ -10,6 +10,15 @@ interface CKEditorProps {
   height?: number;
 }
 
+interface UploadAdapter {
+  upload: () => Promise<{ default: string }>;
+  abort: () => void;
+}
+
+interface FileLoader {
+  file: Promise<File>;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let ClassicEditor: any = null;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -160,9 +169,31 @@ export function CKEditor({
           'sourceEditing'
         ],
       }}
-      onReady={(editor: { getData: () => string; setData: (data: string) => void }) => {
+      onReady={(editor: { getData: () => string; setData: (data: string) => void; plugins: { get: (name: string) => { createUploadAdapter: (loader: FileLoader) => UploadAdapter } | null } }) => {
         editorRef.current = editor;
         console.log('CKEditor is ready');
+        
+        // Configure custom upload adapter for base64 images
+        editor.plugins.get('FileRepository')!.createUploadAdapter = (loader: FileLoader) => {
+          return {
+            upload: async () => {
+              const file = await loader.file;
+              return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                  resolve({
+                    default: reader.result as string
+                  });
+                };
+                reader.onerror = (error) => {
+                  reject(error);
+                };
+                reader.readAsDataURL(file);
+              });
+            },
+            abort: () => {}
+          };
+        };
         
         // Fix existing content - convert <br> inside headings to proper paragraph breaks
         const data = editor.getData();
