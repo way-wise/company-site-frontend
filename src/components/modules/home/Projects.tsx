@@ -20,17 +20,6 @@ const Projects = () => {
       url: "https://seatwaves.waywisetech.com",
       image: seatWavesImg,
     },
-
-    {
-      id: 2,
-      title: "Fidden Website Landing Page",
-      description:
-        "A modern landing page design for an online cosmetic shop, built to highlight beauty products with elegance and style. Focused on smooth UI/UX, it ensures a seamless shopping experience. Optimized for showcasing collections, offers, and brand identity.",
-
-      tags: ["UI/UX Design", "App Development", "SEO"],
-      url: "https://fidden.io",
-      image: fiddenImg,
-    },
     {
       id: 3,
       title: "We Out Project",

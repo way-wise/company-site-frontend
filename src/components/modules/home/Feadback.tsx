@@ -17,7 +17,6 @@ const seatWavesImg = "/images/category/seat-waves.svg";
 const weout = "/images/category/weout1.png";
 
 // Feedback images
-const fidden = "/images/feadback/fidden.jpg";
 const flyArzan = "/images/feadback/flyarjon.jpg";
 const clientImg = "/images/feadback/image1.png";
 const searchImg = "/images/feadback/search.jpg";

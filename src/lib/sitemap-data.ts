@@ -64,7 +64,6 @@ const contactImage4 = "/images/contact/image4.svg";
 const contactLee1 = "/images/contact/lee1.png";
 
 // Projects images
-const projectFidden = "/images/projects/fidden-io.png";
 const projectFly = "/images/projects/fly.png";
 const projectBg = "/images/projects/project-bg.png";
 const projectSearch = "/images/projects/search.png";
@@ -81,7 +80,6 @@ const offer4 = "/images/offers/offer4.png";
 
 // Feedback images
 const feadbackBg = "/images/feadback/feadback-bg.png";
-const feadbackFidden = "/images/feadback/fidden.jpg";
 const feadbackFlyarjon = "/images/feadback/flyarjon.jpg";
 const feadbackImage1 = "/images/feadback/image1.png";
 const feadbackSearch = "/images/feadback/search.jpg";
@@ -89,7 +87,6 @@ const feadbackWeout = "/images/feadback/weout-jad.jpg";
 
 // Category images
 const categoryBullet = "/images/category/bullet.svg";
-const categoryFidden = "/images/category/fidden.svg";
 const categoryFlyArzan = "/images/category/fly-arzan.svg";
 const categoryPenWise = "/images/category/pen-wise.svg";
 const categoryRN = "/images/category/r-n.png";
@@ -170,7 +167,6 @@ const allImages = [
 
 	// Feedback images
 	{ image: feadbackBg, label: "Feedback Background" },
-	{ image: feadbackFidden, label: "Fidden Feedback" },
 	{ image: feadbackFlyarjon, label: "Flyarjon Feedback" },
 	{ image: feadbackImage1, label: "Feedback Image 1" },
 	{ image: feadbackSearch, label: "Search Feedback" },
@@ -178,7 +174,6 @@ const allImages = [
 
 	// Category images
 	{ image: categoryBullet, label: "Bullet Category" },
-	{ image: categoryFidden, label: "Fidden Category" },
 	{ image: categoryFlyArzan, label: "Fly Arzan Category" },
 	{ image: categoryPenWise, label: "Pen Wise Category" },
 	{ image: categoryRN, label: "R-N Category" },
