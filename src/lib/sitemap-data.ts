@@ -150,7 +150,6 @@ const allImages = [
 	{ image: contactLee1, label: "Contact - Lee" },
 
 	// Project images
-	{ image: projectFidden, label: "Fidden.io Project" },
 	{ image: projectFly, label: "Fly Project" },
 	{ image: projectBg, label: "Projects Background" },
 	{ image: projectSearch, label: "Search Project" },

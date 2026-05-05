@@ -19,6 +19,7 @@ const weout = "/images/category/weout1.png";
 // Feedback images
 const flyArzan = "/images/feadback/flyarjon.jpg";
 const clientImg = "/images/feadback/image1.png";
+const fidden = "/images/feadback/fidden.jpg";
 const searchImg = "/images/feadback/search.jpg";
 const weoutImg = "/images/feadback/weout-jad.jpg";
 
