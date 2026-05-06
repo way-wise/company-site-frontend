@@ -172,20 +172,28 @@ const TodayEntryCell = ({ project, onViewHourLogs }: { project: NewLiveProject; 
 const PaymentMethodCell = ({ project, onUpdate }: { project: NewLiveProject; onUpdate: () => void }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [value, setValue] = React.useState(project.paymentMethod || "");
+  const [displayValue, setDisplayValue] = React.useState<string | null>(project.paymentMethod ?? null);
   const updateProject = useUpdateNewLiveProject();
 
+  // Keep displayValue in sync if parent data refreshes with a different value
+  React.useEffect(() => {
+    setDisplayValue(project.paymentMethod ?? null);
+  }, [project.paymentMethod]);
+
   const handleSave = async () => {
+    const saved = value.trim() || null;
     await updateProject.mutateAsync({
       projectId: project.id,
-      projectData: { paymentMethod: value.trim() || null },
+      projectData: { paymentMethod: saved },
     });
+    setDisplayValue(saved); // optimistic: show immediately
     setIsEditing(false);
     onUpdate();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleSave();
-    if (e.key === "Escape") { setIsEditing(false); setValue(project.paymentMethod || ""); }
+    if (e.key === "Escape") { setIsEditing(false); setValue(displayValue || ""); }
   };
 
   if (isEditing) {
@@ -202,7 +210,7 @@ const PaymentMethodCell = ({ project, onUpdate }: { project: NewLiveProject; onU
         <Button type="button" size="sm" variant="ghost" className="h-6 w-6 p-0 text-green-600" onClick={handleSave} disabled={updateProject.isPending}>
           <Check className="h-3 w-3" />
         </Button>
-        <Button type="button" size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => { setIsEditing(false); setValue(project.paymentMethod || ""); }}>
+        <Button type="button" size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => { setIsEditing(false); setValue(displayValue || ""); }}>
           <X className="h-3 w-3" />
         </Button>
       </div>
@@ -212,10 +220,10 @@ const PaymentMethodCell = ({ project, onUpdate }: { project: NewLiveProject; onU
   return (
     <div
       className="cursor-pointer hover:bg-muted/50 rounded px-1.5 py-0.5 min-w-[80px] text-sm"
-      onClick={() => { setValue(project.paymentMethod || ""); setIsEditing(true); }}
+      onClick={() => { setValue(displayValue || ""); setIsEditing(true); }}
       title="Click to edit payment method"
     >
-      {project.paymentMethod || <span className="text-muted-foreground text-xs italic">Click to set</span>}
+      {displayValue || <span className="text-muted-foreground text-xs italic">Click to set</span>}
     </div>
   );
 };
@@ -387,6 +395,7 @@ export const NewLiveProjectTable = () => {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("pending_active"); // Default: PENDING and ACTIVE
   const [typeFilter, setTypeFilter] = useState<string>("FIXED"); // Default: FIXED
+  const [paymentMethodFilter, setPaymentMethodFilter] = useState<string>("all");
 
   // Debounce search input
   useEffect(() => {
@@ -884,15 +893,27 @@ export const NewLiveProjectTable = () => {
     }
   }, [projects]);
   
+  // Derive unique payment method values for the filter dropdown
+  const uniquePaymentMethods = React.useMemo(() => {
+    const methods = projects
+      .map((p: NewLiveProject) => p.paymentMethod)
+      .filter((m): m is string => !!m);
+    return Array.from(new Set(methods)).sort();
+  }, [projects]);
+
   // Sort by displayOrder first (ascending), then by createdAt (oldest first)
-  const sortedProjects = [...projects].sort((a, b) => {
-    const orderA = a.displayOrder ?? 0;
-    const orderB = b.displayOrder ?? 0;
-    if (orderA !== orderB) {
-      return orderA - orderB;
-    }
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-  });
+  const sortedProjects = [...projects]
+    .sort((a, b) => {
+      const orderA = a.displayOrder ?? 0;
+      const orderB = b.displayOrder ?? 0;
+      if (orderA !== orderB) return orderA - orderB;
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    })
+    .filter((p) => {
+      if (paymentMethodFilter === "all") return true;
+      if (paymentMethodFilter === "__none__") return !p.paymentMethod;
+      return p.paymentMethod === paymentMethodFilter;
+    });
 
   // Fetch actions for all projects when modal is open
   const actionsQueries = useQueries({
@@ -1485,6 +1506,17 @@ export const NewLiveProjectTable = () => {
             <SelectItem value="FIXED">Fixed</SelectItem>
             <SelectItem value="HOURLY">Hourly</SelectItem>
             <SelectItem value="all">All Types</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={paymentMethodFilter} onValueChange={setPaymentMethodFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by payment" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Methods</SelectItem>
+            {uniquePaymentMethods.map((m) => (
+              <SelectItem key={m} value={m}>{m}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
