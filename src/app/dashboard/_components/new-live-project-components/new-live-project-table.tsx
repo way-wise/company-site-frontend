@@ -1048,14 +1048,6 @@ export const NewLiveProjectTable = () => {
         return <PaymentMethodCell project={project} onUpdate={refetch} />;
       },
     },
-    {
-      header: "Payment Got",
-      accessorKey: "paymentLogs",
-      cell: ({ row }: { row: { original: NewLiveProject } }) => {
-        const project = row.original;
-        return <PaymentLogsCell project={project} />;
-      },
-    },
     // Hourly columns - only show for HOURLY projects
     {
       header: "Rate / Limit",
@@ -1121,6 +1113,15 @@ export const NewLiveProjectTable = () => {
           );
         };
         return <DuePaymentDisplay />;
+      },
+    },
+    {
+      header: "Payment Received",
+      accessorKey: "paymentLogs",
+      showForType: "HOURLY",
+      cell: ({ row }: { row: { original: NewLiveProject } }) => {
+        const project = row.original;
+        return <PaymentLogsCell project={project} />;
       },
     },
     // Fixed columns - only show for FIXED projects
