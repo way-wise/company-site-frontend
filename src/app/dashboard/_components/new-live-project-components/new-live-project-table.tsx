@@ -66,6 +66,9 @@ import {
   useAddHourLog,
   useUpdateHourLog,
   useDeleteHourLog,
+  usePaymentLogs,
+  useAddPaymentLog,
+  useDeletePaymentLog,
 } from "@/hooks/useNewLiveProjectMutations";
 import { useQueries } from "@tanstack/react-query";
 import { newLiveProjectService } from "@/services/NewLiveProjectService";
@@ -102,50 +105,6 @@ const getProjectTypeBadge = (type: string) => {
     >
       {type}
     </Badge>
-  );
-};
-
-// Component to display last action for a project
-const NextActionCell = ({ project, onViewActions }: { project: NewLiveProject; onViewActions: () => void }) => {
-  const { data: actionsData } = useProjectActions(project.id);
-  const actions = actionsData?.data || [];
-
-  // Also check if actions are already in the project object
-  const projectActions = project.actions || [];
-  const allActions = actions.length > 0 ? actions : projectActions;
-
-  let lastAction = null;
-  let displayText = "No actions";
-
-  if (allActions && Array.isArray(allActions) && allActions.length > 0) {
-    // Sort by actionDate or createdAt descending to get the most recent
-    const sortedActions = [...allActions].sort((a: { actionDate?: string; createdAt?: string; date?: string }, b: { actionDate?: string; createdAt?: string; date?: string }) => {
-      const dateA = new Date(a.actionDate || a.createdAt || a.date || 0).getTime();
-      const dateB = new Date(b.actionDate || b.createdAt || b.date || 0).getTime();
-      return dateB - dateA;
-    });
-    lastAction = sortedActions[0];
-    if (lastAction) {
-      displayText = lastAction.actionText || "Action";
-    }
-  }
-
-  return (
-    <div className="flex items-center gap-2">
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="h-8 !p-0 hover:bg-transparent"
-        onClick={onViewActions}
-        title={lastAction ? `View all actions - Last: ${displayText}` : "View all actions"}
-      >
-        <MessageSquare className="h-4 w-4 mr-1" />
-        <span className={`max-w-[150px] truncate text-xs ${lastAction ? "" : "text-muted-foreground"}`}>
-          {displayText}
-        </span>
-      </Button>
-    </div>
   );
 };
 
@@ -207,6 +166,177 @@ const TodayEntryCell = ({ project, onViewHourLogs }: { project: NewLiveProject; 
         {todayHours > 0 ? `${todayHours.toFixed(1)}h` : "0h"} / {weekHours > 0 ? `${weekHours.toFixed(1)}h` : "0h"}
       </span>
     </Button>
+  );
+};
+
+const PaymentMethodCell = ({ project, onUpdate }: { project: NewLiveProject; onUpdate: () => void }) => {
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [value, setValue] = React.useState(project.paymentMethod || "");
+  const updateProject = useUpdateNewLiveProject();
+
+  const handleSave = async () => {
+    await updateProject.mutateAsync({
+      projectId: project.id,
+      projectData: { paymentMethod: value.trim() || null },
+    });
+    setIsEditing(false);
+    onUpdate();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleSave();
+    if (e.key === "Escape") { setIsEditing(false); setValue(project.paymentMethod || ""); }
+  };
+
+  if (isEditing) {
+    return (
+      <div className="flex items-center gap-1">
+        <Input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="h-7 text-xs w-28"
+          autoFocus
+          placeholder="e.g. Payoneer"
+        />
+        <Button type="button" size="sm" variant="ghost" className="h-6 w-6 p-0 text-green-600" onClick={handleSave} disabled={updateProject.isPending}>
+          <Check className="h-3 w-3" />
+        </Button>
+        <Button type="button" size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => { setIsEditing(false); setValue(project.paymentMethod || ""); }}>
+          <X className="h-3 w-3" />
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="cursor-pointer hover:bg-muted/50 rounded px-1.5 py-0.5 min-w-[80px] text-sm"
+      onClick={() => { setValue(project.paymentMethod || ""); setIsEditing(true); }}
+      title="Click to edit payment method"
+    >
+      {project.paymentMethod || <span className="text-muted-foreground text-xs italic">Click to set</span>}
+    </div>
+  );
+};
+
+const PaymentLogsCell = ({ project }: { project: NewLiveProject }) => {
+  const [open, setOpen] = React.useState(false);
+  const [amount, setAmount] = React.useState("");
+  const [method, setMethod] = React.useState("");
+  const [note, setNote] = React.useState("");
+  const [receivedAt, setReceivedAt] = React.useState(new Date().toISOString().split("T")[0]);
+
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+  const { data: logsData, isLoading } = usePaymentLogs(open ? project.id : "");
+  const allLogs = logsData?.data || [];
+
+  const addPaymentLog = useAddPaymentLog();
+  const deletePaymentLog = useDeletePaymentLog();
+
+  const currentMonthLogs = allLogs.filter((log) => {
+    const d = new Date(log.receivedAt);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}` === currentMonth;
+  });
+  const currentMonthTotal = currentMonthLogs.reduce((s, l) => s + Number(l.amount), 0);
+  const allTimeTotal = allLogs.reduce((s, l) => s + Number(l.amount), 0);
+
+  const handleAdd = async () => {
+    const num = parseFloat(amount);
+    if (isNaN(num) || num <= 0) { toast.error("Enter a valid positive amount"); return; }
+    await addPaymentLog.mutateAsync({
+      projectId: project.id,
+      amount: num,
+      paymentMethod: method.trim() || null,
+      note: note.trim() || null,
+      receivedAt: receivedAt ? new Date(receivedAt).toISOString() : null,
+    });
+    setAmount(""); setMethod(""); setNote("");
+    setReceivedAt(new Date().toISOString().split("T")[0]);
+  };
+
+  const handleDelete = async (paymentLogId: string) => {
+    if (!confirm("Delete this payment entry?")) return;
+    await deletePaymentLog.mutateAsync({ projectId: project.id, paymentLogId });
+  };
+
+  return (
+    <>
+      <div
+        className="cursor-pointer hover:bg-muted/50 rounded px-1.5 py-0.5 min-w-[80px]"
+        onClick={() => setOpen(true)}
+        title="Click to manage payment logs"
+      >
+        <div className="text-sm font-medium text-green-700">
+          {currentMonthTotal > 0
+            ? `$${currentMonthTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            : <span className="text-muted-foreground text-xs italic">No payments</span>}
+        </div>
+        <div className="text-xs text-muted-foreground">this month</div>
+      </div>
+
+      <Modal isOpen={open} onClose={() => setOpen(false)} title={`Payment Logs — ${project.clientName || project.projectName}`} className="max-w-lg">
+        <div className="space-y-4">
+          {/* Summary */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-lg border p-3 bg-green-50">
+              <p className="text-xs text-muted-foreground mb-1">This Month</p>
+              <p className="text-lg font-bold text-green-700">
+                ${currentMonthTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+            </div>
+            <div className="rounded-lg border p-3 bg-blue-50">
+              <p className="text-xs text-muted-foreground mb-1">All Time</p>
+              <p className="text-lg font-bold text-blue-700">
+                ${allTimeTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+            </div>
+          </div>
+
+          {/* Add form */}
+          <div className="rounded-lg border p-3 space-y-2 bg-muted/30">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Add Payment</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Input type="number" min="0.01" step="0.01" placeholder="Amount *" value={amount} onChange={(e) => setAmount(e.target.value)} className="h-8 text-sm" />
+              <Input placeholder="Method (e.g. Payoneer)" value={method} onChange={(e) => setMethod(e.target.value)} className="h-8 text-sm" />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <Input type="date" value={receivedAt} onChange={(e) => setReceivedAt(e.target.value)} className="h-8 text-sm" />
+              <Input placeholder="Note (optional)" value={note} onChange={(e) => setNote(e.target.value)} className="h-8 text-sm" />
+            </div>
+            <Button type="button" size="sm" className="w-full h-8" onClick={handleAdd} disabled={addPaymentLog.isPending}>
+              <Plus className="h-3 w-3 mr-1" /> Add Payment
+            </Button>
+          </div>
+
+          {/* Log history */}
+          <div className="space-y-1 max-h-64 overflow-y-auto">
+            {isLoading ? (
+              <p className="text-sm text-muted-foreground text-center py-4">Loading...</p>
+            ) : allLogs.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-4">No payment logs yet</p>
+            ) : allLogs.map((log) => {
+              const d = new Date(log.receivedAt);
+              const isCurrentMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}` === currentMonth;
+              return (
+                <div key={log.id} className={`flex items-center justify-between rounded p-2 text-sm ${isCurrentMonth ? "bg-green-50 border border-green-100" : "bg-muted/30"}`}>
+                  <div className="flex-1 min-w-0">
+                    <span className="font-semibold text-green-700">${Number(log.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    {log.paymentMethod && <span className="ml-2 text-xs text-muted-foreground">{log.paymentMethod}</span>}
+                    <div className="text-xs text-muted-foreground">{d.toLocaleDateString()}{log.note && ` · ${log.note}`}</div>
+                  </div>
+                  <Button type="button" variant="ghost" size="sm" className="h-6 w-6 p-0 text-red-500 hover:text-red-700 flex-shrink-0" onClick={() => handleDelete(log.id)} disabled={deletePaymentLog.isPending}>
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 };
 
@@ -851,38 +981,20 @@ export const NewLiveProjectTable = () => {
   // Define all possible columns
   const allColumns = [
     {
-      header: "Project Name",
-      accessorKey: "projectName",
-      cell: ({ row }: { row: { original: NewLiveProject } }) => {
-        return (
-          <div className="font-medium max-w-[120px] truncate" title={row.original.projectName}>
-            {row.original.projectName}
-          </div>
-        );
-      },
-    },
-    {
-      header: "Client Name",
+      header: "Client / Project",
       accessorKey: "clientName",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
-        const clientName = row.original.clientName || "N/A";
+        const { clientName, projectName } = row.original;
         return (
-          <div className="font-medium max-w-[150px] truncate" title={clientName}>
-            {clientName}
+          <div className="min-w-[130px]">
+            <div className="font-semibold text-sm truncate max-w-[160px]" title={clientName || "—"}>
+              {clientName || <span className="text-muted-foreground">—</span>}
+            </div>
+            <div className="text-xs text-muted-foreground truncate max-w-[160px]" title={projectName}>
+              {projectName}
+            </div>
           </div>
         );
-      },
-    },
-    {
-      header: "Next Actions",
-      accessorKey: "nextActions",
-      cell: ({ row }: { row: { original: NewLiveProject } }) => {
-        const project = row.original;
-        return <NextActionCell project={project} onViewActions={() => {
-          setSelectedProject(project);
-          setProjectId(project.id);
-          setActionsModalOpen(true);
-        }} />;
       },
     },
     {
@@ -901,31 +1013,44 @@ export const NewLiveProjectTable = () => {
         );
       },
     },
+    {
+      header: createSortableHeader("Payment Method"),
+      accessorKey: "paymentMethod",
+      enableSorting: true,
+      sortingFn: (rowA: { original: NewLiveProject }, rowB: { original: NewLiveProject }) => {
+        const a = rowA.original.paymentMethod || "";
+        const b = rowB.original.paymentMethod || "";
+        return a.localeCompare(b);
+      },
+      cell: ({ row }: { row: { original: NewLiveProject } }) => {
+        const project = row.original;
+        return <PaymentMethodCell project={project} onUpdate={refetch} />;
+      },
+    },
+    {
+      header: "Payment Got",
+      accessorKey: "paymentLogs",
+      cell: ({ row }: { row: { original: NewLiveProject } }) => {
+        const project = row.original;
+        return <PaymentLogsCell project={project} />;
+      },
+    },
     // Hourly columns - only show for HOURLY projects
     {
-      header: "Hourly Rate",
+      header: "Rate / Limit",
       accessorKey: "hourlyRate",
       showForType: "HOURLY",
       cell: ({ row }: { row: { original: NewLiveProject } }) => {
         const project = row.original;
-        const hourlyRate = project.hourlyRate;
+        const { hourlyRate, weeklyLimit } = project;
         return (
-          <div className="font-medium">
-            {hourlyRate ? `$${hourlyRate.toLocaleString()}/hr` : <span className="text-muted-foreground">-</span>}
-          </div>
-        );
-      },
-    },
-    {
-      header: "Weekly Limit",
-      accessorKey: "weeklyLimit",
-      showForType: "HOURLY",
-      cell: ({ row }: { row: { original: NewLiveProject } }) => {
-        const project = row.original;
-        const weeklyLimit = project.weeklyLimit;
-        return (
-          <div className="font-medium">
-            {weeklyLimit ? `${weeklyLimit} hrs/week` : <span className="text-muted-foreground">-</span>}
+          <div className="min-w-[80px]">
+            <div className="text-sm font-medium">
+              {hourlyRate ? `$${Number(hourlyRate).toLocaleString()}/hr` : <span className="text-muted-foreground">—</span>}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {weeklyLimit ? `${Number(weeklyLimit)} hrs/wk` : <span>—</span>}
+            </div>
           </div>
         );
       },

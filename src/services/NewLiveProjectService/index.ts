@@ -7,6 +7,7 @@ import {
   NewLiveProjectsQueryParams,
   NewProjectAction,
   NewHourLog,
+  NewPaymentLog,
 } from "@/types";
 
 export type { NewLiveProjectsQueryParams };
@@ -215,6 +216,35 @@ export const newLiveProjectService = {
     const response = await apiClient.delete(
       `/new-live-projects/${projectId}/hours/${hourLogId}`
     );
+    return response.data;
+  },
+
+  // Get payment logs for a project
+  getPaymentLogs: async (
+    projectId: string,
+    month?: string
+  ): Promise<ApiResponse<NewPaymentLog[]>> => {
+    let url = `/new-live-projects/${projectId}/payments`;
+    if (month) url += `?month=${encodeURIComponent(month)}`;
+    const response = await apiClient.get(url);
+    return response.data;
+  },
+
+  // Add payment log
+  addPaymentLog: async (
+    projectId: string,
+    data: { amount: number; paymentMethod?: string | null; note?: string | null; receivedAt?: string | null }
+  ): Promise<ApiResponse<NewPaymentLog>> => {
+    const response = await apiClient.post(`/new-live-projects/${projectId}/payments`, data);
+    return response.data;
+  },
+
+  // Delete payment log
+  deletePaymentLog: async (
+    projectId: string,
+    paymentLogId: string
+  ): Promise<ApiResponse<void>> => {
+    const response = await apiClient.delete(`/new-live-projects/${projectId}/payments/${paymentLogId}`);
     return response.data;
   },
 

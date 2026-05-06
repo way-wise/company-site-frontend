@@ -411,13 +411,34 @@ export interface NewLiveProject {
 	targetedDeadline?: TargetedDeadline | null; // JSON object
 	documents?: ProjectDocument[] | null; // JSON array
 	progress?: number | null; // Progress percentage (0-100) for FIXED projects
+	paymentMethod?: string | null; // Default/preferred payment method
 	displayOrder?: number; // Custom display order for sorting
+	paymentLogs?: NewPaymentLog[];
 	createdBy: string;
 	createdAt: string; // ISO date string
 	updatedAt: string; // ISO date string
 	// Relations
 	actions?: NewProjectAction[];
 	hourLogs?: NewHourLog[];
+	creator?: {
+		id: string;
+		user: {
+			id: string;
+			name: string;
+			email: string;
+		};
+	};
+}
+
+export interface NewPaymentLog {
+	id: string;
+	projectId: string;
+	amount: number;
+	paymentMethod?: string | null;
+	note?: string | null;
+	receivedAt: string; // ISO date string
+	createdBy: string;
+	createdAt: string;
 	creator?: {
 		id: string;
 		user: {

@@ -217,6 +217,8 @@ export const createNewLiveProjectSchema = z
       uploadedAt: z.string(),
     })).optional(),
     progress: z.number().min(0).max(100, "Progress must be between 0 and 100").optional(),
+    paymentMethod: z.string().optional().nullable(),
+    paymentGot: z.number().min(0, "Payment got cannot be negative").optional().nullable(),
   })
   .refine(
     (data) => {
@@ -286,6 +288,8 @@ export const updateNewLiveProjectSchema = z
       uploadedAt: z.string(),
     })).optional(),
     progress: z.number().min(0).max(100, "Progress must be between 0 and 100").optional(),
+    paymentMethod: z.string().optional().nullable(),
+    paymentGot: z.number().min(0, "Payment got cannot be negative").optional().nullable(),
   })
   .refine(
     (data) => {

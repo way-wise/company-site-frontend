@@ -1,7 +1,7 @@
 "use client";
 
 import { newLiveProjectService, NewLiveProjectsQueryParams } from "@/services/NewLiveProjectService";
-import { NewLiveProject, NewProjectAction, NewHourLog } from "@/types";
+import { NewLiveProject, NewProjectAction, NewHourLog, NewPaymentLog } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -33,6 +33,7 @@ export const newLiveProjectQueryKeys = {
   detail: (id: string) => [...newLiveProjectQueryKeys.details(), id] as const,
   actions: (id: string) => [...newLiveProjectQueryKeys.detail(id), "actions"] as const,
   hourLogs: (id: string) => [...newLiveProjectQueryKeys.detail(id), "hour-logs"] as const,
+  paymentLogs: (id: string) => [...newLiveProjectQueryKeys.detail(id), "payment-logs"] as const,
   stats: () => [...newLiveProjectQueryKeys.all, "stats"] as const,
 };
 
@@ -76,6 +77,76 @@ export const useHourLogs = (projectId: string) => {
     enabled: !!projectId,
     staleTime: 1 * 60 * 1000,
     refetchOnWindowFocus: false,
+  });
+};
+
+// Hook to get payment logs
+export const usePaymentLogs = (projectId: string, month?: string) => {
+  return useQuery({
+    queryKey: [...newLiveProjectQueryKeys.paymentLogs(projectId), month],
+    queryFn: () => newLiveProjectService.getPaymentLogs(projectId, month),
+    enabled: !!projectId,
+    staleTime: 1 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// Hook to add payment log
+export const useAddPaymentLog = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      amount,
+      paymentMethod,
+      note,
+      receivedAt,
+    }: {
+      projectId: string;
+      amount: number;
+      paymentMethod?: string | null;
+      note?: string | null;
+      receivedAt?: string | null;
+    }) => newLiveProjectService.addPaymentLog(projectId, { amount, paymentMethod, note, receivedAt }),
+    onSuccess: (data, variables) => {
+      if (data.success) {
+        toast.success("Payment log added successfully");
+        queryClient.invalidateQueries({ queryKey: newLiveProjectQueryKeys.paymentLogs(variables.projectId) });
+        queryClient.invalidateQueries({ queryKey: newLiveProjectQueryKeys.lists() });
+        queryClient.invalidateQueries({ queryKey: newLiveProjectQueryKeys.detail(variables.projectId) });
+      } else {
+        toast.error(data.message || "Failed to add payment log");
+      }
+    },
+    onError: (error: Error) => {
+      const apiError = error as ApiError;
+      toast.error(apiError.response?.data?.message || error.message || "Failed to add payment log");
+    },
+  });
+};
+
+// Hook to delete payment log
+export const useDeletePaymentLog = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ projectId, paymentLogId }: { projectId: string; paymentLogId: string }) =>
+      newLiveProjectService.deletePaymentLog(projectId, paymentLogId),
+    onSuccess: (data, variables) => {
+      if (data.success) {
+        toast.success("Payment log deleted successfully");
+        queryClient.invalidateQueries({ queryKey: newLiveProjectQueryKeys.paymentLogs(variables.projectId) });
+        queryClient.invalidateQueries({ queryKey: newLiveProjectQueryKeys.lists() });
+        queryClient.invalidateQueries({ queryKey: newLiveProjectQueryKeys.detail(variables.projectId) });
+      } else {
+        toast.error(data.message || "Failed to delete payment log");
+      }
+    },
+    onError: (error: Error) => {
+      const apiError = error as ApiError;
+      toast.error(apiError.response?.data?.message || error.message || "Failed to delete payment log");
+    },
   });
 };
 
