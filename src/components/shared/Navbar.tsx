@@ -85,10 +85,6 @@ export default function Navbar() {
       label: "Contact Us",
       href: "/contact-us",
     },
-    {
-      label: "Company Profile",
-      href: "/book",
-    },
   ];
 
   // Services links - main page + all individual services
