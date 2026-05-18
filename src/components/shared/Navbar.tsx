@@ -88,7 +88,7 @@ export default function Navbar() {
     {
       label: "Company Profile",
       href: "/book",
-    }
+    },
   ];
 
   // Services links - main page + all individual services
@@ -127,35 +127,35 @@ export default function Navbar() {
 
   const usersPortalLinks = isLoggedIn
     ? [
-      {
-        label: "Profile",
-        href: shouldUseDashboardDomain
-          ? `${dashboardUrl}/profile`
-          : "/profile",
-        external: shouldUseDashboardDomain,
-      },
-      {
-        label: "Dashboard",
-        href: shouldUseDashboardDomain
-          ? `${dashboardUrl}/dashboard`
-          : "/dashboard",
-        external: shouldUseDashboardDomain,
-      },
-    ]
+        {
+          label: "Profile",
+          href: shouldUseDashboardDomain
+            ? `${dashboardUrl}/profile`
+            : "/profile",
+          external: shouldUseDashboardDomain,
+        },
+        {
+          label: "Dashboard",
+          href: shouldUseDashboardDomain
+            ? `${dashboardUrl}/dashboard`
+            : "/dashboard",
+          external: shouldUseDashboardDomain,
+        },
+      ]
     : [
-      {
-        label: "Login",
-        href: shouldUseDashboardDomain ? `${dashboardUrl}/login` : "/login",
-        external: shouldUseDashboardDomain,
-      },
-      {
-        label: "Signup",
-        href: shouldUseDashboardDomain
-          ? `${dashboardUrl}/register`
-          : "/register",
-        external: shouldUseDashboardDomain,
-      },
-    ];
+        {
+          label: "Login",
+          href: shouldUseDashboardDomain ? `${dashboardUrl}/login` : "/login",
+          external: shouldUseDashboardDomain,
+        },
+        {
+          label: "Signup",
+          href: shouldUseDashboardDomain
+            ? `${dashboardUrl}/register`
+            : "/register",
+          external: shouldUseDashboardDomain,
+        },
+      ];
 
   // Function to check if a route is active
   const isRouteActive = (href: string) => {
@@ -183,27 +183,28 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full bg-transparent  transition-shadow duration-300 ${isScrolled ? "shadow-sm" : "border-gray-100"
-        }`}
+      className={`sticky top-0 z-50 w-full bg-transparent  transition-shadow duration-300 ${
+        isScrolled ? "shadow-sm" : "border-gray-100"
+      }`}
     >
       <div className=" lg:hidden bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat py-1 ">
         <div className="container lg:hidden flex items-center justify-between gap-2  rounded-md ">
           <div className="flex items-center gap-2">
             <Phone className="w-4 h-4 text-white" />
             <a
-              href="tel:+13105286170"
+              href="tel:+971521442416"
               className="text-white text-sm hover:underline block text-nowrap"
             >
-              +1 (310) 528-6170
+              +971 52 144-2416 (UAE)
             </a>
           </div>
           <div className="flex items-center gap-2">
             <Phone className="w-4 h-4 text-white" />
             <a
-              href="tel:+8801748771945"
+              href="tel:+13105286170"
               className="text-white text-sm hover:underline block text-nowrap "
             >
-              +1 (310) 756-5533
+              +1 (310) 528-6170 (USA)
             </a>
           </div>
         </div>
@@ -221,18 +222,18 @@ export default function Navbar() {
         <div className="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-t from-white/50 via-white/90 to-white dark:from-dark/10 dark:via-dark/90 dark:to-dark"></div>
         <div className="container flex justify-between items-center gap-2 pt-2">
           <a
-            href="tel:+13105286170"
+            href="tel:+971521442416"
             className="text-black font-semibold text-sm hover:underline inline-flex items-center gap-1 text-nowrap"
           >
             <Phone className="size-3 text-black hidden xl:block" />
-            +1 (310) 528-6170
+            +971 52 144-2416 (UAE)
           </a>
           <a
-            href="tel:+8801748771945"
+            href="tel:+13105286170"
             className="text-black font-semibold text-sm hover:underline inline-flex items-center gap-1 text-nowrap "
           >
             <Phone className="size-3 text-black hidden xl:block" />
-            +1 (310) 756-5533
+            +1 (310) 528-6170 (USA)
           </a>
         </div>
         <div className="container flex justify-between items-center mx-auto  py-4 ">
@@ -267,10 +268,11 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`text-md transition-colors text-nowrap font-semibold ${isActive
+                    className={`text-md transition-colors text-nowrap font-semibold ${
+                      isActive
                         ? "text-brand  "
                         : "text-[#1B3447] hover:text-brand"
-                      }`}
+                    }`}
                   >
                     {link.label}
                   </Link>
@@ -282,10 +284,11 @@ export default function Navbar() {
                 <NavigationMenuList>
                   <NavigationMenuItem>
                     <NavigationMenuTrigger
-                      className={`text-md px-0 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${pathname.startsWith("/services")
+                      className={`text-md px-0 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${
+                        pathname.startsWith("/services")
                           ? "text-brand "
                           : "text-[#1B3447] hover:text-brand"
-                        }`}
+                      }`}
                     >
                       Services
                     </NavigationMenuTrigger>
@@ -296,10 +299,11 @@ export default function Navbar() {
                             <NavigationMenuLink asChild>
                               <Link
                                 href={item.href}
-                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${pathname === item.href
+                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                  pathname === item.href
                                     ? "bg-accent text-brand font-semibold"
                                     : ""
-                                  }`}
+                                }`}
                               >
                                 <div className="text-sm font-medium leading-none">
                                   {item.label}
@@ -319,10 +323,11 @@ export default function Navbar() {
                 <NavigationMenuList>
                   <NavigationMenuItem>
                     <NavigationMenuTrigger
-                      className={`text-md px-0    bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${pathname.startsWith("/portfolio")
+                      className={`text-md px-0    bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${
+                        pathname.startsWith("/portfolio")
                           ? "text-brand "
                           : "text-[#1B3447] hover:text-brand"
-                        }`}
+                      }`}
                     >
                       Portfolio
                     </NavigationMenuTrigger>
@@ -334,10 +339,11 @@ export default function Navbar() {
                               <Link
                                 target="_blank"
                                 href={item.href}
-                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${pathname === item.href
+                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                  pathname === item.href
                                     ? "bg-accent text-brand font-semibold"
                                     : ""
-                                  }`}
+                                }`}
                               >
                                 <div className="text-sm font-medium leading-none">
                                   {item.label}
@@ -357,10 +363,11 @@ export default function Navbar() {
                   <NavigationMenuItem>
                     <NavigationMenuTrigger
                       id="users-portal-trigger"
-                      className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${pathname.startsWith("/users-portal")
+                      className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
+                        pathname.startsWith("/users-portal")
                           ? "text-brand font-semibold"
                           : "text-[#1B3447] hover:text-brand"
-                        }`}
+                      }`}
                     >
                       <UserRound />
                     </NavigationMenuTrigger>
@@ -381,10 +388,11 @@ export default function Navbar() {
                               ) : (
                                 <Link
                                   href={item.href}
-                                  className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${pathname === item.href
+                                  className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                    pathname === item.href
                                       ? "bg-accent text-brand font-semibold"
                                       : ""
-                                    }`}
+                                  }`}
                                 >
                                   <div className="text-sm font-medium leading-none">
                                     {item.label}
@@ -406,19 +414,29 @@ export default function Navbar() {
               </NavigationMenu>
             </nav>
 
-            {/* Desktop Phone Section */}
-            {/* <div
-              className="hidden lg:flex gap-2  rounded-xs cursor-pointer shadow-md"
+            {/* Desktop Company Profile Thumbnail */}
+            <div
+              className="hidden lg:flex gap-2 rounded-sm cursor-pointer overflow-hidden ring-2 ring-[#00A3FF]/60 transition-all duration-300 hover:scale-[1.04] hover:ring-[#00A3FF]/80"
+              style={{ boxShadow: "0 0 8px rgba(0, 163, 255, 0.3)" }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.boxShadow =
+                  "0 0 14px rgba(0, 163, 255, 0.5)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.boxShadow =
+                  "0 0 8px rgba(0, 163, 255, 0.3)")
+              }
               onClick={() => router.push("/book")}
+              title="View Company Profile"
             >
               <Image
                 src={profileGuide}
-                alt="Phone"
-                width={66}
-                height={66}
-                className="w-24 h-full shadow-md rounded-xs"
+                alt="Company Profile"
+                width={96}
+                height={60}
+                className="w-24 h-auto object-cover"
               />
-            </div> */}
+            </div>
             {/* <div className="hidden lg:flex items-center justify-center gap-2  rounded-md p-2 bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat">
               <Phone className="w-5 h-5 text-white hidden xl:block" />
               <div>
@@ -482,10 +500,11 @@ export default function Navbar() {
                           e.stopPropagation();
                           handleNavigation(link.href);
                         }}
-                        className={`text-lg font-medium transition-colors text-left ${isActive
+                        className={`text-lg font-medium transition-colors text-left ${
+                          isActive
                             ? "text-brand"
                             : "text-gray-700 hover:text-gray-900"
-                          }`}
+                        }`}
                       >
                         {link.label}
                       </button>
@@ -500,8 +519,9 @@ export default function Navbar() {
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
                       <span>Services</span>
                       <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-500 ${isServicesOpen ? "rotate-180" : ""
-                          }`}
+                        className={`w-4 h-4 transition-transform duration-500 ${
+                          isServicesOpen ? "rotate-180" : ""
+                        }`}
                       />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="pt-3 ">
@@ -515,10 +535,11 @@ export default function Navbar() {
                               e.preventDefault();
                               handleNavigation(item.href);
                             }}
-                            className={`block text-base transition-colors ${pathname === item.href
+                            className={`block text-base transition-colors ${
+                              pathname === item.href
                                 ? "text-brand font-semibold"
                                 : "text-gray-600 hover:text-brand"
-                              }`}
+                            }`}
                           >
                             {item.label}
                           </a>
@@ -535,8 +556,9 @@ export default function Navbar() {
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
                       <span>Portfolio</span>
                       <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-500 ${isPortfolioOpen ? "rotate-180" : ""
-                          }`}
+                        className={`w-4 h-4 transition-transform duration-500 ${
+                          isPortfolioOpen ? "rotate-180" : ""
+                        }`}
                       />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="pt-3 ">
@@ -554,14 +576,15 @@ export default function Navbar() {
                                 window.open(
                                   item.href,
                                   "_blank",
-                                  "noopener,noreferrer"
+                                  "noopener,noreferrer",
                                 );
                               }, 100);
                             }}
-                            className={`block text-base transition-colors ${pathname === item.href
+                            className={`block text-base transition-colors ${
+                              pathname === item.href
                                 ? "text-brand font-semibold"
                                 : "text-gray-600 hover:text-brand"
-                              }`}
+                            }`}
                           >
                             {item.label}
                           </a>
@@ -576,8 +599,9 @@ export default function Navbar() {
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
                       <span>Users Portal</span>
                       <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-300 ${isUsersPortalOpen ? "rotate-180" : ""
-                          }`}
+                        className={`w-4 h-4 transition-transform duration-300 ${
+                          isUsersPortalOpen ? "rotate-180" : ""
+                        }`}
                       />
                     </CollapsibleTrigger>
 
@@ -600,10 +624,11 @@ export default function Navbar() {
                                 setIsMobileMenuOpen(false);
                               }
                             }}
-                            className={`block text-base transition-colors duration-700 ${pathname === item.href
+                            className={`block text-base transition-colors duration-700 ${
+                              pathname === item.href
                                 ? "text-brand font-semibold"
                                 : "text-gray-600 hover:text-brand"
-                              }`}
+                            }`}
                           >
                             {item.label}
                           </a>
@@ -642,16 +667,16 @@ export default function Navbar() {
                       </span>
                     </div>
                     <a
-                      href="tel:+8801712345678"
+                      href="tel:+971521442416"
                       className="text-gray-600 hover:text-brand hover:underline block"
                     >
-                      +1 (310) 528-6170
+                      +971 52 144-2416 (UAE)
                     </a>
                     <a
-                      href="tel:+1105258461070"
+                      href="tel:+13105286170"
                       className="text-gray-600 hover:text-brand hover:underline block"
                     >
-                      +1 (310) 756-5533
+                      +1 (310) 528-6170 (USA)
                     </a>
                   </div>
                   <Button className=" bg-brand hover:bg-brand/90 px-2 xl:px-4 ">

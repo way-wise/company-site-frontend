@@ -151,14 +151,16 @@ const HeroSection = () => {
 
         {/* Right column – AI image */}
         <div className="flex justify-center lg:justify-end items-center">
-          <Image
-            src={heroLeftBg}
-            alt="Way Wise Tech AI"
-            width={500}
-            height={500}
-            className="w-[280px] sm:w-[340px] lg:w-[380px] xl:w-[460px] h-auto"
-            priority
-          />
+          <div className="animate-bounce-slow">
+            <Image
+              src={heroLeftBg}
+              alt="Way Wise Tech AI"
+              width={500}
+              height={500}
+              className="w-[280px] sm:w-[340px] lg:w-[380px] xl:w-[460px] h-auto"
+              priority
+            />
+          </div>
         </div>
       </div>
 
