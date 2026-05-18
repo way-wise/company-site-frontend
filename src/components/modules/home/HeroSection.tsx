@@ -23,7 +23,7 @@ const HeroSection = () => {
     >
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center px-8 md:px-12 lg:px-16 xl:px-20 2xl:px-24">
         {/* Left column */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full lg:w-[115%]">
           {/* Office cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Dubai card */}
@@ -68,7 +68,7 @@ const HeroSection = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-xl">
               <div className="bg-[#C14223] px-4 py-2.5 text-center">
                 <h3 className="text-white font-bold text-sm lg:text-[15px] leading-tight">
-                  Way Wise Tech (California, USA)
+                  WayWise Tech (California, USA)
                 </h3>
               </div>
               <div className="p-3 lg:p-4">
@@ -104,7 +104,7 @@ const HeroSection = () => {
 
           {/* Main heading – single line, Outfit ExtraBold, 69px breathing room from cards */}
           <h2
-            className="font-extrabold leading-none tracking-wide mt-[53px]"
+            className="font-extrabold leading-none tracking-wide mt-10 text-center md:text-left"
             style={{
               fontFamily: "var(--font-outfit), sans-serif",
               fontSize: "clamp(38px, 4.5vw, 60px)",
@@ -116,7 +116,7 @@ const HeroSection = () => {
           </h2>
 
           {/* Description – no max-width cap, stretches with the layout */}
-          <p className="text-white/80 text-sm lg:text-base xl:text-lg leading-relaxed">
+          <p className="text-white/80 text-sm lg:text-base xl:text-lg leading-relaxed text-center md:text-left md:w-[80%] lg:w-full">
             Way Wise Tech is a UAE &amp; USA-based software company helping
             businesses grow through custom web development, scalable software
             solutions, and performance-driven digital marketing trusted by 100+
@@ -124,7 +124,7 @@ const HeroSection = () => {
           </p>
 
           {/* CTA Button */}
-          <div>
+          <div className="flex justify-center md:justify-start">
             <Link
               href="/contact-us"
               className="inline-flex items-center gap-3 bg-[#00A3FF] text-white px-8 py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-[#0091e6] transition-all duration-300 hover:scale-105"
