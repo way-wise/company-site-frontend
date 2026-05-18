@@ -1,5 +1,3 @@
-import CalendlyButton from "@/components/shared/CalendlyButton";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -7,86 +5,169 @@ import Image from "next/image";
 const mainBackground = "/images/home/full-bg.png";
 const heroLeftBg = "/images/home/hero-ai.png";
 
+const officeServices = [
+  ["Business Management", "Client Management", "Offshore Team MGMT"],
+  ["Sales & Marketing", "Legal & Compliance", "Finance & Operations"],
+];
+
 const HeroSection = () => {
-	return (
-		<section
-			className="w-full h-full py-8 lg:py-10 lg:h-[80vh] bg-left  md:bg-right lg:bg-center relative"
-			style={{
-				backgroundImage: `url(${mainBackground})`,
-				backgroundSize: "cover",
+  return (
+    <section
+      className="w-full py-16 lg:py-24 relative"
+      style={{
+        backgroundImage: `url(${mainBackground})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center px-8 md:px-12 lg:px-16 xl:px-20 2xl:px-24">
+        {/* Left column */}
+        <div className="flex flex-col gap-4">
+          {/* Office cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Dubai card */}
+            <div className="bg-white rounded-xl overflow-hidden shadow-xl">
+              <div className="bg-[#BD1C82] px-4 py-2.5 text-center">
+                <h3 className="text-white font-bold text-sm lg:text-[15px] leading-tight">
+                  WayWise Tech (Dubai, UAE)
+                </h3>
+              </div>
+              <div className="p-3 lg:p-4">
+                <div className="grid grid-cols-2 gap-x-3 mb-3">
+                  {officeServices.map((col, ci) => (
+                    <ul key={ci} className="space-y-1.5">
+                      {col.map((item) => (
+                        <li
+                          key={item}
+                          className="text-[11px] lg:text-xs text-gray-900 font-medium flex items-start gap-1"
+                        >
+                          <span className="mt-0.5 text-gray-600 shrink-0">
+                            •
+                          </span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  ))}
+                </div>
+                <hr className="border-gray-200 mb-2" />
+                <div className="text-center">
+                  <p className="text-[#BD1C82] font-bold text-xs lg:text-sm">
+                    Dubai Office:
+                  </p>
+                  <p className="text-xs lg:text-sm text-gray-800 mt-0.5 leading-snug">
+                    Arzoo Building, 3rd Floor (306-14) 171 Al Nahda Street, Al
+                    Qusasis 2, Devika Business Center, Dubai.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-				backgroundRepeat: "no-repeat",
-			}}
-		>
-			{/* Main content */}
+            {/* USA card */}
+            <div className="bg-white rounded-xl overflow-hidden shadow-xl">
+              <div className="bg-[#C14223] px-4 py-2.5 text-center">
+                <h3 className="text-white font-bold text-sm lg:text-[15px] leading-tight">
+                  Way Wise Tech (California, USA)
+                </h3>
+              </div>
+              <div className="p-3 lg:p-4">
+                <div className="grid grid-cols-2 gap-x-3 mb-3">
+                  {officeServices.map((col, ci) => (
+                    <ul key={ci} className="space-y-1.5">
+                      {col.map((item) => (
+                        <li
+                          key={item}
+                          className="text-[11px] lg:text-xs text-gray-900 font-medium flex items-start gap-1"
+                        >
+                          <span className="mt-0.5 text-gray-600 shrink-0">
+                            •
+                          </span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  ))}
+                </div>
+                <hr className="border-gray-200 mb-2" />
+                <div className="text-center">
+                  <p className="text-[#C14223] font-bold text-xs lg:text-sm">
+                    USA Office:
+                  </p>
+                  <p className="text-xs lg:text-sm text-gray-800 mt-0.5 leading-snug">
+                    Saddleback Ridge rd, Santa Clarita, California, USA
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-			<div className="container mx-auto  grid grid-cols-1 md:grid-cols-2 h-full">
-				<div className="flex flex-col justify-center items-center md:items-start">
-					{/* Main heading */}
-					<div className="mb-4 md:mb-8">
-						<div className="text-4xl lg:text-6xl  font-bold tracking-wide text-center md:text-left">
-							<p className="text-white ">WAY-WISE</p>
-							<p className="text-transparent bg-gradient-to-r from-[#00D4FF] to-[#0099CC] bg-clip-text ">
-								TECHNOLOGY
-							</p>
-						</div>
-					</div>
-					{/* <p className="text-white/80 text-md  lg:text-2xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">Microsoft M365 Customer Support Services</p> */}
-					{/* Description */}
-					<h1 className="text-md  lg:text-2xl text-white mb-2">Web and Software Development Company USA</h1>
-					<p className="text-white/80 text-md  lg:text-xl max-w-3xl mb-4 md:mb-8 leading-relaxed text-center  md:text-left ">
-						Way Wise Tech is a leading Web and Software Development Company in the USA, helping businesses scale faster with high-quality custom software, web applications, and data-driven digital marketing solutions. Trusted by 100+ global partners, we engineer growth with guaranteed results, unmatched delivery, and technology built to drive real revenue.
-					</p>
+          {/* Main heading – single line, Outfit ExtraBold, 69px breathing room from cards */}
+          <h2
+            className="font-extrabold leading-none tracking-wide mt-[53px]"
+            style={{
+              fontFamily: "var(--font-outfit), sans-serif",
+              fontSize: "clamp(38px, 4.5vw, 60px)",
+              textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            <span className="text-white">WAY-WISE </span>
+            <span className="text-[#00A3FF]">TECHNOLOGY</span>
+          </h2>
 
-					{/* CTA Button */}
-					<div>
-						{/* <CalendlyButton
-							buttonText="Get a Free Quote"
-							url="/contact-us"
-						/> */}
-						
-						<Link
-							href="/contact-us"
-							className="bg-gradient-to-r from-[#00D4FF] to-[#0099CC] text-white lg:px-8 lg:py-4 px-4 py-3 rounded-lg text-lg font-semibold hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105 flex items-center gap-2 text-left"
-						>
-							Get a Free Quote
-							<svg
-								width="20"
-								height="20"
-								viewBox="0 0 24 24"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg"
-								className="ml-2"
-							>
-								<path
-									d="M5 12H19M19 12L12 5M19 12L12 19"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								/>
-							</svg>
-						</Link>
-					</div>
-				</div>
-				<div className="flex md:justify-end justify-center items-center pt-3">
-					<div className="animate-bounce-slow">
-						<Image
-							src={heroLeftBg}
-							alt="hero left bg"
-							width={350}
-							height={350}
-							className="w-full md:w-[250px]  lg:w-[300px] xl:w-[400px] h-full md:h-auto "
-						/>
-					</div>
-				</div>
-			</div>
+          {/* Description – no max-width cap, stretches with the layout */}
+          <p className="text-white/80 text-sm lg:text-base xl:text-lg leading-relaxed">
+            Way Wise Tech is a UAE &amp; USA-based software company helping
+            businesses grow through custom web development, scalable software
+            solutions, and performance-driven digital marketing trusted by 100+
+            global partners for fast delivery and real business results.
+          </p>
 
-			<div className="text-center text-white pb-4 md:pb-0 text-[20px] lg:text-[26px]  xl:text-[30px] font-semibold px-2 md:absolute bottom-2 right-8 md:right-6 xl:right-20 2xl:right-40 ">
-				<h2>Inspiring Innovation with AI...</h2>
-			</div>
-		</section>
-	);
+          {/* CTA Button */}
+          <div>
+            <Link
+              href="/contact-us"
+              className="inline-flex items-center gap-3 bg-[#00A3FF] text-white px-8 py-4 rounded-lg text-base lg:text-lg font-semibold hover:bg-[#0091e6] transition-all duration-300 hover:scale-105"
+            >
+              Lets Get Started
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7 7L17 17M17 17H7M17 17V7"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </Link>
+          </div>
+        </div>
+
+        {/* Right column – AI image */}
+        <div className="flex justify-center lg:justify-end items-center">
+          <Image
+            src={heroLeftBg}
+            alt="Way Wise Tech AI"
+            width={500}
+            height={500}
+            className="w-[280px] sm:w-[340px] lg:w-[380px] xl:w-[460px] h-auto"
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Bottom tagline */}
+      <div className="text-center text-white pb-4 md:pb-0 text-[18px] lg:text-[24px] xl:text-[28px] font-semibold px-2 mt-6 md:mt-0 md:absolute bottom-3 right-8 md:right-6 xl:right-20 2xl:right-40">
+        <h2>Inspiring Innovation with AI...</h2>
+      </div>
+    </section>
+  );
 };
 
 export default HeroSection;
