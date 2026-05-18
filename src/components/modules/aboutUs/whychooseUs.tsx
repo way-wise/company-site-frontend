@@ -76,10 +76,22 @@ const ChooseUs = () => {
                 in Tech Solutions
               </h1>
               <p className="text-lg sm:text-xl text-[#3d4e5c] leading-7 translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:400ms]">
-                At Way-Wise Tech, a California-based Web and Software Development Company in the USA, we deliver innovative digital solutions that help businesses grow and scale faster. Our expertise in custom software development, web application development, and mobile app development enables companies to build powerful, scalable digital products.
+                At Way-Wise Tech, a California-based Web and Software
+                Development Company with operations in the USA and UAE, we
+                deliver innovative digital solutions that help businesses grow
+                and scale faster. Our expertise in custom software development,
+                web application development, and mobile app development enables
+                startups and enterprises to build powerful, scalable digital
+                products.
                 <br />
                 <br />
-                Our team of skilled developers, designers, marketers, and IT specialists creates high-performing websites, enterprise software solutions, and data-driven digital marketing strategies. By combining full-stack development, cloud engineering services, and modern technology, we work closely with clients to transform ideas into secure, efficient, and growth-focused digital solutions. 
+                Our team of skilled developers, designers, marketers, and IT
+                specialists creates high-performing websites, enterprise
+                software solutions, and data-driven digital marketing
+                strategies. By combining full-stack development, cloud
+                engineering services, and modern technology, we work closely
+                with clients to transform ideas into secure, efficient, and
+                growth-focused digital solutions.
               </p>
             </div>
           </div>
@@ -121,9 +133,9 @@ const ChooseUs = () => {
           </div>
           <div className="flex justify-center mt-8 md:mt-16">
             <CalendlyButton
-                buttonText="Need an Expert Help - Book a Meeting"
-                url="https://calendly.com/way-wise-tech/software-development-meeting"
-              />
+              buttonText="Need an Expert Help - Book a Meeting"
+              url="https://calendly.com/way-wise-tech/software-development-meeting"
+            />
           </div>
         </div>
       </section>
