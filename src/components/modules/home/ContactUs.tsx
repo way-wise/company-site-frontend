@@ -26,33 +26,39 @@ const ContactUs = () => {
               </h2>
 
               <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-2xl">
-                Get in touch with Way Wise Tech, a trusted web development and custom software development company in the USA, to discuss your project and receive a tailored solution for your business. Our team specializes in web application development, mobile app development, and scalable digital solutions, helping startups and enterprises turn ideas into powerful, results-driven technology
+                Get in touch with Way Wise Tech, a trusted web development and
+                custom software development company operating in the USA and
+                UAE, to discuss your project and receive a tailored solution for
+                your business. Our team specializes in web application
+                development, mobile app development, and scalable digital
+                solutions, helping startups and enterprises turn ideas into
+                powerful, results-driven technology.
               </p>
             </div>
 
             {/* Checklist */}
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center justify-start gap-2">
-                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
                 <span className="text-sm sm:text-base text-gray-700">
                   We will respond to you within 24 hrs
                 </span>
               </div>
               <div className="flex items-center justify-start gap-2">
-                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
                 <span className="text-sm sm:text-base text-gray-700">
                   Our business hours are Monday through Friday.
                 </span>
               </div>
               <div className="flex items-center justify-start gap-2">
-                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
                 <span className="text-sm sm:text-base text-gray-700">
                   Office hours are from 9:00 AM to 5:00 PM.
                 </span>
               </div>
 
               <div className="flex items-center justify-start gap-2">
-                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+                <CircleCheck className="text-gray-600 w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
                 <span className="text-sm sm:text-base text-gray-700">
                   We&apos;ll sign an NDA if requested.
                 </span>
