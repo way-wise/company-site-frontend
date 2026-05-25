@@ -12,7 +12,7 @@ export default function BookPage() {
                      scrolling="no"
                      className="fp-iframe w-full h-full"
                      style={{ height: "600px" }}
-                     src="https://heyzine.com/flip-book/2e44a286ec.html"
+                     src="https://heyzine.com/flip-book/8ae5bd6819.html"
                   />
                </div>
             </div>

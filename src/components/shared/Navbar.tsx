@@ -1,21 +1,21 @@
 "use client";
 // Public folder image paths
 const Logo = "/images/shared/way-wise-logo.svg";
-const profileGuide = "/images/shared/way-wise-profile.jpg";
+const profileGuide = "/images/shared/book-v2-front.png";
 const LogoText = "/images/shared/way-wise-text.png";
 import { Button } from "@/components/ui/button";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
+   Collapsible,
+   CollapsibleContent,
+   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
+   NavigationMenu,
+   NavigationMenuContent,
+   NavigationMenuItem,
+   NavigationMenuLink,
+   NavigationMenuList,
+   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/UserContext";
@@ -29,411 +29,400 @@ import { useEffect, useRef, useState } from "react";
 import LogoutButton from "../auth/LogoutButton";
 
 export default function Navbar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const [isUsersPortalOpen, setIsUsersPortalOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const { user } = useAuth();
-  const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+   const pathname = usePathname();
+   const router = useRouter();
+   const [isScrolled, setIsScrolled] = useState(false);
+   const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
+   const [isServicesOpen, setIsServicesOpen] = useState(false);
+   const [isUsersPortalOpen, setIsUsersPortalOpen] = useState(false);
+   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+   const [isMounted, setIsMounted] = useState(false);
+   const { user } = useAuth();
+   const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Prevent hydration mismatch by only rendering user-dependent content after mount
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+   // Prevent hydration mismatch by only rendering user-dependent content after mount
+   useEffect(() => {
+      setIsMounted(true);
+   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+   useEffect(() => {
+      const handleScroll = () => {
+         if (window.scrollY > 10) {
+            setIsScrolled(true);
+         } else {
+            setIsScrolled(false);
+         }
+      };
+
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+   }, []);
+
+   // Close mobile menu when pathname changes
+   useEffect(() => {
+      setIsMobileMenuOpen(false);
+   }, [pathname]);
+
+   // Cleanup timeout on unmount
+   useEffect(() => {
+      return () => {
+         if (navigationTimeoutRef.current) {
+            clearTimeout(navigationTimeoutRef.current);
+         }
+      };
+   }, []);
+
+   const navigationLinks = [
+      {
+         label: "Home",
+         href: "/",
+      },
+      {
+         label: "About Us",
+         href: "/about-us",
+      },
+      {
+         label: "Contact Us",
+         href: "/contact-us",
+      },
+   ];
+
+   // Services links - main page + all individual services
+   const servicesLinks = [
+      { label: "All Services", href: "/services" },
+      ...servicesData.slice(0, 3).map((service) => ({
+         label: service.title,
+         href: service.url,
+      })),
+      { label: "Microsoft Support", href: "/microsoft-support" },
+      ...servicesData.slice(3).map((service) => ({
+         label: service.title,
+         href: service.url,
+      })),
+   ];
+
+   const portfolioLinks = [
+      { label: "Web Portfolio", href: "https://firoz.waywisetech.com/" },
+      { label: "AI/ML Portfolio", href: "https://aifiroz.waywisetech.com/" },
+      {
+         label: "Marketing Portfolio",
+         href: "https://digitalmarketing.waywisetech.com/",
+      },
+      { label: "Design Portfolio", href: "https://fiona.waywisetech.com/" },
+   ];
+
+   // Conditional links based on authentication status
+   // In public mode, redirect to dashboard subdomain for auth and protected routes
+   // In development mode (no APP_MODE), use local routes
+   const dashboardUrl = getDashboardUrl();
+   const isDevelopment = !process.env.NEXT_PUBLIC_APP_MODE;
+   const shouldUseDashboardDomain = isPublicMode() && !isDevelopment;
+
+   // Use isMounted to prevent hydration mismatch - always render logged-out state initially
+   const isLoggedIn = isMounted && user;
+
+   const usersPortalLinks =
+      isLoggedIn ?
+         [
+            {
+               label: "Profile",
+               href:
+                  shouldUseDashboardDomain ?
+                     `${dashboardUrl}/profile`
+                  :  "/profile",
+               external: shouldUseDashboardDomain,
+            },
+            {
+               label: "Dashboard",
+               href:
+                  shouldUseDashboardDomain ?
+                     `${dashboardUrl}/dashboard`
+                  :  "/dashboard",
+               external: shouldUseDashboardDomain,
+            },
+         ]
+      :  [
+            {
+               label: "Login",
+               href:
+                  shouldUseDashboardDomain ? `${dashboardUrl}/login` : "/login",
+               external: shouldUseDashboardDomain,
+            },
+            {
+               label: "Signup",
+               href:
+                  shouldUseDashboardDomain ?
+                     `${dashboardUrl}/register`
+                  :  "/register",
+               external: shouldUseDashboardDomain,
+            },
+         ];
+
+   // Function to check if a route is active
+   const isRouteActive = (href: string) => {
+      if (href === "/") {
+         return pathname === "/";
       }
-    };
+      return pathname.startsWith(href);
+   };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Close mobile menu when pathname changes
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
+   // Function to handle navigation and close mobile menu
+   const handleNavigation = (href: string) => {
+      // Clear any existing timeout
       if (navigationTimeoutRef.current) {
-        clearTimeout(navigationTimeoutRef.current);
+         clearTimeout(navigationTimeoutRef.current);
       }
-    };
-  }, []);
 
-  const navigationLinks = [
-    {
-      label: "Home",
-      href: "/",
-    },
-    {
-      label: "About Us",
-      href: "/about-us",
-    },
-    {
-      label: "Contact Us",
-      href: "/contact-us",
-    },
-  ];
+      // Close the menu first
+      setIsMobileMenuOpen(false);
 
-  // Services links - main page + all individual services
-  const servicesLinks = [
-    { label: "All Services", href: "/services" },
-    ...servicesData.slice(0, 3).map((service) => ({
-      label: service.title,
-      href: service.url,
-    })),
-    { label: "Microsoft Support", href: "/microsoft-support" },
-    ...servicesData.slice(3).map((service) => ({
-      label: service.title,
-      href: service.url,
-    })),
-  ];
+      // Use setTimeout to ensure the menu closes before navigation
+      navigationTimeoutRef.current = setTimeout(() => {
+         router.push(href);
+      }, 150);
+   };
 
-  const portfolioLinks = [
-    { label: "Web Portfolio", href: "https://firoz.waywisetech.com/" },
-    { label: "AI/ML Portfolio", href: "https://aifiroz.waywisetech.com/" },
-    {
-      label: "Marketing Portfolio",
-      href: "https://digitalmarketing.waywisetech.com/",
-    },
-    { label: "Design Portfolio", href: "https://fiona.waywisetech.com/" },
-  ];
-
-  // Conditional links based on authentication status
-  // In public mode, redirect to dashboard subdomain for auth and protected routes
-  // In development mode (no APP_MODE), use local routes
-  const dashboardUrl = getDashboardUrl();
-  const isDevelopment = !process.env.NEXT_PUBLIC_APP_MODE;
-  const shouldUseDashboardDomain = isPublicMode() && !isDevelopment;
-
-  // Use isMounted to prevent hydration mismatch - always render logged-out state initially
-  const isLoggedIn = isMounted && user;
-
-  const usersPortalLinks = isLoggedIn
-    ? [
-        {
-          label: "Profile",
-          href: shouldUseDashboardDomain
-            ? `${dashboardUrl}/profile`
-            : "/profile",
-          external: shouldUseDashboardDomain,
-        },
-        {
-          label: "Dashboard",
-          href: shouldUseDashboardDomain
-            ? `${dashboardUrl}/dashboard`
-            : "/dashboard",
-          external: shouldUseDashboardDomain,
-        },
-      ]
-    : [
-        {
-          label: "Login",
-          href: shouldUseDashboardDomain ? `${dashboardUrl}/login` : "/login",
-          external: shouldUseDashboardDomain,
-        },
-        {
-          label: "Signup",
-          href: shouldUseDashboardDomain
-            ? `${dashboardUrl}/register`
-            : "/register",
-          external: shouldUseDashboardDomain,
-        },
-      ];
-
-  // Function to check if a route is active
-  const isRouteActive = (href: string) => {
-    if (href === "/") {
-      return pathname === "/";
-    }
-    return pathname.startsWith(href);
-  };
-
-  // Function to handle navigation and close mobile menu
-  const handleNavigation = (href: string) => {
-    // Clear any existing timeout
-    if (navigationTimeoutRef.current) {
-      clearTimeout(navigationTimeoutRef.current);
-    }
-
-    // Close the menu first
-    setIsMobileMenuOpen(false);
-
-    // Use setTimeout to ensure the menu closes before navigation
-    navigationTimeoutRef.current = setTimeout(() => {
-      router.push(href);
-    }, 150);
-  };
-
-  return (
-    <header
-      className={`sticky top-0 z-50 w-full bg-transparent  transition-shadow duration-300 ${
-        isScrolled ? "shadow-sm" : "border-gray-100"
-      }`}
-    >
-      <div className=" lg:hidden bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat py-1 ">
-        <div className="container lg:hidden flex items-center justify-between gap-2  rounded-md ">
-          <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-white" />
-            <a
-              href="tel:+971521442416"
-              className="text-white text-sm hover:underline block text-nowrap"
-            >
-              +971 52 144-2416 (UAE)
-            </a>
-          </div>
-          <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-white" />
-            <a
-              href="tel:+13105286170"
-              className="text-white text-sm hover:underline block text-nowrap "
-            >
-              +1 (310) 528-6170 (USA)
-            </a>
-          </div>
-        </div>
-      </div>
-      <div
-        className="relative z-10 bg-white  dark:bg-gray-dark "
-        style={{
-          backgroundImage: 'url("/footer-bg.jpg")',
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "bottom",
-          backgroundColor: "#ddd",
-        }}
-      >
-        <div className="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-t from-white/50 via-white/90 to-white dark:from-dark/10 dark:via-dark/90 dark:to-dark"></div>
-        <div className="container flex justify-between items-center gap-2 pt-2">
-          <a
-            href="tel:+971521442416"
-            className="text-black font-semibold text-sm hover:underline inline-flex items-center gap-1 text-nowrap"
-          >
-            <Phone className="size-3 text-black hidden xl:block" />
-            +971 52 144-2416 (UAE)
-          </a>
-          <a
-            href="tel:+13105286170"
-            className="text-black font-semibold text-sm hover:underline inline-flex items-center gap-1 text-nowrap "
-          >
-            <Phone className="size-3 text-black hidden xl:block" />
-            +1 (310) 528-6170 (USA)
-          </a>
-        </div>
-        <div className="container flex justify-between items-center mx-auto  py-4 ">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-1 ">
-            {/* Logo Icon */}
-            <Image
-              src={Logo}
-              alt="Logo"
-              width={56}
-              height={60}
-              className="w-8 h-auto  md:w-10 "
-            />
-
-            {/* Logo Text */}
-            <Image
-              src={LogoText}
-              alt="Logo Text"
-              width={214}
-              height={51}
-              className="w-24 md:w-32 xl:w-40 h-auto"
-            />
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="flex justify-end  items-center gap-2 xl:gap-4">
-            <nav className="hidden lg:flex gap-[10px] xl:gap-4 mx-auto items-center">
-              {navigationLinks.map((link) => {
-                const isActive = isRouteActive(link.href);
-
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`text-md transition-colors text-nowrap font-semibold ${
-                      isActive
-                        ? "text-brand  "
-                        : "text-[#1B3447] hover:text-brand"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-
-              {/* Services Dropdown */}
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger
-                      className={`text-md px-0 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${
-                        pathname.startsWith("/services")
-                          ? "text-brand "
-                          : "text-[#1B3447] hover:text-brand"
-                      }`}
-                    >
-                      Services
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[220px] gap-3 p-2">
-                        {servicesLinks.map((item) => (
-                          <li key={item.href}>
-                            <NavigationMenuLink asChild>
-                              <Link
-                                href={item.href}
-                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
-                                  pathname === item.href
-                                    ? "bg-accent text-brand font-semibold"
-                                    : ""
-                                }`}
-                              >
-                                <div className="text-sm font-medium leading-none">
-                                  {item.label}
-                                </div>
-                              </Link>
-                            </NavigationMenuLink>
-                          </li>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-
-              {/* Portfolio Dropdown */}
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger
-                      className={`text-md px-0    bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${
-                        pathname.startsWith("/portfolio")
-                          ? "text-brand "
-                          : "text-[#1B3447] hover:text-brand"
-                      }`}
-                    >
-                      Portfolio
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-3 p-2">
-                        {portfolioLinks.map((item) => (
-                          <li key={item.href}>
-                            <NavigationMenuLink asChild>
-                              <Link
-                                target="_blank"
-                                href={item.href}
-                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
-                                  pathname === item.href
-                                    ? "bg-accent text-brand font-semibold"
-                                    : ""
-                                }`}
-                              >
-                                <div className="text-sm font-medium leading-none">
-                                  {item.label}
-                                </div>
-                              </Link>
-                            </NavigationMenuLink>
-                          </li>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-              {/* Portfolio Dropdown */}
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger
-                      id="users-portal-trigger"
-                      className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
-                        pathname.startsWith("/users-portal")
-                          ? "text-brand font-semibold"
-                          : "text-[#1B3447] hover:text-brand"
-                      }`}
-                    >
-                      <UserRound />
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-3 p-2">
-                        {usersPortalLinks.map((item) => (
-                          <li key={item.href}>
-                            <NavigationMenuLink asChild>
-                              {item.external ? (
-                                <a
-                                  href={item.href}
-                                  className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md`}
-                                >
-                                  <div className="text-sm font-medium leading-none">
-                                    {item.label}
-                                  </div>
-                                </a>
-                              ) : (
-                                <Link
-                                  href={item.href}
-                                  className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
-                                    pathname === item.href
-                                      ? "bg-accent text-brand font-semibold"
-                                      : ""
-                                  }`}
-                                >
-                                  <div className="text-sm font-medium leading-none">
-                                    {item.label}
-                                  </div>
-                                </Link>
-                              )}
-                            </NavigationMenuLink>
-                          </li>
-                        ))}
-                        {isLoggedIn && (
-                          <li>
-                            <LogoutButton />
-                          </li>
-                        )}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            </nav>
-
-            {/* Desktop Company Profile Thumbnail */}
-            <div
-              className="hidden lg:flex gap-2 rounded-sm cursor-pointer overflow-hidden ring-2 ring-[#00A3FF]/60 transition-all duration-300 hover:scale-[1.04] hover:ring-[#00A3FF]/80"
-              style={{ boxShadow: "0 0 8px rgba(0, 163, 255, 0.3)" }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.boxShadow =
-                  "0 0 14px rgba(0, 163, 255, 0.5)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.boxShadow =
-                  "0 0 8px rgba(0, 163, 255, 0.3)")
-              }
-              onClick={() => router.push("/book")}
-              title="View Company Profile"
-            >
-              <Image
-                src={profileGuide}
-                alt="Company Profile"
-                width={96}
-                height={60}
-                className="w-24 h-auto object-cover"
-              />
+   return (
+      <header
+         className={`sticky top-0 z-50 w-full bg-transparent  transition-shadow duration-300 ${
+            isScrolled ? "shadow-sm" : "border-gray-100"
+         }`}>
+         <div className=" lg:hidden bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat py-1 ">
+            <div className="container lg:hidden flex items-center justify-between gap-2  rounded-md ">
+               <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-white" />
+                  <a
+                     href="tel:+971521442416"
+                     className="text-white text-sm hover:underline block text-nowrap">
+                     +971 52 144-2416 (UAE)
+                  </a>
+               </div>
+               <div className="flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-white" />
+                  <a
+                     href="tel:+13105286170"
+                     className="text-white text-sm hover:underline block text-nowrap ">
+                     +1 (310) 528-6170 (USA)
+                  </a>
+               </div>
             </div>
-            {/* <div className="hidden lg:flex items-center justify-center gap-2  rounded-md p-2 bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat">
+         </div>
+         <div
+            className="relative z-10 bg-white  dark:bg-gray-dark "
+            style={{
+               backgroundImage: 'url("/footer-bg.jpg")',
+               backgroundRepeat: "no-repeat",
+               backgroundSize: "cover",
+               backgroundPosition: "bottom",
+               backgroundColor: "#ddd",
+            }}>
+            <div className="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-t from-white/50 via-white/90 to-white dark:from-dark/10 dark:via-dark/90 dark:to-dark"></div>
+            <div className="container flex justify-between items-center gap-2 pt-2">
+               <a
+                  href="tel:+971521442416"
+                  className="text-black font-semibold text-sm hover:underline inline-flex items-center gap-1 text-nowrap">
+                  <Phone className="size-3 text-black hidden xl:block" />
+                  +971 52 144-2416 (UAE)
+               </a>
+               <a
+                  href="tel:+13105286170"
+                  className="text-black font-semibold text-sm hover:underline inline-flex items-center gap-1 text-nowrap ">
+                  <Phone className="size-3 text-black hidden xl:block" />
+                  +1 (310) 528-6170 (USA)
+               </a>
+            </div>
+            <div className="container flex justify-between items-center mx-auto  py-4 ">
+               {/* Logo */}
+               <Link href="/" className="flex items-center gap-1 ">
+                  {/* Logo Icon */}
+                  <Image
+                     src={Logo}
+                     alt="Logo"
+                     width={56}
+                     height={60}
+                     className="w-8 h-auto  md:w-10 "
+                  />
+
+                  {/* Logo Text */}
+                  <Image
+                     src={LogoText}
+                     alt="Logo Text"
+                     width={214}
+                     height={51}
+                     className="w-24 md:w-32 xl:w-40 h-auto"
+                  />
+               </Link>
+
+               {/* Desktop Navigation */}
+               <div className="flex justify-end  items-center gap-2 xl:gap-4">
+                  <nav className="hidden lg:flex gap-[10px] xl:gap-4 mx-auto items-center">
+                     {navigationLinks.map((link) => {
+                        const isActive = isRouteActive(link.href);
+
+                        return (
+                           <Link
+                              key={link.href}
+                              href={link.href}
+                              className={`text-md transition-colors text-nowrap font-semibold ${
+                                 isActive ? "text-brand  " : (
+                                    "text-[#1B3447] hover:text-brand"
+                                 )
+                              }`}>
+                              {link.label}
+                           </Link>
+                        );
+                     })}
+
+                     {/* Services Dropdown */}
+                     <NavigationMenu>
+                        <NavigationMenuList>
+                           <NavigationMenuItem>
+                              <NavigationMenuTrigger
+                                 className={`text-md px-0 bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${
+                                    pathname.startsWith("/services") ?
+                                       "text-brand "
+                                    :  "text-[#1B3447] hover:text-brand"
+                                 }`}>
+                                 Services
+                              </NavigationMenuTrigger>
+                              <NavigationMenuContent>
+                                 <ul className="grid w-[220px] gap-3 p-2">
+                                    {servicesLinks.map((item) => (
+                                       <li key={item.href}>
+                                          <NavigationMenuLink asChild>
+                                             <Link
+                                                href={item.href}
+                                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                                   pathname === item.href ?
+                                                      "bg-accent text-brand font-semibold"
+                                                   :  ""
+                                                }`}>
+                                                <div className="text-sm font-medium leading-none">
+                                                   {item.label}
+                                                </div>
+                                             </Link>
+                                          </NavigationMenuLink>
+                                       </li>
+                                    ))}
+                                 </ul>
+                              </NavigationMenuContent>
+                           </NavigationMenuItem>
+                        </NavigationMenuList>
+                     </NavigationMenu>
+
+                     {/* Portfolio Dropdown */}
+                     <NavigationMenu>
+                        <NavigationMenuList>
+                           <NavigationMenuItem>
+                              <NavigationMenuTrigger
+                                 className={`text-md px-0    bg-transparent hover:bg-transparent data-[state=open]:bg-transparent font-semibold ${
+                                    pathname.startsWith("/portfolio") ?
+                                       "text-brand "
+                                    :  "text-[#1B3447] hover:text-brand"
+                                 }`}>
+                                 Portfolio
+                              </NavigationMenuTrigger>
+                              <NavigationMenuContent>
+                                 <ul className="grid w-[200px] gap-3 p-2">
+                                    {portfolioLinks.map((item) => (
+                                       <li key={item.href}>
+                                          <NavigationMenuLink asChild>
+                                             <Link
+                                                target="_blank"
+                                                href={item.href}
+                                                className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                                   pathname === item.href ?
+                                                      "bg-accent text-brand font-semibold"
+                                                   :  ""
+                                                }`}>
+                                                <div className="text-sm font-medium leading-none">
+                                                   {item.label}
+                                                </div>
+                                             </Link>
+                                          </NavigationMenuLink>
+                                       </li>
+                                    ))}
+                                 </ul>
+                              </NavigationMenuContent>
+                           </NavigationMenuItem>
+                        </NavigationMenuList>
+                     </NavigationMenu>
+                     {/* Portfolio Dropdown */}
+                     <NavigationMenu>
+                        <NavigationMenuList>
+                           <NavigationMenuItem>
+                              <NavigationMenuTrigger
+                                 id="users-portal-trigger"
+                                 className={`text-md px-0 font-normal   bg-transparent hover:bg-transparent data-[state=open]:bg-transparent ${
+                                    pathname.startsWith("/users-portal") ?
+                                       "text-brand font-semibold"
+                                    :  "text-[#1B3447] hover:text-brand"
+                                 }`}>
+                                 <UserRound />
+                              </NavigationMenuTrigger>
+                              <NavigationMenuContent>
+                                 <ul className="grid w-[200px] gap-3 p-2">
+                                    {usersPortalLinks.map((item) => (
+                                       <li key={item.href}>
+                                          <NavigationMenuLink asChild>
+                                             {item.external ?
+                                                <a
+                                                   href={item.href}
+                                                   className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md`}>
+                                                   <div className="text-sm font-medium leading-none">
+                                                      {item.label}
+                                                   </div>
+                                                </a>
+                                             :  <Link
+                                                   href={item.href}
+                                                   className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
+                                                      pathname === item.href ?
+                                                         "bg-accent text-brand font-semibold"
+                                                      :  ""
+                                                   }`}>
+                                                   <div className="text-sm font-medium leading-none">
+                                                      {item.label}
+                                                   </div>
+                                                </Link>
+                                             }
+                                          </NavigationMenuLink>
+                                       </li>
+                                    ))}
+                                    {isLoggedIn && (
+                                       <li>
+                                          <LogoutButton />
+                                       </li>
+                                    )}
+                                 </ul>
+                              </NavigationMenuContent>
+                           </NavigationMenuItem>
+                        </NavigationMenuList>
+                     </NavigationMenu>
+                  </nav>
+
+                  {/* Desktop Company Profile Thumbnail */}
+                  <div
+                     className="hidden lg:flex gap-2 rounded-sm cursor-pointer overflow-hidden ring-2 ring-[#00A3FF]/60 transition-all duration-300 hover:scale-[1.04] hover:ring-[#00A3FF]/80"
+                     style={{ boxShadow: "0 0 8px rgba(0, 163, 255, 0.3)" }}
+                     onMouseEnter={(e) =>
+                        (e.currentTarget.style.boxShadow =
+                           "0 0 14px rgba(0, 163, 255, 0.5)")
+                     }
+                     onMouseLeave={(e) =>
+                        (e.currentTarget.style.boxShadow =
+                           "0 0 8px rgba(0, 163, 255, 0.3)")
+                     }
+                     onClick={() => router.push("/book")}
+                     title="View Company Profile">
+                     <Image
+                        src={profileGuide}
+                        alt="Company Profile"
+                        width={96}
+                        height={60}
+                        className="w-24 h-auto object-cover"
+                     />
+                  </div>
+                  {/* <div className="hidden lg:flex items-center justify-center gap-2  rounded-md p-2 bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat">
               <Phone className="w-5 h-5 text-white hidden xl:block" />
               <div>
                 <a
@@ -450,240 +439,243 @@ export default function Navbar() {
                 </a>
               </div>
             </div> */}
-            <Button className="hidden lg:flex bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
-              <Link href="/contact-us">Get a Free Quote</Link>
-            </Button>
-          </div>
-
-          {/* Mobile Menu */}
-          <div className="flex justify-end items-center lg:hidden">
-            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-              <div className="flex items-center gap-2">
-                {/* Mobile Phone Button */}
-
-                <Button className="hidden min-[370px]:flex lg:flex bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
-                  <Link href="/contact-us">Get a Free Quote</Link>
-                </Button>
-
-                <SheetTrigger asChild>
-                  <Button size="icon" className="bg-brand hover:bg-brand/90">
-                    <Menu className="h-5 w-5 text-white" />
-                    <span className="sr-only">Open menu</span>
+                  <Button className="hidden lg:flex bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
+                     <Link href="/contact-us">Get a Free Quote</Link>
                   </Button>
-                </SheetTrigger>
-              </div>
+               </div>
 
-              <SheetContent
-                side="right"
-                className="w-[300px] sm:w-[400px] bg-white p-6"
-              >
-                <nav className="flex flex-col space-y-6 ">
-                  {/* Mobile Logo */}
-                  <Link href="/" className="flex items-center gap-3">
-                    <Image src={Logo} alt="Logo" width={36} height={36} />
-                    <Image src={LogoText} alt="Logo" width={120} height={43} />
-                  </Link>
-                  <hr />
-                  {/* Mobile Navigation Links */}
-                  {navigationLinks.map((link) => {
-                    const isActive = isRouteActive(link.href);
+               {/* Mobile Menu */}
+               <div className="flex justify-end items-center lg:hidden">
+                  <Sheet
+                     open={isMobileMenuOpen}
+                     onOpenChange={setIsMobileMenuOpen}>
+                     <div className="flex items-center gap-2">
+                        {/* Mobile Phone Button */}
 
-                    return (
-                      <button
-                        key={link.href}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleNavigation(link.href);
-                        }}
-                        className={`text-lg font-medium transition-colors text-left ${
-                          isActive
-                            ? "text-brand"
-                            : "text-gray-700 hover:text-gray-900"
-                        }`}
-                      >
-                        {link.label}
-                      </button>
-                    );
-                  })}
+                        <Button className="hidden min-[370px]:flex lg:flex bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
+                           <Link href="/contact-us">Get a Free Quote</Link>
+                        </Button>
 
-                  {/* Mobile Services Section */}
-                  <Collapsible
-                    open={isServicesOpen}
-                    onOpenChange={setIsServicesOpen}
-                  >
-                    <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
-                      <span>Services</span>
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-500 ${
-                          isServicesOpen ? "rotate-180" : ""
-                        }`}
-                      />
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="pt-3 ">
-                      <div className="pl-4 space-y-3">
-                        {servicesLinks.map((item) => (
-                          <a
-                            key={item.href}
-                            href={item.href}
-                            rel="noopener noreferrer"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleNavigation(item.href);
-                            }}
-                            className={`block text-base transition-colors ${
-                              pathname === item.href
-                                ? "text-brand font-semibold"
-                                : "text-gray-600 hover:text-brand"
-                            }`}
-                          >
-                            {item.label}
-                          </a>
-                        ))}
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
+                        <SheetTrigger asChild>
+                           <Button
+                              size="icon"
+                              className="bg-brand hover:bg-brand/90">
+                              <Menu className="h-5 w-5 text-white" />
+                              <span className="sr-only">Open menu</span>
+                           </Button>
+                        </SheetTrigger>
+                     </div>
 
-                  {/* Mobile Portfolio Section */}
-                  <Collapsible
-                    open={isPortfolioOpen}
-                    onOpenChange={setIsPortfolioOpen}
-                  >
-                    <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
-                      <span>Portfolio</span>
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-500 ${
-                          isPortfolioOpen ? "rotate-180" : ""
-                        }`}
-                      />
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="pt-3 ">
-                      <div className="pl-4 space-y-3">
-                        {portfolioLinks.map((item) => (
-                          <a
-                            key={item.href}
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setIsMobileMenuOpen(false);
-                              setTimeout(() => {
-                                window.open(
-                                  item.href,
-                                  "_blank",
-                                  "noopener,noreferrer",
-                                );
-                              }, 100);
-                            }}
-                            className={`block text-base transition-colors ${
-                              pathname === item.href
-                                ? "text-brand font-semibold"
-                                : "text-gray-600 hover:text-brand"
-                            }`}
-                          >
-                            {item.label}
-                          </a>
-                        ))}
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
-                  <Collapsible
-                    open={isUsersPortalOpen}
-                    onOpenChange={setIsUsersPortalOpen}
-                  >
-                    <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
-                      <span>Users Portal</span>
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-300 ${
-                          isUsersPortalOpen ? "rotate-180" : ""
-                        }`}
-                      />
-                    </CollapsibleTrigger>
+                     <SheetContent
+                        side="right"
+                        className="w-[300px] sm:w-[400px] bg-white p-6">
+                        <nav className="flex flex-col space-y-6 ">
+                           {/* Mobile Logo */}
+                           <Link href="/" className="flex items-center gap-3">
+                              <Image
+                                 src={Logo}
+                                 alt="Logo"
+                                 width={36}
+                                 height={36}
+                              />
+                              <Image
+                                 src={LogoText}
+                                 alt="Logo"
+                                 width={120}
+                                 height={43}
+                              />
+                           </Link>
+                           <hr />
+                           {/* Mobile Navigation Links */}
+                           {navigationLinks.map((link) => {
+                              const isActive = isRouteActive(link.href);
 
-                    <CollapsibleContent className="pt-3 transition-all duration-700 ease-in-out">
-                      <div className="pl-4 space-y-3">
-                        {usersPortalLinks.map((item) => (
-                          <a
-                            key={item.href}
-                            href={item.href}
-                            rel="noopener noreferrer"
-                            onClick={(e) => {
-                              if (!item.external) {
-                                e.preventDefault();
-                                setIsMobileMenuOpen(false);
-                                setTimeout(() => {
-                                  router.push(item.href);
-                                }, 100);
-                              } else {
-                                // For external links, just let the default behavior happen
-                                setIsMobileMenuOpen(false);
-                              }
-                            }}
-                            className={`block text-base transition-colors duration-700 ${
-                              pathname === item.href
-                                ? "text-brand font-semibold"
-                                : "text-gray-600 hover:text-brand"
-                            }`}
-                          >
-                            {item.label}
-                          </a>
-                        ))}
-                        {isLoggedIn && (
-                          <div className="pt-2">
-                            <LogoutButton />
-                          </div>
-                        )}
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
+                              return (
+                                 <button
+                                    key={link.href}
+                                    onClick={(e) => {
+                                       e.preventDefault();
+                                       e.stopPropagation();
+                                       handleNavigation(link.href);
+                                    }}
+                                    className={`text-lg font-medium transition-colors text-left ${
+                                       isActive ? "text-brand" : (
+                                          "text-gray-700 hover:text-gray-900"
+                                       )
+                                    }`}>
+                                    {link.label}
+                                 </button>
+                              );
+                           })}
 
-                  <div
-                    className="flex lg:hidden gap-2  rounded-md cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleNavigation("/book");
-                    }}
-                  >
-                    <Image
-                      src={profileGuide}
-                      alt="Phone"
-                      width={65}
-                      height={65}
-                      className="w-20 h-auto"
-                    />
-                  </div>
-                  {/* Mobile Phone Numbers */}
-                  <div className="pt-4 border-t border-gray-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Phone className="w-4 h-4 text-brand" />
-                      <span className="text-sm font-medium text-gray-700">
-                        Contact Us
-                      </span>
-                    </div>
-                    <a
-                      href="tel:+971521442416"
-                      className="text-gray-600 hover:text-brand hover:underline block"
-                    >
-                      +971 52 144-2416 (UAE)
-                    </a>
-                    <a
-                      href="tel:+13105286170"
-                      className="text-gray-600 hover:text-brand hover:underline block"
-                    >
-                      +1 (310) 528-6170 (USA)
-                    </a>
-                  </div>
-                  <Button className=" bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
-                    <Link href="/contact-us">Get a Free Quote</Link>
-                  </Button>
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
+                           {/* Mobile Services Section */}
+                           <Collapsible
+                              open={isServicesOpen}
+                              onOpenChange={setIsServicesOpen}>
+                              <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
+                                 <span>Services</span>
+                                 <ChevronDown
+                                    className={`w-4 h-4 transition-transform duration-500 ${
+                                       isServicesOpen ? "rotate-180" : ""
+                                    }`}
+                                 />
+                              </CollapsibleTrigger>
+                              <CollapsibleContent className="pt-3 ">
+                                 <div className="pl-4 space-y-3">
+                                    {servicesLinks.map((item) => (
+                                       <a
+                                          key={item.href}
+                                          href={item.href}
+                                          rel="noopener noreferrer"
+                                          onClick={(e) => {
+                                             e.preventDefault();
+                                             handleNavigation(item.href);
+                                          }}
+                                          className={`block text-base transition-colors ${
+                                             pathname === item.href ?
+                                                "text-brand font-semibold"
+                                             :  "text-gray-600 hover:text-brand"
+                                          }`}>
+                                          {item.label}
+                                       </a>
+                                    ))}
+                                 </div>
+                              </CollapsibleContent>
+                           </Collapsible>
+
+                           {/* Mobile Portfolio Section */}
+                           <Collapsible
+                              open={isPortfolioOpen}
+                              onOpenChange={setIsPortfolioOpen}>
+                              <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
+                                 <span>Portfolio</span>
+                                 <ChevronDown
+                                    className={`w-4 h-4 transition-transform duration-500 ${
+                                       isPortfolioOpen ? "rotate-180" : ""
+                                    }`}
+                                 />
+                              </CollapsibleTrigger>
+                              <CollapsibleContent className="pt-3 ">
+                                 <div className="pl-4 space-y-3">
+                                    {portfolioLinks.map((item) => (
+                                       <a
+                                          key={item.href}
+                                          href={item.href}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          onClick={(e) => {
+                                             e.preventDefault();
+                                             setIsMobileMenuOpen(false);
+                                             setTimeout(() => {
+                                                window.open(
+                                                   item.href,
+                                                   "_blank",
+                                                   "noopener,noreferrer",
+                                                );
+                                             }, 100);
+                                          }}
+                                          className={`block text-base transition-colors ${
+                                             pathname === item.href ?
+                                                "text-brand font-semibold"
+                                             :  "text-gray-600 hover:text-brand"
+                                          }`}>
+                                          {item.label}
+                                       </a>
+                                    ))}
+                                 </div>
+                              </CollapsibleContent>
+                           </Collapsible>
+                           <Collapsible
+                              open={isUsersPortalOpen}
+                              onOpenChange={setIsUsersPortalOpen}>
+                              <CollapsibleTrigger className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-gray-900">
+                                 <span>Users Portal</span>
+                                 <ChevronDown
+                                    className={`w-4 h-4 transition-transform duration-300 ${
+                                       isUsersPortalOpen ? "rotate-180" : ""
+                                    }`}
+                                 />
+                              </CollapsibleTrigger>
+
+                              <CollapsibleContent className="pt-3 transition-all duration-700 ease-in-out">
+                                 <div className="pl-4 space-y-3">
+                                    {usersPortalLinks.map((item) => (
+                                       <a
+                                          key={item.href}
+                                          href={item.href}
+                                          rel="noopener noreferrer"
+                                          onClick={(e) => {
+                                             if (!item.external) {
+                                                e.preventDefault();
+                                                setIsMobileMenuOpen(false);
+                                                setTimeout(() => {
+                                                   router.push(item.href);
+                                                }, 100);
+                                             } else {
+                                                // For external links, just let the default behavior happen
+                                                setIsMobileMenuOpen(false);
+                                             }
+                                          }}
+                                          className={`block text-base transition-colors duration-700 ${
+                                             pathname === item.href ?
+                                                "text-brand font-semibold"
+                                             :  "text-gray-600 hover:text-brand"
+                                          }`}>
+                                          {item.label}
+                                       </a>
+                                    ))}
+                                    {isLoggedIn && (
+                                       <div className="pt-2">
+                                          <LogoutButton />
+                                       </div>
+                                    )}
+                                 </div>
+                              </CollapsibleContent>
+                           </Collapsible>
+
+                           <div
+                              className="flex lg:hidden gap-2  rounded-md cursor-pointer"
+                              onClick={(e) => {
+                                 e.preventDefault();
+                                 e.stopPropagation();
+                                 handleNavigation("/book");
+                              }}>
+                              <Image
+                                 src={profileGuide}
+                                 alt="Phone"
+                                 width={65}
+                                 height={65}
+                                 className="w-20 h-auto"
+                              />
+                           </div>
+                           {/* Mobile Phone Numbers */}
+                           <div className="pt-4 border-t border-gray-200">
+                              <div className="flex items-center gap-2 mb-2">
+                                 <Phone className="w-4 h-4 text-brand" />
+                                 <span className="text-sm font-medium text-gray-700">
+                                    Contact Us
+                                 </span>
+                              </div>
+                              <a
+                                 href="tel:+971521442416"
+                                 className="text-gray-600 hover:text-brand hover:underline block">
+                                 +971 52 144-2416 (UAE)
+                              </a>
+                              <a
+                                 href="tel:+13105286170"
+                                 className="text-gray-600 hover:text-brand hover:underline block">
+                                 +1 (310) 528-6170 (USA)
+                              </a>
+                           </div>
+                           <Button className=" bg-brand hover:bg-brand/90 px-2 xl:px-4 ">
+                              <Link href="/contact-us">Get a Free Quote</Link>
+                           </Button>
+                        </nav>
+                     </SheetContent>
+                  </Sheet>
+               </div>
+            </div>
+         </div>
+      </header>
+   );
 }
