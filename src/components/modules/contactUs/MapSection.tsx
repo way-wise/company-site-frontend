@@ -1,36 +1,26 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Headset, MailOpen, MapPinCheck } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 
 // Public folder image paths
-const image1 = "/images/contact/image1.svg";
-const image2 = "/images/contact/image2.svg";
-const image3 = "/images/contact/image3.svg";
-const image4 = "/images/contact/image4.svg";
+const image1 = "/images/contact/usa-flag-animated.gif";
+const image2 = "/images/contact/uae-flag-animated.gif";
+
 const contactCards = [
    {
-      icon: "phone",
-      title: "Make a Call",
-      subtitle: "+1-310-528-6170",
+      title: "WAY-WISE GLOBAL INC, USA",
+      address: "Saddleback Ridge rd, Santa Clarita, California, USA",
+      phone: " +1 (310) 528-6170",
       image: image1,
-      stasue: "tel:+1-310-528-6170",
-      iconSrc: Headset,
+      addressLink: "https://maps.app.goo.gl/3KSqZih9nCMe71Bo8",
    },
    {
-      icon: "mail",
-      title: "Make a Quote",
-      subtitle: "info@waywisetech.com",
+      title: "WAY-WISE TECH SERVICES, UAE",
+      address:
+         "Arzoo Building, 3rd floor (306-14), 171 Al Nahda St, Al Qusais 2, Dubai",
+      phone: " +971 52 144-2416",
       image: image2,
-      stasue: "mailto:info@waywisetech.com",
-      iconSrc: MailOpen,
-   },
-   {
-      icon: "location",
-      title: " Location",
-      subtitle: "Santa Clarita, CA 91351, USA",
-      image: image3,
-      stasue: "https://maps.app.goo.gl/EgMwMf5hbxYeJD8t5",
-      iconSrc: MapPinCheck,
+      addressLink: "https://maps.app.goo.gl/FrAcvjAFV7zvndYj6",
    },
 ];
 
@@ -53,7 +43,7 @@ const MapSection = () => {
             <div className="mx-auto sm:px-6 py-8 lg:py-0 container">
                <Card className="w-full mx-auto bg-white rounded-xl shadow-[0px_4px_20px_#7b7b7b1a]">
                   <CardContent className="p-4 sm:p-6 md:p-8 lg:p-4 xl:p-8">
-                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         {contactCards.map((card, index) => (
                            <div key={index} className="flex flex-col">
                               <div className="w-full h-48 sm:h-56 md:h-64 lg:h-[260px] mb-4 sm:mb-6">
@@ -61,32 +51,33 @@ const MapSection = () => {
                                     className="w-full h-full rounded-[10px] object-cover"
                                     alt={`Contact ${card.title}`}
                                     src={card.image}
-                                    width={100}
-                                    height={100}
+                                    width={600}
+                                    height={260}
                                  />
                               </div>
 
-                              <div className="flex items-center gap-3 sm:gap-4">
-                                 {/* <Image
-                        className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0"
-                        alt={card.title}
-                        src={card.iconSrc}
-                        width={100}
-                        height={100}
-                      /> */}
-                                 <div>
-                                    <card.iconSrc className="w-8 h-8 sm:w-10 sm:h-10 font-normal text-[#1b3447] flex-shrink-0" />
-                                 </div>
-                                 <div className="flex flex-col min-w-0">
-                                    <div className="font-normal text-[#00a3ff] text-xs sm:text-sm tracking-[0] leading-6">
-                                       {card.title}
-                                    </div>
-                                    <div className="font-semibold text-[#1b3447] text-sm sm:text-base xl:text-xl tracking-[0] leading-normal break-words">
-                                       <a href={card.stasue} target="_blank">
-                                          {card.subtitle}
-                                       </a>
-                                    </div>
-                                 </div>
+                              <h3 className="font-bold text-[#1b3447] text-2xl sm:text-2xl mb-3">
+                                 {card.title}
+                              </h3>
+
+                              <div className="flex items-start gap-3 mb-2">
+                                 <MapPin className="w-5 h-5 text-[#00a3ff] flex-shrink-0 mt-0.5" />
+                                 <a
+                                    href={card.addressLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#1b3447] text-sm sm:text-base leading-relaxed">
+                                    {card.address}
+                                 </a>
+                              </div>
+
+                              <div className="flex items-center gap-3">
+                                 <Phone className="w-5 h-5 text-[#00a3ff] flex-shrink-0" />
+                                 <a
+                                    href={`tel:${card.phone}`}
+                                    className="font-semibold text-[#1b3447] text-sm sm:text-base hover:text-[#00a3ff] transition-colors">
+                                    {card.phone}
+                                 </a>
                               </div>
                            </div>
                         ))}
