@@ -8,37 +8,37 @@ const image2 = "/images/contact/image2.svg";
 const image3 = "/images/contact/image3.svg";
 const image4 = "/images/contact/image4.svg";
 const contactCards = [
-  {
-    icon: "phone",
-    title: "Make a Call",
-    subtitle: "+1-310-528-6170",
-    image: image1,
-    stasue: "tel:+1-310-528-6170",
-    iconSrc: Headset,
-  },
-  {
-    icon: "mail",
-    title: "Make a Quote",
-    subtitle: "info@waywisetech.com",
-    image: image2,
-    stasue: "mailto:info@waywisetech.com",
-    iconSrc: MailOpen,
-  },
-  {
-    icon: "location",
-    title: " Location",
-    subtitle: "Santa Clarita, CA 91351, USA",
-    image: image3,
-    stasue: "https://maps.app.goo.gl/EgMwMf5hbxYeJD8t5",
-    iconSrc: MapPinCheck,
-  },
+   {
+      icon: "phone",
+      title: "Make a Call",
+      subtitle: "+1-310-528-6170",
+      image: image1,
+      stasue: "tel:+1-310-528-6170",
+      iconSrc: Headset,
+   },
+   {
+      icon: "mail",
+      title: "Make a Quote",
+      subtitle: "info@waywisetech.com",
+      image: image2,
+      stasue: "mailto:info@waywisetech.com",
+      iconSrc: MailOpen,
+   },
+   {
+      icon: "location",
+      title: " Location",
+      subtitle: "Santa Clarita, CA 91351, USA",
+      image: image3,
+      stasue: "https://maps.app.goo.gl/EgMwMf5hbxYeJD8t5",
+      iconSrc: MapPinCheck,
+   },
 ];
 
 const MapSection = () => {
-  return (
-    <div className="bg-[#f2f6ff] w-full relative">
-      {/* Map Background Section */}
-      <section className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[598px] animate-fade-in opacity-0 [--animation-delay:400ms]">
+   return (
+      <div className="bg-[#f2f6ff] w-full relative">
+         {/* Map Background Section */}
+         {/* <section className="w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[598px] animate-fade-in opacity-0 [--animation-delay:400ms]">
         <Image
           className="w-full h-full object-cover"
           alt="Map background"
@@ -46,60 +46,60 @@ const MapSection = () => {
           width={1200}
           height={598}
         />
-      </section>
+      </section> */}
 
-      {/* Contact Information Cards - Responsive Positioning */}
-      <section className="w-full relative lg:absolute lg:top-1/2 lg:left-0 lg:right-0 animate-fade-in opacity-0 [--animation-delay:600ms]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-0">
-          <Card className="w-full max-w-6xl mx-auto bg-white rounded-xl shadow-[0px_4px_20px_#7b7b7b1a]">
-            <CardContent className="p-4 sm:p-6 md:p-8 lg:p-4 xl:p-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {contactCards.map((card, index) => (
-                  <div key={index} className="flex flex-col">
-                    <div className="w-full h-48 sm:h-56 md:h-64 lg:h-[260px] mb-4 sm:mb-6">
-                      <Image
-                        className="w-full h-full rounded-[10px] object-cover"
-                        alt={`Contact ${card.title}`}
-                        src={card.image}
-                        width={100}
-                        height={100}
-                      />
-                    </div>
+         {/* Contact Information Cards - Responsive Positioning */}
+         <section className="w-full lg:top-1/2 lg:left-0 lg:right-0 animate-fade-in opacity-0 [--animation-delay:600ms] pb-10 lg:pb-20">
+            <div className="mx-auto sm:px-6 py-8 lg:py-0 container">
+               <Card className="w-full mx-auto bg-white rounded-xl shadow-[0px_4px_20px_#7b7b7b1a]">
+                  <CardContent className="p-4 sm:p-6 md:p-8 lg:p-4 xl:p-8">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {contactCards.map((card, index) => (
+                           <div key={index} className="flex flex-col">
+                              <div className="w-full h-48 sm:h-56 md:h-64 lg:h-[260px] mb-4 sm:mb-6">
+                                 <Image
+                                    className="w-full h-full rounded-[10px] object-cover"
+                                    alt={`Contact ${card.title}`}
+                                    src={card.image}
+                                    width={100}
+                                    height={100}
+                                 />
+                              </div>
 
-                    <div className="flex items-center gap-3 sm:gap-4">
-                      {/* <Image
+                              <div className="flex items-center gap-3 sm:gap-4">
+                                 {/* <Image
                         className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0"
                         alt={card.title}
                         src={card.iconSrc}
                         width={100}
                         height={100}
                       /> */}
-                      <div>
-                        <card.iconSrc className="w-8 h-8 sm:w-10 sm:h-10 font-normal text-[#1b3447] flex-shrink-0" />
-                      </div>
-                      <div className="flex flex-col min-w-0">
-                        <div className="font-normal text-[#00a3ff] text-xs sm:text-sm tracking-[0] leading-6">
-                          {card.title}
-                        </div>
-                        <div className="font-semibold text-[#1b3447] text-sm sm:text-base xl:text-xl tracking-[0] leading-normal break-words">
-                          <a href={card.stasue} target="_blank">
-                            {card.subtitle}
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+                                 <div>
+                                    <card.iconSrc className="w-8 h-8 sm:w-10 sm:h-10 font-normal text-[#1b3447] flex-shrink-0" />
+                                 </div>
+                                 <div className="flex flex-col min-w-0">
+                                    <div className="font-normal text-[#00a3ff] text-xs sm:text-sm tracking-[0] leading-6">
+                                       {card.title}
+                                    </div>
+                                    <div className="font-semibold text-[#1b3447] text-sm sm:text-base xl:text-xl tracking-[0] leading-normal break-words">
+                                       <a href={card.stasue} target="_blank">
+                                          {card.subtitle}
+                                       </a>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        ))}
+                     </div>
+                  </CardContent>
+               </Card>
+            </div>
+         </section>
 
-      {/* Spacer to prevent content overlap - only on larger screens */}
-      <div className="hidden lg:block h-48 xl:h-56 2xl:h-80"></div>
-    </div>
-  );
+         {/* Spacer to prevent content overlap - only on larger screens */}
+         {/* <div className="hidden lg:block h-48 xl:h-56 2xl:h-80"></div> */}
+      </div>
+   );
 };
 
 export default MapSection;

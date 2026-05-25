@@ -192,17 +192,17 @@ export default function Navbar() {
                <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-white" />
                   <a
-                     href="tel:+971521442416"
-                     className="text-white text-sm hover:underline block text-nowrap">
-                     +971 52 144-2416 (UAE)
+                     href="tel:+13105286170"
+                     className="text-white text-sm hover:underline block text-nowrap ">
+                     +1 (310) 528-6170 (USA)
                   </a>
                </div>
                <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-white" />
                   <a
-                     href="tel:+13105286170"
-                     className="text-white text-sm hover:underline block text-nowrap ">
-                     +1 (310) 528-6170 (USA)
+                     href="tel:+971521442416"
+                     className="text-white text-sm hover:underline block text-nowrap">
+                     +971 52 144-2416 (UAE)
                   </a>
                </div>
             </div>
@@ -219,16 +219,16 @@ export default function Navbar() {
             <div className="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-t from-white/50 via-white/90 to-white dark:from-dark/10 dark:via-dark/90 dark:to-dark"></div>
             <div className="container flex justify-between items-center gap-2 pt-2">
                <a
-                  href="tel:+971521442416"
-                  className="text-black font-semibold text-sm hover:underline inline-flex items-center gap-1 text-nowrap">
-                  <Phone className="size-3 text-black hidden xl:block" />
-                  +971 52 144-2416 (UAE)
-               </a>
-               <a
                   href="tel:+13105286170"
                   className="text-black font-semibold text-sm hover:underline inline-flex items-center gap-1 text-nowrap ">
                   <Phone className="size-3 text-black hidden xl:block" />
                   +1 (310) 528-6170 (USA)
+               </a>
+               <a
+                  href="tel:+971521442416"
+                  className="text-black font-semibold text-sm hover:underline inline-flex items-center gap-1 text-nowrap">
+                  <Phone className="size-3 text-black hidden xl:block" />
+                  +971 52 144-2416 (UAE)
                </a>
             </div>
             <div className="container flex justify-between items-center mx-auto  py-4 ">
