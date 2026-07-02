@@ -1,11 +1,8 @@
 import { GroupedSitemapEntry, SitemapGroup } from "./sitemap-groups";
 import { servicesData } from "@/datas/services";
+import { SITE_URL } from "@/lib/site";
 
-const baseUrl =
-	process.env.NEXT_PUBLIC_BASE_URL ||
-	(process.env.NODE_ENV === "production"
-		? "https://www.waywisetech.com"
-		: "http://localhost:3000");
+const baseUrl = SITE_URL;
 
 // Helper to get image URL
 const getImageUrl = (

@@ -1,17 +1,10 @@
 import { Metadata } from "next";
+import { absoluteUrl } from "@/lib/site";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API || process.env.NEXT_PUBLIC_API_URL || "http://localhost:7000/api/v1";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://waywisetech.com";
-const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 function getCanonicalUrl(path?: string): string {
-  let url = path ? `${BASE_URL}${path}` : BASE_URL;
-  
-  if (IS_PRODUCTION) {
-    url = url.replace("://", "://www.").replace("://www.www.", "://www.");
-  }
-  
-  return url;
+  return absoluteUrl(path);
 }
 
 export interface SeoData {

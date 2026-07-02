@@ -417,8 +417,8 @@ export default function Navbar() {
                      <Image
                         src={profileGuide}
                         alt="Company Profile"
-                        width={96}
-                        height={60}
+                        width={1190}
+                        height={841}
                         className="w-24 h-auto object-cover"
                      />
                   </div>

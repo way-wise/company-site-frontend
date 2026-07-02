@@ -184,6 +184,7 @@ const ContactForm = () => {
 						onChange={handleInputChange}
 						className={`w-full ${errors.email ? "border-red-500" : ""}`}
 						disabled={isSubmitting}
+						autoComplete="email"
 					/>
 					{errors.email && (
 						<p className="text-sm text-red-500">{errors.email}</p>
@@ -226,6 +227,7 @@ const ContactForm = () => {
 						Service Required
 					</Label>
 					<Select
+						name="serviceRequired"
 						value={formData.serviceRequired}
 						onValueChange={(value) =>
 							handleSelectChange("serviceRequired", value)
@@ -236,6 +238,7 @@ const ContactForm = () => {
 							className={`w-full ${
 								errors.serviceRequired ? "border-red-500" : ""
 							}`}
+							id="serviceRequired"
 						>
 							<SelectValue placeholder="Select Your Service" />
 						</SelectTrigger>
@@ -269,6 +272,7 @@ const ContactForm = () => {
 						Project Budget
 					</Label>
 					<Select
+						name="projectBudget"
 						value={formData.projectBudget}
 						onValueChange={(value) =>
 							handleSelectChange("projectBudget", value)
@@ -279,6 +283,7 @@ const ContactForm = () => {
 							className={`w-full ${
 								errors.projectBudget ? "border-red-500" : ""
 							}`}
+							id="projectBudget"
 						>
 							<SelectValue placeholder="Select Your Range" />
 						</SelectTrigger>

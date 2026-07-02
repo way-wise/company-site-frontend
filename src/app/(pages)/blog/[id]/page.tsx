@@ -52,13 +52,13 @@ export async function generateMetadata({
 			tags: validTags,
 			images: blog.featuredImage
 				? [
-						{
-							url: blog.featuredImage,
-							width: 1200,
-							height: 630,
-							alt: blog.title,
-						},
-				  ]
+					{
+						url: blog.featuredImage,
+						width: 1200,
+						height: 630,
+						alt: blog.title,
+					},
+				]
 				: [],
 		},
 		twitter: {
