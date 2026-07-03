@@ -5,7 +5,7 @@ import { cookieManager } from "./cookies";
 const SOCKET_URL =
   process.env.NEXT_PUBLIC_BASE_API?.replace("/api/v1", "") ||
   process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:5000";
+  (process.env.NODE_ENV !== "production" ? "http://localhost:5000" : undefined);
 
 let socket: Socket | null = null;
 
