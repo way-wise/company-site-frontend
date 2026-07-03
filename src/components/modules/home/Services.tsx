@@ -21,7 +21,7 @@ const Services = ({
       <div className="container mx-auto py-12 lg:py-20 ">
         <div className="mb-16">
           <SectionTitle
-            title="Our Web and Software Services"
+            title="Our Web and Software Services Pro"
             description="As a trusted Web and Software Development Company in the USA & UAE, we deliver custom software development, web application development, and scalable cloud solutions tailored to your business goals. Our expert team specializes in full-stack web development, mobile app development, and AI-powered software solutions to help startups and enterprises accelerate growth, improve efficiency, and stay ahead in a competitive digital landscape."
             titleClass="text-white text-4xl pb-4  xl:text-[55px] font-bold"
             descriptionClass="text-white text-base xl:text-[20px]"
