@@ -34,12 +34,21 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/v1/:path*`,
-      },
-    ];
+   const rawBaseApi = process.env.NEXT_PUBLIC_BASE_API;
+   const apiOrigin = rawBaseApi?.replace(/\/api\/v1\/?$/, "");
+
+   if (!apiOrigin && process.env.NODE_ENV === "production") {
+     throw new Error(
+       "NEXT_PUBLIC_BASE_API is not set. Refusing to build production with a localhost API fallback."
+     );
+   }
+
+   return [
+     {
+       source: "/api/:path*",
+       destination: `${apiOrigin || "http://localhost:5000"}/api/v1/:path*`,
+     },
+   ];
   },
 };
 

@@ -19,16 +19,8 @@ export const getPublicUrl = (): string =>
 export const getDashboardUrl = (): string =>
   process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000";
 
-export const getApiUrl = (): string => {
-  const url = process.env.NEXT_PUBLIC_API_URL;
-  if (url) return url;
-
-  if (process.env.NODE_ENV !== "production") {
-    return "http://localhost:5000";
-  }
-
-  throw new Error("Missing required env var: NEXT_PUBLIC_API_URL in production");
-};
+export const getApiUrl = (): string =>
+  process.env.NEXT_PUBLIC_BASE_API?.replace(/\/api\/v1\/?$/, "") || "http://localhost:5000";
 
 /**
  * List of public routes that should be accessible in public mode
