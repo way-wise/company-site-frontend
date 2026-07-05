@@ -756,7 +756,13 @@ export const NewLiveProjectTable = () => {
         projectId: selectedProject.id,
         file: file,
       });
-      await refetch();
+      const result = await refetch();
+      const updatedProject = result.data?.data?.find(
+        (p: NewLiveProject) => p.id === selectedProject.id
+      );
+      if (updatedProject) {
+        setSelectedProject(updatedProject);
+      }
     } catch (error) {
       console.error("Error uploading document:", error);
     } finally {
@@ -2293,7 +2299,11 @@ export const NewLiveProjectTable = () => {
                               projectId: selectedProject.id,
                               projectData: { documents: updatedDocs },
                             });
-                            await refetch();
+                            const result = await refetch();
+                            const updatedProject = result.data?.data?.find(
+                              (p: NewLiveProject) => p.id === selectedProject.id
+                            );
+                            setSelectedProject(updatedProject ?? { ...selectedProject, documents: updatedDocs });
                             toast.success("Document deleted");
                           } catch (error) {
                             toast.error("Failed to delete document");
