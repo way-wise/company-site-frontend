@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
     ],
     useCache: true,
   },
+  // Crawlers that parse the raw HTML and expect metadata inside <head>. For these UAs Next.js
+  // does a blocking render instead of streaming metadata after </head>. This is Next's default
+  // list (see next/dist/shared/lib/router/utils/html-bots) plus the SEO audit crawlers, which
+  // otherwise report "meta robots outside of the <head> element" on dynamically rendered pages.
+  htmlLimitedBots:
+    /[\w-]+-Google|Google-[\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight|Screaming ?Frog|Sitebulb|AhrefsBot|AhrefsSiteAudit|SemrushBot|SiteAuditBot|MJ12bot|DotBot|rogerbot|PetalBot|SeznamBot|Pinterestbot|CCBot|GPTBot|OAI-SearchBot|ChatGPT-User|ClaudeBot|Claude-Web|PerplexityBot|Amazonbot/i,
   eslint: {
     ignoreDuringBuilds: false,
   },

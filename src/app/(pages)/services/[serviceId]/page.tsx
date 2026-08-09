@@ -10,10 +10,20 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 interface ServiceDetailsPageProps {
-  params: {
+  params: Promise<{
     serviceId: string;
-  };
+  }>;
 }
+
+// Prerender all service pages at build time. A statically rendered page emits its
+// metadata inside <head>; a dynamically rendered one streams it to the end of <body>
+// (Next.js streaming metadata), which SEO crawlers flag as "meta robots outside <head>".
+export function generateStaticParams() {
+  return servicesData.map((service) => ({ serviceId: service.slug }));
+}
+
+// Unknown slugs 404 without an on-demand render, so no page can fall back to streamed metadata.
+export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
