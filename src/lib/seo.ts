@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { absoluteUrl } from "@/lib/site";
+import { unstable_cacheLife as cacheLife } from 'next/cache';
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_API || process.env.NEXT_PUBLIC_API_URL || "http://localhost:7000/api/v1";
 
@@ -32,6 +33,8 @@ interface SeoResponse {
 }
 
 export async function getSeoBySlug(slug: string): Promise<SeoData | null> {
+  'use cache';
+  cacheLife({ revalidate: 10 });
   try {
     const encodedSlug = encodeURIComponent(slug);
     const response = await fetch(`${API_URL}/seo/slug/${encodedSlug}`, {

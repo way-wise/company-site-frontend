@@ -16,7 +16,9 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-accordion",
       "@radix-ui/react-collapsible",
       "@radix-ui/react-navigation-menu",
+      
     ],
+    useCache: true,
   },
   eslint: {
     ignoreDuringBuilds: false,
