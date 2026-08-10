@@ -37,6 +37,10 @@ const Feadback = () => {
       name: "Nichol",
       designation: "CEO, Bullet-Proof",
       companyLogo: bulletImg,
+      imageWidth: 300,
+      imageHeight: 400,
+      logoWidth: 1912,
+      logoHeight: 787,
     },
     {
       image: fidden,
@@ -45,6 +49,10 @@ const Feadback = () => {
       name: "Jeson Morgan",
       designation: "CEO, Fidden",
       companyLogo: fiddenImg,
+      imageWidth: 668,
+      imageHeight: 1000,
+      logoWidth: 155,
+      logoHeight: 34,
     },
     {
       image: flyArzan,
@@ -53,6 +61,10 @@ const Feadback = () => {
       name: "Brandon",
       designation: "CEO, Seat-Waves",
       companyLogo: seatWavesImg,
+      imageWidth: 667,
+      imageHeight: 1000,
+      logoWidth: 122,
+      logoHeight: 34,
     },
     {
       image: weoutImg,
@@ -61,6 +73,10 @@ const Feadback = () => {
       name: "Jad Shoueip",
       designation: "Founder, WeOut",
       companyLogo: weout,
+      imageWidth: 667,
+      imageHeight: 1000,
+      logoWidth: 56,
+      logoHeight: 33,
     },
     {
       image: searchImg,
@@ -69,6 +85,10 @@ const Feadback = () => {
       name: "Management Team",
       designation: "Search Force group",
       companyLogo: searchforceIcon,
+      imageWidth: 668,
+      imageHeight: 1000,
+      logoWidth: 1014,
+      logoHeight: 276,
     },
   ];
 

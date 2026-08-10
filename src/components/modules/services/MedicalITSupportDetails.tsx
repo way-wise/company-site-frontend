@@ -27,6 +27,8 @@ const MedicalITSupportDetails = () => {
       title: "Medical Billing Services",
       icon: DollarSign,
       image: MedicalBillingServices,
+      imageWidth: 2000,
+      imageHeight: 608,
       description: "Expert billing for Medicare, Medicaid & commercial payers with NSA-compliant workflows to maximize reimbursements and minimize denials.",
       features: [
         "Medicare/Medicaid claim submission & follow-up",
@@ -42,6 +44,8 @@ const MedicalITSupportDetails = () => {
       title: "Medical Coding Services",
       icon: FileText,
       image: medicalbillingandcodingservicesinfographic,
+      imageWidth: 2000,
+      imageHeight: 1000,
       description: "Certified coders specializing in emergency medicine coding with Medicare/Medicaid and NSA compliance expertise.",
       features: [
         "Emergency department coding (99281-99285)",
@@ -57,6 +61,8 @@ const MedicalITSupportDetails = () => {
       title: "Federal Compliance Services",
       icon: Shield,
       image: fedearalCompliance,
+      imageWidth: 1408,
+      imageHeight: 704,
       description: "Comprehensive compliance protection including HIPAA, No Surprises Act, and Medicare/Medicaid regulations to prevent penalties.",
       features: [
         "NSA/IDR compliance & dispute filings",
@@ -72,6 +78,8 @@ const MedicalITSupportDetails = () => {
       title: "Provider Credentialing",
       icon: Award,
       image: providerCredentialing,
+      imageWidth: 1408,
+      imageHeight: 704,
       description: "Expedited Medicare, Medicaid & commercial credentialing with emergency provider enrollment prioritization.",
       features: [
         "Medicare/Medicaid enrollment (PECOS, state systems)",
@@ -87,6 +95,8 @@ const MedicalITSupportDetails = () => {
       title: "24/7 Emergency Support Center",
       icon: Headphones,
       image: _24_7_calling,
+      imageWidth: 1408,
+      imageHeight: 704,
       description: "Dedicated emergency billing support available 24/7/365 for prior authorizations, eligibility checks, and NSA compliance during crises.",
       features: [
         "24/7/365 emergency billing support",
@@ -102,6 +112,8 @@ const MedicalITSupportDetails = () => {
       title: "Revenue Cycle Management",
       icon: TrendingUp,
       image: revenue_cycle,
+      imageWidth: 2816,
+      imageHeight: 1408,
       description: "End-to-end RCM optimized for emergency providers with Medicare/Medicaid expertise and NSA-compliant workflows.",
       features: [
         "Emergency department workflow optimization",
@@ -231,11 +243,18 @@ const MedicalITSupportDetails = () => {
                 >
                   {/* Image Section */}
                   <div className="relative h-48 overflow-hidden">
+                    {/* Explicit width/height rather than `fill`, which emits no dimension
+                        attributes. Visually identical: h-48 on this container and w-full below
+                        constrain both axes, so object-cover crops exactly as before. The values
+                        are each file's native size. (These never actually shifted layout — the
+                        fixed-height container already reserved the space — but the attributes
+                        are what an audit can see.) */}
                     <Image
                       src={service.image}
                       alt={service.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      width={service.imageWidth}
+                      height={service.imageHeight}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1b3447]/90 via-[#1b3447]/50 to-transparent" />
                     <div className="absolute top-4 left-4">

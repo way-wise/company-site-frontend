@@ -7,6 +7,17 @@ interface Props {
   name: string;
   designation: string;
   companyLogo: StaticImageData | string;
+  /**
+   * Native pixel dimensions of the two images, supplied per entry because the aspect ratios
+   * differ (client photos 0.67-0.75; logos 1.70-4.56). They must be the real dimensions: the
+   * logo renders `h-6 w-auto`, so the browser derives its width from this ratio — wrong values
+   * would visibly stretch or squash the logo. Without them the browser cannot reserve space
+   * until the file loads, which is the layout shift (CLS) this fixes.
+   */
+  imageWidth: number;
+  imageHeight: number;
+  logoWidth: number;
+  logoHeight: number;
 }
 
 const FeadBackCard = ({
@@ -15,6 +26,10 @@ const FeadBackCard = ({
   name,
   designation,
   companyLogo,
+  imageWidth,
+  imageHeight,
+  logoWidth,
+  logoHeight,
 }: Props) => {
   return (
     <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 lg:p-8 w-full h-auto flex flex-col sm:flex-row items-start gap-4 sm:gap-6 lg:gap-8">
@@ -24,6 +39,8 @@ const FeadBackCard = ({
           <img
             src={image as string}
             alt={name}
+            width={imageWidth}
+            height={imageHeight}
             className="h-[200px] sm:h-[250px] lg:h-[300px] xl:h-[350px] w-full sm:w-auto object-cover sm:object-cover object-top sm:object-center"
           />
         </div>
@@ -64,7 +81,9 @@ const FeadBackCard = ({
           <div className="flex items-center">
             <img
               src={companyLogo as string}
-              alt="company logo"
+              alt={`${designation.split(",").pop()?.trim() || name} logo`}
+              width={logoWidth}
+              height={logoHeight}
               className="h-6 w-auto sm:h-7 lg:h-8"
             />
           </div>
