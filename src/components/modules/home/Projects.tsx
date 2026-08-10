@@ -3,12 +3,12 @@ import { PortfolioProject } from "@/types";
 import ProjectsCard from "./ProjectsCard";
 
 // Public folder image paths
-const fiddenImg = "/images/projects/fidden-io.png";
-const flyArzanImg = "/images/projects/fly.png";
+const fiddenImg = "/images/projects/fidden-io.webp";
+const flyArzanImg = "/images/projects/fly.webp";
 const searchImg = "/images/projects/search.png";
-const seatWavesImg = "/images/projects/seat-wave.png";
-const voiceImg = "/images/projects/voice.png";
-const weOutImg = "/images/projects/weout1.png";
+const seatWavesImg = "/images/projects/seat-wave.webp";
+const voiceImg = "/images/projects/voice.webp";
+const weOutImg = "/images/projects/weout1.webp";
 const Projects = () => {
   const projects: PortfolioProject[] = [
     {

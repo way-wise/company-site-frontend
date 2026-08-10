@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Public folder image paths
-const mainBackground = "/images/home/full-bg.png";
+const mainBackground = "/images/home/full-bg.webp";
 const heroLeftBg = "/images/home/hero-ai.png";
 
 const usaServices = [

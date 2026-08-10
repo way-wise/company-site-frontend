@@ -1,5 +1,5 @@
 // Public folder image paths
-const microsoftSupportImage = "/images/services/microsoft-support.png";
+const microsoftSupportImage = "/images/services/microsoft-support.webp";
 const supportDeliveryFramework = "/images/services/ms-support-flow-chart.png";
 
 import {

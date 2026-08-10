@@ -1,10 +1,10 @@
 // Public folder image paths
-const _24_7_calling = "/images/MedicalBilling/247_calling.png";
-const MedicalBillingServices = "/images/MedicalBilling/MedicalBillingServices.png";
-const fedearalCompliance = "/images/MedicalBilling/federalCompliance.png";
-const medicalbillingandcodingservicesinfographic = "/images/MedicalBilling/medicalbillingandcodingservicesinfographic.png";
-const providerCredentialing = "/images/MedicalBilling/providerCredentialing.png";
-const revenue_cycle = "/images/MedicalBilling/revenue_cycle.jpeg";
+const _24_7_calling = "/images/MedicalBilling/247_calling.webp";
+const MedicalBillingServices = "/images/MedicalBilling/MedicalBillingServices.webp";
+const fedearalCompliance = "/images/MedicalBilling/federalCompliance.webp";
+const medicalbillingandcodingservicesinfographic = "/images/MedicalBilling/medicalbillingandcodingservicesinfographic.webp";
+const providerCredentialing = "/images/MedicalBilling/providerCredentialing.webp";
+const revenue_cycle = "/images/MedicalBilling/revenue_cycle.webp";
 const medicalBillingImage = "/images/services/billing-shape.png";
 import {
   Award,
