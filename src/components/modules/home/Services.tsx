@@ -36,12 +36,17 @@ const Services = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 my-12">
           <div className="w-full max-w-5xl flex flex-col lg:flex-row gap-6 lg:gap-8 justify-between bg-white rounded-xl relative overflow-hidden">
             <div className="lg:w-1/2 p-5 lg:p-6">
-              <h2 className="text-black text-2xl font-bold mb-4">
-                Microsoft M365 Customer Support <br />
-                <span className="text-lg tetx-brand">
-                  (Services Previously Provided by our tech)
-                </span>
+              {/* The parenthetical is a subtitle, not part of the heading — inside the <h2> it
+                  made the heading 74 chars, over the ~70 limit. Moved to its own element, so the
+                  heading is 31 chars. Rendering is unchanged: it was already on its own line via
+                  <br /> at text-lg, and it inherited text-black + font-bold from the h2, which
+                  the classes below reproduce. */}
+              <h2 className="text-black text-2xl font-bold">
+                Microsoft M365 Customer Support
               </h2>
+              <p className="text-black text-lg font-bold mb-4">
+                (Services Previously Provided by our tech)
+              </p>
               <p className="text-gray-900 text-sm mb-1">
                 Way-Wise Tech covered end-to-end Microsoft 365 support:
               </p>
