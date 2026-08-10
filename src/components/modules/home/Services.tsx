@@ -45,11 +45,13 @@ const Services = ({
               <p className="text-gray-900 text-sm mb-1">
                 Way-Wise Tech covered end-to-end Microsoft 365 support:
               </p>
+              {/* Descriptive anchor text: "Learn More" gave search engines and screen-reader
+                  users no idea what this link points to. */}
               <Link
                 href="/microsoft-support"
                 className="inline-block text-white bg-brand px-4 py-2 rounded-md text-base mt-3"
               >
-                Learn More
+                Explore Microsoft 365 Support
               </Link>
             </div>
             <Image
@@ -77,7 +79,7 @@ const Services = ({
                 href="/medical-it-support"
                 className="inline-block text-white bg-brand px-4 py-2 rounded-md text-base mt-3"
               >
-                Learn More
+                Explore Medical Billing Services
               </Link>
             </div>
             <Image

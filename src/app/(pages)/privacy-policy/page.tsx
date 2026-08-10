@@ -16,6 +16,7 @@ const PrivacyPolicyPage = () => {
   return (
     <main>
       <PageHeader
+        titleAs="h1"
         title="PRIVACY"
         description="POLICY"
         titleClass="text-white text-5xl lg:text-[85px] font-bold font-['Akira Expanded]"

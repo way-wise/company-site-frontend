@@ -42,9 +42,11 @@ export const BlogList = ({ blogs }: BlogListProps) => {
 				<div className="mb-4 rounded-full bg-gray-100 p-4">
 					<SearchIcon className="h-8 w-8 text-gray-400" />
 				</div>
-				<h3 className="mb-2 text-xl font-semibold text-gray-900">
+				{/* Not a heading: this is an empty-state message, not a section of the
+				    document. As an h3 it put a stray heading in the page outline. */}
+				<p className="mb-2 text-xl font-semibold text-gray-900">
 					No articles found
-				</h3>
+				</p>
 				<p className="text-gray-500">
 					Try adjusting your search or filters to find what you&apos;re looking
 					for.

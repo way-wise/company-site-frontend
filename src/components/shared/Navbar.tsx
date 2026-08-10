@@ -237,7 +237,7 @@ export default function Navbar() {
                   {/* Logo Icon */}
                   <Image
                      src={Logo}
-                     alt="Logo"
+                     alt="Way Wise Tech"
                      width={56}
                      height={60}
                      className="w-8 h-auto  md:w-10 "
@@ -329,6 +329,7 @@ export default function Navbar() {
                                           <NavigationMenuLink asChild>
                                              <Link
                                                 target="_blank"
+                                                rel="noopener noreferrer"
                                                 href={item.href}
                                                 className={`block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-brand focus:bg-accent focus:text-accent-foreground text-md ${
                                                    pathname === item.href ?
@@ -474,13 +475,13 @@ export default function Navbar() {
                            <Link href="/" className="flex items-center gap-3">
                               <Image
                                  src={Logo}
-                                 alt="Logo"
+                                 alt="Way Wise Tech"
                                  width={36}
                                  height={36}
                               />
                               <Image
                                  src={LogoText}
-                                 alt="Logo"
+                                 alt="Way Wise Tech"
                                  width={120}
                                  height={43}
                               />

@@ -27,6 +27,7 @@ const ContactUsPage = () => {
    return (
       <main>
          <PageHeader
+            titleAs="h1"
             title="CONTACT"
             description="US"
             titleClass="text-white text-5xl lg:text-[85px] font-bold font-['Akira Expanded]"

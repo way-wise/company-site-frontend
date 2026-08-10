@@ -30,7 +30,8 @@ export const servicesFirstData: ServiceDetail[] = [
 		title: "Web Application",
 		slug: "web-application",
 		description:
-			"Get expert web application services in the USA from Way Wise Tech. We build secure, scalable, and custom web applications tailored to modern business needs.",
+			// Kept at/below the 155-char meta description limit; used as this page's meta description.
+			"Get expert web application services in the USA from Way Wise Tech. We build secure, scalable, custom web applications tailored to modern business needs.",
 		bgImage: webAppBg,
 		url: "/services/web-application",
 		icon: webIcon,

@@ -26,7 +26,7 @@ export const RelatedPosts = ({ blogs, currentBlogId }: RelatedPostsProps) => {
 				{relatedBlogs.map((blog) => (
 					<Link
 						key={blog.id}
-						href={`/blogs/${blog.slug}`}
+						href={`/blog/${blog.slug}`}
 						className="group block"
 					>
 						{blog.featuredImage && (

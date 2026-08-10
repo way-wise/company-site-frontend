@@ -43,9 +43,11 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
 						/>
 					</div>
 
-					<h3 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-8 md:mb-12">
+					{/* h2, not h3: this is a top-level section of the page, a sibling of
+					    "Service Outcome" below. As an h3 it skipped a level after the h1. */}
+					<h2 className="text-2xl md:text-3xl lg:text-[35px] font-semibold text-[#1b3447] mb-8 md:mb-12">
 						Our {service.title} Expertise
-					</h3>
+					</h2>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-x-16 lg:gap-y-12">
 						{service.expertiseAreas.map((area, index) => (
@@ -56,9 +58,10 @@ export default function ServiceDetails({ service }: ServiceDetailsProps) {
 									</span>
 								</div>
 								<div>
-									<h4 className="text-lg md:text-xl font-semibold text-[#1b3447] mb-2 md:mb-4">
+									{/* h3 to stay one level below the section heading above. */}
+									<h3 className="text-lg md:text-xl font-semibold text-[#1b3447] mb-2 md:mb-4">
 										{area.title}
-									</h4>
+									</h3>
 									<p className="text-sm text-[#3d4e5c] leading-5 md:leading-6 whitespace-pre-line">
 										{area.description}
 									</p>

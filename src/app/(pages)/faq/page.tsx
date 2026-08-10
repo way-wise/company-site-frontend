@@ -56,6 +56,7 @@ const FaqPage = async () => {
   return (
     <main>
       <PageHeader
+        titleAs="h1"
         title="FREQUENTLY"
         description="ASKED QUESTIONS"
         titleClass="text-white text-5xl lg:text-[85px] font-bold font-['Akira Expanded]"
@@ -111,9 +112,11 @@ const FaqPage = async () => {
 
           {/* Contact CTA */}
           <div className="mt-16 p-8 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-100 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            {/* h2: a top-level section, sibling of the FAQ category headings above.
+                As an h3 it skipped a level whenever no FAQ categories were rendered. */}
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
               Still Have Questions?
-            </h3>
+            </h2>
             <p className="text-gray-700 leading-relaxed mb-6 max-w-2xl mx-auto">
               Can&apos;t find the answer you&apos;re looking for? Our team is
               here to help! Reach out to us and we&apos;ll get back to you as

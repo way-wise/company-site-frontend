@@ -22,6 +22,8 @@ const MedicalITSupportPage = () => {
   return (
     <main>
       <PageHeader
+        // The <h1> is in <MedicalITSupportDetails />; this banner must not precede it.
+        titleAs="plain"
         title="Medical Billing and Revenue Cycle Management"
         description="Services"
         titleClass="text-white text-5xl lg:text-[85px] font-bold"

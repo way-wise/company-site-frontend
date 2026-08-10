@@ -21,7 +21,7 @@ export const ShareButtons = ({ title, slug }: ShareButtonsProps) => {
 	const [url, setUrl] = useState("");
 
 	useEffect(() => {
-		setUrl(`${window.location.origin}/blogs/${slug}`);
+		setUrl(`${window.location.origin}/blog/${slug}`);
 	}, [slug]);
 
 	const handleCopy = () => {

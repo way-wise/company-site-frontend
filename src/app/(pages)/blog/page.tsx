@@ -29,8 +29,9 @@ async function getAllBlogs(): Promise<Blog[]> {
 export async function generateMetadata(): Promise<Metadata> {
 	return getDynamicMetadata("blog", {
 		title: "Blog | Way-Wise - Insights, Tips & Industry News",
+		// 148 chars — under Google's ~155-char meta description limit.
 		description:
-			"Stay updated with the latest insights, tips, and industry news from Way-Wise. Explore articles on business solutions, technology trends, and expert advice to help your business grow.",
+			"Insights, tips and industry news from Way Wise Tech. Read articles on business solutions, technology trends and expert advice to grow your business.",
 		keywords: [
 			"blog",
 			"business insights",
@@ -79,7 +80,8 @@ const BlogsPage = async ({
 		name: "Way-Wise Blog",
 		description:
 			"Stay updated with the latest insights, tips, and industry news from Way-Wise. Expert articles on business solutions, technology trends, and growth strategies.",
-		url: `${frontendUrl}/blogs`,
+		// /blog, not /blogs — the latter has no route (line below already gets this right).
+		url: `${frontendUrl}/blog`,
 		publisher: {
 			"@type": "Organization",
 			name: "Way-Wise",

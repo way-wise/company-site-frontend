@@ -52,7 +52,7 @@ export const BlogHero = ({ blog }: BlogHeroProps) => {
 						))}
 					</div>
 
-					<Link href={`/blogs/${blog.slug}`} className="group">
+					<Link href={`/blog/${blog.slug}`} className="group">
 						<h1 className="text-3xl font-bold font-[Family-Name,sans-serif] leading-tight md:text-5xl group-hover:text-blue-300 transition-colors">
 							{blog.title}
 						</h1>
@@ -81,7 +81,7 @@ export const BlogHero = ({ blog }: BlogHeroProps) => {
 							size="lg"
 							className="rounded-full bg-white text-gray-900 hover:bg-gray-100 px-8"
 						>
-							<Link href={`/blogs/${blog.slug}`}>
+							<Link href={`/blog/${blog.slug}`}>
 								Read Article <ArrowRight className="ml-2 h-4 w-4" />
 							</Link>
 						</Button>

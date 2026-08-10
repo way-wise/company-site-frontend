@@ -38,7 +38,11 @@ export async function generateMetadata({
   // Use dynamic SEO from admin panel with fallback to service data
   return getDynamicMetadata(`services/${serviceId}`, {
     title: `${service.title} Services | Web Development Company`,
-    description: `${service.description} ${service.detailedDescription?.substring(0, 120) || ""} Expert ${service.title.toLowerCase()} services by Way Wise Tech, a leading web development company in the USA.`,
+    // service.description is a complete, self-contained sentence written for this purpose and
+    // is never rendered on the page. The previous value concatenated it with a hard 120-char
+    // substring of detailedDescription plus a boilerplate suffix, which ran 312-375 chars and
+    // emitted a mid-word cut ("...create powerful, us Expert mobile application...").
+    description: service.description,
     keywords: [
       service.title.toLowerCase(),
       `${service.title.toLowerCase()} company`,
@@ -62,6 +66,8 @@ const ServiceDetailsPage = async ({ params }: ServiceDetailsPageProps) => {
   return (
     <main>
       <PageHeader
+        // The <h1> is in <ServiceDetails />; this banner must not precede it.
+        titleAs="plain"
         title={service.title}
         description={""}
         titleClass="text-white text-5xl lg:text-[85px] font-bold"

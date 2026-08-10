@@ -12,8 +12,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return getDynamicMetadata("services", {
     // Kept under Google's ~561px SERP title limit (527px in Arial 20px).
     title: "Web, Software & Digital Solution Services | Way Wise Tech",
+    // 129 chars — under Google's ~155-char meta description limit.
     description:
-      "Comprehensive web development services including custom software development, ecommerce solutions, web applications, mobile apps, and digital marketing. Expert team delivering innovative solutions.",
+      "Web development services from Way Wise Tech: custom software development, ecommerce, web apps, mobile apps and digital marketing.",
     keywords: [
       "web development services",
       "custom software development",
@@ -39,6 +40,7 @@ const ServicesPage = () => {
   return (
     <>
       <PageHeader
+        titleAs="h1"
         title="OUR"
         description="SERVICES"
         titleClass="text-white text-5xl lg:text-[85px] font-bold"

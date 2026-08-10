@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogDetail } from "../../_components/blogs/blog-detail";
 import { getAllBlogs, getBlogBySlug } from "@/lib/api/blogs";
+import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 interface BlogDetailPageProps {
 	params: Promise<{
@@ -24,8 +25,10 @@ export async function generateMetadata({
 		};
 	}
 
-	const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-	const blogUrl = `${baseUrl}/blogs/${blog.slug}`;
+	// The public route is /blog/[id], resolved with getBlogBySlug — so /blog/<slug>, not /blogs/.
+	// This value is the canonical and og:url, so /blogs/ pointed every post's canonical at a 404.
+	// Built via absoluteUrl so a missing env var can't produce "undefined/blog/<slug>".
+	const blogUrl = absoluteUrl(`/blog/${blog.slug}`);
 
 	// Filter out undefined tags
 	const validTags =
@@ -96,8 +99,9 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
 		})
 		.slice(0, 3); // Top 3
 
-	const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-	const blogUrl = `${baseUrl}/blogs/${blog.slug}`;
+	// See generateMetadata above: the route is /blog/<slug>, and absoluteUrl guards against a
+	// missing env var. This feeds JSON-LD url/@id, which pointed at a non-existent /blogs/ URL.
+	const blogUrl = absoluteUrl(`/blog/${blog.slug}`);
 
 	const validTags =
 		blog.tags?.filter((tag): tag is string => tag !== undefined) || [];
@@ -114,8 +118,10 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
 		},
 		publisher: {
 			"@type": "Organization",
-			name: "Way-Wise Car Rental",
-			url: baseUrl,
+			// Was "Way-Wise Car Rental" — a copy-paste from another project that told search
+			// engines the wrong organisation published these posts.
+			name: "Way Wise Tech",
+			url: SITE_URL,
 		},
 		datePublished: blog.publishedAt || blog.createdAt,
 		dateModified: blog.updatedAt,

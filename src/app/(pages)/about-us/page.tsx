@@ -31,6 +31,8 @@ const AboutUs = () => {
   return (
     <>
       <PageHeader
+        // The <h1> is in <ChooseUs />; this banner must not precede it in the outline.
+        titleAs="plain"
         title="ABOUT"
         description="WAY-WISE"
         titleClass="text-white text-5xl lg:text-[85px] font-bold font-['Akira Expanded]"

@@ -16,6 +16,7 @@ const TermsAndConditionsPage = () => {
   return (
     <main>
       <PageHeader
+        titleAs="h1"
         title="TERMS AND CONDITIONS"
         description=""
         titleClass="text-white text-5xl lg:text-[85px] font-bold font-['Akira Expanded]"

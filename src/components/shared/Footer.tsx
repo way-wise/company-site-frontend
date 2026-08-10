@@ -27,14 +27,14 @@ const Footer = () => {
               <Link href="/" className="flex items-center gap-2 sm:gap-3 mb-6">
                 <Image
                   src={Logo}
-                  alt="Logo"
+                  alt="Way Wise Tech"
                   width={56}
                   height={60}
                   className="w-8 h-8 md:w-12 md:h-12 lg:w-14 lg:h-14 flex-shrink-0"
                 />
                 <Image
                   src={LogoText}
-                  alt="Logo"
+                  alt="Way Wise Tech"
                   width={214}
                   height={51}
                   className="w-32 h-auto lg:w-52 flex-shrink-0"
@@ -128,9 +128,13 @@ const Footer = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-6">
               {/* Services Navigation */}
               <nav className="w-full">
-                <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-black dark:text-white">
+                {/* h3, not h2: these are footer nav column labels, not page sections. As h2s
+                    they put the same four headings on every page, which reads as duplicate-h2
+                    boilerplate and dilutes each page's real headings. They stay headings (so
+                    screen readers can still navigate them) inside the <nav> landmark below. */}
+                <h3 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-black dark:text-white">
                   Services
-                </h2>
+                </h3>
                 <ul className="list-none m-0 p-0 space-y-2 sm:space-y-3">
                   <li>
                     <Link
@@ -185,9 +189,9 @@ const Footer = () => {
 
               {/* Company Navigation */}
               <nav className="w-full">
-                <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-black dark:text-white">
+                <h3 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-black dark:text-white">
                   Company
-                </h2>
+                </h3>
                 <ul className="list-none m-0 p-0 space-y-2 sm:space-y-3">
                   <li>
                     <Link
@@ -235,9 +239,9 @@ const Footer = () => {
               <div>
                 {/* Support & Help Navigation */}
                 <nav className="w-full">
-                  <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-black dark:text-white">
+                  <h3 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-black dark:text-white">
                     Support & Help
-                  </h2>
+                  </h3>
                   <ul className="list-none m-0 p-0 space-y-2 sm:space-y-3">
                     {/* <li>
 										<div className="pt-2">
@@ -276,13 +280,14 @@ const Footer = () => {
                   </ul>
                 </nav>
                 {/* Social Media Links */}
-				<h2 className="my-4 sm:my-6 text-lg sm:text-xl font-bold text-black dark:text-white">
+				<h3 className="my-4 sm:my-6 text-lg sm:text-xl font-bold text-black dark:text-white">
                     Social Media
-                  </h2>
+                  </h3>
                 <div className="mt-3 flex gap-5 items-center">
                   <Link
                     href="https://www.facebook.com/WayWiseTech/"
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="text-black hover:text-black transition-colors"
                     aria-label="Facebook"
                   >
@@ -310,6 +315,7 @@ const Footer = () => {
                   <Link
                     href="https://github.com/way-wise"
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="text-black hover:text-black transition-colors"
                     aria-label="Github"
                   >
@@ -367,6 +373,7 @@ const Footer = () => {
                   <Link
                     href="https://www.youtube.com/@WayWiseTech"
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="text-black hover:text-black transition-colors"
                     aria-label="YouTube"
                   >
@@ -424,6 +431,7 @@ const Footer = () => {
                   <Link
                     href="https://www.linkedin.com/company/waywisetech"
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="text-black hover:text-black transition-colors"
                     aria-label="Linkedin"
                   >

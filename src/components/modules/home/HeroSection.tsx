@@ -41,11 +41,13 @@ const HeroSection = () => {
                   <div className="grid grid-cols-2 gap-3">
                      {/* USA card – red */}
                      <div className="bg-[#D0201A] rounded-2xl p-4 lg:p-5 shadow-xl">
-                        <h3 className="text-white font-black text-xl lg:text-2xl xl:text-3xl leading-tight mb-3">
+                        {/* Plain <div>, not a heading: these office cards sit above the page
+                            <h1> in the DOM, so as headings they made the <h1> non-sequential. */}
+                        <div className="text-white font-black text-xl lg:text-2xl xl:text-3xl leading-tight mb-3">
                            WayWise
                            <br />
                            <span className="text-white">Tech USA</span>
-                        </h3>
+                        </div>
                         <ul className="space-y-1.5">
                            {usaServices.map((item) => (
                               <li
@@ -60,11 +62,12 @@ const HeroSection = () => {
 
                      {/* Dubai card – dark */}
                      <div className="bg-[#1A1A1A] rounded-2xl p-4 lg:p-5 shadow-xl">
-                        <h3 className="text-white font-black text-xl lg:text-2xl xl:text-3xl leading-tight mb-3">
+                        {/* Plain <div>, not a heading — see the USA card above. */}
+                        <div className="text-white font-black text-xl lg:text-2xl xl:text-3xl leading-tight mb-3">
                            WayWise
                            <br />
                            <span className="text-white">Tech Dubai</span>
-                        </h3>
+                        </div>
                         <ul className="space-y-1.5">
                            {dubaiServices.map((item) => (
                               <li
@@ -107,7 +110,10 @@ const HeroSection = () => {
                </div>
 
                {/* Main heading – single line, Outfit ExtraBold, 69px breathing room from cards */}
-               <h2
+               {/* This is the homepage's <h1>: it's the main title of the page. Sizing comes
+                   entirely from the classes and inline style below, so the heading level has
+                   no visual effect (Tailwind's preflight resets heading font-size/weight). */}
+               <h1
                   className="font-extrabold leading-none tracking-wide mt-10 text-center md:text-left"
                   style={{
                      fontFamily: "var(--font-outfit), sans-serif",
@@ -116,7 +122,7 @@ const HeroSection = () => {
                   }}>
                   <span className="text-white">WAY-WISE </span>
                   <span className="text-[#00A3FF]">TECHNOLOGY</span>
-               </h2>
+               </h1>
 
                {/* Description – no max-width cap, stretches with the layout */}
                <p className="text-white/80 text-sm lg:text-base xl:text-lg leading-relaxed text-center md:text-left md:w-[80%] lg:w-full">
