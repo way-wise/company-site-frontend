@@ -5,12 +5,21 @@ import {
 	sitemapGroups,
 } from "@/lib/sitemap-groups";
 import { getAllSitemapEntries } from "@/lib/sitemap-data";
+import { absoluteUrl } from "@/lib/site";
 import { Metadata } from "next";
 
+// Keep this a static `metadata` export rather than an async `generateMetadata`. This route is
+// rendered dynamically, and Next.js streams *awaited* metadata to the end of <body> — static
+// metadata has nothing to await, so it stays inside <head> where crawlers expect it.
 export const metadata: Metadata = {
 	title: "Sitemap | Way-Wise",
 	description:
 		"Navigate through all pages, services, blogs, and images on Way-Wise. Find exactly what you're looking for with our organized sitemap.",
+	// Self-referencing canonical. Without this the page inherits the root layout's
+	// alternates.canonical, which points at the homepage and canonicalises this page away.
+	alternates: {
+		canonical: absoluteUrl("/sitemap-page"),
+	},
 };
 
 export default async function SitemapPage() {

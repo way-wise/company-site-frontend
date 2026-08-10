@@ -7,7 +7,8 @@ import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
 	return getDynamicMetadata("microsoft-support", {
-		title: "Microsoft Support Services | M365 Customer Support | Way Wise Tech",
+		// Kept under Google's ~561px SERP title limit (546px in Arial 20px).
+		title: "Microsoft M365 Customer Support Services | Way Wise Tech",
 		description:
 			"Professional Microsoft M365 customer support services by Way Wise Tech. Expert Microsoft support, troubleshooting, and technical assistance for businesses. Reliable Microsoft support solutions.",
 		keywords: [

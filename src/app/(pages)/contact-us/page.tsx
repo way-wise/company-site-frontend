@@ -6,7 +6,8 @@ import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
    return getDynamicMetadata("contact-us", {
-      title: "Contact Us | Web Development Company | Get Custom Software Quote",
+      // Kept under Google's ~561px SERP title limit (544px in Arial 20px).
+      title: "Contact Us | Get a Custom Software Quote | Way Wise Tech",
       description:
          "Contact Way Wise Tech, trusted web development company, to discuss your project and get a custom software development quote for web, mobile",
       keywords: [
