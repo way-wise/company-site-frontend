@@ -45,7 +45,7 @@ const publicPagesConfig: Array<{
 
 // Public folder image paths - Home
 const contactImg = "/images/home/contact.png";
-const mainBackground = "/images/home/full-bg.png";
+const mainBackground = "/images/home/full-bg.webp";
 const heroLeftBg = "/images/home/hero-ai.png";
 
 // About-us images
@@ -61,12 +61,12 @@ const contactImage4 = "/images/contact/image4.svg";
 const contactLee1 = "/images/contact/lee1.png";
 
 // Projects images
-const projectFly = "/images/projects/fly.png";
+const projectFly = "/images/projects/fly.webp";
 const projectBg = "/images/projects/project-bg.png";
 const projectSearch = "/images/projects/search.png";
-const projectSeatWave = "/images/projects/seat-wave.png";
-const projectVoice = "/images/projects/voice.png";
-const projectWeout = "/images/projects/weout1.png";
+const projectSeatWave = "/images/projects/seat-wave.webp";
+const projectVoice = "/images/projects/voice.webp";
+const projectWeout = "/images/projects/weout1.webp";
 
 // Offers images
 const offerBg = "/images/offers/offer-bg.png";
@@ -94,7 +94,7 @@ const categoryWeoutSvg = "/images/category/weout.svg";
 const categoryWeout = "/images/category/weout1.png";
 
 // Services images
-const microsoftSupportImg = "/images/services/microsoft-support.png";
+const microsoftSupportImg = "/images/services/microsoft-support.webp";
 const msSupportFlowChart = "/images/services/ms-support-flow-chart.png";
 const msSupport = "/images/services/ms-support.png";
 const serviceBg = "/images/services/service-bg.png";
