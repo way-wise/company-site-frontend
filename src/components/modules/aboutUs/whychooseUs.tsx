@@ -71,7 +71,7 @@ const ChooseUs = () => {
             {/* Text Content */}
             <div className="order-1 lg:order-2 space-y-8 ">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[55px] font-bold text-[#1b3447] leading-tight translate-y-[-1rem] animate-fade-in opacity-0 [--animation-delay:200ms] text-center lg:text-left">
-                We are Specialize
+                We Specialize
                 <br />
                 in Tech Solutions
               </h1>
@@ -133,7 +133,7 @@ const ChooseUs = () => {
           </div>
           <div className="flex justify-center mt-8 md:mt-16">
             <CalendlyButton
-              buttonText="Need an Expert Help - Book a Meeting"
+              buttonText="Need Expert Help? - Book a Consultation"
               url="https://calendly.com/way-wise-tech/software-development-meeting"
             />
           </div>

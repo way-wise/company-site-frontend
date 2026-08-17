@@ -13,10 +13,10 @@ import type { Metadata } from "next";
 export async function generateMetadata(): Promise<Metadata> {
   return getDynamicMetadata("home", {
     // Kept under Google's ~561px SERP title limit (553px in Arial 20px).
-    title: "Web & Software Development Services USA | Way Wise Tech",
+    title: "Custom Software & Web Development | Way Wise Tech",
     // 148 chars — under Google's ~155-char meta description limit.
     description:
-      "Way Wise Tech is a web development company in the USA, providing custom software development, web, app, and digital solutions for global businesses.",
+      "WayWise Tech is a custom software development company delivering web applications, mobile apps, AI solutions, cloud engineering, UX design, and digital transformation services for startups and businesses in the USA and beyond.",
     keywords: [
       "Web and Software Development Company USA",
       "custom software development services USA",

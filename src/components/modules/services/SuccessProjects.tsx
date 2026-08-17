@@ -40,7 +40,7 @@ const statistics = [
   {
     id: 3,
     number: "70",
-    label: "Project Completed",
+    label: "Projects Completed",
   },
   {
     id: 4,
