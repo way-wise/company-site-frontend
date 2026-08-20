@@ -47,8 +47,6 @@ export default async function SitemapPage() {
 									<li key={`${entry.url}-${index}`}>
 										<Link
 											href={entry.url}
-											target={group.id === "images" ? "_blank" : undefined}
-											rel={group.id === "images" ? "noopener noreferrer" : undefined}
 											className="text-blue-600 hover:underline dark:text-blue-400"
 										>
 											{entry.url}

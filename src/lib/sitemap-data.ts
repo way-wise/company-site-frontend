@@ -1,8 +1,32 @@
-import { GroupedSitemapEntry, SitemapGroup } from "./sitemap-groups";
+import { MetadataRoute } from "next";
+import { GroupedSitemapEntry } from "./sitemap-groups";
 import { servicesData } from "@/datas/services";
 import { SITE_URL } from "@/lib/site";
 
 const baseUrl = SITE_URL;
+
+/**
+ * MAINTENANCE NOTE — `lastModified` / <lastmod>
+ *
+ * Never derive these from `new Date()` at build or request time. A sitemap where every
+ * <lastmod> carries the deploy timestamp tells crawlers "everything changed" on every
+ * deploy, which trains them to ignore the field entirely and defeats its only purpose:
+ * telling Google which pages are actually worth re-crawling.
+ *
+ * These dates are the real content-update dates, seeded from git history of each route's
+ * page + component sources. When you change a page's *visible content*, bump that page's
+ * date here. Purely technical edits (refactors, styling, dependency bumps) should NOT
+ * bump it — <lastmod> means "the content changed", not "the file changed".
+ *
+ * Blog posts are exempt: they take `updatedAt` straight from the API, which is the
+ * correct per-record source of truth.
+ */
+
+// Fallback for a route added to the site but not yet listed below. Deliberately a fixed
+// date, not `new Date()` — a stale date is a far smaller problem than a lying one.
+const CONTENT_BASELINE = "2026-08-17";
+
+const toDate = (isoDay: string) => new Date(`${isoDay}T00:00:00.000Z`);
 
 // Helper to get image URL
 const getImageUrl = (
@@ -23,206 +47,53 @@ const getImageUrl = (
 	return null;
 };
 
-// Public pages configuration
+// Public pages configuration.
+//
+// Only indexable pages belong here. A page must NOT appear if it is either listed in the
+// `disallow` array of `src/app/robots.ts` or marked `robots: { index: false }` in its own
+// metadata — submitting a URL for indexing while telling crawlers not to index it is a
+// contradictory signal and gets flagged as a sitemap error. That is why /book is absent:
+// it is a bare third-party flip-book iframe, held out of the index by `noindex` in
+// `src/app/(pages)/book/layout.tsx`.
 const publicPagesConfig: Array<{
 	path: string;
 	label: string;
 	priority: number;
 	changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+	lastModified: string;
 }> = [
-	{ path: "/", label: "Home", priority: 1.0, changeFrequency: "daily" },
-	{ path: "/about-us", label: "About Us", priority: 0.8, changeFrequency: "monthly" },
-	{ path: "/contact-us", label: "Contact Us", priority: 0.8, changeFrequency: "monthly" },
-	{ path: "/services", label: "Services", priority: 0.9, changeFrequency: "weekly" },
-	{ path: "/microsoft-support", label: "Microsoft Support", priority: 0.8, changeFrequency: "monthly" },
-	{ path: "/faq", label: "FAQ", priority: 0.7, changeFrequency: "monthly" },
-	{ path: "/privacy-policy", label: "Privacy Policy", priority: 0.5, changeFrequency: "yearly" },
-	{ path: "/terms-and-conditions", label: "Terms and Conditions", priority: 0.5, changeFrequency: "yearly" },
-	{ path: "/book", label: "Book a Meeting", priority: 0.6, changeFrequency: "monthly" },
-	{ path: "/blog", label: "Blog", priority: 0.8, changeFrequency: "weekly" },
-	{ path: "/sitemap-page", label: "Sitemap", priority: 0.5, changeFrequency: "monthly" },
+	{ path: "/", label: "Home", priority: 1.0, changeFrequency: "daily", lastModified: "2026-08-17" },
+	{ path: "/about-us", label: "About Us", priority: 0.8, changeFrequency: "monthly", lastModified: "2026-08-17" },
+	{ path: "/contact-us", label: "Contact Us", priority: 0.8, changeFrequency: "monthly", lastModified: "2026-08-10" },
+	{ path: "/services", label: "Services", priority: 0.9, changeFrequency: "weekly", lastModified: "2026-08-17" },
+	{ path: "/microsoft-support", label: "Microsoft Support", priority: 0.8, changeFrequency: "monthly", lastModified: "2026-08-10" },
+	{ path: "/medical-it-support", label: "Medical Billing & RCM", priority: 0.8, changeFrequency: "monthly", lastModified: "2026-08-10" },
+	{ path: "/faq", label: "FAQ", priority: 0.7, changeFrequency: "monthly", lastModified: "2026-08-17" },
+	{ path: "/privacy-policy", label: "Privacy Policy", priority: 0.5, changeFrequency: "yearly", lastModified: "2026-08-10" },
+	{ path: "/terms-and-conditions", label: "Terms and Conditions", priority: 0.5, changeFrequency: "yearly", lastModified: "2026-08-10" },
+	{ path: "/blog", label: "Blog", priority: 0.8, changeFrequency: "weekly", lastModified: "2026-08-10" },
+	{ path: "/sitemap-page", label: "Sitemap", priority: 0.5, changeFrequency: "monthly", lastModified: "2026-08-12" },
 ];
 
-// Public folder image paths - Home
-const contactImg = "/images/home/contact.png";
-const mainBackground = "/images/home/full-bg.webp";
-const heroLeftBg = "/images/home/hero-ai.png";
-
-// About-us images
-const aboutMainPng = "/images/about-us/about-main.png";
-const aboutUsSvg = "/images/about-us/about-us.svg";
-
-// Contact images
-const contactFiroz = "/images/contact/firoz.svg";
-const contactImage1 = "/images/contact/image1.svg";
-const contactImage2 = "/images/contact/image2.svg";
-const contactImage3 = "/images/contact/image3.svg";
-const contactImage4 = "/images/contact/image4.svg";
-const contactLee1 = "/images/contact/lee1.png";
-
-// Projects images
-const projectFly = "/images/projects/fly.webp";
-const projectBg = "/images/projects/project-bg.png";
-const projectSearch = "/images/projects/search.png";
-const projectSeatWave = "/images/projects/seat-wave.webp";
-const projectVoice = "/images/projects/voice.webp";
-const projectWeout = "/images/projects/weout1.webp";
-
-// Offers images
-const offerBg = "/images/offers/offer-bg.png";
-const offer1 = "/images/offers/offer1.png";
-const offer2 = "/images/offers/offer2.png";
-const offer3 = "/images/offers/offer3.png";
-const offer4 = "/images/offers/offer4.png";
-
-// Feedback images
-const feadbackBg = "/images/feadback/feadback-bg.png";
-const feadbackFlyarjon = "/images/feadback/flyarjon.jpg";
-const feadbackImage1 = "/images/feadback/image1.png";
-const feadbackSearch = "/images/feadback/search.jpg";
-const feadbackWeout = "/images/feadback/weout-jad.jpg";
-
-// Category images
-const categoryBullet = "/images/category/bullet.svg";
-const categoryFlyArzan = "/images/category/fly-arzan.svg";
-const categoryPenWise = "/images/category/pen-wise.svg";
-const categoryRN = "/images/category/r-n.png";
-const categoryRNsvg = "/images/category/r-n.svg";
-const categorySearchforce = "/images/category/searchforce.png";
-const categorySeatWaves = "/images/category/seat-waves.svg";
-const categoryWeoutSvg = "/images/category/weout.svg";
-const categoryWeout = "/images/category/weout1.png";
-
-// Services images
-const microsoftSupportImg = "/images/services/microsoft-support.webp";
-const msSupportFlowChart = "/images/services/ms-support-flow-chart.png";
-const msSupport = "/images/services/ms-support.png";
-const serviceBg = "/images/services/service-bg.png";
-const servicesBg = "/images/services/services-bg.png";
-
-// Shared images
-const wayWiseLogo = "/images/shared/way-wise-logo.svg";
-const wayWiseProfile = "/images/shared/way-wise-profile.jpg";
-const wayWiseText = "/images/shared/way-wise-text.png";
-
-// Service-specific images
-const cloudEngineeringBg = "/images/services/cloud-engineering.png";
-const digitalMarketingBg = "/images/services/digital-marketing.png";
-const graphicsDesignBg = "/images/services/graphics-design.png";
-const internetThingsBg = "/images/services/internetthings.png";
-const mobileAppBg = "/images/services/mobile-application.png";
-const webAppBg = "/images/services/web-application.png";
-const aiImg = "/images/services/ai.jpg";
-const appImg = "/images/services/app.jpg";
-const cloudImg = "/images/services/cloud.jpg";
-const digitalImg = "/images/services/digital.jpg";
-const grpahicsImg = "/images/services/graphic.jpg";
-const webImg = "/images/services/web.jpg";
-
-// Service icons
-const cloudIcon = "/icons/services/cloud.svg";
-const digitalIcon = "/icons/services/digital.png";
-const graphicsIcon = "/icons/services/graphics.svg";
-const internetIcon = "/icons/services/internet.svg";
-const mobileIcon = "/icons/services/mobile.svg";
-const webIcon = "/icons/services/web.png";
-
-// Collect all images
-const allImages = [
-	// Home images
-	{ image: mainBackground, label: "Home Background" },
-	{ image: heroLeftBg, label: "Hero Background" },
-	{ image: contactImg, label: "Contact Section Image" },
-
-	// About images
-	{ image: aboutMainPng, label: "About Main Image" },
-	{ image: aboutUsSvg, label: "About Us Graphic" },
-
-	// Contact images
-	{ image: contactFiroz, label: "Contact - Firoz" },
-	{ image: contactImage1, label: "Contact Image 1" },
-	{ image: contactImage2, label: "Contact Image 2" },
-	{ image: contactImage3, label: "Contact Image 3" },
-	{ image: contactImage4, label: "Contact Image 4" },
-	{ image: contactLee1, label: "Contact - Lee" },
-
-	// Project images
-	{ image: projectFly, label: "Fly Project" },
-	{ image: projectBg, label: "Projects Background" },
-	{ image: projectSearch, label: "Search Project" },
-	{ image: projectSeatWave, label: "Seat Wave Project" },
-	{ image: projectVoice, label: "Voice Project" },
-	{ image: projectWeout, label: "WeOut Project" },
-
-	// Offer images
-	{ image: offerBg, label: "Offers Background" },
-	{ image: offer1, label: "Offer 1" },
-	{ image: offer2, label: "Offer 2" },
-	{ image: offer3, label: "Offer 3" },
-	{ image: offer4, label: "Offer 4" },
-
-	// Feedback images
-	{ image: feadbackBg, label: "Feedback Background" },
-	{ image: feadbackFlyarjon, label: "Flyarjon Feedback" },
-	{ image: feadbackImage1, label: "Feedback Image 1" },
-	{ image: feadbackSearch, label: "Search Feedback" },
-	{ image: feadbackWeout, label: "WeOut Feedback" },
-
-	// Category images
-	{ image: categoryBullet, label: "Bullet Category" },
-	{ image: categoryFlyArzan, label: "Fly Arzan Category" },
-	{ image: categoryPenWise, label: "Pen Wise Category" },
-	{ image: categoryRN, label: "R-N Category" },
-	{ image: categoryRNsvg, label: "R-N SVG Category" },
-	{ image: categorySearchforce, label: "Searchforce Category" },
-	{ image: categorySeatWaves, label: "Seat Waves Category" },
-	{ image: categoryWeoutSvg, label: "WeOut SVG Category" },
-	{ image: categoryWeout, label: "WeOut Category" },
-
-	// Services images
-	{ image: microsoftSupportImg, label: "Microsoft Support" },
-	{ image: msSupportFlowChart, label: "MS Support Flow Chart" },
-	{ image: msSupport, label: "MS Support" },
-	{ image: serviceBg, label: "Service Background" },
-	{ image: servicesBg, label: "Services Background" },
-
-	// Shared images
-	{ image: wayWiseLogo, label: "Way Wise Logo" },
-	{ image: wayWiseProfile, label: "Way Wise Profile" },
-	{ image: wayWiseText, label: "Way Wise Text" },
-
-	// Service specific images
-	{ image: cloudEngineeringBg, label: "Cloud Engineering" },
-	{ image: digitalMarketingBg, label: "Digital Marketing" },
-	{ image: graphicsDesignBg, label: "Graphics Design" },
-	{ image: internetThingsBg, label: "AI/ML Services" },
-	{ image: mobileAppBg, label: "Mobile Application" },
-	{ image: webAppBg, label: "Web Application" },
-	{ image: aiImg, label: "AI Services" },
-	{ image: appImg, label: "App Development" },
-	{ image: cloudImg, label: "Cloud Services" },
-	{ image: digitalImg, label: "Digital Services" },
-	{ image: grpahicsImg, label: "Graphics Services" },
-	{ image: webImg, label: "Web Services" },
-
-	// Service icons
-	{ image: cloudIcon, label: "Cloud Icon" },
-	{ image: digitalIcon, label: "Digital Icon" },
-	{ image: graphicsIcon, label: "Graphics Icon" },
-	{ image: internetIcon, label: "Internet Icon" },
-	{ image: mobileIcon, label: "Mobile Icon" },
-	{ image: webIcon, label: "Web Icon" },
-];
+// Content-update date per service page, keyed by `service.url`. Bump when you edit that
+// service's copy in `src/datas/services.ts`.
+const servicePagesLastModified: Record<string, string> = {
+	"/services/web-application": "2026-08-17",
+	"/services/mobile-application": "2026-08-17",
+	"/services/ai-integration": "2026-08-17",
+	"/services/graphics-design": "2026-08-17",
+	"/services/digital-marketing": "2026-08-17",
+	"/services/cloud-engineering": "2026-08-17",
+};
 
 export async function getAllSitemapEntries(): Promise<GroupedSitemapEntry[]> {
 	const entries: GroupedSitemapEntry[] = [];
-	const now = new Date();
 
 	// Add public pages
 	publicPagesConfig.forEach((page) => {
 		entries.push({
 			url: `${baseUrl}${page.path}`,
-			lastModified: now,
+			lastModified: toDate(page.lastModified),
 			changeFrequency: page.changeFrequency,
 			priority: page.priority,
 			group: "public-pages",
@@ -230,7 +101,8 @@ export async function getAllSitemapEntries(): Promise<GroupedSitemapEntry[]> {
 		});
 	});
 
-	// Add service pages
+	// Add service pages. Images belong here as per-entry `images` (which Next.js emits as
+	// <image:image> children of this <url>) — never as standalone <url> entries of their own.
 	servicesData.forEach((service) => {
 		const imageUrls: string[] = [];
 		const bgUrl = getImageUrl(service.bgImage);
@@ -243,7 +115,7 @@ export async function getAllSitemapEntries(): Promise<GroupedSitemapEntry[]> {
 
 		entries.push({
 			url: `${baseUrl}${service.url}`,
-			lastModified: now,
+			lastModified: toDate(servicePagesLastModified[service.url] ?? CONTENT_BASELINE),
 			changeFrequency: "weekly",
 			priority: 0.9,
 			images: imageUrls.length > 0 ? imageUrls : undefined,
@@ -271,7 +143,9 @@ export async function getAllSitemapEntries(): Promise<GroupedSitemapEntry[]> {
 
 					entries.push({
 						url: `${baseUrl}/blog/${blog.slug}`,
-						lastModified: blog.updatedAt ? new Date(blog.updatedAt) : now,
+						lastModified: blog.updatedAt
+							? new Date(blog.updatedAt)
+							: toDate(CONTENT_BASELINE),
 						changeFrequency: "weekly",
 						priority: 0.7,
 						images: imageUrls.length > 0 ? imageUrls : undefined,
@@ -285,44 +159,12 @@ export async function getAllSitemapEntries(): Promise<GroupedSitemapEntry[]> {
 		// Silent fail - blogs will be excluded if API is unavailable
 	}
 
-	// Add all images as separate entries
-	allImages.forEach(({ image, label }) => {
-		const url = getImageUrl(image);
-		if (url) {
-			entries.push({
-				url,
-				lastModified: now,
-				changeFrequency: "monthly",
-				priority: 0.4,
-				group: "images",
-				groupLabel: "Images",
-			});
-		}
-	});
-
 	return entries;
 }
 
-// For XML sitemap generation (MetadataRoute.Sitemap format)
-export async function getXmlSitemapEntries(): Promise<
-	Array<{
-		url: string;
-		lastModified?: Date;
-		changeFrequency?:
-			| "always"
-			| "hourly"
-			| "daily"
-			| "weekly"
-			| "monthly"
-			| "yearly"
-			| "never";
-		priority?: number;
-		images?: string[];
-	}>
-> {
+// For XML sitemap generation: same entries, minus the grouping metadata that only the
+// human-readable /sitemap-page needs.
+export async function getXmlSitemapEntries(): Promise<MetadataRoute.Sitemap> {
 	const grouped = await getAllSitemapEntries();
-	return grouped.map(({ group, groupLabel, ...entry }) => ({
-		...entry,
-		lastModified: entry.lastModified instanceof Date ? entry.lastModified : new Date(),
-	}));
+	return grouped.map(({ group, groupLabel, ...entry }) => entry);
 }

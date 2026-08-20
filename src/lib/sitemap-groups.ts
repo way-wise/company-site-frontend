@@ -1,10 +1,9 @@
 import { MetadataRoute } from "next";
 
-export type SitemapGroup =
-	| "public-pages"
-	| "service-pages"
-	| "blog-pages"
-	| "images";
+// No "images" group: image files are not pages. They belong in the sitemap only as
+// <image:image> children of the <url> of the page that displays them (the per-entry
+// `images` field on a service/blog entry), never as URLs in their own right.
+export type SitemapGroup = "public-pages" | "service-pages" | "blog-pages";
 
 type SitemapEntry = MetadataRoute.Sitemap[0];
 
@@ -39,12 +38,6 @@ export const sitemapGroups: SitemapGroupInfo[] = [
 		description: "Articles, insights, and industry news",
 		priority: 3,
 	},
-	{
-		id: "images",
-		label: "Images & Media",
-		description: "Visual content and media assets",
-		priority: 4,
-	},
 ];
 
 export function groupSitemapEntries(
@@ -62,7 +55,6 @@ export function groupSitemapEntries(
 			"public-pages": [],
 			"service-pages": [],
 			"blog-pages": [],
-			images: [],
 		} as Record<SitemapGroup, GroupedSitemapEntry[]>
 	);
 }
