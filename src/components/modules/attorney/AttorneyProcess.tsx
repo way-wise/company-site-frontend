@@ -152,8 +152,8 @@ const AttorneyProcess = () => {
 
                 {/* Copy panel. `pr` clears the shield tab so long titles can't run
                     underneath it. */}
-                <div className="relative flex-1 px-8 py-7 pr-28">
-                  <div className="w-16 h-16 bg-[#00A3FF] rounded-b-4xl top-0 right-16 absolute">
+                <div className="relative flex-1 px-8 py-7 md:pr-28">
+                  <div className="w-16 h-16 bg-[#00A3FF] rounded-b-4xl top-0 right-4 md:right-16 absolute">
                     <svg width="32" height="32" className="relative top-1/2 left-1/2 -translate-1/2" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16 28C22.6274 28 28 22.6274 28 16C28 9.37258 22.6274 4 16 4C9.37258 4 4 9.37258 4 16C4 22.6274 9.37258 28 16 28Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M20 12L15.076 12.9853C14.5601 13.0887 14.0864 13.3424 13.7144 13.7144C13.3424 14.0864 13.0887 14.5601 12.9853 15.076L12 20L16.924 19.016C17.44 18.9125 17.9139 18.6587 18.2859 18.2864C18.658 17.9141 18.9115 17.4401 19.0147 16.924L20 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

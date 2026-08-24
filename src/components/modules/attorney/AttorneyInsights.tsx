@@ -158,7 +158,7 @@ const AttorneyInsights = () => {
                 {/* h3: nested under this section's h2. */}
                 <h3
                   style={cardHeadTypography}
-                  className="mt-5 font-bold text-white transition-colors duration-200 group-hover:text-[#00A3FF]"
+                  className="mt-5 font-bold text-white transition-colors !leading-7 duration-200 group-hover:text-[#00A3FF]"
                 >
                   {post.title}
                 </h3>

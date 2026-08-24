@@ -11,6 +11,9 @@ import AttorneyWhyUs from "@/components/modules/attorney/AttorneyWhyUs";
 import AttorneyProcess from "@/components/modules/attorney/AttorneyProcess";
 import AttorneyPricing from "@/components/modules/attorney/AttorneyPricing";
 import AttorneyInsights from "@/components/modules/attorney/AttorneyInsights";
+import AttorneyReviews from "@/components/modules/attorney/AttorneyReviews";
+import AttorneyFaq from "@/components/modules/attorney/AttorneyFaq";
+import AttorneyCta from "@/components/modules/attorney/AttorneyCta";
 import AttorneyFooter from "@/components/modules/attorney/AttorneyFooter";
 
 export const metadata: Metadata = {
@@ -44,6 +47,9 @@ const AttorneyPage = () => {
       <AttorneyProcess />
       <AttorneyPricing />
       <AttorneyInsights />
+      <AttorneyReviews />
+      <AttorneyFaq />
+      <AttorneyCta />
       {/* New sections go above the footer. */}
       <AttorneyFooter />
     </main>

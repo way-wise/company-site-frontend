@@ -1,4 +1,4 @@
-import { DM_Sans, Rajdhani } from "next/font/google";
+import { DM_Sans, Instrument_Sans, Rajdhani } from "next/font/google";
 
 /**
  * Fonts are loaded here rather than in the root layout on purpose: they are used only
@@ -23,12 +23,24 @@ const rajdhani = Rajdhani({
   display: "swap",
 });
 
+// Used by the testimonial slider. Variable font on Google Fonts, so no weight array —
+// 400 and 500 both resolve from the single axis.
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export default function AttorneyLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className={`${dmSans.variable} ${rajdhani.variable}`}>{children}</div>
+    <div
+      className={`${dmSans.variable} ${rajdhani.variable} ${instrumentSans.variable}`}
+    >
+      {children}
+    </div>
   );
 }

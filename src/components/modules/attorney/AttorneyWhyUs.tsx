@@ -164,27 +164,23 @@ const AttorneyWhyUs = () => {
           </div>
 
           {/* Centre card — the asset supplies the fill, corners and illustration. */}
-          <div
-            className="flex flex-col rounded-xl px-8 pt-9"
-            style={{
-              backgroundImage: `url(${midCard.src})`,
-              backgroundSize: "100% 100%",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            <h3
-              style={cardHeadTypography}
-              className="font-semibold text-[#1A1A1A]"
-            >
-              Result- Oriented Delivery
-            </h3>
-            <p
-              style={cardParagraphTypography}
-              className="mt-1 max-w-[300px] text-[#3A3A3A]"
-            >
-              Our IT solutions focus on client needs, delivering results
-              efficiently
-            </p>
+          <div className="relative">
+            <Image alt="" src={midCard} className="w-full" />
+            <div className="flex flex-col rounded-xl px-8 pt-9 absolute top-0 left-0 w-full">
+              <h3
+                style={cardHeadTypography}
+                className="font-semibold text-[#1A1A1A]"
+              >
+                Result- Oriented Delivery
+              </h3>
+              <p
+                style={cardParagraphTypography}
+                className="mt-1 max-w-[300px] text-[#3A3A3A]"
+              >
+                Our IT solutions focus on client needs, delivering results
+                efficiently
+              </p>
+            </div>
           </div>
 
           {/* Right column */}
