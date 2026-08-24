@@ -25,16 +25,12 @@ const eyebrowTypography = {
 // Figma spec (centred sections): Rajdhani Bold 60px / 52.8px, -0.8px letter-spacing.
 const centeredHeadingTypography = {
   fontFamily: "var(--font-rajdhani), sans-serif",
-  fontSize: "60px",
-  lineHeight: "52.8px",
   letterSpacing: "-0.8px",
 } as const;
 
 // Figma spec (left-aligned sections): Rajdhani Bold 60px / 70px, zero letter-spacing.
 const leftHeadingTypography = {
   fontFamily: "var(--font-rajdhani), sans-serif",
-  fontSize: "60px",
-  lineHeight: "70px",
   letterSpacing: "0",
 } as const;
 

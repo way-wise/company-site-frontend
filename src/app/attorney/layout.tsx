@@ -1,4 +1,5 @@
 import { DM_Sans, Instrument_Sans, Rajdhani } from "next/font/google";
+import AttorneySmoothScroll from "@/components/modules/attorney/AttorneySmoothScroll";
 
 /**
  * Fonts are loaded here rather than in the root layout on purpose: they are used only
@@ -40,6 +41,7 @@ export default function AttorneyLayout({
     <div
       className={`${dmSans.variable} ${rajdhani.variable} ${instrumentSans.variable}`}
     >
+      <AttorneySmoothScroll />
       {children}
     </div>
   );

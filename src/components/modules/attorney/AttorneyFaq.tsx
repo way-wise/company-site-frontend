@@ -35,10 +35,14 @@ const metaTypography = {
 } as const;
 
 // Figma spec: Rajdhani SemiBold 24px / 100%, zero letter-spacing.
+//
+// fontSize deliberately omitted here and set in classes instead (20px below md, 24px
+// from md up): an inline style beats any class, so keeping it in this object would make
+// the responsive size impossible to override. lineHeight stays as a percentage, so it
+// tracks whichever size wins.
 const questionTypography = {
   fontFamily: "var(--font-rajdhani), sans-serif",
-  fontSize: "24px",
-  lineHeight: "100%",
+  lineHeight: "26px",
   letterSpacing: "0",
 } as const;
 
@@ -108,7 +112,7 @@ const SupportBox = ({
   linkLabel: string;
   href: string;
 }) => (
-  <div className="flex flex-1 flex-col justify-between gap-10 rounded-xl bg-[#007AFF] p-6.25">
+  <div className="flex flex-1 flex-col justify-between gap-10 rounded-xl bg-[#007AFF] p-4 xl:p-6.25">
     <span className="text-white">{icon}</span>
     <div>
       <p style={supportTypography} className="font-medium text-white">
@@ -129,18 +133,22 @@ const AttorneyFaq = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(DEFAULT_OPEN);
 
   return (
-    <section id="faqs" className="bg-black">
-      <AttorneyContainer className="py-28">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1fr_1.5fr] lg:gap-20">
+    <section id="faqs" className="scroll-mt-24 bg-black">
+      <AttorneyContainer className="py-15 lg:py-28">
+        <div className="grid grid-cols-1 gap-16 md:grid-cols-[1fr_1.5fr] lg:gap-20">
           {/* Left: heading + support boxes */}
           <div>
             <AttorneySectionHeading
               align="left"
               eyebrow="FAQ's"
               heading="Everything You Need to Know"
+              headingClassName="text-[36px] leading-10 lg:text-[60px] lg:leading-[64px]"
             />
 
-            <div className="mt-32 flex max-w-[420px] gap-3.5">
+            {/* Stacked below sm: side by side, each box was ~137px wide on a 375px
+                viewport, and after 25px of padding either side "+1 (310) 528 6170"
+                had nowhere to go. */}
+            <div className="mt-10 flex max-w-105 gap-3.5 flex-row lg:mt-32">
               <SupportBox
                 icon={<PhoneCall className="size-9" aria-hidden="true" />}
                 value="+1 (310) 528 6170"
@@ -167,32 +175,38 @@ const AttorneyFaq = () => {
               return (
                 <li
                   key={`${faq.question}-${index}`}
-                  className={`px-8 py-8 not-last:border-b not-last:border-[#363636] ${
+                  className={`px-5 py-6 not-last:border-b not-last:border-[#363636] md:px-8 md:py-8 ${
                     isOpen ? "bg-[#222222]" : "bg-[#151516]"
                   }`}
                 >
-                  {/* Two columns: a FIXED-WIDTH left gutter and the content column.
-                      The thumbnail lives inside the gutter rather than in the content
-                      flow — otherwise an open item's question is pushed right by the
-                      image width and stops lining up with the closed items above it. */}
-                  <div className="flex gap-6">
+                  {/*
+                    md+ : two columns — a fixed 144px gutter and the content column.
+                          The thumbnail lives in the gutter, not the content flow, so an
+                          open item's question still lines up with the closed ones.
+                    < md: stacked. A 144px gutter on a ~375px viewport left the question
+                          about 143px wide and it wrapped one word per line, so below md
+                          the gutter becomes a full-width row and the copy gets the lot.
+                  */}
+                  <div className="flex flex-col gap-4 md:flex-row md:gap-6">
                     {/* Gutter: number + rule, with the thumbnail beneath when open. */}
-                    <div className="w-36 shrink-0">
+                    <div className="md:w-36 md:shrink-0">
                       <div className="flex items-center gap-3">
                         <span style={metaTypography} className="text-[#00A3FF]">
                           {number}
                         </span>
                         <span
                           aria-hidden="true"
-                          className="h-px flex-1 bg-[#00A3FF]"
+                          className="h-px w-20 bg-[#00A3FF] md:w-auto md:flex-1"
                         />
                       </div>
 
+                      {/* Hidden below md: stacked, it would sit between the rule and
+                          the question, which reads oddly — and it is decorative. */}
                       {isOpen && faq.image && (
                         <Image
                           src={faq.image}
                           alt=""
-                          className="mt-5 h-auto w-full rounded-md"
+                          className="mt-5 hidden h-auto w-full rounded-md md:block"
                         />
                       )}
                     </div>
@@ -210,7 +224,7 @@ const AttorneyFaq = () => {
                       {/* <h3> wraps the <button>, not the other way round: a button may
                           only contain phrasing content, so a heading inside it is
                           invalid HTML. */}
-                      <h3 className="mt-5">
+                      <h3 className="mt-3 md:mt-5">
                         <button
                           id={buttonId}
                           type="button"
@@ -220,12 +234,14 @@ const AttorneyFaq = () => {
                             setOpenIndex(isOpen ? null : index)
                           }
                           style={questionTypography}
-                          className="flex w-full items-center justify-between gap-6 text-left font-semibold text-white transition-colors duration-200 hover:text-[#00A3FF]"
+                          // gap-3 not gap-6 on mobile: the wider gap was stealing
+                          // width the wrapping question needed.
+                          className="flex w-full items-start justify-between gap-3 text-left text-[20px] font-semibold text-white transition-colors duration-200 hover:text-[#00A3FF] md:items-center md:gap-6 md:text-[24px]"
                         >
                           {faq.question}
                           <ChevronDown
                             aria-hidden="true"
-                            className={`size-5 shrink-0 text-white transition-transform duration-300 ${
+                            className={`mt-1 size-5 shrink-0 text-white transition-transform duration-300 md:mt-0 ${
                               isOpen ? "rotate-180" : ""
                             }`}
                           />

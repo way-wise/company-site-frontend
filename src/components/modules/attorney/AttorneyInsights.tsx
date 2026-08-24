@@ -100,7 +100,7 @@ const posts: Post[] = [
 const AttorneyInsights = () => {
   return (
     <section className="bg-black">
-      <AttorneyContainer className="py-28">
+      <AttorneyContainer className="py-15 lg:py-28">
         {/* Header row: heading left, CTA pinned to the right and baseline-aligned
             with the bottom of the heading, as in the frame. */}
         <div className="flex flex-wrap items-end justify-between gap-8">
@@ -109,7 +109,7 @@ const AttorneyInsights = () => {
               align="left"
               eyebrow="Insights"
               heading="Perspectives on Digital Product Building"
-              headingClassName="max-w-[660px]"
+              headingClassName="max-w-[660px] text-[36px] leading-10 lg:text-[60px] lg:leading-[64px]"
             />
           </div>
 

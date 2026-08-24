@@ -136,6 +136,9 @@ const AttorneyReviews = () => {
   return (
     <section
       id="reviews"
+      // scroll-mt clears the pinned navbar so this section's heading isn't hidden
+      // beneath it when the nav link jumps here.
+      className="scroll-mt-24"
       // Mesh backdrop: warm orange left, magenta across the top, blue right, over a
       // deep plum base. Eyeballed from the Figma export — no values were given.
       style={{
@@ -143,11 +146,11 @@ const AttorneyReviews = () => {
           "radial-gradient(42% 46% at 7% 46%, rgba(196,71,42,0.95) 0%, rgba(196,71,42,0) 70%), radial-gradient(36% 42% at 29% 0%, rgba(194,48,107,0.9) 0%, rgba(194,48,107,0) 70%), radial-gradient(40% 40% at 62% 0%, rgba(211,63,134,0.85) 0%, rgba(211,63,134,0) 70%), radial-gradient(46% 62% at 100% 34%, rgba(74,111,196,0.95) 0%, rgba(74,111,196,0) 70%), radial-gradient(55% 55% at 48% 105%, rgba(24,12,40,0.95) 0%, rgba(24,12,40,0) 72%), #2A1440",
       }}
     >
-      <AttorneyContainer className="py-28">
+      <AttorneyContainer className="py-15 lg:py-28">
         <AttorneySectionHeading
           eyebrow="Client Reviews"
           heading="What Our Legal Clients Say About Working With Us"
-          headingClassName="!leading-16"
+          headingClassName="text-[34px] leading-10 lg:text-[60px] lg:leading-[64px]"
         />
 
         {/* Viewport clips the track; the track slides by whole cards. */}

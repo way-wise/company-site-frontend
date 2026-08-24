@@ -32,7 +32,6 @@ const cardHeadTypography = {
 const cardParagraphTypography = {
   fontFamily: "var(--font-inter), sans-serif",
   fontSize: "16px",
-  lineHeight: "28px",
   letterSpacing: "0",
 } as const;
 
@@ -94,15 +93,16 @@ const DoubleChevron = () => (
 
 const AttorneyProcess = () => {
   return (
-    <section id="process" className="bg-black">
-      <AttorneyContainer className="py-28">
-        <div className="grid grid-cols-1 items-start gap-14 lg:grid-cols-2 lg:gap-20">
+    <section id="process" className="scroll-mt-24 bg-black">
+      <AttorneyContainer className="py-15 lg:py-28">
+        <div className="grid grid-cols-1 items-start gap-14 md:grid-cols-2 lg:gap-20">
           {/* Left: header + CTA. Sticks while the tall step list scrolls past. */}
-          <div className="lg:sticky lg:top-16">
+          <div className="md:sticky md:top-16">
             <AttorneySectionHeading
               align="left"
               eyebrow="Our Process"
               heading="A Clear Path from Legal Strategy to Launch"
+              headingClassName="text-[36px] leading-10 lg:text-[60px] lg:leading-[70px]"
             />
 
             <Link
@@ -168,7 +168,7 @@ const AttorneyProcess = () => {
                   </h3>
                   <p
                     style={cardParagraphTypography}
-                    className="mt-6 text-[#B8B8B8]"
+                    className="mt-6 text-[#B8B8B8] leading-6 lg:leading-7"
                   >
                     {step.body}
                   </p>

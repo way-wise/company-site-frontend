@@ -11,8 +11,6 @@ import AttorneyContainer from "./AttorneyContainer";
 // Figma spec: Inter ExtraBold 48px / 52.8px, -0.8px letter-spacing, centred.
 const headlineTypography = {
   fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "48px",
-  lineHeight: "52.8px",
   letterSpacing: "-0.8px",
 } as const;
 
@@ -50,11 +48,11 @@ const AttorneyCta = () => {
           "radial-gradient(45% 75% at 86% 45%, rgba(178,150,252,0.95) 0%, rgba(178,150,252,0) 62%), radial-gradient(60% 90% at 62% 55%, rgba(104,52,214,0.75) 0%, rgba(104,52,214,0) 70%), linear-gradient(90deg, #1D0A4C 0%, #2A1270 38%, #4A22A8 70%, #6B3FD8 100%)",
       }}
     >
-      <AttorneyContainer className="py-28">
+      <AttorneyContainer className="py-15 lg:py-28">
         {/* h2: the page <h1> lives in the banner. */}
         <h2
           style={headlineTypography}
-          className="mx-auto max-w-225 text-center font-extrabold text-white"
+          className="mx-auto max-w-225 text-center font-extrabold text-white text-[30px] leading-10 lg:text-[48px] lg:leading-[64px]"
         >
           Let&rsquo;s Build Something That Moves Your Business Forward
         </h2>

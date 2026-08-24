@@ -41,7 +41,6 @@ const filterTypography = {
 // Figma spec: Rajdhani SemiBold 32px / 100%, zero letter-spacing.
 const itemHeadTypography = {
   fontFamily: "var(--font-rajdhani), sans-serif",
-  fontSize: "32px",
   lineHeight: "100%",
   letterSpacing: "0",
 } as const;
@@ -188,7 +187,9 @@ const AttorneyWork = () => {
   return (
     <section
       id="our-work"
-      className="bg-black"
+      // scroll-mt clears the pinned navbar so this section's heading isn't hidden
+      // beneath it when the nav link jumps here.
+      className="scroll-mt-24 bg-black"
       // Stretched rather than `cover`: the artwork is 2880x2085 (landscape) but this
       // section is far taller than wide, so `cover` would crop ~1000px off each side
       // and discard both corner accents — the red glow and the pixel grid.
@@ -198,12 +199,13 @@ const AttorneyWork = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <AttorneyContainer className="py-28">
+      <AttorneyContainer className="py-15 lg:py-28">
         <AttorneySectionHeading
           eyebrow="Selected Legal Work"
           heading="Legal Products We've Designed and Developed"
           description="Explore websites, platforms, and digital experiences we have created for attorneys, legal-service providers, and businesses operating in the legal industry."
           descriptionClassName="max-w-137"
+          headingClassName="text-[36px] leading-10 lg:text-[60px] lg:leading-[64px]"
         />
 
         {/* Filters — 12px gap per spec */}
@@ -251,7 +253,7 @@ const AttorneyWork = () => {
               </div>
               {/* h3: nested under this section's h2. */}
               <h3
-                className="mt-6 font-semibold text-white"
+                className="mt-6 font-semibold text-white text-[24px] lg:text-[32px]"
                 style={itemHeadTypography}
               >
                 {project.title}

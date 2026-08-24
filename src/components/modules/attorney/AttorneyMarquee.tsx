@@ -13,8 +13,6 @@
 // Figma spec: Rajdhani SemiBold 54.82px / 45.22px, zero letter-spacing.
 const itemTypography = {
   fontFamily: "var(--font-rajdhani), sans-serif",
-  fontSize: "54.82px",
-  lineHeight: "45.22px",
   letterSpacing: "0",
 } as const;
 
@@ -58,7 +56,7 @@ const MarqueeTrack = ({ duplicate = false }: { duplicate?: boolean }) => (
         <Sparkle />
         <span
           style={itemTypography}
-          className="font-semibold whitespace-nowrap text-white uppercase"
+          className="font-semibold whitespace-nowrap text-white uppercase text-[30px] md:text-[54px] md:leading-8.5"
         >
           {item}
         </span>
@@ -71,7 +69,7 @@ const AttorneyMarquee = () => {
   return (
     <section
       // Gradient stops are eyeballed from the Figma export — see note to the user.
-      className="w-full overflow-hidden bg-[linear-gradient(90deg,#8B2BBF_0%,#B534E0_22%,#DD5CF2_45%,#D14BEC_58%,#A93BE0_78%,#9A4BE8_90%,#7B2CBF_100%)] pt-[50px] pb-10.5"
+      className="w-full overflow-hidden bg-[linear-gradient(90deg,#8B2BBF_0%,#B534E0_22%,#DD5CF2_45%,#D14BEC_58%,#A93BE0_78%,#9A4BE8_90%,#7B2CBF_100%)] pt-6 pb-6  md:pt-12.5 md:pb-10.5"
     >
       <div className="flex">
         <MarqueeTrack />

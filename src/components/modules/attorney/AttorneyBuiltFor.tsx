@@ -11,8 +11,6 @@ import AttorneyContainer from "./AttorneyContainer";
 // Figma spec: Rajdhani Bold 48px / 64px, -0.6px letter-spacing.
 const headlineTypography = {
   fontFamily: "var(--font-rajdhani), sans-serif",
-  fontSize: "48px",
-  lineHeight: "64px",
   letterSpacing: "-0.6px",
 } as const;
 
@@ -66,7 +64,7 @@ const cards = [
 
 const AttorneyBuiltFor = () => {
   return (
-    <AttorneyContainer className="bg-black py-[112px]">
+    <AttorneyContainer className="bg-black py-15 lg:py-[112px]">
       <div className="grid grid-cols-1 items-center gap-13 lg:grid-cols-2">
         {/* Photo. The asset's corners are already rounded with alpha, so no CSS
             radius here — adding one would clip it twice. */}
@@ -74,13 +72,13 @@ const AttorneyBuiltFor = () => {
           src={builtForImage}
           alt="Attorneys reviewing case documents together at a conference table"
           sizes="(min-width: 1024px) 50vw, 100vw"
-          className="h-auto w-full"
+          className="h-auto w-full order-2 lg:order-1"
         />
 
-        <div>
+        <div className="order-1 lg:order-2">
           {/* h2: the page <h1> lives in the banner. */}
           <h2
-            className="mb-7 font-bold text-white"
+            className="mb-7 font-bold text-white text-[36px] lg:text-[48px] leading-10 lg:leading-16"
             style={headlineTypography}
           >
             Built for Attorneys, Law Firms, and Legal Service Providers

@@ -104,18 +104,18 @@ const AttorneyWhyUs = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <AttorneyContainer className="py-28">
+      <AttorneyContainer className="py-15 lg:py-28">
         <AttorneySectionHeading
-        headingClassName='!max-w-full'
+        headingClassName='!max-w-full text-[36px] leading-10 lg:leading-[52px] lg:text-[60px]'
           eyebrow="Why Way Wise Tech"
           heading="More Than a Development Team"
           description="We are a full-cycle digital product company that combines strategic thinking, design craft, and engineering excellence."
           descriptionClassName="max-w-225"
         />
 
-        <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 gap-6 lg:gap-8 lg:grid-cols-2 xl:grid-cols-3">
           {/* Left column */}
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col md:grid md:grid-cols-2 lg:flex gap-6 lg:gap-10">
             <Card className="px-10 py-9">
               {/* Star rating pill */}
               <div className="inline-flex items-center gap-1 rounded-full bg-[#FB2A2A] px-5 my-2.5 py-2.5 text-[#FDC700]">
@@ -164,7 +164,7 @@ const AttorneyWhyUs = () => {
           </div>
 
           {/* Centre card — the asset supplies the fill, corners and illustration. */}
-          <div className="relative">
+          <div className="relative md:hidden xl:block">
             <Image alt="" src={midCard} className="w-full" />
             <div className="flex flex-col rounded-xl px-8 pt-9 absolute top-0 left-0 w-full">
               <h3
@@ -184,7 +184,7 @@ const AttorneyWhyUs = () => {
           </div>
 
           {/* Right column */}
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col md:grid md:grid-cols-2 lg:flex gap-6 lg:gap-10">
             <Card className="px-10 pb-10">
               <h3
                 style={cardHeadTypography}

@@ -229,7 +229,7 @@ const CheckIcon = () => (
 
 const PhaseCard = ({ phase, isMiddle }: { phase: Phase; isMiddle: boolean }) => (
   <div
-    className="px-7 py-13"
+    className="px-7 md:px-4 lg:px-7 py-13"
     style={
       isMiddle
         ? { backgroundImage: MIDDLE_CARD_BG }
@@ -290,6 +290,9 @@ const AttorneyPricing = () => {
   return (
     <section
       id="packages"
+      // scroll-mt clears the pinned navbar so this section's heading isn't hidden
+      // beneath it when the nav link jumps here.
+      className="scroll-mt-24"
       // Section backdrop: a violet glow bleeding in from the right over a deep
       // indigo base. Eyeballed from the Figma export — no values were given.
       style={{
@@ -297,15 +300,15 @@ const AttorneyPricing = () => {
           "radial-gradient(65% 55% at 96% 34%, rgba(146,102,248,0.85) 0%, rgba(146,102,248,0) 68%), radial-gradient(75% 60% at 18% 12%, rgba(63,33,132,0.65) 0%, rgba(0,0,0,0) 72%), #0E0626",
       }}
     >
-      <AttorneyContainer className="py-28">
+      <AttorneyContainer className="py-15 lg:py-28">
         <AttorneySectionHeading
           eyebrow="Built for Every Stage"
           heading="Grow Your Practice, Phase by Phase"
-          headingClassName="!max-w-full"
+          headingClassName="!max-w-full text-[36px] leading-10 lg:text-[60px] lg:leading-[52px]"
         />
 
         {/* One clipped shell: the three cards touch, so the radius lives here. */}
-        <div className="mt-14 grid grid-cols-1 overflow-hidden rounded-2xl lg:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 overflow-hidden rounded-2xl md:grid-cols-3">
           {phases.map((phase, index) => (
             <PhaseCard
               key={phase.name}

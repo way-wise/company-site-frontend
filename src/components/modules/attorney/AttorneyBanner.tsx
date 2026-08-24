@@ -37,8 +37,6 @@ const descriptionTypography = {
 // Figma spec: Inter Medium 20px / 30px, zero letter-spacing.
 const buttonTypography = {
   fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "20px",
-  lineHeight: "30px",
   letterSpacing: "0",
 } as const;
 
@@ -52,7 +50,7 @@ const AttorneyBanner = () => {
         fill
         priority
         sizes="100vw"
-        className="object-cover object-right"
+        className="object-cover object-right hidden md:block"
         aria-hidden="true"
       />
 
@@ -100,21 +98,23 @@ const AttorneyBanner = () => {
             efficiency.
           </p>
 
+          {/* Plain <a> rather than <Link>: same-document fragments, so native anchor
+              navigation is what picks up `scroll-behavior: smooth` and scroll-mt. */}
           <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
-            <Link
+            <a
               href="#our-work"
               style={buttonTypography}
-              className="rounded-md bg-[#007AFF] px-7 py-[13px] text-center font-medium whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#0091e6]"
+              className="rounded-md bg-[#007AFF] px-7 py-[13px] text-center font-medium whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#0091e6] text-[16px] md:text-[20px] leading-7.5"
             >
               View Our Legal Work
-            </Link>
-            <Link
+            </a>
+            <a
               href="#packages"
               style={buttonTypography}
-              className="rounded-md bg-[#F1F5F9] px-7 py-[13px] text-center font-medium whitespace-nowrap text-[#0A0A0A] transition-colors duration-200 hover:bg-white"
+              className="rounded-md bg-[#F1F5F9] px-7 py-[13px] text-center font-medium whitespace-nowrap text-[#0A0A0A] transition-colors duration-200 hover:bg-white text-[16px] md:text-[20px] leading-7.5"
             >
               Explore Legal Packages
-            </Link>
+            </a>
           </div>
         </div>
       </AttorneyContainer>

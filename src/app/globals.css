@@ -198,6 +198,31 @@ div#magazineViewport .logo-backs2 {
    animation-play-state: paused;
 }
 
+/* Sticky-navbar entrance (used by the /attorney navbar when it pins to the top).
+   A keyframe animation rather than a transition on purpose: an animation plays from
+   its own 0% the moment the class is applied, whereas a transition needs the browser
+   to have already painted the start state — which React's batching does not guarantee. */
+@keyframes nav-slide-down {
+   from {
+      opacity: 0;
+      transform: translateY(-100%);
+   }
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+.animate-nav-slide-down {
+   animation: nav-slide-down 0.4s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .animate-nav-slide-down {
+      animation: none;
+   }
+}
+
 #users-portal-trigger > .lulucide .lucide-chevron-down {
    display: none;
 }

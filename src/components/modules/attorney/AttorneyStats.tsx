@@ -10,8 +10,6 @@ import AttorneyContainer from "./AttorneyContainer";
 // Figma spec: Rajdhani Bold 64px / 54px, -1.2% letter-spacing (= -0.768px at 64px).
 const numberTypography = {
   fontFamily: "var(--font-rajdhani), sans-serif",
-  fontSize: "64px",
-  lineHeight: "54px",
   letterSpacing: "-0.768px",
 } as const;
 
@@ -53,12 +51,12 @@ const AttorneyStats = () => {
   return (
     <AttorneyContainer
       // Gradient stops are eyeballed from the Figma export — see note to the user.
-      className="bg-[linear-gradient(90deg,#1B0838_0%,#2E0F63_18%,#5B21B6_50%,#7C3AED_72%,#A970FF_88%,#8B5CF6_100%)] py-8 lg:py-10"
+      className="px-4 bg-[linear-gradient(90deg,#1B0838_0%,#2E0F63_18%,#5B21B6_50%,#7C3AED_72%,#A970FF_88%,#8B5CF6_100%)] py-8 lg:py-10"
     >
       <ul className="flex flex-col items-center gap-10 lg:flex-row lg:justify-between lg:gap-0">
         {stats.map((stat, index) => (
           <li key={stat.head} className="flex items-center">
-            <span style={numberTypography} className="font-bold text-white">
+            <span style={numberTypography} className="font-bold text-white text-[36px] leading-10 md:text-[64px] md:leading-13.5">
               {stat.value}
             </span>
 
@@ -78,7 +76,7 @@ const AttorneyStats = () => {
             {index < stats.length - 1 && (
               <span
                 aria-hidden="true"
-                className="ml-10 hidden h-[90px] w-px bg-white lg:block"
+                className="ml-10 hidden h-[90px] w-px bg-white xl:block"
               />
             )}
           </li>
