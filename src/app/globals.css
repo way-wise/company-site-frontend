@@ -198,7 +198,8 @@ div#magazineViewport .logo-backs2 {
    animation-play-state: paused;
 }
 
-/* Sticky-navbar entrance (used by the /attorney navbar when it pins to the top).
+/* Sticky-navbar entrance (used by the /attorney and /doctor navbars when they pin to
+   the top).
    A keyframe animation rather than a transition on purpose: an animation plays from
    its own 0% the moment the class is applied, whereas a transition needs the browser
    to have already painted the start state — which React's batching does not guarantee. */
