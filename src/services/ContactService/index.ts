@@ -32,6 +32,29 @@ export const contactService = {
 		return response.data;
 	},
 
+	/**
+	 * Fires the team notification email via this app's own Next.js route.
+	 *
+	 * Deliberately uses fetch, not apiClient: apiClient's baseURL is
+	 * NEXT_PUBLIC_BASE_API, which would send this to the Express backend instead
+	 * of the local route handler. A relative URL keeps it same-origin.
+	 *
+	 * Never throws — the caller has already stored the submission, so a failed
+	 * notification must not turn a saved lead into a visible error.
+	 */
+	sendContactNotification: async (data: ContactFormData): Promise<boolean> => {
+		try {
+			const response = await fetch("/api/contact-email", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
+			});
+			return response.ok;
+		} catch {
+			return false;
+		}
+	},
+
 	getAllContacts: async (
 		params?: GetAllContactsParams
 	): Promise<ApiResponse<Contact[]>> => {

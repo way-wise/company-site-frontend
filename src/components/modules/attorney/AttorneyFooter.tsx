@@ -86,12 +86,12 @@ const socials = [
     path: socialPaths.linkedin,
   },
   {
-    label: "Facebook",
+    label: "Twitter",
     href: "https://www.facebook.com/WayWiseTech/",
     path: socialPaths.twitter,
   },
   {
-    label: "YouTube",
+    label: "Instagram",
     href: "https://www.youtube.com/@WayWiseTech",
     path: socialPaths.instagram,
   },

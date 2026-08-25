@@ -11,6 +11,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { BUDGET_OPTIONS, SERVICE_OPTIONS } from "@/lib/contact-options";
 import { contactService, ContactFormData } from "@/services/ContactService";
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
@@ -113,10 +114,19 @@ const ContactForm = () => {
 
 		setIsSubmitting(true);
 
+		// Captured before the reset below clears state.
+		const submission = { ...formData };
+
 		try {
-			const response = await contactService.submitContactForm(formData);
+			const response = await contactService.submitContactForm(submission);
 
 			if (response.success) {
+				// Stored first, notified second. Awaited so the request is not cut
+				// short if the visitor navigates away, but its result is ignored on
+				// purpose: the lead is already saved, so a mail failure must not
+				// show as an error. Failures are logged server-side in the route.
+				await contactService.sendContactNotification(submission);
+
 				setSuccessMessage(
 					response.message ||
 						"Thank you for your inquiry! We'll get back to you within 24 hours."
@@ -243,19 +253,11 @@ const ContactForm = () => {
 							<SelectValue placeholder="Select Your Service" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="web-development">Web Development</SelectItem>
-							<SelectItem value="mobile-app">Mobile App Development</SelectItem>
-							<SelectItem value="ui-ux-design">UI/UX Design</SelectItem>
-							<SelectItem value="consulting">AI/ML</SelectItem>
-							<SelectItem value="digital-marketing">
-								Digital Marketing
-							</SelectItem>
-							<SelectItem value="graphics-design">Graphics Design</SelectItem>
-							<SelectItem value="iot">Internet of Things</SelectItem>
-							<SelectItem value="cloud-engineering">
-								Cloud Engineering
-							</SelectItem>
-							<SelectItem value="other">Other</SelectItem>
+							{SERVICE_OPTIONS.map((option) => (
+								<SelectItem key={option.value} value={option.value}>
+									{option.label}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 					{errors.serviceRequired && (
@@ -288,11 +290,11 @@ const ContactForm = () => {
 							<SelectValue placeholder="Select Your Range" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="under-1k">Under $1,000</SelectItem>
-							<SelectItem value="1k-5k">$1,000 - $5,000</SelectItem>
-							<SelectItem value="5k-10k">$5,000 - $10,000</SelectItem>
-							<SelectItem value="10k-25k">$10,000 - $25,000</SelectItem>
-							<SelectItem value="25k-plus">$25,000+</SelectItem>
+							{BUDGET_OPTIONS.map((option) => (
+								<SelectItem key={option.value} value={option.value}>
+									{option.label}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 					{errors.projectBudget && (
