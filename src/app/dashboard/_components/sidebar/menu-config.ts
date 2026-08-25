@@ -45,7 +45,11 @@ export const menuConfig: MenuItem[] = [
 		url: "/dashboard",
 		// Always visible to authenticated users
 	},
-
+	{
+		title: "Customer Queries",
+		icon: MessageSquare,
+		url: "/dashboard/feedback",
+	},
 	{
 		title: "Users",
 		icon: UsersRound,
