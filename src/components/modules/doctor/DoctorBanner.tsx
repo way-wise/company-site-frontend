@@ -1,121 +1,108 @@
 import Image from "next/image";
 import Link from "next/link";
-import bannerImage from "@/assets/images/doctor/banner.webp";
-import DoctorContainer from "./DoctorContainer";
+import { ArrowRight } from "lucide-react";
+import bannerImage from "@/assets/images/doctor/banner_right_image.webp";
 
 /**
- * Section 3 — hero banner.
+ * Banner / hero.
  *
- * The artwork is full-bleed and anchored right (that is where the subject sits); the
- * copy is held to the shared 1420px container over the dark left side.
+ * The right-hand visual is a single flattened image: the doctor, the dashboard mockup
+ * and all six floating labels ("Patient Management", "Billing & Invoicing", …) are baked
+ * into the asset, so none of them are markup. That means the label text is not
+ * selectable or translatable — noted to the user in case those should become real DOM.
  */
 
-// Figma spec: Inter Regular 18px / 28px, zero letter-spacing.
-const breadcrumbTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
+// Figma spec: Urbanist Bold 52px, line-height 100%, zero letter-spacing.
+// Only the desktop size is specced; the responsive steps below it are mine — 52px/100%
+// overflows a phone viewport.
+const titleTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 700,
+  letterSpacing: "0",
+} as const;
+
+// Figma spec: Urbanist Medium 18px / 28px, zero letter-spacing.
+const paragraphTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 500,
   fontSize: "18px",
   lineHeight: "28px",
   letterSpacing: "0",
 } as const;
 
-// Figma spec: Rajdhani Bold 48px / 56px, -0.96px letter-spacing.
-const headlineTypography = {
-  fontFamily: "var(--font-rajdhani), sans-serif",
-  fontSize: "48px",
-  lineHeight: "56px",
-  letterSpacing: "-0.96px",
-} as const;
-
-// Figma spec: Inter Regular 20px / 32px, zero letter-spacing.
-const descriptionTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "20px",
-  lineHeight: "32px",
-  letterSpacing: "0",
-} as const;
-
-// Figma spec: Inter Medium 20px / 30px, zero letter-spacing.
+// Figma spec: Urbanist SemiBold 16px, line-height 100%, zero letter-spacing.
+// Shared by both CTAs — they differ only in fill vs outline.
 const buttonTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 600,
+  fontSize: "16px",
+  lineHeight: "100%",
   letterSpacing: "0",
 } as const;
 
 const DoctorBanner = () => {
   return (
-    <section className="relative isolate overflow-hidden bg-black">
-      {/* Background artwork. `priority` because this is the LCP element. */}
-      <Image
-        src={bannerImage}
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-right hidden md:block"
-        aria-hidden="true"
-      />
-
-      <DoctorContainer
-        className="relative flex min-h-[560px] items-center py-16 lg:min-h-[640px] lg:py-20"
-        innerClassName="w-full"
-      >
-        <div className="max-w-[680px]">
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol
-              className="flex items-center gap-3 text-white"
-              style={breadcrumbTypography}
-            >
-              <li>
-                <Link
-                  href="/"
-                  className="transition-colors duration-200 hover:text-[#00A3FF]"
-                >
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden="true" className="text-white/60">
-                &bull;
-              </li>
-              {/* aria-current marks the trail's end for screen readers. */}
-              <li aria-current="page">Doctors</li>
-            </ol>
-          </nav>
-
-          {/* The page's single <h1>. */}
+    <section className="w-full px-4">
+      <div className="mx-auto lg:flex xl:grid w-full max-w-[1420px] items-center gap-12 pt-10 pb-16 lg:grid-cols-[1fr_auto] lg:gap-8 lg:pt-16 lg:pb-24">
+        {/* Copy column */}
+        <div>
+          {/* The page h1. Line breaks are hard-coded rather than left to wrapping
+              because the colour split falls on line boundaries: line 2 is the accent. */}
           <h1
-            className="mb-6 font-bold text-white"
-            style={headlineTypography}
+            className="text-[34px] sm:text-[42px] xl:text-[52px] leading-10 sm:leading-11 md:leading-14"
+            style={titleTypography}
           >
-            Innovative Technology That Empowers Care Solutions
+            <span className="block text-[#011139]">Build a Smarter</span>
+            <span className="block text-[#3191EA]">Digital Experience</span>
+            <span className="block text-[#011139]">for Your Practice.</span>
           </h1>
 
           <p
-            className="mb-6 font-normal text-gray-200"
-            style={descriptionTypography}
+            className="mt-6 max-w-[500px] text-[#4B5563]"
+            style={paragraphTypography}
           >
-            We design and develop secure, intuitive digital solutions for doctors, clinics, and healthcare providers—helping teams improve patient experiences, streamline daily operations, and grow with confidence.
+            From your first professional website to a complete patient
+            engagement and practice management platform, we help healthcare
+            organizations grow with confidence.
           </p>
 
-          {/* Plain <a> rather than <Link>: same-document fragments, so native anchor
-              navigation is what picks up `scroll-behavior: smooth` and scroll-mt. */}
-          <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
-            <a
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <Link
+              href="/contact-us"
+              style={buttonTypography}
+              className="inline-flex items-center gap-5 rounded-[60px] bg-[#3191EA] px-5 sm:px-[30px] lg:px-6 xl:px-7.5 py-[15px] whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#1f7fd4]"
+            >
+              Get Started
+              <ArrowRight className="size-5" aria-hidden="true" />
+            </Link>
+
+            {/* Outline variant: same box, same type, no fill. `border` adds 1px to each
+                axis, so this sits 2px taller than the filled button unless the border
+                is accounted for — hence the matching 1px inset on the padding. */}
+            <Link
               href="#our-work"
               style={buttonTypography}
-              className="rounded-md bg-[#007AFF] px-7 py-[13px] text-center font-medium whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#0091e6] text-[16px] md:text-[20px] leading-7.5"
+              className="inline-flex items-center gap-5 rounded-[60px] border border-[#3191EA] px-5 sm:px-[29px] lg:px-6 xl:px-7.5 py-[14px] whitespace-nowrap text-[#3191EA] transition-colors duration-200 hover:bg-[#3191EA] hover:text-white"
             >
-              View Our Healthcare Work
-            </a>
-            <a
-              href="#packages"
-              style={buttonTypography}
-              className="rounded-md bg-[#F1F5F9] px-7 py-[13px] text-center font-medium whitespace-nowrap text-[#0A0A0A] transition-colors duration-200 hover:bg-white text-[16px] md:text-[20px] leading-7.5"
-            >
-              Explore Healthcare Packages
-            </a>
+              View Our Work
+              <ArrowRight className="size-5" aria-hidden="true" />
+            </Link>
           </div>
         </div>
-      </DoctorContainer>
+
+        {/* Visual column. Intrinsic size is 736x663; width/height come from the static
+            import, so only the rendered width is capped here and the height follows.
+            `priority` because this is the largest above-the-fold paint. */}
+        <div className="justify-self-center lg:justify-self-end pt-5 lg:pt-0">
+          <Image
+            src={bannerImage}
+            alt="WiseDocx practice management dashboard shown alongside a doctor holding a tablet, with labels for patient management, billing and invoicing, appointment scheduling, analytics and data security"
+            className="h-auto w-full max-w-[736px]"
+            sizes="(min-width: 1024px) 736px, 100vw"
+            priority
+          />
+        </div>
+      </div>
     </section>
   );
 };

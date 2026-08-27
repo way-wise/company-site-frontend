@@ -3,11 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X } from "lucide-react";
-import DoctorContainer, { DOCTOR_NAV_WIDTH } from "./DoctorContainer";
-import DoctorLogo from "./DoctorLogo";
-
-const profileGuide = "/images/shared/book-v2-front.png";
+import { ArrowRight, Menu, X } from "lucide-react";
+import logo from "@/assets/images/doctor/logo.webp";
 
 /** Scroll depth at which the navbar detaches and pins to the viewport top. */
 const STICK_AFTER_PX = 100;
@@ -16,38 +13,28 @@ const STICK_AFTER_PX = 100;
 const DRAWER_ID = "doctor-mobile-drawer";
 
 // In-page anchors: this is a single-scroll landing page, so each link targets a
-// section further down. Section ids must match these.
-//
-// No active/current state by design — nothing is highlighted at rest, so blue is
-// reserved entirely for hover.
+// section further down. Section ids must match these as the sections get built.
 const navLinks = [
-  { label: "Legal Solutions", href: "#home" },
-  { label: "Our Work", href: "#our-work" },
-  { label: "Process", href: "#process" },
+  { label: "Home", href: "#home" },
+  { label: "Services", href: "#services" },
+  { label: "Solutions", href: "#solutions" },
   { label: "Packages", href: "#packages" },
-  { label: "Reviews", href: "#reviews" },
-  { label: "FAQs", href: "#faqs" },
+  { label: "Why Us", href: "#why-us" },
+  { label: "Contact Us", href: "#contact-us" },
 ];
 
-// Figma spec: Inter Medium 16px / 21px, zero letter-spacing, centered.
-const linkTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
+// Figma spec: Urbanist SemiBold 16px, line-height 100%, zero letter-spacing.
+// Shared by the nav links and the CTA — only the colour differs.
+const navTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 600,
   fontSize: "16px",
-  lineHeight: "21px",
-  letterSpacing: "0px",
-} as const;
-
-// Figma spec: Inter Medium 14px / 130%, zero letter-spacing, centered.
-const buttonTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "14px",
-  lineHeight: "130%",
-  letterSpacing: "0px",
+  lineHeight: "100%",
+  letterSpacing: "0",
 } as const;
 
 const DoctorNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const [isPinned, setIsPinned] = useState(false);
 
   // Height is measured rather than hardcoded: it changes with the logo's responsive
@@ -57,8 +44,7 @@ const DoctorNavbar = () => {
   const isPinnedRef = useRef(false);
 
   useEffect(() => {
-    // Only measure while unpinned: that is the height the document actually loses,
-    // and the pinned header is deliberately shorter (tighter padding).
+    // Only measure while unpinned: that is the height the document actually loses.
     const measure = () => {
       if (headerRef.current && !isPinnedRef.current) {
         setHeaderHeight(headerRef.current.offsetHeight);
@@ -113,89 +99,87 @@ const DoctorNavbar = () => {
 
   return (
     <>
-      {/* Reserves the space the header vacates when it goes fixed, so the banner
+      {/* Reserves the space the header vacates when it goes fixed, so the section
           below doesn't jump up by the header's height. */}
       {isPinned && <div style={{ height: headerHeight }} aria-hidden="true" />}
 
-      <header id="home"
+      <header
+        id="home"
         ref={headerRef}
-        // `transition-all` stays on in BOTH states so the padding tightening below
-        // eases rather than snapping. The pinned entrance itself is the keyframe
-        // animation (globals.css) — see the note there on why not a transition.
-        className={`w-full transition-all duration-500 ease-out ${
+        className={
           isPinned
-            ? "animate-nav-slide-down fixed inset-x-0 top-0 z-50 bg-black shadow-lg shadow-black/40"
-            : "relative bg-black"
-        }`}
+            ? "animate-nav-slide-down fixed inset-x-0 top-0 z-50 w-full py-3"
+            : "relative w-full py-3"
+        }
       >
-      {/* 1530px, not the 1420px used by every content section — per the Figma spec. */}
-      <DoctorContainer
-        className={`transition-all duration-500 ease-out ${
-          isPinned ? "py-3" : "py-4"
-        }`}
-        innerClassName="flex items-center justify-between"
-        maxWidthClass={DOCTOR_NAV_WIDTH}
-      >
-        <DoctorLogo />
-
-        {/* Desktop navigation — 40px gap per spec */}
-        <nav className="hidden items-center lg:gap-3.5 gap-10 xl:gap-10 lg:flex">
-          {/* Plain <a>, not <Link>: these are same-document fragments. next/link
-              routes them through the App Router, which does its own scrolling and
-              bypasses the document's `scroll-behavior: smooth`. A bare anchor gets
-              native fragment navigation, which honours both that and scroll-mt. */}
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              // Mirrored into the ::after pseudo-element below to reserve the bold width.
-              data-label={link.label}
-              style={linkTypography}
-              className="text-center font-medium whitespace-nowrap text-white transition-all duration-200 hover:font-bold hover:text-[#00A3FF] after:invisible after:block after:h-0 after:overflow-hidden after:font-bold after:content-[attr(data-label)]"
+        {/* 1420px per the Figma spec. The padding sits on the outer element and the
+            cap on the inner one, so the bar measures exactly 1420px at wide viewports
+            rather than that width minus the gutters. */}
+        <div className="w-full px-4">
+          <div
+            // The bar is its own translucent pill rather than a full-bleed strip:
+            // bg #F2F5FF at 60% (99) over a 70% white (B2) hairline border.
+            // backdrop-blur keeps text legible once content scrolls underneath — at
+            // 60% alpha the raw page would otherwise read straight through.
+            className="mx-auto flex w-full max-w-[1420px] items-center justify-between rounded-full border border-[#FFFFFFB2] bg-[#F2F5FF99] py-[22px] pr-8 pl-[30px] backdrop-blur-xl"
+          >
+            <Link
+              href="/doctor"
+              className="inline-flex shrink-0 items-center"
+              aria-label="Way Wise Tech"
             >
-              {link.label}
-            </a>
-          ))}
-          <Link
-            href="/book"
-            title="View Company Profile"
-            className="hidden overflow-hidden rounded-sm shadow-[0_0_8px_rgba(0,163,255,0.3)] transition-all duration-300 hover:scale-[1.04] hover:ring-[#00A3FF]/80 hover:shadow-[0_0_14px_rgba(0,163,255,0.5)] lg:block"
-          >
-            <Image
-              src={profileGuide}
-              alt="Way Wise Tech company profile"
-              width={1190}
-              height={841}
-              className="h-auto w-24 object-cover"
-            />
-          </Link>
-        </nav>
+              <Image
+                src={logo}
+                alt="Way Wise Tech"
+                // Intrinsic size is 190x40; width/height come from the static import,
+                // so only the rendered width is set here and the height follows.
+                className="h-auto w-[150px] xl:w-[190px]"
+                priority
+              />
+            </Link>
 
-        {/* Right cluster: profile book + CTA */}
-        <div className="flex items-center gap-4">
-          {/* Company profile thumbnail, glow ring matches the main site treatment */}
+            {/* Desktop navigation — 31px gap per spec */}
+            <nav className="hidden items-center gap-[31px] lg:flex">
+              {/* Plain <a>, not <Link>: these are same-document fragments. next/link
+                  routes them through the App Router, which does its own scrolling and
+                  bypasses the document's `scroll-behavior: smooth`. A bare anchor gets
+                  native fragment navigation, which honours both that and scroll-mt. */}
+              {navLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  style={navTypography}
+                  className="whitespace-nowrap text-[#011139] transition-colors duration-200 hover:text-[#3191EA]"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
 
-          <Link
-            href="/contact-us"
-            style={buttonTypography}
-            className="hidden rounded-md bg-[#00A3FF] px-5 py-2.5 text-center font-medium whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#0091e6] lg:inline-block"
-          >
-            Start a Project
-          </Link>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/contact-us"
+                style={navTypography}
+                className="hidden items-center gap-5 rounded-full bg-[#3191EA] px-[30px] py-[15px] whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#1f7fd4] lg:inline-flex"
+              >
+                Get Started
+                <ArrowRight className="size-5" aria-hidden="true" />
+              </Link>
 
-          {/* Drawer toggle */}
-          <button
-            type="button"
-            onClick={() => setMobileOpen(true)}
-            className="text-white lg:hidden"
-            aria-label="Open menu"
-            aria-expanded={mobileOpen}
-            aria-controls={DRAWER_ID}
-          >
-            <Menu className="size-6" />
-          </button>
+              {/* Drawer toggle */}
+              <button
+                type="button"
+                onClick={() => setMobileOpen(true)}
+                className="text-[#011139] transition-colors duration-200 hover:text-[#3191EA] lg:hidden"
+                aria-label="Open menu"
+                aria-expanded={mobileOpen}
+                aria-controls={DRAWER_ID}
+              >
+                <Menu className="size-6" />
+              </button>
+            </div>
+          </div>
         </div>
-      </DoctorContainer>
       </header>
 
       {/*
@@ -211,28 +195,38 @@ const DoctorNavbar = () => {
       <div
         onClick={() => setMobileOpen(false)}
         aria-hidden="true"
-        className={`fixed inset-0 z-40 bg-black/60 transition-opacity duration-300 ease-out lg:hidden ${
+        className={`fixed inset-0 z-40 bg-[#011139]/40 transition-opacity duration-300 ease-out lg:hidden ${
           mobileOpen ? "visible opacity-100" : "invisible opacity-0"
         }`}
       />
 
       {/* Panel. Also kept mounted — conditional rendering would give it no slide at
           all, since there'd be no start state to animate from. `inert` while closed
-          keeps its links out of the tab order and the accessibility tree. */}
+          keeps its links out of the tab order and the accessibility tree.
+
+          Same #F2F5FF99 as the bar; the blur is what makes a 60%-alpha panel opaque
+          enough to read against whatever it covers. */}
       <div
         id={DRAWER_ID}
         inert={!mobileOpen}
-        className={`fixed top-0 left-0 z-50 flex h-dvh w-80 max-w-[85%] flex-col bg-black transition-transform duration-300 ease-out lg:hidden ${
+        className={`fixed top-0 left-0 z-50 flex h-dvh w-80 max-w-[85%] flex-col border-r border-[#FFFFFFB2] bg-[#F2F5FF99] backdrop-blur-xl transition-transform duration-300 ease-out lg:hidden ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex shrink-0 items-center justify-between border-b border-[#363636] p-5">
-          <DoctorLogo />
+        <div className="flex shrink-0 items-center justify-between border-b border-[#FFFFFFB2] p-5">
+          <Link
+            href="/doctor"
+            onClick={() => setMobileOpen(false)}
+            className="inline-flex shrink-0 items-center"
+            aria-label="Way Wise Tech"
+          >
+            <Image src={logo} alt="Way Wise Tech" className="h-auto w-[150px]" />
+          </Link>
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
             aria-label="Close menu"
-            className="text-white transition-colors duration-200 hover:text-[#00A3FF]"
+            className="text-[#011139] transition-colors duration-200 hover:text-[#3191EA]"
           >
             <X className="size-7" />
           </button>
@@ -247,8 +241,8 @@ const DoctorNavbar = () => {
                 <a
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  style={linkTypography}
-                  className="block border-b border-[#363636] px-6 py-4 font-medium text-white transition-colors duration-200 hover:bg-white/5 hover:text-[#00A3FF]"
+                  style={navTypography}
+                  className="block border-b border-[#FFFFFFB2] px-6 py-4 text-[#011139] transition-colors duration-200 hover:bg-white/40 hover:text-[#3191EA]"
                 >
                   {link.label}
                 </a>
@@ -260,10 +254,11 @@ const DoctorNavbar = () => {
             <Link
               href="/contact-us"
               onClick={() => setMobileOpen(false)}
-              style={buttonTypography}
-              className="block rounded-md bg-[#00A3FF] px-5 py-3 text-center font-medium text-white transition-colors duration-200 hover:bg-[#0091e6]"
+              style={navTypography}
+              className="flex items-center justify-center gap-2 rounded-full bg-[#3191EA] px-[30px] py-[15px] text-center text-white transition-colors duration-200 hover:bg-[#1f7fd4]"
             >
-              Start a Project
+              Get Started
+              <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </div>
         </nav>

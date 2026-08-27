@@ -1,334 +1,256 @@
-import DoctorContainer from "./DoctorContainer";
-import DoctorSectionHeading from "./DoctorSectionHeading";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 /**
- * Section 11 — "Grow Your Practice, Phase by Phase".
+ * Pricing — three phase cards.
  *
- * Three phase cards butted flush against each other inside one rounded, clipped
- * shell — there is no gap between them in the design, so the outer radius is on the
- * wrapper and the cards themselves are square.
+ * NOTE ON LEADING: the spec gives `line-height: 100%` for every type ramp here. That is
+ * applied as-is to the single-line items (card headings, price, feature rows, button).
+ * The multi-line blocks — section title, section paragraph, card description — get real
+ * leading instead, because at 100% their wrapped lines collide. The design's own artwork
+ * shows roughly 117-122% on exactly those blocks.
  */
 
-// Figma spec: Inter Bold 32px / 24px, zero letter-spacing.
+// Figma spec: Urbanist Bold 52px, zero letter-spacing, centered, #011139.
+// Only the desktop size is specced; the responsive steps below it are mine.
+const titleTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 700,
+  letterSpacing: "0",
+} as const;
+
+// Figma spec: Urbanist Medium 18px, zero letter-spacing, centered, #4B5563.
+const introTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 500,
+  fontSize: "18px",
+  letterSpacing: "0",
+} as const;
+
+// Figma spec: Urbanist SemiBold 34.43px / 100%, centered, #011139.
 const phaseTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "32px",
-  lineHeight: "24px",
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 600,
+  fontSize: "34.43px",
+  lineHeight: "100%",
   letterSpacing: "0",
 } as const;
 
-// Figma spec: Inter Bold 16px / 24px, zero letter-spacing.
-const subheadTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "16px",
-  lineHeight: "24px",
+// Figma spec: Urbanist SemiBold 23.67px / 100%, centered, #011139.
+const subTitleTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 600,
+  lineHeight: "100%",
   letterSpacing: "0",
 } as const;
 
-// No type spec was given for the price text itself, only the 147x36 chip geometry.
-// 16px bold fills that box at the 6px/12px padding specified.
+// Figma spec: Urbanist Medium 17px, centered, #011139.
+const descriptionTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 500,
+  fontSize: "17px",
+  letterSpacing: "0",
+} as const;
+
+// Figma spec: Urbanist ExtraBold 48px / 100%, centered, #3191EA.
 const priceTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "16px",
-  lineHeight: "24px",
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 800,
+  lineHeight: "100%",
   letterSpacing: "0",
 } as const;
 
-// Figma spec: Inter Regular 14px / 21.45px, zero letter-spacing, #B8B8B8.
-const paragraphTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "14px",
-  lineHeight: "21.45px",
+// Figma spec: Urbanist SemiBold 25.82px / 100%, #011139.
+const featuresTitleTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 600,
+  fontSize: "25.82px",
+  lineHeight: "100%",
   letterSpacing: "0",
 } as const;
 
-// Figma spec: Inter SemiBold 16px / 21.45px, zero letter-spacing.
-const groupHeadTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "16px",
-  lineHeight: "21.45px",
+// Figma spec: Urbanist SemiBold 19.36px / 100%, #011139.
+const featureTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 600,
+  lineHeight: "100%",
   letterSpacing: "0",
 } as const;
 
-// Figma spec: Inter Regular 14px / 21.45px, zero letter-spacing, #B8B8B8.
-const pointTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "14px",
-  lineHeight: "21.45px",
+// Figma spec: Urbanist SemiBold 17.21px / 100%, zero letter-spacing.
+const buttonTypography = {
+  fontFamily: "var(--font-urbanist), sans-serif",
+  fontWeight: 600,
+  fontSize: "17.21px",
+  lineHeight: "100%",
   letterSpacing: "0",
 } as const;
 
-const OUTER_CARD_BG = "#060138";
-// The middle card reads as a translucent violet wash over the section gradient.
-// Approximated — no value was specified beyond "gradient".
-const MIDDLE_CARD_BG =
-  "linear-gradient(180deg, rgba(124,92,215,0.34) 0%, rgba(78,55,150,0.26) 100%)";
+/**
+ * Hand-rolled rather than lucide's CircleCheck: the design's mark is a SOLID blue disc
+ * with a white tick, and lucide's is an outline whose circle and tick share one path
+ * set — there is no way to fill the disc without also filling the tick.
+ */
+const CheckMark = () => (
+  <svg
+    viewBox="0 0 20 20"
+    className="mt-0.5 size-5 shrink-0"
+    aria-hidden="true"
+  >
+    <circle cx="10" cy="10" r="10" fill="#3191EA" />
+    <path
+      d="m5.8 10.3 2.6 2.6 5.8-5.8"
+      fill="none"
+      stroke="#FFFFFF"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-type Phase = {
-  name: string;
-  subhead: string;
-  price: string;
-  /** One flat colour per phase, per spe        c: red, orange, amber. */
-  priceColor: string;
-  summary: string;
-  groups: { title: string; points: string[] }[];
-};
-
-const phases: Phase[] = [
+const plans = [
   {
-    name: "Phase 1",
-    subhead: "Practice Launch",
-    price: "$750-$1800",
-    priceColor: "#FB3748",
-    summary:
-      "Build your medical or healthcare brand and establish a trusted online presence.",
-    groups: [
-      {
-        title: "Brand Identity",
-        points: [
-          "Custom Logo Design",
-          "Brand Guidelines",
-          "Business Stationery",
-          "Doctor Profile",
-          "Consultation Form",
-        ],
-      },
-      {
-        title: "Healthcare Website",
-        points: [
-          "5–10 Page",
-          "Medical Service Pages",
-          "Patient Testimonials",
-          "Contact System",
-          "Mobile Responsive",
-        ],
-      },
-      {
-        title: "Online Presence",
-        points: [
-          "Basic SEO Setup",
-          "Google Maps Integration",
-          "Social Media Profiles",
-        ],
-      },
-      {
-        title: "Hosting & Security",
-        points: ["Domain & Hosting", "Business Email", "SSL Security"],
-      },
+    phase: "Phase 1",
+    name: "Practice Launch",
+    description:
+      "Establish a credible, professional online presence that attracts potential clients.",
+    price: "$750 - $1800",
+    features: [
+      "Brand Identity",
+      "Website Design & Development",
+      "Mobile Responsive Design",
+      "Business Profile",
+      "SEO",
+      "Hosting & Security",
     ],
   },
   {
-    name: "Phase 2",
-    subhead: "PATIENT ENGAGEMENT PLATFORM",
-    price: "$1800 – $3900",
-    priceColor: "#F97316",
-    summary:
-      "Improve patient communication and create a modern, convenient healthcare experience.",
-    groups: [
-      {
-        title: "Patient Experience",
-        points: [
-          "Patient Portal",
-          "Online Appointment Booking",
-          "AI Support Assistant",
-          "Live Chat",
-          "Digital Consultation Forms",
-          "Secure Patient Login",
-        ],
-      },
-      {
-        title: "Comms System",
-        points: [
-          "Email & SMS Alerts",
-          "Appointment Reminders",
-          "Doctor Messaging",
-          "Patient Messaging",
-          "Review Collection",
-        ],
-      },
-      {
-        title: "Patient Services",
-        points: [
-          "Online Payments",
-          "Prescription Requests",
-          "Billing Portal",
-          "Insurance Forms",
-          "Test Results",
-          "Secure File Sharing",
-        ],
-      },
-      {
-        title: "Growth Features",
-        points: ["Patient Retention Campaigns", "Follow-Up Automation", "Review Management"],
-      },
+    phase: "Phase 2",
+    name: "Patient Engagement",
+    description: "Establish a credible, professional online presence.",
+    price: "$1800 - $3900",
+    features: [
+      "Everything in Phase 1",
+      "Patient Portal",
+      "Medical Database",
+      "Treatment Tracking",
+      "Reminders & Alerts",
+      "Email/SMS Notification",
+      "Online Payments",
+      "Review Management",
     ],
   },
   {
-    name: "Phase 3",
-    subhead: "SMART PRACTICE MANAGEMENT",
-    price: "$750-$1800",
-    priceColor: "#FCB017",
-    summary:
-      "Everything in Phases 1 and 2, plus a complete healthcare practice-management ecosystem.",
-    groups: [
-      {
-        title: "Practice Management",
-        points: [
-          "Patient CRM System",
-          "Patient History Database",
-          "Chronic Disease Monitoring",
-          "Treatment Tracking",
-          "Medication Management",
-          "Follow-Up Reminder System",
-        ],
-      },
-      {
-        title: "Analytics & Reports",
-        points: [
-          "Patient Progress Reports",
-          "Appointment Analytics",
-          "Revenue Reports",
-          "AI-Powered Insights",
-          "Practice Performance Dashboard",
-        ],
-      },
-      {
-        title: "Team Management",
-        points: [
-          "Staff Management Portal",
-          "Multi-Doctor Access",
-          "Role-Based Permissions",
-          "Communication Logs",
-        ],
-      },
-      {
-        title: "Mobile & Cloud Solutions",
-        points: [
-          "Patient Mobile Application",
-          "Doctor Mobile Application",
-          "Secure Cloud Storage",
-          "Custom Web Application",
-        ],
-      },
-      {
-        title: "Growth And Security",
-        points: [
-          "Advanced SEO",
-          "Privacy-Focused Infrastructure",
-          "Scalable Cloud Environment",
-          "Ongoing Technical Support",
-        ],
-      },
+    phase: "Phase 3",
+    name: "Smart Practice Management",
+    description:
+      "Build a connected digital platform for modern practice operations.",
+    price: "$4000 - $12900",
+    features: [
+      "Everything in Phase 1 &2",
+      "Patient CRM",
+      "Medical Database",
+      "Treatment Tracking",
+      "Revenue Reports",
+      "Staff Tools",
+      "Mobile App",
+      "AI Reporting",
+      "HIPAA Ready Infrastructure",
     ],
   },
 ];
 
-const CheckIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-    className="mt-1 size-3.5 shrink-0 text-[#00A3FF]"
-  >
-    <path d="M4 12.5l5 5L20 6.5" />
-  </svg>
-);
-
-const PhaseCard = ({ phase, isMiddle }: { phase: Phase; isMiddle: boolean }) => (
-  <div
-    className="px-7 md:px-4 lg:px-7 py-13"
-    style={
-      isMiddle
-        ? { backgroundImage: MIDDLE_CARD_BG }
-        : { backgroundColor: OUTER_CARD_BG }
-    }
-  >
-    {/* h3: nested under this section's h2. */}
-    <h3 style={phaseTypography} className="font-bold text-white">
-      {phase.name}
-    </h3>
-
-    <p style={subheadTypography} className="mt-4 font-bold text-white">
-      {phase.subhead}
-    </p>
-
-    {/* Price chip: 147x36 with 6px/12px padding and a 3px radius, per spec. */}
-    <p
-      style={{
-        ...priceTypography,
-        backgroundColor: phase.priceColor,
-        borderRadius: "3px",
-      }}
-      className="mt-4 inline-block px-3 py-1.5 font-bold text-white"
-    >
-      {phase.price}
-    </p>
-
-    <p style={paragraphTypography} className="mt-4 text-[#B8B8B8]">
-      {phase.summary}
-    </p>
-
-    <div className="mt-9 grid grid-cols-2 gap-x-5 gap-y-9">
-      {phase.groups.map((group) => (
-        <div key={group.title}>
-          {/* Plain <p>, not a heading: these sit under each card's h3 and would need
-              to be h4s, but they are labels for the list directly beneath them and
-              adding a fourth level here buys nothing for the outline. */}
-          <p style={groupHeadTypography} className="font-semibold text-white">
-            {group.title}
-          </p>
-          <ul className="mt-3.5 flex flex-col gap-2.5">
-            {group.points.map((point) => (
-              <li key={point} className="flex items-start gap-2">
-                <CheckIcon />
-                <span style={pointTypography} className="text-[#B8B8B8]">
-                  {point}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
 const DoctorPricing = () => {
   return (
-    <section
-      id="packages"
-      // scroll-mt clears the pinned navbar so this section's heading isn't hidden
-      // beneath it when the nav link jumps here.
-      className="scroll-mt-24"
-      // Section backdrop: a violet glow bleeding in from the right over a deep
-      // indigo base. Eyeballed from the Figma export — no values were given.
-      style={{
-        background:
-          "radial-gradient(65% 55% at 96% 34%, rgba(146,102,248,0.85) 0%, rgba(146,102,248,0) 68%), radial-gradient(75% 60% at 18% 12%, rgba(63,33,132,0.65) 0%, rgba(0,0,0,0) 72%), #0E0626",
-      }}
-    >
-      <DoctorContainer className="py-15 lg:py-28">
-        <DoctorSectionHeading
-          eyebrow="Built for Every Stage"
-          heading="Grow Your Practice, Phase by Phase"
-          headingClassName="!max-w-full text-[36px] leading-10 lg:text-[60px] lg:leading-[52px]"
-        />
+    <section id="packages" className="w-full bg-[#F5F7FC] px-4">
+      <div className="mx-auto w-full max-w-[1320px] py-16 lg:py-[100px]">
+        <h2
+          className="text-center text-[30px] leading-[1.15] text-[#011139] sm:text-[40px] lg:text-[52px]"
+          style={titleTypography}
+        >
+          {/* Hard break reproduced from the Figma frame. */}
+          <span className="block">Choose the Right Solution</span>
+          <span className="block">for Your Practice</span>
+        </h2>
 
-        {/* One clipped shell: the three cards touch, so the radius lives here. */}
-        <div className="mt-14 grid grid-cols-1 overflow-hidden rounded-2xl md:grid-cols-3">
-          {phases.map((phase, index) => (
-            <PhaseCard
-              key={phase.name}
-              phase={phase}
-              isMiddle={index === 1}
-            />
+        <p
+          className="mx-auto mt-6 max-w-[620px] text-center leading-[1.4] text-[#4B5563]"
+          style={introTypography}
+        >
+          Start with a strong digital foundation, then scale into patient
+          engagement and smarter practice management as your needs grow.
+        </p>
+
+        {/* Flush on desktop, per the Figma frame: the cards butt against each other and
+            the seam is the two 50px corner radii meeting, with the section background
+            showing through the notches. The gap only exists while they are stacked. */}
+        <ul className="mt-12 grid grid-cols-1 gap-6 lg:mt-16 md:grid-cols-3 md:gap-0">
+          {plans.map((plan) => (
+            <li
+              key={plan.phase}
+              // `h-full` + column flex so every card matches the tallest in the row and
+              // the CTA can be pushed to the bottom edge regardless of feature count —
+              // Phase 1 has six rows, Phase 3 has nine.
+              className="flex h-full flex-col rounded-[50px] border border-[#E0ECF6] bg-white px-8 pt-12 pb-10 md:px-4 lg:px-10"
+            >
+              {/* h3: nested under this section's h2. */}
+              <h3 className="text-center text-[#011139]" style={phaseTypography}>
+                {plan.phase}
+              </h3>
+
+              <p
+                className="mt-5 text-center text-[22px] lg:text-[24px] text-[#011139]"
+                style={subTitleTypography}
+              >
+                {plan.name}
+              </p>
+
+              <p
+                className="mt-4 xl:px-9 text-center leading-[1.4] text-[#011139]"
+                style={descriptionTypography}
+              >
+                {plan.description}
+              </p>
+
+              <p
+                className="mt-8 text-center text-[30px] md:text-[24px] lg:text-[32px] xl:text-[48px] text-[#3191EA]"
+                style={priceTypography}
+              >
+                {plan.price}
+              </p>
+
+              <p className="mt-10 text-[#011139]" style={featuresTitleTypography}>
+                Features:
+              </p>
+
+              <ul className="mt-5 flex flex-col gap-3.5">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-start md:items-center gap-2.5">
+                    <CheckMark />
+                    <span className="text-[#011139] text-[16px] md:text-[14px] lg:text-[18px] xl:text-[19.36px]" style={featureTypography}>
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* `mt-auto` eats the leftover space, pinning the CTA to the card's
+                  bottom so all three line up across the row. */}
+              <div className="mt-auto pt-12 text-center">
+                <Link
+                  href="/contact-us"
+                  style={buttonTypography}
+                  className="inline-flex items-center gap-5 rounded-[64px] border border-[#011139] px-8 md:px-4 lg:px-8  py-4 md:py-3 lg:py-4 whitespace-nowrap text-[#011139] transition-colors duration-200 hover:bg-[#011139] hover:text-white"
+                >
+                  Build My Platform
+                  <ArrowRight className="size-5" aria-hidden="true" />
+                </Link>
+              </div>
+            </li>
           ))}
-        </div>
-      </DoctorContainer>
+        </ul>
+      </div>
     </section>
   );
 };

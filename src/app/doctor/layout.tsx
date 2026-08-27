@@ -1,33 +1,23 @@
-import { DM_Sans, Instrument_Sans, Rajdhani } from "next/font/google";
-import DoctorSmoothScroll from "@/components/modules/doctor/DoctorSmoothScroll";
+import { Montserrat, Urbanist } from "next/font/google";
 
 /**
  * Fonts are loaded here rather than in the root layout on purpose: they are used only
  * by this standalone landing page, so scoping them to the route keeps them off every
  * other page's critical path.
  *
- * Extra weights are declared up front so later sections don't need to touch this file.
+ * Both are variable fonts on Google Fonts, so no weight arrays — every weight the page
+ * uses resolves from the single axis.
  */
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const urbanist = Urbanist({
+  variable: "--font-urbanist",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
   display: "swap",
 });
 
-// Display face for headlines. Rajdhani has no italic and no variable axis on Google
-// Fonts, so the weights needed must be listed explicitly.
-const rajdhani = Rajdhani({
-  variable: "--font-rajdhani",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  display: "swap",
-});
-
-// Used by the testimonial slider. Variable font on Google Fonts, so no weight array —
-// 400 and 500 both resolve from the single axis.
-const instrumentSans = Instrument_Sans({
-  variable: "--font-instrument-sans",
+// Used only by the stat cards in the "Technology That Helps" section, whose numbers and
+// labels are specced in Montserrat rather than the page's Urbanist.
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
   display: "swap",
 });
@@ -38,10 +28,7 @@ export default function DoctorLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={`${dmSans.variable} ${rajdhani.variable} ${instrumentSans.variable}`}
-    >
-      <DoctorSmoothScroll />
+    <div className={`${urbanist.variable} ${montserrat.variable}`}>
       {children}
     </div>
   );

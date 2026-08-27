@@ -1,33 +1,42 @@
+import Image from "next/image";
 import Link from "next/link";
-import DoctorContainer from "./DoctorContainer";
-import DoctorLogo from "./DoctorLogo";
+import logo from "@/assets/images/doctor/logo.webp";
 
 /**
- * Section 7 — footer.
+ * Footer.
  *
- * Standalone: deliberately not the shared <Footer />, which has its own light
- * background and layout.
+ * Standalone: deliberately not the shared <Footer />, which has its own layout, and
+ * not an import from the /attorney module — the two verticals stay physically separate.
+ *
+ * Structure mirrors the /attorney footer as requested; the palette is inverted to suit
+ * this page's light theme.
  *
  * NOTE ON HREFS: entries marked `href: "#"` have no destination yet — the site has no
  * matching route. They are listed in the message to the user for a decision; do not
  * treat them as finished links.
  */
 
-// Figma spec: Inter Regular 15px / 21.45px, zero letter-spacing, #B8B8B8.
+/** Body copy and link text. */
 const bodyTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
+  fontFamily: "var(--font-urbanist), sans-serif",
   fontSize: "15px",
   lineHeight: "21.45px",
   letterSpacing: "0",
 } as const;
 
-// Figma spec: Inter Bold 20px / 24px, zero letter-spacing.
+/** Column headings. */
 const headingTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
+  fontFamily: "var(--font-urbanist), sans-serif",
   fontSize: "20px",
   lineHeight: "24px",
   letterSpacing: "0",
 } as const;
+
+/**
+ * Ink (#0C2F25) and accent (#007AFF) are applied as Tailwind classes rather than via
+ * the typography objects above: an inline `color` would win over a hover class, so the
+ * hover states would silently never fire.
+ */
 
 // Individual service pages are dynamic (/services/[serviceId], ids come from the API),
 // so every service entry points at the /services index rather than guessing a slug.
@@ -44,7 +53,7 @@ const serviceLinks = [
 
 const industryLinks = [
   { label: "Healthcare & Medical", href: "/medical-it-support" },
-  { label: "Legal & Professional Services", href: "/doctor" },
+  { label: "Legal & Professional Services", href: "/attorney" },
   { label: "Real Estate & Construction", href: "#" },
   { label: "Finance, Insurance & Accounting", href: "#" },
   { label: "Retail, E-commerce & Logistics", href: "#" },
@@ -108,7 +117,7 @@ const LinkColumn = ({
 }) => (
   <div>
     {/* h2: siblings of the other footer column headings, under the page h1. */}
-    <h2 className="mb-6 font-bold text-white" style={headingTypography}>
+    <h2 className="mb-6 font-bold text-[#0C2F25]" style={headingTypography}>
       {heading}
     </h2>
     <ul className="flex flex-col gap-3.5">
@@ -117,7 +126,7 @@ const LinkColumn = ({
           <Link
             href={link.href}
             style={bodyTypography}
-            className="text-[#B8B8B8] transition-colors duration-200 hover:text-white"
+            className="text-[#0C2F25] transition-colors duration-200 hover:text-[#007AFF]"
           >
             {link.label}
           </Link>
@@ -127,7 +136,7 @@ const LinkColumn = ({
     <Link
       href={cta.href}
       style={bodyTypography}
-      className="mt-6 inline-block font-bold text-white transition-colors duration-200 hover:text-[#00A3FF]"
+      className="mt-6 inline-block font-bold text-[#0C2F25] transition-colors duration-200 hover:text-[#007AFF]"
     >
       {cta.label}
     </Link>
@@ -136,100 +145,120 @@ const LinkColumn = ({
 
 const DoctorFooter = () => {
   return (
-    <footer className="bg-black">
-      <DoctorContainer className="pt-10 lg:pt-16 pb-8">
-        {/* The three menu columns sit hard right: they are `auto`, so each is only as
-            wide as its own longest link, while the brand column takes `1fr` and absorbs
-            all the slack in between. Fixed fr ratios were wrong here — they stretched
-            the menu tracks and pulled the group leftward, away from the right edge. */}
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_auto_auto_auto] lg:gap-x-14">
-          <div className="max-w-146.5">
-            <DoctorLogo />
+    <footer className="bg-[#F5F7FC]">
+      {/* 1420px, matching the navbar and the rest of this page. Padding on the outer
+          element, cap on the inner one, so content measures its stated width at wide
+          viewports rather than that width minus the gutters. */}
+      <div className="w-full px-4">
+        <div className="mx-auto w-full max-w-[1420px] pt-10 pb-8 lg:pt-16">
+          {/* The three menu columns sit hard right: they are `auto`, so each is only as
+              wide as its own longest link, while the brand column takes `1fr` and
+              absorbs all the slack in between. */}
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_auto_auto_auto] lg:gap-x-14">
+            <div className="max-w-146.5">
+              <Link
+                href="/doctor"
+                className="inline-flex shrink-0 items-center"
+                aria-label="Way Wise Tech"
+              >
+                <Image
+                  src={logo}
+                  alt="Way Wise Tech"
+                  // Intrinsic size is 190x40; width/height come from the static
+                  // import, so only the rendered width is set here.
+                  className="h-auto w-[150px] xl:w-[190px]"
+                />
+              </Link>
 
-            <p className="mt-7 text-[#B8B8B8]" style={bodyTypography}>
-              A global technology company designing and building digital
-              products for ambitious businesses in the USA, UAE, and worldwide.
+              <p className="mt-7 text-[#0C2F25]" style={bodyTypography}>
+                A global technology company designing and building digital
+                products for ambitious businesses in the USA, UAE, and worldwide.
+              </p>
+
+              <ul className="mt-7 flex items-center gap-3">
+                {socials.map(({ label, href, path }) => (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="flex size-9 items-center justify-center rounded-md border border-[#2A2A2A] text-[#0C2F25] transition-colors duration-200 hover:border-[#007AFF] hover:text-[#007AFF]"
+                    >
+                      {/* currentColor so the mark follows the link's hover colour —
+                          a hardcoded stroke would stay put while the border moved. */}
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path
+                          d={path}
+                          stroke="currentColor"
+                          strokeWidth="1.16667"
+                        />
+                      </svg>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+
+              {/* "Start a Conversation" card */}
+              <div className="mt-10 rounded-lg bg-[#BEDFFF] p-4">
+                <p className="mb-3.5 text-[#0C2F25]" style={bodyTypography}>
+                  Start a Conversation
+                </p>
+                <Link
+                  href="/contact-us"
+                  style={bodyTypography}
+                  className="block rounded-md bg-[#007AFF] py-3 text-center font-medium !text-[14px] text-white transition-colors duration-200 hover:bg-[#0066d6]"
+                >
+                  Get in Touch
+                </Link>
+              </div>
+            </div>
+
+            <LinkColumn
+              heading="Services"
+              links={serviceLinks}
+              cta={{ label: "View All Services", href: "/services" }}
+            />
+            <LinkColumn
+              heading="Industries"
+              // Label reproduced from the Figma frame, which repeats "View All
+              // Services" here — flagged to the user as a probable copy slip.
+              links={industryLinks}
+              cta={{ label: "View All Services", href: "/services" }}
+            />
+            <LinkColumn
+              heading="Company"
+              links={companyLinks}
+              cta={{ label: "Contact Us", href: "/contact-us" }}
+            />
+          </div>
+
+          {/* Bottom bar */}
+          <div className="mt-14 flex flex-col items-center gap-6 border-t border-[#2A2A2A] pt-6 lg:flex-row lg:justify-between lg:gap-0">
+            <p className="text-[#0C2F25]" style={bodyTypography}>
+              &copy; 2026 Way Wise Tech. All rights reserved.
             </p>
 
-            <ul className="mt-7 flex items-center gap-3">
-              {socials.map(({ label, href, path }) => (
-                <li key={label}>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="flex size-9 items-center justify-center rounded-md border border-[#3A3A3A] text-[#B8B8B8] transition-colors duration-200 hover:border-[#00A3FF] hover:text-[#00A3FF]"
+            <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
+              {legalLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    style={bodyTypography}
+                    className="text-[#0C2F25] transition-colors duration-200 hover:text-[#007AFF]"
                   >
-                    <svg
-                     width="14" height="14" viewBox="0 0 14 14" fill="none"
-                    >
-                      <path d={path} stroke="#B8B8B8" stroke-width="1.16667" />
-                    </svg>
-                  </a>
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
 
-            {/* "Start a Conversation" card */}
-            <div className="mt-10 rounded-lg border border-[#4A4A4A] bg-[#333333] p-4">
-              <p className="mb-3.5 text-[#B8B8B8]" style={bodyTypography}>
-                Start a Conversation
-              </p>
-              <Link
-                href="/contact-us"
-                style={bodyTypography}
-                className="block rounded-md bg-[#00A3FF] py-3 text-center text-white transition-colors duration-200 hover:bg-[#0091e6] font-medium !text-[14px]"
-              >
-                Get in Touch
-              </Link>
-            </div>
+            <p className="text-[#0C2F25]" style={bodyTypography}>
+              USA &bull; UAE &bull; Worldwide
+            </p>
           </div>
-
-          <LinkColumn
-            heading="Services"
-            links={serviceLinks}
-            cta={{ label: "View All Services", href: "/services" }}
-          />
-          <LinkColumn
-            heading="Industries"
-            // Label reproduced from the Figma frame, which repeats "View All Services"
-            // here — flagged to the user as a probable copy slip.
-            links={industryLinks}
-            cta={{ label: "View All Services", href: "/services" }}
-          />
-          <LinkColumn
-            heading="Company"
-            links={companyLinks}
-            cta={{ label: "Contact Us", href: "/contact-us" }}
-          />
         </div>
-
-        {/* Bottom bar */}
-        <div className="mt-14 flex flex-col items-center gap-6 border-t border-[#2A2A2A] pt-6 lg:flex-row lg:justify-between lg:gap-0">
-          <p style={bodyTypography} className="text-[#B8B8B8]">
-            &copy; 2026 Way Wise Tech. All rights reserved.
-          </p>
-
-          <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
-            {legalLinks.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.href}
-                  style={bodyTypography}
-                  className="text-[#B8B8B8] transition-colors duration-200 hover:text-white"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <p style={bodyTypography} className="text-[#B8B8B8]">
-            USA &bull; UAE &bull; Worldwide
-          </p>
-        </div>
-      </DoctorContainer>
+      </div>
     </footer>
   );
 };
