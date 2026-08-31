@@ -60,7 +60,7 @@ const DoctorFuture = () => {
           />
 
           {/* `relative` lifts the copy above the absolutely-positioned artwork. */}
-          <div className="relative grid lg:min-h-[436px] lg:grid-cols-[60fr_40fr]">
+          <div className="relative sm:grid lg:min-h-[436px] lg:grid-cols-[60fr_40fr]">
             {/* Reserves the left 60% for the phone, which is part of the image. */}
             <div className="hidden lg:block" aria-hidden="true" />
 
@@ -87,7 +87,7 @@ const DoctorFuture = () => {
                 <Link
                   href="/contact-us"
                   style={buttonTypography}
-                  className="inline-flex items-center gap-5 rounded-[60px] bg-[#3191EA] px-[60px] py-4 whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#1f7fd4]"
+                  className="inline-flex items-center gap-5 rounded-[60px] bg-[#3191EA] px-6 sm:px-[60px] py-4 whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#1f7fd4]"
                 >
                   Start Growing Today
                   <ArrowRight className="size-5" aria-hidden="true" />
