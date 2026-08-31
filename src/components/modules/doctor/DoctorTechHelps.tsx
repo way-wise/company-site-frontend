@@ -111,7 +111,7 @@ const stats = [
 
 const DoctorTechHelps = () => {
   return (
-    <section id="services" className="w-full bg-white px-4">
+    <section id="services" className="w-full scroll-mt-[130px] bg-white px-4">
       <div className="mx-auto grid w-full max-w-[1320px] items-center gap-10 py-16 lg:grid-cols-[513fr_774fr] lg:gap-8 lg:py-[100px]">
         {/* Photo column */}
         <div className="relative overflow-hidden rounded-[20px]">

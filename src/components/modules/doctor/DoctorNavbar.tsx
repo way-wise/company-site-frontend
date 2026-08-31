@@ -103,8 +103,10 @@ const DoctorNavbar = () => {
           below doesn't jump up by the header's height. */}
       {isPinned && <div style={{ height: headerHeight }} aria-hidden="true" />}
 
+      {/* No id="home" here: once pinned this element is `position: fixed` at the
+          viewport top, so a fragment jump to it resolves to a zero-distance scroll and
+          the Home link would do nothing. The banner section carries that id instead. */}
       <header
-        id="home"
         ref={headerRef}
         className={
           isPinned
@@ -117,11 +119,24 @@ const DoctorNavbar = () => {
             rather than that width minus the gutters. */}
         <div className="w-full px-4">
           <div
-            // The bar is its own translucent pill rather than a full-bleed strip:
-            // bg #F2F5FF at 60% (99) over a 70% white (B2) hairline border.
-            // backdrop-blur keeps text legible once content scrolls underneath — at
-            // 60% alpha the raw page would otherwise read straight through.
-            className="mx-auto flex w-full max-w-[1420px] items-center justify-between rounded-full border border-[#FFFFFFB2] bg-[#F2F5FF99] py-[22px] pr-8 pl-[30px] backdrop-blur-xl"
+            /*
+             * The bar is its own pill rather than a full-bleed strip: the Figma fill is
+             * #F2F5FF at 60% (99) over a 70% white (B2) hairline border.
+             *
+             * That translucency only holds while the bar sits at rest over the hero.
+             * Once pinned it goes OPAQUE, because the blur that would otherwise keep it
+             * legible cannot work there: the pinned <header> carries the slide-down
+             * keyframe, whose `forwards` fill leaves a `transform` on it permanently. A
+             * transformed ancestor starts a new backdrop root, so `backdrop-filter` on
+             * this child samples only what is painted inside the header — nothing — and
+             * silently blurs nothing at all. Page content then reads straight through
+             * the 60% fill, which is what made the menu unreadable over the sections.
+             */
+            className={`mx-auto flex w-full max-w-[1420px] items-center justify-between rounded-full border border-[#FFFFFFB2] py-[22px] pr-8 pl-[30px] transition-shadow duration-300 ${
+              isPinned
+                ? "bg-[#F2F5FF] shadow-[0_4px_20px_rgba(1,17,57,0.08)]"
+                : "bg-[#F2F5FF99] backdrop-blur-xl"
+            }`}
           >
             <Link
               href="/doctor"

@@ -42,7 +42,7 @@ const buttonTypography = {
 
 const DoctorBanner = () => {
   return (
-    <section className="w-full px-4">
+    <section id="home" className="w-full scroll-mt-[130px] px-4">
       <div className="mx-auto lg:flex xl:grid w-full max-w-[1420px] items-center gap-12 pt-10 pb-16 lg:grid-cols-[1fr_auto] lg:gap-8 lg:pt-16 lg:pb-24">
         {/* Copy column */}
         <div>

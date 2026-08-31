@@ -7,6 +7,10 @@ import DoctorPricing from "@/components/modules/doctor/DoctorPricing";
 import DoctorTechHelps from "@/components/modules/doctor/DoctorTechHelps";
 import DoctorExperiences from "@/components/modules/doctor/DoctorExperiences";
 import DoctorSolutions from "@/components/modules/doctor/DoctorSolutions";
+import DoctorProjects from "@/components/modules/doctor/DoctorProjects";
+import DoctorSimple from "@/components/modules/doctor/DoctorSimple";
+import DoctorProcess from "@/components/modules/doctor/DoctorProcess";
+import DoctorFuture from "@/components/modules/doctor/DoctorFuture";
 import DoctorFooter from "@/components/modules/doctor/DoctorFooter";
 
 export const metadata: Metadata = {
@@ -30,6 +34,10 @@ const DoctorPage = () => {
       <DoctorTechHelps />
       <DoctorExperiences />
       <DoctorSolutions />
+      <DoctorProjects />
+      <DoctorSimple />
+      <DoctorProcess />
+      <DoctorFuture />
       <DoctorFooter />
     </main>
   );

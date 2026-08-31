@@ -1,4 +1,5 @@
-import { Montserrat, Urbanist } from "next/font/google";
+import { Manrope, Montserrat, Poppins, Urbanist } from "next/font/google";
+import DoctorSmoothScroll from "@/components/modules/doctor/DoctorSmoothScroll";
 
 /**
  * Fonts are loaded here rather than in the root layout on purpose: they are used only
@@ -22,13 +23,32 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+// Card titles in the "Technology that feels simple" section.
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Card body copy in the same section. Poppins has no variable axis on Google Fonts, so
+// the weights used have to be listed explicitly.
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+});
+
 export default function DoctorLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className={`${urbanist.variable} ${montserrat.variable}`}>
+    <div
+      className={`${urbanist.variable} ${montserrat.variable} ${manrope.variable} ${poppins.variable}`}
+    >
+      <DoctorSmoothScroll />
       {children}
     </div>
   );

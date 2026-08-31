@@ -163,7 +163,7 @@ const plans = [
 
 const DoctorPricing = () => {
   return (
-    <section id="packages" className="w-full bg-[#F5F7FC] px-4">
+    <section id="packages" className="w-full scroll-mt-[130px] bg-[#F5F7FC] px-4">
       <div className="mx-auto w-full max-w-[1320px] py-16 lg:py-[100px]">
         <h2
           className="text-center text-[30px] leading-[1.15] text-[#011139] sm:text-[40px] lg:text-[52px]"

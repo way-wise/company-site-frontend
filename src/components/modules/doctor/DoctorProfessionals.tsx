@@ -79,7 +79,7 @@ const cards: {
 
 const DoctorProfessionals = () => {
   return (
-    <section id="solutions" className="w-full px-4 bg-white">
+    <section id="solutions" className="w-full scroll-mt-[130px] px-4 bg-white">
       <div className="mx-auto w-full max-w-[1260px] py-16 lg:py-[100px]">
         <h2
           className="text-center text-[30px] sm:text-[40px] lg:text-[52px] leading-10 lg:leading-14"
