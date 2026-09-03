@@ -7,6 +7,7 @@ import RestaurentGuestExperience from "@/components/modules/restaurent/Restauren
 import RestaurentScaleFaster from "@/components/modules/restaurent/RestaurentScaleFaster";
 import RestaurentGrowDigitally from "@/components/modules/restaurent/RestaurentGrowDigitally";
 import RestaurentPricing from "@/components/modules/restaurent/RestaurentPricing";
+import RestaurentProjects from "@/components/modules/restaurent/RestaurentProjects";
 
 export const metadata: Metadata = {
   // Self-referencing canonical. Without it this page inherits the root layout's
@@ -26,6 +27,7 @@ const RestaurentPage = () => {
       <RestaurentScaleFaster />
       <RestaurentGrowDigitally />
       <RestaurentPricing />
+      <RestaurentProjects />
     </main>
   );
 };
