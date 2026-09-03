@@ -91,7 +91,7 @@ const RestaurentScaleFaster = () => {
   return (
     <section id="why-us" className="w-full bg-[#16110E] px-4">
       {/* 540px right column: the photo's intrinsic width, so it renders unscaled. */}
-      <div className="mx-auto grid w-full max-w-[1320px] items-center gap-12 py-16 lg:grid-cols-[1fr_540px] lg:gap-[60px] lg:py-[100px]">
+      <div className="mx-auto grid w-full max-w-[1320px] items-center gap-12 py-10 lg:grid-cols-[1fr_540px] lg:gap-[60px] lg:py-[100px]">
         {/* Copy column */}
         <div>
           <h2
@@ -147,7 +147,7 @@ const RestaurentScaleFaster = () => {
 
             {/* Rating pill, overlapping the photo's bottom-right corner. Two rows: the
                 stacked avatars above, stars and score below. */}
-            <div className="absolute right-4 bottom-0 flex flex-col gap-2 rounded-[10px] bg-[#E94222] px-4 py-3">
+            <div className="absolute right-5 bottom-6 flex flex-col gap-2 rounded-[10px] bg-[#E94222] px-4 py-3">
               {/* The overlap, the white rings and the trailing "+" are all baked into
                   the asset, so it renders at its intrinsic 98x26 as one image. */}
               <Image
@@ -176,11 +176,11 @@ const RestaurentScaleFaster = () => {
           </div>
 
           {/* Stat cards */}
-          <ul className="mt-4 grid grid-cols-2 gap-4">
+          <ul className="mt-4 grid sm:grid-cols-2 gap-4">
             {stats.map(({ image, width, height, number, label }) => (
               <li
                 key={label}
-                className="flex items-center gap-3 rounded-[10px] bg-[#FFE0D1] px-4 py-3"
+                className="flex justify-center sm:justify-normal items-center gap-3 rounded-[10px] bg-[#FFE0D1] px-4 py-3"
               >
                 {/* Supplied at 2x (144px) and rendered at 64px. */}
                 <Image

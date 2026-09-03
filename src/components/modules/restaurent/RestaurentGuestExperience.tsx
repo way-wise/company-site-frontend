@@ -112,12 +112,7 @@ const RestaurentGuestExperience = () => {
                 <li
                   key={badge}
                   style={badgeTypography}
-                  className={`rounded-[100px] px-[18px] py-2 whitespace-nowrap ${
-                    isActive
-                      ? "bg-[#E94222] text-white"
-                      : "bg-[#F36F38]/12 text-[#E94222]"
-                  }`}
-                >
+                  className='hover:bg-[#E94222] hover:text-white rounded-[100px] px-[18px] py-2 whitespace-nowrap bg-[#F36F38]/12 text-[#E94222]'>
                   {badge}
                 </li>
               );
