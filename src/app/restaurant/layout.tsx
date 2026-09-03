@@ -23,7 +23,7 @@ const poppins = Poppins({
   display: "swap",
 });
 
-export default function RestaurentLayout({
+export default function RestaurantLayout({
   children,
 }: {
   children: React.ReactNode;

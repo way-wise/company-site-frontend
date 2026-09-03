@@ -16,7 +16,7 @@ import type { LucideIcon } from "lucide-react";
  * for vectors. Picked to match the Figma artwork.
  */
 
-// Same ramp as RestaurentFoodBusiness, as requested: Plus Jakarta Sans ExtraBold
+// Same ramp as RestaurantFoodBusiness, as requested: Plus Jakarta Sans ExtraBold
 // 48px / 60px, centered, #0F1A1A. Only the desktop size is specced; the steps below
 // it are mine.
 const titleTypography = {
@@ -25,7 +25,7 @@ const titleTypography = {
   letterSpacing: "0",
 } as const;
 
-// Same ramp as RestaurentFoodBusiness: Plus Jakarta Sans Regular 18px / 26.4px,
+// Same ramp as RestaurantFoodBusiness: Plus Jakarta Sans Regular 18px / 26.4px,
 // centered, #6D625C.
 const introTypography = {
   fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
@@ -86,7 +86,7 @@ const cards: { Icon: LucideIcon; title: string; body: string }[] = [
   },
 ];
 
-const RestaurentGrowDigitally = () => {
+const RestaurantGrowDigitally = () => {
   return (
     <section id="packages" className="w-full bg-[#FFF8F2] px-4">
       <div className="mx-auto w-full max-w-[1320px] py-10 lg:py-[100px]">
@@ -138,4 +138,4 @@ const RestaurentGrowDigitally = () => {
   );
 };
 
-export default RestaurentGrowDigitally;
+export default RestaurantGrowDigitally;

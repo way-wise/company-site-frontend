@@ -51,7 +51,6 @@ const chipTypography = {
 const projectTitleTypography = {
   fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
   fontWeight: 600,
-  fontSize: "30px",
   lineHeight: "100%",
   letterSpacing: "0",
 } as const;
@@ -60,7 +59,6 @@ const projectTitleTypography = {
 const projectMetaTypography = {
   fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
   fontWeight: 400,
-  fontSize: "18px",
   lineHeight: "24px",
   letterSpacing: "0",
 } as const;
@@ -87,42 +85,42 @@ const projects: {
   categories: string[];
 }[] = [
   {
-    image: "/images/restaurent/project1.webp",
+    image: "/images/restaurant/project1.webp",
     badge: "ONLINE ORDERING",
     title: "OrderNest",
     meta: "UI/UX Design, Web Development, Online Ordering",
     categories: ["Online Ordering", "Restaurant Websites"],
   },
   {
-    image: "/images/restaurent/project2.webp",
+    image: "/images/restaurant/project2.webp",
     badge: "RESTAURANT WEBSITE",
     title: "TableNova",
     meta: "UI/UX Design, Web Development, Reservation Flow",
     categories: ["Restaurant Websites"],
   },
   {
-    image: "/images/restaurent/project3.webp",
+    image: "/images/restaurant/project3.webp",
     badge: "BRAND WEBSITE",
     title: "MenuCraft",
     meta: "UI/UX Design, Web Development, Brand Experience",
     categories: ["Restaurant Websites"],
   },
   {
-    image: "/images/restaurent/project4.webp",
+    image: "/images/restaurant/project4.webp",
     badge: "OPERATIONS DASHBOARD",
     title: "KitchenPilot",
     meta: "UI/UX Design, Dashboard Design, Restaurant Analytics",
     categories: ["Restaurant Systems"],
   },
   {
-    image: "/images/restaurent/project5.webp",
+    image: "/images/restaurant/project5.webp",
     badge: "LOYALTY & CRM",
     title: "GuestLoop",
     meta: "UI/UX Design, Customer Retention, Automation",
     categories: ["Restaurant Systems"],
   },
   {
-    image: "/images/restaurent/project6.webp",
+    image: "/images/restaurant/project6.webp",
     badge: "MOBILE APP",
     title: "QuickServe",
     meta: "UI/UX Design, Mobile App, Ordering & Delivery",
@@ -130,7 +128,7 @@ const projects: {
   },
 ];
 
-const RestaurentProjects = () => {
+const RestaurantProjects = () => {
   const [activeFilter, setActiveFilter] = useState<string>(ALL);
   const [visibleCount, setVisibleCount] = useState(PROJECTS_PER_PAGE);
 
@@ -218,12 +216,12 @@ const RestaurentProjects = () => {
 
               {/* h3: nested under this section's h2. */}
               <h3
-                className="mt-6 text-[#17120F]"
+                className="mt-6 text-[#17120F] text-[20px] md:text-[30px]"
                 style={projectTitleTypography}
               >
                 {project.title}
               </h3>
-              <p className="mt-3 text-[#6D625C]" style={projectMetaTypography}>
+              <p className="mt-3 text-[#6D625C] text-[16px] md:text-[18px]" style={projectMetaTypography}>
                 {project.meta}
               </p>
             </li>
@@ -250,4 +248,4 @@ const RestaurentProjects = () => {
   );
 };
 
-export default RestaurentProjects;
+export default RestaurantProjects;

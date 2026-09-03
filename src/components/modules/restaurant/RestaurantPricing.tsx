@@ -254,7 +254,7 @@ const plans = [
   },
 ];
 
-const RestaurentPricing = () => {
+const RestaurantPricing = () => {
   return (
     <section className="w-full bg-white px-4">
       <div className="mx-auto w-full max-w-[1320px] py-10 lg:py-[100px]">
@@ -399,4 +399,4 @@ const RestaurentPricing = () => {
   );
 };
 
-export default RestaurentPricing;
+export default RestaurantPricing;

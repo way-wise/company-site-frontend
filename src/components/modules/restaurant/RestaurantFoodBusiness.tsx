@@ -50,7 +50,7 @@ const cards = [
   { image: "food_business6", lines: ["Franchises &", "Multi-Location"] },
 ];
 
-const RestaurentFoodBusiness = () => {
+const RestaurantFoodBusiness = () => {
   return (
     <section id="solutions" className="w-full bg-[#FFF8F2] px-4">
       <div className="mx-auto w-full max-w-[1320px] py-10 lg:py-[100px]">
@@ -81,7 +81,7 @@ const RestaurentFoodBusiness = () => {
               className="overflow-hidden rounded-[10px] border border-[#DBD0CB] bg-white"
             >
               <Image
-                src={`/images/restaurent/${image}.webp`}
+                src={`/images/restaurant/${image}.webp`}
                 alt=""
                 width={IMAGE_WIDTH}
                 height={IMAGE_HEIGHT}
@@ -109,4 +109,4 @@ const RestaurentFoodBusiness = () => {
   );
 };
 
-export default RestaurentFoodBusiness;
+export default RestaurantFoodBusiness;

@@ -14,12 +14,12 @@ import { ArrowUpRight, Menu, X } from "lucide-react";
  * The logo lives in `public/` rather than `src/assets/`, which is where it was supplied,
  * so it is referenced by path and needs its intrinsic size declared by hand.
  */
-const LOGO = "/images/restaurent/logo.webp";
+const LOGO = "/images/restaurant/logo.webp";
 const LOGO_WIDTH = 190;
 const LOGO_HEIGHT = 40;
 
 /** Ties the hamburger's aria-controls to the drawer it opens. */
-const DRAWER_ID = "restaurent-mobile-drawer";
+const DRAWER_ID = "restaurant-mobile-drawer";
 
 // In-page anchors: this is a single-scroll landing page, so each link targets a section
 // further down. Section ids must match these as the sections get built.
@@ -41,7 +41,7 @@ const navTypography = {
   letterSpacing: "0",
 } as const;
 
-const RestaurentNavbar = () => {
+const RestaurantNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // While the drawer is open: lock page scroll so the body behind it doesn't move,
@@ -74,7 +74,7 @@ const RestaurentNavbar = () => {
         <div className="w-full px-4">
           <div className="mx-auto flex w-full max-w-[1420px] items-center justify-between py-[22px]">
             <Link
-              href="/restaurent"
+              href="/restaurant"
               className="inline-flex shrink-0 items-center"
               aria-label="Way Wise Tech"
             >
@@ -159,7 +159,7 @@ const RestaurentNavbar = () => {
       >
         <div className="flex shrink-0 items-center justify-between border-b border-[#0F1A1A]/10 p-5">
           <Link
-            href="/restaurent"
+            href="/restaurant"
             onClick={() => setMobileOpen(false)}
             className="inline-flex shrink-0 items-center"
             aria-label="Way Wise Tech"
@@ -217,4 +217,4 @@ const RestaurentNavbar = () => {
   );
 };
 
-export default RestaurentNavbar;
+export default RestaurantNavbar;

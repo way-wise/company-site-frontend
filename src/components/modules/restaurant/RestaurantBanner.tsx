@@ -14,8 +14,8 @@ import { ArrowUpRight } from "lucide-react";
  * Both live in `public/` rather than `src/assets/`, which is where they were supplied,
  * so they are referenced by path and need their intrinsic sizes declared by hand.
  */
-const BACKDROP = "/images/restaurent/banner.webp";
-const VISUAL = "/images/restaurent/banner_right.webp";
+const BACKDROP = "/images/restaurant/banner.webp";
+const VISUAL = "/images/restaurant/banner_right.webp";
 const VISUAL_WIDTH = 845;
 const VISUAL_HEIGHT = 715;
 
@@ -47,7 +47,7 @@ const buttonTypography = {
   letterSpacing: "0",
 } as const;
 
-const RestaurentBanner = () => {
+const RestaurantBanner = () => {
   return (
     // The dark fill on the section itself is a fallback, so the white copy never lands
     // on bare white in the moment before the photo paints.
@@ -134,4 +134,4 @@ const RestaurentBanner = () => {
   );
 };
 
-export default RestaurentBanner;
+export default RestaurantBanner;

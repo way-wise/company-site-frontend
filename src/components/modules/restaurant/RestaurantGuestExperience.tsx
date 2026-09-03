@@ -12,7 +12,7 @@ import Image from "next/image";
  * The photo lives in `public/` rather than `src/assets/`, which is where it was
  * supplied, so it is referenced by path and needs its intrinsic size declared.
  */
-const PHOTO = "/images/restaurent/discovery.webp";
+const PHOTO = "/images/restaurant/discovery.webp";
 const PHOTO_WIDTH = 630;
 const PHOTO_HEIGHT = 315;
 
@@ -81,7 +81,7 @@ const cards = [
   },
 ];
 
-const RestaurentGuestExperience = () => {
+const RestaurantGuestExperience = () => {
   return (
     <section id="services" className="w-full bg-white px-4">
       {/* 630px per column: the photo's intrinsic width, and exactly half of 1320 once
@@ -161,4 +161,4 @@ const RestaurentGuestExperience = () => {
   );
 };
 
-export default RestaurentGuestExperience;
+export default RestaurantGuestExperience;

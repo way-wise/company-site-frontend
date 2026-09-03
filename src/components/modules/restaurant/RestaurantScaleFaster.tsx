@@ -9,11 +9,11 @@ import { ArrowUpRight, Star } from "lucide-react";
  * Assets live in `public/` rather than `src/assets/`, which is where they were supplied,
  * so they are referenced by path and need their intrinsic sizes declared.
  */
-const PHOTO = "/images/restaurent/scale_faster.webp";
+const PHOTO = "/images/restaurant/scale_faster.webp";
 const PHOTO_WIDTH = 540;
 const PHOTO_HEIGHT = 400;
 
-const REVIEWERS = "/images/restaurent/reviewers.webp";
+const REVIEWERS = "/images/restaurant/reviewers.webp";
 const REVIEWERS_WIDTH = 98;
 const REVIEWERS_HEIGHT = 26;
 
@@ -72,14 +72,14 @@ const statLabelTypography = {
 
 const stats = [
   {
-    image: "/images/restaurent/ten.webp",
+    image: "/images/restaurant/ten.webp",
     width: 144,
     height: 135,
     number: "10+",
     label: "Years Experience",
   },
   {
-    image: "/images/restaurent/happyclients.webp",
+    image: "/images/restaurant/happyclients.webp",
     width: 144,
     height: 136,
     number: "300+",
@@ -87,7 +87,7 @@ const stats = [
   },
 ];
 
-const RestaurentScaleFaster = () => {
+const RestaurantScaleFaster = () => {
   return (
     <section id="why-us" className="w-full bg-[#16110E] px-4">
       {/* 540px right column: the photo's intrinsic width, so it renders unscaled. */}
@@ -211,4 +211,4 @@ const RestaurentScaleFaster = () => {
   );
 };
 
-export default RestaurentScaleFaster;
+export default RestaurantScaleFaster;
