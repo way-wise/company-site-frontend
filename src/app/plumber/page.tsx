@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { absoluteUrl } from "@/lib/site";
 import PlumberNavbar from "@/components/modules/plumber/PlumberNavbar";
 import PlumberBanner from "@/components/modules/plumber/PlumberBanner";
+import PlumberServices from "@/components/modules/plumber/PlumberServices";
 import PlumberFooter from "@/components/modules/plumber/PlumberFooter";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ const PlumberPage = () => {
     <main className="min-h-screen bg-white">
       <PlumberNavbar />
       <PlumberBanner />
+      <PlumberServices />
       <PlumberFooter />
     </main>
   );
