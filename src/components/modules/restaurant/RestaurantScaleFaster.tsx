@@ -89,7 +89,7 @@ const stats = [
 
 const RestaurantScaleFaster = () => {
   return (
-    <section id="why-us" className="w-full bg-[#16110E] px-4">
+    <section className="w-full bg-[#16110E] px-4">
       {/* 540px right column: the photo's intrinsic width, so it renders unscaled. */}
       <div className="mx-auto grid w-full max-w-[1320px] items-center gap-12 py-10 lg:grid-cols-[1fr_540px] lg:gap-[60px] lg:py-[100px]">
         {/* Copy column */}

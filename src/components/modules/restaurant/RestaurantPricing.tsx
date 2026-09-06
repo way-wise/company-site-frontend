@@ -256,7 +256,7 @@ const plans = [
 
 const RestaurantPricing = () => {
   return (
-    <section className="w-full bg-white px-4">
+    <section id="packages" className="w-full scroll-mt-[110px] bg-white px-4">
       <div className="mx-auto w-full max-w-[1320px] py-10 lg:py-[100px]">
         <h2
           className="text-center text-[30px] leading-[1.2] text-[#0F1A1A] sm:text-[38px] lg:text-[48px] lg:leading-[60px]"

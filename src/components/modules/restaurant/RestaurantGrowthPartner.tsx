@@ -96,7 +96,7 @@ const cards = [
 
 const RestaurantGrowthPartner = () => {
   return (
-    <section className="w-full bg-[#FFF8F2] px-4">
+    <section id="why-us" className="w-full scroll-mt-[110px] bg-[#FFF8F2] px-4">
       {/* 630px per column: the photo's intrinsic width, and exactly half of 1320 once
           the 60px gap is taken out. */}
       <div className="mx-auto grid w-full max-w-[1320px] gap-10 py-10 xl:grid-cols-2 lg:gap-[60px] lg:py-[100px]">
@@ -135,7 +135,7 @@ const RestaurantGrowthPartner = () => {
           >
             {/* Hard break reproduced from the Figma frame. */}
             <span className="block">More Than a Website Team.</span>
-            <span className="block sm:my-3! md:my-0! ">A Digital Growth Partner for</span>
+            <span className="block sm:my-3! lg:my-0! ">A Digital Growth Partner for</span>
             <span className="block">Your Restaurant.</span>
           </h2>
 

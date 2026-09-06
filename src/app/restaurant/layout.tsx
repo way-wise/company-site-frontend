@@ -1,4 +1,5 @@
 import { Plus_Jakarta_Sans, Poppins } from "next/font/google";
+import RestaurantSmoothScroll from "@/components/modules/restaurant/RestaurantSmoothScroll";
 
 /**
  * Fonts are loaded here rather than in the root layout on purpose: they are used only
@@ -30,6 +31,7 @@ export default function RestaurantLayout({
 }) {
   return (
     <div className={`${plusJakartaSans.variable} ${poppins.variable}`}>
+      <RestaurantSmoothScroll />
       {children}
     </div>
   );

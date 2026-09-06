@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
 /**
@@ -18,6 +18,9 @@ const LOGO = "/images/restaurant/logo.webp";
 const LOGO_WIDTH = 190;
 const LOGO_HEIGHT = 40;
 
+/** Scroll depth at which the navbar detaches and pins to the viewport top. */
+const STICK_AFTER_PX = 100;
+
 /** Ties the hamburger's aria-controls to the drawer it opens. */
 const DRAWER_ID = "restaurant-mobile-drawer";
 
@@ -29,7 +32,7 @@ const navLinks = [
   { label: "Solutions", href: "#solutions" },
   { label: "Packages", href: "#packages" },
   { label: "Why Us", href: "#why-us" },
-  { label: "Contact Us", href: "#contact-us" },
+  { label: "Contact Us", href: "/contact-us" },
 ];
 
 // Figma spec: Plus Jakarta Sans SemiBold 16px, line-height 100%, zero letter-spacing.
@@ -43,6 +46,46 @@ const navTypography = {
 
 const RestaurantNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+
+  // Height is measured rather than hardcoded: it changes with the logo's responsive
+  // sizing, and a wrong value shows up as a jump in the content below.
+  const headerRef = useRef<HTMLElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const isPinnedRef = useRef(false);
+
+  useEffect(() => {
+    // Only measure while unpinned: that is the height the document actually loses.
+    const measure = () => {
+      if (headerRef.current && !isPinnedRef.current) {
+        setHeaderHeight(headerRef.current.offsetHeight);
+      }
+    };
+
+    // Passive: this listener never calls preventDefault, so the browser is free to keep
+    // scrolling without waiting on it. Re-setting the same boolean is a no-op in React,
+    // so this only re-renders on the two threshold crossings.
+    const onScroll = () => {
+      const pinned = window.scrollY > STICK_AFTER_PX;
+      isPinnedRef.current = pinned;
+      setIsPinned(pinned);
+    };
+
+    measure();
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  // Close the drawer on pin/unpin — leaving it open while the header jumps between flow
+  // and fixed looks broken.
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [isPinned]);
 
   // While the drawer is open: lock page scroll so the body behind it doesn't move,
   // and let Escape dismiss it.
@@ -67,7 +110,21 @@ const RestaurantNavbar = () => {
 
   return (
     <>
-      <header className="w-full bg-[#F3EDEA]">
+      {/* Reserves the space the header vacates when it goes fixed, so the banner below
+          doesn't jump up by the header's height. */}
+      {isPinned && <div style={{ height: headerHeight }} aria-hidden="true" />}
+
+      <header
+        ref={headerRef}
+        // The bar is already an opaque #F3EDEA, so nothing needs to change for
+        // legibility once content scrolls under it — only the shadow is added to lift
+        // it off the page.
+        className={
+          isPinned
+            ? "animate-nav-slide-down fixed inset-x-0 top-0 z-50 w-full bg-[#F3EDEA] shadow-[0_4px_20px_rgba(23,18,15,0.08)]"
+            : "relative w-full bg-[#F3EDEA]"
+        }
+      >
         {/* 1420px per the Figma spec. The padding sits on the outer element and the cap
             on the inner one, so the bar measures exactly 1420px at wide viewports
             rather than that width minus the gutters. */}

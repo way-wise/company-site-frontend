@@ -83,7 +83,7 @@ const cards = [
 
 const RestaurantGuestExperience = () => {
   return (
-    <section id="services" className="w-full bg-white px-4">
+    <section className="w-full bg-white px-4">
       {/* 630px per column: the photo's intrinsic width, and exactly half of 1320 once
           the 60px gap is taken out. */}
       <div className="mx-auto grid w-full max-w-[1320px] gap-10 py-10 lg:grid-cols-2 lg:gap-[60px] lg:py-[100px]">

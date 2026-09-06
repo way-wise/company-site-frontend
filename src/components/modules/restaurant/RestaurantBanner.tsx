@@ -52,7 +52,7 @@ const RestaurantBanner = () => {
     // The dark fill on the section itself is a fallback, so the white copy never lands
     // on bare white in the moment before the photo paints.
     // No scroll-mt: this page's navbar is not sticky, so nothing overlays the anchor.
-    <section id="home" className="relative overflow-hidden bg-[#1A1310]">
+    <section id="home" className="relative scroll-mt-[110px] overflow-hidden bg-[#1A1310]">
       {/* Backdrop. `fill` rather than an in-flow image: the section's height comes from
           the copy and the visual, and the photo has to cover whatever that turns out to
           be. The asset is already darkened, so no scrim is layered on top. */}

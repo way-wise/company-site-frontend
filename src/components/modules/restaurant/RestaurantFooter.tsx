@@ -147,7 +147,7 @@ const LinkColumn = ({
 
 const RestaurantFooter = () => {
   return (
-    <footer id="contact-us" className="bg-[#16110E]">
+    <footer id="contact-us" className="scroll-mt-[110px] bg-[#16110E]">
       {/* 1320px, matching this page's content sections. Padding on the outer element,
           cap on the inner one, so content measures its stated width at wide viewports
           rather than that width minus the gutters. */}
