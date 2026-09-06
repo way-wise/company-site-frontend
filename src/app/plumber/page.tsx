@@ -3,6 +3,8 @@ import { absoluteUrl } from "@/lib/site";
 import PlumberNavbar from "@/components/modules/plumber/PlumberNavbar";
 import PlumberBanner from "@/components/modules/plumber/PlumberBanner";
 import PlumberServices from "@/components/modules/plumber/PlumberServices";
+import PlumberWhyChoose from "@/components/modules/plumber/PlumberWhyChoose";
+import PlumberPackages from "@/components/modules/plumber/PlumberPackages";
 import PlumberFooter from "@/components/modules/plumber/PlumberFooter";
 
 export const metadata: Metadata = {
@@ -19,6 +21,8 @@ const PlumberPage = () => {
       <PlumberNavbar />
       <PlumberBanner />
       <PlumberServices />
+      <PlumberWhyChoose />
+      <PlumberPackages />
       <PlumberFooter />
     </main>
   );

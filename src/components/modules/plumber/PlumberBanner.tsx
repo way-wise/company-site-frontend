@@ -46,13 +46,13 @@ const PlumberBanner = () => {
     <section id="home" className="w-full scroll-mt-[110px] bg-[#101311] px-4">
       {/* 1420px, matching the navbar. 625px right column is the asset's intrinsic width,
           so the collage renders unscaled. */}
-      <div className="mx-auto grid w-full max-w-[1420px] items-center gap-12 py-16 lg:grid-cols-[1fr_625px] lg:gap-[75px] lg:py-[100px]">
+      <div className="mx-auto grid w-full max-w-[1420px] items-center gap-12 py-15 lg:grid-cols-[1fr_625px] lg:gap-[75px] lg:py-[100px]">
         {/* Copy column */}
         <div>
           {/* The page h1. Line breaks are hard-coded rather than left to wrapping
               because the colour split falls mid-line on row two. */}
           <h1
-            className="text-[36px] leading-[1.15] sm:text-[46px] lg:text-[56px] xl:text-[62px] xl:leading-[74px]"
+            className="text-[32px] leading-[1.15] sm:text-[46px] lg:text-[56px] xl:text-[62px] xl:leading-[74px]"
             style={titleTypography}
           >
             <span className="block text-white">Power Your Business</span>

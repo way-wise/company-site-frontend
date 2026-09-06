@@ -42,7 +42,7 @@ const cardSubtitleTypography = {
   fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
   fontWeight: 500,
   fontSize: "18px",
-  lineHeight: "16px",
+  lineHeight: "24px",
   letterSpacing: "0",
 } as const;
 
@@ -51,7 +51,7 @@ const cardTitleTypography = {
   fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
   fontWeight: 700,
   fontSize: "24px",
-  lineHeight: "22.5px",
+  lineHeight: "30px",
   letterSpacing: "0",
 } as const;
 
@@ -102,7 +102,7 @@ const cards: {
 const PlumberServices = () => {
   return (
     <section id="services" className="w-full scroll-mt-[110px] bg-white px-4">
-      <div className="mx-auto w-full max-w-[1320px] py-16 lg:py-[100px]">
+      <div className="mx-auto w-full max-w-[1320px] py-10 lg:py-[100px]">
         <h2
           className="text-center text-[30px] leading-[1.2] sm:text-[38px] lg:text-[48px] lg:leading-[60px]"
           style={titleTypography}
