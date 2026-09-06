@@ -75,14 +75,14 @@ const stats = [
     image: "/images/restaurant/ten.webp",
     width: 144,
     height: 135,
-    number: "10+",
+    number: "6+",
     label: "Years Experience",
   },
   {
     image: "/images/restaurant/happyclients.webp",
     width: 144,
     height: 136,
-    number: "300+",
+    number: "100+",
     label: "Happy Clients",
   },
 ];

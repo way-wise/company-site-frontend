@@ -43,44 +43,37 @@ const reviews = [
   {
     id: 1,
     quote:
-      "Corem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus",
-    name: "Jhon doe",
-    role: "CEO @ meta",
+      "Way Wise Tech completely transformed our online presence. They understood what a law firm needs from a website and created an experience that feels professional, trustworthy, and easy for potential clients to navigate",
+    name: "Sarah Mitchell",
+    role: "Managing Partner, Mitchell & Associates",
   },
   {
     id: 2,
     quote:
-      "Corem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus",
-    name: "Jhon doe",
-    role: "CEO @ meta",
+      "We needed more than just a law firm website, and Way Wise Tech delivered. The client portal and intake experience have made communication with our clients much more organized and efficient",
+    name: "Daniel Carter",
+    role: "Attorney & Managing Partner, Carter Law Firm",
   },
   {
     id: 3,
     quote:
-      "Corem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus",
-    name: "Jhon doe",
-    role: "CEO @ meta",
+      "What impressed us most was their understanding of both design and business goals. They built a modern website that represents our firm professionally while also helping us generate more qualified inquiries",
+    name: "Emily Rodriguez",
+    role: "Partner, Rodriguez Legal",
   },
   {
     id: 4,
     quote:
-      "Corem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus",
-    name: "Jhon doe",
-    role: "CEO @ meta",
+      "Way Wise Tech made the entire digital transformation process straightforward. From UX design to development and launch, their team was responsive, knowledgeable, and focused on delivering a solution that actually works for our firm",
+    name: "James Wilson",
+    role: "Managing Attorney, Wilson & Partners",
   },
   {
     id: 5,
     quote:
-      "Corem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus",
-    name: "Jhon doe",
-    role: "CEO @ meta",
-  },
-  {
-    id: 6,
-    quote:
-      "Corem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus",
-    name: "Jhon doe",
-    role: "CEO @ meta",
+      "Our old website didn't reflect the quality of our legal services. Way Wise Tech helped us create a modern, credible digital presence that gives clients confidence from their very first interaction with our firm",
+    name: "Robert Thompson",
+    role: "Founder, Thompson Law Group",
   },
 ];
 

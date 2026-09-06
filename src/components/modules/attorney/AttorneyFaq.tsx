@@ -67,33 +67,35 @@ type Faq = {
   image?: StaticImageData;
 };
 
-const ANSWER =
-  "You can get started by contacting us through website or requesting a consultation. Our team will understand your requirements.";
-
 const faqs: Faq[] = [
   {
-    question: "What services does Way Wise Tech Offer?",
-    answer: ANSWER,
+    question: "How can Way Wise Tech help my law firm?",
+    answer:
+      "We help law firms build modern, professional digital experiences that make it easier for potential clients to discover your services, understand your practice areas, and get in touch with your firm.",
     image: faqThumb,
   },
   {
-    question: "How do I get started with your services?",
-    answer: ANSWER,
+    question: "Can you integrate a client intake or consultation system?",
+    answer:
+      "Yes. We can build streamlined client intake forms, consultation request systems, appointment scheduling, and other workflows to make it easier to turn website visitors into potential clients.",
     image: faqThumb,
   },
   {
-    question: "What services does Way Wise Tech Offer?",
-    answer: ANSWER,
+    question: "Can you help my law firm generate more leads?",
+    answer:
+      "Yes. We can optimize your website's user experience, calls-to-action, contact and intake flows, and SEO foundation to help attract and convert more relevant visitors.",
     image: faqThumb,
   },
   {
-    question: "What services does Way Wise Tech Offer?",
-    answer: ANSWER,
+    question: "How long does it take to build a law firm website?",
+    answer:
+      "The timeline depends on the website's size, features, content, integrations, and level of customization. After understanding your requirements, we'll provide a clear development timeline",
     image: faqThumb,
   },
   {
-    question: "What services does Way Wise Tech Offer?",
-    answer: ANSWER,
+    question: "Do you provide support after the website is launched?",
+    answer:
+      "Yes. We can provide ongoing maintenance, updates, improvements, technical support, and additional feature development as your firm grows.",
     image: faqThumb,
   },
 ];
@@ -230,9 +232,7 @@ const AttorneyFaq = () => {
                           type="button"
                           aria-expanded={isOpen}
                           aria-controls={panelId}
-                          onClick={() =>
-                            setOpenIndex(isOpen ? null : index)
-                          }
+                          onClick={() => setOpenIndex(isOpen ? null : index)}
                           style={questionTypography}
                           // gap-3 not gap-6 on mobile: the wider gap was stealing
                           // width the wrapping question needed.
