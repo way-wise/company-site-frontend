@@ -1,4 +1,5 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
+import PlumberSmoothScroll from "@/components/modules/plumber/PlumberSmoothScroll";
 
 /**
  * Fonts are loaded here rather than in the root layout on purpose: they are used only
@@ -19,5 +20,10 @@ export default function PlumberLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className={plusJakartaSans.variable}>{children}</div>;
+  return (
+    <div className={plusJakartaSans.variable}>
+      <PlumberSmoothScroll />
+      {children}
+    </div>
+  );
 }

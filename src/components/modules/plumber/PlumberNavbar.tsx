@@ -31,9 +31,9 @@ const DRAWER_ID = "plumber-mobile-drawer";
 const navLinks = [
   { label: "Home", href: "#home" },
   { label: "Services", href: "#services" },
-  { label: "Solutions", href: "#solutions" },
-  { label: "Packages", href: "#packages" },
   { label: "Why Us", href: "#why-us" },
+  { label: "Packages", href: "#packages" },
+  { label: "Solutions", href: "#our-work" },
   { label: "Contact Us", href: "/contact-us" },
 ];
 

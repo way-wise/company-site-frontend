@@ -9,6 +9,8 @@ import PlumberProjects from "@/components/modules/plumber/PlumberProjects";
 import PlumberWayToGrow from "@/components/modules/plumber/PlumberWayToGrow";
 import PlumberBusinessControl from "@/components/modules/plumber/PlumberBusinessControl";
 import PlumberBetterWay from "@/components/modules/plumber/PlumberBetterWay";
+import PlumberFaq from "@/components/modules/plumber/PlumberFaq";
+import PlumberCta from "@/components/modules/plumber/PlumberCta";
 import PlumberFooter from "@/components/modules/plumber/PlumberFooter";
 
 export const metadata: Metadata = {
@@ -31,6 +33,8 @@ const PlumberPage = () => {
       <PlumberWayToGrow />
       <PlumberBusinessControl />
       <PlumberBetterWay />
+      <PlumberFaq />
+      <PlumberCta />
       <PlumberFooter />
     </main>
   );
