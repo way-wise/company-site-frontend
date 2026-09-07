@@ -116,7 +116,7 @@ const PlumberWhyChoose = () => {
               {/* h3: nested under this section's h2. Uppercased in CSS rather than in
                   the data, so the accessible name keeps its normal casing. */}
               <h3
-                className="mt-9 text-[#101311] uppercase"
+                className="mt-9 pr-0.5 text-[#101311] uppercase"
                 style={cardTitleTypography}
               >
                 {title}
