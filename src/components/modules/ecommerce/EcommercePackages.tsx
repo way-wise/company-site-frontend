@@ -157,14 +157,14 @@ const EcommercePackages = () => {
   return (
     <section id="packages" className="scroll-mt-[110px] bg-[#F7FAFC] px-4">
       {/* 1420px, matching the navbar. */}
-      <div className="mx-auto w-full max-w-[1420px] py-16 lg:py-[100px]">
+      <div className="mx-auto w-full max-w-[1420px] py-10 lg:py-[100px]">
         <div className="mx-auto max-w-[768px] text-center">
           <h3 style={eyebrowTypography} className="pb-4 text-[#A07B62]">
             BUILT AROUND YOUR BUSINESS STAGE
           </h3>
           <h2
             style={titleTypography}
-            className="pb-4 text-[34px] leading-10 text-[#1E130A] md:text-[48px] md:leading-12.5"
+            className="pb-4 text-[30px] leading-10 text-[#1E130A] md:text-[48px] md:leading-12.5"
           >
             Start With What You Need. Scale When You&apos;re Ready.
           </h2>

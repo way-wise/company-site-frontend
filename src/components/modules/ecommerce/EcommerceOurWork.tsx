@@ -177,11 +177,11 @@ const EcommerceOurWork = () => {
     >
       {/* 1420px, matching the navbar. Two 685px columns plus the 50px gutter is exactly
           that width, so the images render at their intrinsic size. */}
-      <div className="mx-auto w-full max-w-[1420px] py-16 lg:py-[100px]">
+      <div className="mx-auto w-full max-w-[1420px] py-10 lg:py-[100px]">
         <div className="mx-auto max-w-[768px] text-center">
           <h2
             style={titleTypography}
-            className="pb-4 text-[34px] leading-10 text-white md:text-[48px] md:leading-12.5"
+            className="pb-4 text-[30px] leading-10 text-white md:text-[48px] md:leading-12.5"
           >
             {/* Hard break reproduced from the Figma frame. */}
             <span className="lg:block">Built for Retail Businesses </span>

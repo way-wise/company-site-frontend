@@ -6,6 +6,7 @@ import EcommerceIndustries from "@/components/modules/ecommerce/EcommerceIndustr
 import EcommerceConnected from "@/components/modules/ecommerce/EcommerceConnected";
 import EcommercePackages from "@/components/modules/ecommerce/EcommercePackages";
 import EcommerceOurWork from "@/components/modules/ecommerce/EcommerceOurWork";
+import EcommerceThreePhases from "@/components/modules/ecommerce/EcommerceThreePhases";
 import EcommerceFooter from "@/components/modules/ecommerce/EcommerceFooter";
 
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ const EcommercePage = () => {
       <EcommerceConnected />
       <EcommercePackages />
       <EcommerceOurWork />
+      <EcommerceThreePhases />
       <EcommerceFooter />
     </main>
   );
