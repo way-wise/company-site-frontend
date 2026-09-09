@@ -1,4 +1,5 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
+import EcommerceSmoothScroll from "@/components/modules/ecommerce/EcommerceSmoothScroll";
 
 /**
  * Fonts are loaded here rather than in the root layout on purpose: they are used only
@@ -19,5 +20,10 @@ export default function EcommerceLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className={plusJakartaSans.variable}>{children}</div>;
+  return (
+    <div className={plusJakartaSans.variable}>
+      <EcommerceSmoothScroll />
+      {children}
+    </div>
+  );
 }

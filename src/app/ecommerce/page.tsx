@@ -7,6 +7,10 @@ import EcommerceConnected from "@/components/modules/ecommerce/EcommerceConnecte
 import EcommercePackages from "@/components/modules/ecommerce/EcommercePackages";
 import EcommerceOurWork from "@/components/modules/ecommerce/EcommerceOurWork";
 import EcommerceThreePhases from "@/components/modules/ecommerce/EcommerceThreePhases";
+import EcommerceGreaterControl from "@/components/modules/ecommerce/EcommerceGreaterControl";
+import EcommerceSolutions from "@/components/modules/ecommerce/EcommerceSolutions";
+import EcommerceFaq from "@/components/modules/ecommerce/EcommerceFaq";
+import EcommerceCta from "@/components/modules/ecommerce/EcommerceCta";
 import EcommerceFooter from "@/components/modules/ecommerce/EcommerceFooter";
 
 export const metadata: Metadata = {
@@ -27,6 +31,10 @@ const EcommercePage = () => {
       <EcommercePackages />
       <EcommerceOurWork />
       <EcommerceThreePhases />
+      <EcommerceGreaterControl />
+      <EcommerceSolutions />
+      <EcommerceFaq />
+      <EcommerceCta />
       <EcommerceFooter />
     </main>
   );
