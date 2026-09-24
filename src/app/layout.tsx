@@ -5,6 +5,7 @@ import Script from "next/script";
 
 import { Toaster } from "@/components/ui/sonner";
 import WhatsAppButton from "@/components/ui/whatsapp-button";
+import CalendlyStylesheet from "@/components/shared/CalendlyStylesheet";
 import "./globals.css";
 
 const inter = Inter({
@@ -106,10 +107,6 @@ export default function RootLayout({
             `,
           }}
         />
-        <link
-          href="https://assets.calendly.com/assets/external/widget.css"
-          rel="stylesheet"
-        />
         <meta
           name="p:domain_verify"
           content="1a0ec79e5c7c26286091b5167b64a39d"
@@ -128,6 +125,8 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+
+        <CalendlyStylesheet />
 
         <Providers>
           <Toaster position="bottom-right" />

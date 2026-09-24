@@ -123,6 +123,10 @@
    --normal: #1b3447;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @layer base {
    * {
       @apply border-border outline-ring/50;
@@ -195,6 +199,27 @@ div#magazineViewport .logo-backs2 {
 }
 
 .auto-scroll:hover {
+   animation-play-state: paused;
+}
+
+/* Single animated wrapper holding two identical copies: one element moves, so hover
+   pauses everything together and the copies can never drift apart. */
+@keyframes marquee-scroll {
+   from {
+      transform: translateX(0);
+   }
+   to {
+      transform: translateX(-50%);
+   }
+}
+
+.marquee-scroll {
+   width: max-content;
+   flex-wrap: nowrap;
+   animation: marquee-scroll 35s linear infinite;
+}
+
+.marquee-scroll:hover {
    animation-play-state: paused;
 }
 

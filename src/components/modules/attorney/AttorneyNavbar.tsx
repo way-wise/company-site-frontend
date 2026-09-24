@@ -21,12 +21,11 @@ const DRAWER_ID = "attorney-mobile-drawer";
 // No active/current state by design — nothing is highlighted at rest, so blue is
 // reserved entirely for hover.
 const navLinks = [
-  { label: "Legal Solutions", href: "#home" },
-  { label: "Our Work", href: "#our-work" },
-  { label: "Process", href: "#process" },
+  // { label: "Legal Solutions", href: "#home" },
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
   { label: "Packages", href: "#packages" },
-  { label: "Reviews", href: "#reviews" },
-  { label: "FAQs", href: "#faqs" },
+  { label: "Our Work", href: "#our-work" },
 ];
 
 // Figma spec: Inter Medium 16px / 21px, zero letter-spacing, centered.
@@ -117,7 +116,7 @@ const AttorneyNavbar = () => {
           below doesn't jump up by the header's height. */}
       {isPinned && <div style={{ height: headerHeight }} aria-hidden="true" />}
 
-      <header id="home"
+      <header
         ref={headerRef}
         // `transition-all` stays on in BOTH states so the padding tightening below
         // eases rather than snapping. The pinned entrance itself is the keyframe

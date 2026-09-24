@@ -48,6 +48,7 @@ const AttorneySectionHeading = ({
   description,
   align = "center",
   headingClassName,
+  headingStyle,
   descriptionClassName,
 }: {
   eyebrow: string;
@@ -57,6 +58,8 @@ const AttorneySectionHeading = ({
   align?: "center" | "left";
   /** Constrain the heading's wrap width. */
   headingClassName?: string;
+  /** Per-section override of the heading's inline type metrics (tracking, leading). */
+  headingStyle?: React.CSSProperties;
   /** Constrain the paragraph's wrap width — it differs per section. */
   descriptionClassName?: string;
 }) => {
@@ -90,7 +93,10 @@ const AttorneySectionHeading = ({
           isCentered ? "mx-auto mt-5 max-w-3xl text-center" : "mt-6 text-left",
           headingClassName,
         )}
-        style={isCentered ? centeredHeadingTypography : leftHeadingTypography}
+        style={{
+          ...(isCentered ? centeredHeadingTypography : leftHeadingTypography),
+          ...headingStyle,
+        }}
       >
         {heading}
       </h2>

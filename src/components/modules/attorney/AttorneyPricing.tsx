@@ -1,3 +1,11 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import chevronDown from "@/assets/images/attorney/IconChevronDown.png";
+import bgImage from "@/assets/images/attorney/AttorneyStats-frame-iamge.png";
+import videoThumb from "@/assets/images/attorney/PhaseCard-after-card-image.png";
+import AttorneyPlayButton from "./AttorneyPlayButton";
 import AttorneyContainer from "./AttorneyContainer";
 import AttorneySectionHeading from "./AttorneySectionHeading";
 
@@ -29,8 +37,8 @@ const subheadTypography = {
 // 16px bold fills that box at the 6px/12px padding specified.
 const priceTypography = {
   fontFamily: "var(--font-inter), sans-serif",
-  fontSize: "16px",
-  lineHeight: "24px",
+  fontSize: "32px",
+  lineHeight: "40px",
   letterSpacing: "0",
 } as const;
 
@@ -78,7 +86,7 @@ const phases: Phase[] = [
   {
     name: "Phase 1",
     subhead: "Practice Launch",
-    price: "$750-$1800",
+    price: "$950-$2950",
     priceColor: "#FB3748",
     summary:
       "Build your legal brand and establish a trusted and reliable online presence.",
@@ -93,7 +101,7 @@ const phases: Phase[] = [
         ],
       },
       {
-        title: "Law Firm Website",
+        title: "Website Development",
         points: [
           "5–10 Page",
           "Practice Areas",
@@ -120,8 +128,8 @@ const phases: Phase[] = [
   },
   {
     name: "Phase 2",
-    subhead: "Client Management Platform",
-    price: "$1800 – $3900",
+    subhead: "Client Engagement Platform",
+    price: "$2950 – $6700",
     priceColor: "#F97316",
     summary:
       "Improve client communication and create a modern legal experience.",
@@ -137,7 +145,7 @@ const phases: Phase[] = [
         ],
       },
       {
-        title: "Comms System",
+        title: "Communication System",
         points: [
           "Email & SMS Alerts",
           "Appointment Reminders",
@@ -165,7 +173,7 @@ const phases: Phase[] = [
   {
     name: "Phase 3",
     subhead: "Smart Legal Practice Management",
-    price: "$750-$1800",
+    price: "$6700-$19500",
     priceColor: "#FCB017",
     summary:
       "Everything in Phase 1 & 2 plus transform your firm with a complete legal management system.",
@@ -227,60 +235,81 @@ const CheckIcon = () => (
   </svg>
 );
 
+const GroupRow = ({ group }: { group: Phase["groups"][number] }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-white/30">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full cursor-pointer items-center justify-between py-3.5 text-left"
+      >
+        <span style={groupHeadTypography} className="font-medium text-white">
+          {group.title}
+        </span>
+        <Image
+          src={chevronDown}
+          alt=""
+          aria-hidden="true"
+          width={16}
+          height={16}
+          className={`size-4 shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <ul className="flex flex-col gap-2.5 pb-4">
+          {group.points.map((point) => (
+            <li key={point} className="flex items-start gap-2">
+              <CheckIcon />
+              <span style={pointTypography} className="text-[#B8B8B8]">
+                {point}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
 const PhaseCard = ({ phase, isMiddle }: { phase: Phase; isMiddle: boolean }) => (
   <div
-    className="px-7 md:px-4 lg:px-7 py-13"
+    className="flex flex-col gap-[30px] px-[30px] pt-[54px] pb-[45px]"
     style={
       isMiddle
         ? { backgroundImage: MIDDLE_CARD_BG }
         : { backgroundColor: OUTER_CARD_BG }
     }
   >
-    {/* h3: nested under this section's h2. */}
-    <h3 style={phaseTypography} className="font-bold text-white">
-      {phase.name}
-    </h3>
+    <div className="flex flex-col items-start gap-3">
+      {/* h3: nested under this section's h2. */}
+      <div>
+        <h3 style={phaseTypography} className="font-bold text-white">
+          {phase.name}
+        </h3>
+        <p style={subheadTypography} className="mt-3 font-bold text-white">
+          {phase.subhead}
+        </p>
+      </div>
+      <p
+        style={{
+          ...priceTypography,
+          backgroundColor: phase.priceColor,
+          borderRadius: "6px",
+        }}
+        className="inline-block px-3 py-1 font-semibold text-white"
+      >
+        {phase.price}
+      </p>
+      <p style={paragraphTypography} className="text-[#B8B8B8]">
+        {phase.summary}
+      </p>
+    </div>
 
-    <p style={subheadTypography} className="mt-4 font-bold text-white">
-      {phase.subhead}
-    </p>
-
-    {/* Price chip: 147x36 with 6px/12px padding and a 3px radius, per spec. */}
-    <p
-      style={{
-        ...priceTypography,
-        backgroundColor: phase.priceColor,
-        borderRadius: "3px",
-      }}
-      className="mt-4 inline-block px-3 py-1.5 font-bold text-white"
-    >
-      {phase.price}
-    </p>
-
-    <p style={paragraphTypography} className="mt-4 text-[#B8B8B8]">
-      {phase.summary}
-    </p>
-
-    <div className="mt-9 grid grid-cols-2 gap-x-5 gap-y-9">
+    <div className="flex flex-col">
       {phase.groups.map((group) => (
-        <div key={group.title}>
-          {/* Plain <p>, not a heading: these sit under each card's h3 and would need
-              to be h4s, but they are labels for the list directly beneath them and
-              adding a fourth level here buys nothing for the outline. */}
-          <p style={groupHeadTypography} className="font-semibold text-white">
-            {group.title}
-          </p>
-          <ul className="mt-3.5 flex flex-col gap-2.5">
-            {group.points.map((point) => (
-              <li key={point} className="flex items-start gap-2">
-                <CheckIcon />
-                <span style={pointTypography} className="text-[#B8B8B8]">
-                  {point}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <GroupRow key={group.title} group={group} />
       ))}
     </div>
   </div>
@@ -292,23 +321,29 @@ const AttorneyPricing = () => {
       id="packages"
       // scroll-mt clears the pinned navbar so this section's heading isn't hidden
       // beneath it when the nav link jumps here.
-      className="scroll-mt-24"
-      // Section backdrop: a violet glow bleeding in from the right over a deep
-      // indigo base. Eyeballed from the Figma export — no values were given.
-      style={{
-        background:
-          "radial-gradient(65% 55% at 96% 34%, rgba(146,102,248,0.85) 0%, rgba(146,102,248,0) 68%), radial-gradient(75% 60% at 18% 12%, rgba(63,33,132,0.65) 0%, rgba(0,0,0,0) 72%), #0E0626",
-      }}
+      className="relative isolate scroll-mt-24 overflow-hidden bg-[#0E0626]"
     >
-      <AttorneyContainer className="py-15 lg:py-28">
-        <AttorneySectionHeading
-          eyebrow="Built for Every Stage"
-          heading="Grow Your Practice, Phase by Phase"
-          headingClassName="!max-w-full text-[36px] leading-10 lg:text-[60px] lg:leading-[52px]"
-        />
+      <Image
+        src={bgImage}
+        alt=""
+        aria-hidden="true"
+        fill
+        sizes="100vw"
+        className="pointer-events-none -z-10 object-cover"
+      />
+      <AttorneyContainer className="py-15 lg:py-30" innerClassName="flex flex-col gap-15">
+        {/* Wrapped so the eyebrow and heading aren't separated by the parent's 60px flex gap. */}
+        <div>
+          <AttorneySectionHeading
+            eyebrow="Built for Every Stage"
+            heading="Grow Your Practice with Our Most Popular Package"
+            headingClassName="!mt-3 !max-w-[740px] text-[36px] !leading-10 text-[#FCB017] lg:text-[60px] lg:!leading-[66px]"
+            headingStyle={{ letterSpacing: "0" }}
+          />
+        </div>
 
         {/* One clipped shell: the three cards touch, so the radius lives here. */}
-        <div className="mt-14 grid grid-cols-1 overflow-hidden rounded-2xl md:grid-cols-3">
+        <div className="grid grid-cols-1 items-stretch overflow-hidden rounded-2xl md:grid-cols-3">
           {phases.map((phase, index) => (
             <PhaseCard
               key={phase.name}
@@ -316,6 +351,17 @@ const AttorneyPricing = () => {
               isMiddle={index === 1}
             />
           ))}
+        </div>
+
+        <div className="relative mx-auto aspect-video w-full max-w-[800px] overflow-hidden rounded-xl border border-white/35">
+          <Image
+            src={videoThumb}
+            alt="Why our packages are the best for law firms"
+            fill
+            sizes="800px"
+            className="object-cover"
+          />
+          <AttorneyPlayButton />
         </div>
       </AttorneyContainer>
     </section>

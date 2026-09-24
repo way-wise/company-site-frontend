@@ -36,19 +36,21 @@ export const metadata: Metadata = {
 const AttorneyPage = () => {
   return (
     <main className="min-h-screen bg-white">
+      {/* Home anchor: the navbar goes position:fixed when pinned, so it can not be the scroll target. */}
+      <div id="home" aria-hidden="true" />
       <AttorneyTopBar />
       <AttorneyNavbar />
       <AttorneyBanner />
       <AttorneyStats />
       <AttorneyBuiltFor />
+      <AttorneyPricing />
       <AttorneyMarquee />
       <AttorneyWork />
-      <AttorneyWhyUs />
-      <AttorneyProcess />
-      <AttorneyPricing />
-      <AttorneyInsights />
-      <AttorneyReviews />
-      <AttorneyFaq />
+      {/* <AttorneyWhyUs /> */}
+      {/* <AttorneyProcess /> */}
+      {/* <AttorneyInsights /> */}
+      {/* <AttorneyReviews /> */}
+      {/* <AttorneyFaq /> */}
       <AttorneyCta />
       {/* New sections go above the footer. */}
       <AttorneyFooter />

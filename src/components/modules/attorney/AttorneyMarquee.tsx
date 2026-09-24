@@ -47,7 +47,7 @@ const MarqueeTrack = ({ duplicate = false }: { duplicate?: boolean }) => (
   <ul
     // pr keeps the star-to-word rhythm intact across the seam between the two copies,
     // where the ul's own `gap` cannot reach.
-    className="auto-scroll flex shrink-0 items-center gap-7 pr-7 motion-reduce:animate-none"
+    className="flex shrink-0 flex-nowrap items-center gap-7 pr-7"
     // The second copy is purely visual — hidden so screen readers read the list once.
     aria-hidden={duplicate || undefined}
   >
@@ -71,7 +71,7 @@ const AttorneyMarquee = () => {
       // Gradient stops are eyeballed from the Figma export — see note to the user.
       className="w-full overflow-hidden bg-[linear-gradient(90deg,#8B2BBF_0%,#B534E0_22%,#DD5CF2_45%,#D14BEC_58%,#A93BE0_78%,#9A4BE8_90%,#7B2CBF_100%)] pt-6 pb-6  md:pt-12.5 md:pb-10.5"
     >
-      <div className="flex">
+      <div className="marquee-scroll flex motion-reduce:animate-none">
         <MarqueeTrack />
         <MarqueeTrack duplicate />
       </div>

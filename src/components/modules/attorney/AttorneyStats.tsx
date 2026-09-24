@@ -1,9 +1,11 @@
+import Image from "next/image";
+import frameImage from "@/assets/images/attorney/AttorneyStats-frame-iamge.png";
 import AttorneyContainer from "./AttorneyContainer";
 
 /**
  * Section 4 — stats bar.
  *
- * Full-bleed purple gradient band; the three stats are held to the shared 1420px
+ * Full-bleed frame-image band (159px tall on desktop, 1px top/bottom borders); the three stats are held to the shared 1420px
  * content width and spread across it.
  */
 
@@ -31,7 +33,7 @@ const paragraphTypography = {
 
 const stats = [
   {
-    value: "10,000+",
+    value: "125+",
     head: "Businesses Formed",
     caption: "Successfully Launched",
   },
@@ -49,14 +51,20 @@ const stats = [
 
 const AttorneyStats = () => {
   return (
-    <AttorneyContainer
-      // Gradient stops are eyeballed from the Figma export — see note to the user.
-      className="px-4 bg-[linear-gradient(90deg,#1B0838_0%,#2E0F63_18%,#5B21B6_50%,#7C3AED_72%,#A970FF_88%,#8B5CF6_100%)] py-8 lg:py-10"
-    >
-      <ul className="flex flex-col items-center gap-10 lg:flex-row lg:justify-between lg:gap-0">
+    <section className="relative w-full overflow-hidden py-8 lg:h-[159px] lg:py-0">
+      <Image
+        src={frameImage}
+        alt=""
+        aria-hidden="true"
+        fill
+        sizes="100vw"
+        className="pointer-events-none object-cover object-center"
+      />
+    <AttorneyContainer className="relative z-10 lg:h-full" innerClassName="lg:h-full">
+      <ul className="mx-auto flex w-fit flex-col items-start gap-8 pl-6 md:w-full md:pl-0 md:items-center md:gap-10 lg:h-full lg:flex-row lg:justify-between lg:gap-0">
         {stats.map((stat, index) => (
           <li key={stat.head} className="flex items-center">
-            <span style={numberTypography} className="font-bold text-white text-[36px] leading-10 md:text-[64px] md:leading-13.5">
+            <span style={numberTypography} className="w-[110px] shrink-0 font-bold text-white text-[36px] leading-10 md:w-auto md:text-[64px] md:leading-13.5">
               {stat.value}
             </span>
 
@@ -83,6 +91,7 @@ const AttorneyStats = () => {
         ))}
       </ul>
     </AttorneyContainer>
+    </section>
   );
 };
 
