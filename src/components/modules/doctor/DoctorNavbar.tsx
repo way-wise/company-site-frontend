@@ -16,11 +16,9 @@ const DRAWER_ID = "doctor-mobile-drawer";
 // section further down. Section ids must match these as the sections get built.
 const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "Solutions", href: "#solutions" },
+  { label: "About", href: "#about" },
   { label: "Packages", href: "#packages" },
-  { label: "Why Us", href: "#why-us" },
-  { label: "Contact Us", href: "#contact-us" },
+  { label: "Our Work", href: "#our-work" },
 ];
 
 // Figma spec: Urbanist SemiBold 16px, line-height 100%, zero letter-spacing.
