@@ -1,255 +1,280 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+import { DoctorPlayButton } from "./DoctorBanner";
+import videoThumb from "@/assets/images/doctor/after-price-r2-c1.png";
+import teamPhoto from "@/assets/images/doctor/after-price-r2-c2.png";
 
 /**
- * Pricing — three phase cards.
- *
- * NOTE ON LEADING: the spec gives `line-height: 100%` for every type ramp here. That is
- * applied as-is to the single-line items (card headings, price, feature rows, button).
- * The multi-line blocks — section title, section paragraph, card description — get real
- * leading instead, because at 100% their wrapped lines collide. The design's own artwork
- * shows roughly 117-122% on exactly those blocks.
+ * Pricing — three phase cards butted flush inside one rounded shell (the middle card is
+ * dark), each with accordion feature groups, followed by two photos.
  */
 
-// Figma spec: Urbanist Bold 52px, zero letter-spacing, centered, #011139.
-// Only the desktop size is specced; the responsive steps below it are mine.
-const titleTypography = {
-  fontFamily: "var(--font-urbanist), sans-serif",
-  fontWeight: 700,
-  letterSpacing: "0",
-} as const;
+const urbanist = { fontFamily: "var(--font-urbanist), sans-serif" } as const;
+const inter = { fontFamily: "var(--font-inter), sans-serif" } as const;
 
-// Figma spec: Urbanist Medium 18px, zero letter-spacing, centered, #4B5563.
-const introTypography = {
-  fontFamily: "var(--font-urbanist), sans-serif",
-  fontWeight: 500,
-  fontSize: "18px",
-  letterSpacing: "0",
-} as const;
+type Phase = {
+  name: string;
+  subhead: string;
+  price: string;
+  summary: string;
+  groups: { title: string; points: string[] }[];
+};
 
-// Figma spec: Urbanist SemiBold 34.43px / 100%, centered, #011139.
-const phaseTypography = {
-  fontFamily: "var(--font-urbanist), sans-serif",
-  fontWeight: 600,
-  fontSize: "34.43px",
-  lineHeight: "100%",
-  letterSpacing: "0",
-} as const;
-
-// Figma spec: Urbanist SemiBold 23.67px / 100%, centered, #011139.
-const subTitleTypography = {
-  fontFamily: "var(--font-urbanist), sans-serif",
-  fontWeight: 600,
-  lineHeight: "100%",
-  letterSpacing: "0",
-} as const;
-
-// Figma spec: Urbanist Medium 17px, centered, #011139.
-const descriptionTypography = {
-  fontFamily: "var(--font-urbanist), sans-serif",
-  fontWeight: 500,
-  fontSize: "17px",
-  letterSpacing: "0",
-} as const;
-
-// Figma spec: Urbanist ExtraBold 48px / 100%, centered, #3191EA.
-const priceTypography = {
-  fontFamily: "var(--font-urbanist), sans-serif",
-  fontWeight: 800,
-  lineHeight: "100%",
-  letterSpacing: "0",
-} as const;
-
-// Figma spec: Urbanist SemiBold 25.82px / 100%, #011139.
-const featuresTitleTypography = {
-  fontFamily: "var(--font-urbanist), sans-serif",
-  fontWeight: 600,
-  fontSize: "25.82px",
-  lineHeight: "100%",
-  letterSpacing: "0",
-} as const;
-
-// Figma spec: Urbanist SemiBold 19.36px / 100%, #011139.
-const featureTypography = {
-  fontFamily: "var(--font-urbanist), sans-serif",
-  fontWeight: 600,
-  lineHeight: "100%",
-  letterSpacing: "0",
-} as const;
-
-// Figma spec: Urbanist SemiBold 17.21px / 100%, zero letter-spacing.
-const buttonTypography = {
-  fontFamily: "var(--font-urbanist), sans-serif",
-  fontWeight: 600,
-  fontSize: "17.21px",
-  lineHeight: "100%",
-  letterSpacing: "0",
-} as const;
-
-/**
- * Hand-rolled rather than lucide's CircleCheck: the design's mark is a SOLID blue disc
- * with a white tick, and lucide's is an outline whose circle and tick share one path
- * set — there is no way to fill the disc without also filling the tick.
- */
-const CheckMark = () => (
-  <svg
-    viewBox="0 0 20 20"
-    className="mt-0.5 size-5 shrink-0"
-    aria-hidden="true"
-  >
-    <circle cx="10" cy="10" r="10" fill="#3191EA" />
-    <path
-      d="m5.8 10.3 2.6 2.6 5.8-5.8"
-      fill="none"
-      stroke="#FFFFFF"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const plans = [
+const phases: Phase[] = [
   {
-    phase: "Phase 1",
-    name: "Practice Launch",
-    description:
-      "Establish a credible, professional online presence that attracts potential clients.",
-    price: "$750 - $1800",
-    features: [
-      "Brand Identity",
-      "Website Design & Development",
-      "Mobile Responsive Design",
-      "Business Profile",
-      "SEO",
-      "Hosting & Security",
+    name: "Phase 1",
+    subhead: "Practice Launch",
+    price: "$950-$2950",
+    summary:
+      "Build your Medical/Healthcare brand and establish a trusted online presence.",
+    groups: [
+      {
+        title: "Brand Identity",
+        points: ["Custom Logo Design", "Brand Guidelines", "Business Stationery"],
+      },
+      {
+        title: "Website Development",
+        points: [
+          "5–10 Page Website",
+          "Services & Specialties",
+          "Doctor Profiles",
+          "Mobile Responsive Design",
+        ],
+      },
+      {
+        title: "Online Presence",
+        points: ["Contact Forms", "Google Maps", "Social Profiles", "Basic SEO"],
+      },
+      {
+        title: "Hosting & Security",
+        points: ["Domain & Hosting", "Business Email", "SSL Security"],
+      },
     ],
   },
   {
-    phase: "Phase 2",
-    name: "Patient Engagement",
-    description: "Establish a credible, professional online presence.",
-    price: "$1800 - $3900",
-    features: [
-      "Everything in Phase 1",
-      "Patient Portal",
-      "Medical Database",
-      "Treatment Tracking",
-      "Reminders & Alerts",
-      "Email/SMS Notification",
-      "Online Payments",
-      "Review Management",
+    name: "Phase 2",
+    subhead: "Patient Engagement Platform",
+    price: "$2975 – $6700",
+    summary:
+      "Improve client communication and create a modern patient/healthcare experience",
+    groups: [
+      {
+        title: "Patient Experience",
+        points: [
+          "Online Appointment Booking",
+          "Patient Portal",
+          "Medical Database",
+          "Intake Forms",
+        ],
+      },
+      {
+        title: "Communication System",
+        points: [
+          "Email & SMS Alerts",
+          "Appointment Reminders",
+          "Patient Messaging",
+        ],
+      },
+      {
+        title: "Patient Services",
+        points: [
+          "Treatment Tracking",
+          "Document Uploads",
+          "Online Payments",
+        ],
+      },
+      {
+        title: "Growth & Features",
+        points: ["Review Management", "Lead Capture", "Analytics Tracking"],
+      },
     ],
   },
   {
-    phase: "Phase 3",
-    name: "Smart Practice Management",
-    description:
-      "Build a connected digital platform for modern practice operations.",
-    price: "$4000 - $12900",
-    features: [
-      "Everything in Phase 1 &2",
-      "Patient CRM",
-      "Medical Database",
-      "Treatment Tracking",
-      "Revenue Reports",
-      "Staff Tools",
-      "Mobile App",
-      "AI Reporting",
-      "HIPAA Ready Infrastructure",
+    name: "Phase 3",
+    subhead: "Smart Practice Management",
+    price: "$6800-$19500",
+    summary:
+      "Everything in Phase 1 & 2 plus a complete digital ecosystem for modern healthcare organizations.",
+    groups: [
+      {
+        title: "Practice Management",
+        points: ["Patient CRM", "Scheduling Management", "Workflow Automation"],
+      },
+      {
+        title: "Analytics & Reports",
+        points: ["Revenue Reports", "Patient Analytics", "AI Reporting"],
+      },
+      {
+        title: "Team Management",
+        points: ["Staff Tools", "Role Permissions", "Communication Logs"],
+      },
+      {
+        title: "Mobile & Cloud Solutions",
+        points: ["Mobile App", "Secure Cloud Storage", "Tablet Access"],
+      },
+      {
+        title: "Growth Features & Hosting & Security",
+        points: [
+          "SEO & Marketing Tools",
+          "HIPAA Ready Infrastructure",
+          "Managed Hosting",
+        ],
+      },
     ],
   },
 ];
+
+const CheckIcon = ({ dark }: { dark: boolean }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    className={`mt-1 size-3.5 shrink-0 ${dark ? "text-[#3EA6FF]" : "text-[#3191EA]"}`}
+  >
+    <path d="M4 12.5l5 5L20 6.5" />
+  </svg>
+);
+
+const GroupRow = ({
+  group,
+  dark,
+}: {
+  group: Phase["groups"][number];
+  dark: boolean;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`border-b last:border-b-0 ${dark ? "border-white/25" : "border-[#0B2C50]/30"}`}>
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full cursor-pointer items-center justify-between py-[15px] text-left"
+      >
+        <span
+          style={urbanist}
+          className={`text-[17px] font-medium ${dark ? "text-white" : "text-[#011139]"}`}
+        >
+          {group.title}
+        </span>
+        <ChevronDown
+          aria-hidden="true"
+          className={`size-4 shrink-0 transition-transform duration-300 ${dark ? "text-white" : "text-[#011139]"} ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <ul className="flex flex-col gap-2.5 pb-4">
+          {group.points.map((point) => (
+            <li key={point} className="flex items-start gap-2">
+              <CheckIcon dark={dark} />
+              <span
+                style={inter}
+                className={`text-sm leading-[21px] ${dark ? "text-white/80" : "text-[#4B5563]"}`}
+              >
+                {point}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+const PhaseCard = ({ phase, dark }: { phase: Phase; dark: boolean }) => (
+  <li
+    className={`flex flex-col px-6 pt-12 pb-10 sm:px-8 ${dark ? "bg-[#062648]" : "bg-white"}`}
+  >
+    <h3
+      style={urbanist}
+      className={`text-[32px] leading-none font-semibold ${dark ? "text-white" : "text-[#0B2C50]"}`}
+    >
+      {phase.name}
+    </h3>
+    <p
+      style={inter}
+      className={`mt-3 text-base leading-6 font-semibold ${dark ? "text-white" : "text-[#011139]"}`}
+    >
+      {phase.subhead}
+    </p>
+    <p
+      style={urbanist}
+      className="mt-4 inline-block self-start rounded-lg bg-[#3191EA] px-3 py-1 text-[32px] leading-10 font-bold text-white"
+    >
+      {phase.price}
+    </p>
+    <p
+      style={inter}
+      className={`mt-5 text-sm leading-[21px] ${dark ? "text-white/85" : "text-[#011139]"}`}
+    >
+      {phase.summary}
+    </p>
+
+    <div className="mt-7 flex flex-col">
+      {phase.groups.map((group) => (
+        <GroupRow key={group.title} group={group} dark={dark} />
+      ))}
+    </div>
+  </li>
+);
 
 const DoctorPricing = () => {
   return (
     <section id="packages" className="w-full scroll-mt-[130px] bg-[#F5F7FC] px-4">
       <div className="mx-auto w-full max-w-[1320px] py-16 lg:py-[100px]">
         <h2
-          className="text-center text-[30px] leading-[1.15] text-[#011139] sm:text-[40px] lg:text-[52px]"
-          style={titleTypography}
+          className="mx-auto max-w-[900px] text-center text-[30px] leading-[1.15] font-semibold text-[#0A7CFF] sm:text-[40px] lg:text-[52px]"
+          style={urbanist}
         >
-          {/* Hard break reproduced from the Figma frame. */}
-          <span className="block">Choose the Right Solution</span>
-          <span className="block">for Your Practice</span>
+          Grow Your Healthcare Practice with Our Most Popular Package
         </h2>
 
         <p
-          className="mx-auto mt-6 max-w-[620px] text-center leading-[1.4] text-[#4B5563]"
-          style={introTypography}
+          className="mx-auto mt-4 max-w-[640px] text-center text-base leading-6 font-medium text-[#6B7280] lg:text-lg"
+          style={urbanist}
         >
           Start with a strong digital foundation, then scale into patient
           engagement and smarter practice management as your needs grow.
         </p>
 
-        {/* Flush on desktop, per the Figma frame: the cards butt against each other and
-            the seam is the two 50px corner radii meeting, with the section background
-            showing through the notches. The gap only exists while they are stacked. */}
-        <ul className="mt-12 grid grid-cols-1 gap-6 lg:mt-16 md:grid-cols-3 md:gap-0">
-          {plans.map((plan) => (
-            <li
-              key={plan.phase}
-              // `h-full` + column flex so every card matches the tallest in the row and
-              // the CTA can be pushed to the bottom edge regardless of feature count —
-              // Phase 1 has six rows, Phase 3 has nine.
-              className="flex h-full flex-col rounded-[50px] border border-[#E0ECF6] bg-white px-8 pt-12 pb-10 md:px-4 lg:px-10"
-            >
-              {/* h3: nested under this section's h2. */}
-              <h3 className="text-center text-[#011139]" style={phaseTypography}>
-                {plan.phase}
-              </h3>
-
-              <p
-                className="mt-5 text-center text-[22px] lg:text-[24px] text-[#011139]"
-                style={subTitleTypography}
-              >
-                {plan.name}
-              </p>
-
-              <p
-                className="mt-4 xl:px-9 text-center leading-[1.4] text-[#011139]"
-                style={descriptionTypography}
-              >
-                {plan.description}
-              </p>
-
-              <p
-                className="mt-8 text-center text-[30px] md:text-[24px] lg:text-[32px] xl:text-[48px] text-[#3191EA]"
-                style={priceTypography}
-              >
-                {plan.price}
-              </p>
-
-              <p className="mt-10 text-[#011139]" style={featuresTitleTypography}>
-                Features:
-              </p>
-
-              <ul className="mt-5 flex flex-col gap-3.5">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start md:items-center gap-2.5">
-                    <CheckMark />
-                    <span className="text-[#011139] text-[16px] md:text-[14px] lg:text-[18px] xl:text-[19.36px]" style={featureTypography}>
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* `mt-auto` eats the leftover space, pinning the CTA to the card's
-                  bottom so all three line up across the row. */}
-              <div className="mt-auto pt-12 text-center">
-                <Link
-                  href="/contact-us"
-                  style={buttonTypography}
-                  className="inline-flex items-center gap-5 rounded-[64px] border border-[#011139] px-8 md:px-4 lg:px-8  py-4 md:py-3 lg:py-4 whitespace-nowrap text-[#011139] transition-colors duration-200 hover:bg-[#011139] hover:text-white"
-                >
-                  Build My Platform
-                  <ArrowRight className="size-5" aria-hidden="true" />
-                </Link>
-              </div>
-            </li>
+        <ul className="mt-12 grid grid-cols-1 items-stretch overflow-hidden rounded-2xl border border-[#E0ECF6] md:grid-cols-3 lg:mt-[52px]">
+          {phases.map((phase, index) => (
+            <PhaseCard key={phase.name} phase={phase} dark={index === 1} />
           ))}
         </ul>
+
+        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-[1.03fr_1fr] md:items-stretch">
+          <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-[#D9E2EC]">
+            <Image
+              src={videoThumb}
+              alt="Smarter digital solutions for healthcare professionals"
+              fill
+              sizes="(min-width: 768px) 656px, 100vw"
+              className="object-contain"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-linear-to-b from-gray-500/10 via-gray-800/30 to-black/50"
+            />
+            <DoctorPlayButton />
+          </div>
+          <div className="relative min-h-[260px] overflow-hidden rounded-2xl border border-[#D9E2EC]">
+            <Image
+              src={teamPhoto}
+              alt="Team of doctors and nurses standing together"
+              fill
+              sizes="(min-width: 768px) 638px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

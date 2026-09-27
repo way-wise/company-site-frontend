@@ -52,7 +52,7 @@ const StatCard = ({ label, className }: { label: string; className: string }) =>
 );
 
 // Same ring construction as AttorneyPlayButton, but with the doctor page's blue icon.
-const DoctorPlayButton = () => (
+export const DoctorPlayButton = () => (
   <button
     type="button"
     aria-label="Play video"
@@ -82,7 +82,7 @@ const DoctorPlayButton = () => (
 
 const DoctorBanner = () => {
   return (
-    <section id="home" className="w-full scroll-mt-[130px] px-4">
+    <section className="w-full px-4">
       <div className="mx-auto grid w-full max-w-[1420px] items-center gap-12 pt-10 pb-16 lg:grid-cols-[minmax(0,723px)_minmax(0,744px)] lg:justify-between lg:gap-8 lg:pt-16 lg:pb-24">
         {/* content column */}
         <div className="flex flex-col gap-[50px]">

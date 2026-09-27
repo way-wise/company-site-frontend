@@ -26,17 +26,17 @@ const DoctorPage = () => {
     // TEMPORARY: the page background is a placeholder. The navbar's #F2F5FF99 fill is
     // 60% alpha, so it needs something behind it, and the banner's Figma frame gave no
     // background colour. Replace once the real page/banner background is known.
-    <main className="bg-[#EAEEFB]">
+    <main id="home" className="bg-[#EAEEFB]">
       <DoctorNavbar />
       <DoctorBanner />
       <DoctorProfessionals />
       <DoctorPricing />
-      <DoctorTechHelps />
-      <DoctorExperiences />
-      <DoctorSolutions />
+      {/* <DoctorTechHelps /> */}
+      {/* <DoctorExperiences /> */}
+      {/* <DoctorSolutions /> */}
       <DoctorProjects />
-      <DoctorSimple />
-      <DoctorProcess />
+      {/* <DoctorSimple /> */}
+      {/* <DoctorProcess /> */}
       <DoctorFuture />
       <DoctorFooter />
     </main>

@@ -145,7 +145,7 @@ const LinkColumn = ({
 
 const DoctorFooter = () => {
   return (
-    <footer className="bg-[#F5F7FC]">
+    <footer className="bg-white">
       {/* 1420px, matching the navbar and the rest of this page. Padding on the outer
           element, cap on the inner one, so content measures its stated width at wide
           viewports rather than that width minus the gutters. */}
