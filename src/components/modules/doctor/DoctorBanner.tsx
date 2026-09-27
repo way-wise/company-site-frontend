@@ -32,13 +32,13 @@ const paragraphTypography = {
   letterSpacing: "0",
 } as const;
 
-// Figma spec: Urbanist Medium 18px / 28px, zero letter-spacing.
+// Figma spec: Urbanist Medium 18px / 28px, zero letter-spacing (`sm:text-lg/7`
+// below). The smaller mobile size is ours — two full-width pills at 18px don't
+// fit one row on a phone, so they shrink to `text-sm/6` under `sm:`.
 // Shared by both CTAs — they differ only in fill vs outline.
 const buttonTypography = {
   fontFamily: "var(--font-urbanist), sans-serif",
   fontWeight: 500,
-  fontSize: "18px",
-  lineHeight: "28px",
   letterSpacing: "0",
 } as const;
 
@@ -81,6 +81,33 @@ export const DoctorPlayButton = () => (
 );
 
 const DoctorBanner = () => {
+  // Rendered twice below so the media column can appear before the CTAs on
+  // mobile (DOM order) while the desktop grid keeps them inline with the text.
+  const ctaButtons = (className: string) => (
+    <div className={`${className} w-full flex-nowrap items-center gap-2 sm:w-auto sm:gap-4`}>
+      <Link
+        href="/contact-us"
+        style={buttonTypography}
+        className="inline-flex flex-1 items-center justify-center gap-2 text-sm/6 sm:flex-none sm:gap-5 sm:text-lg/7 rounded-[60px] bg-[#3191EA] px-3 py-2 sm:px-[30px] lg:px-6 xl:px-7.5 sm:py-[15px] whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#1f7fd4]"
+      >
+        Get Started
+        <ArrowRight className="size-4 sm:size-5" aria-hidden="true" />
+      </Link>
+
+      {/* Outline variant: same box, same type, no fill. `border` adds 1px to each
+          axis, so this sits 2px taller than the filled button unless the border
+          is accounted for — hence the matching 1px inset on the padding. */}
+      <Link
+        href="#our-work"
+        style={buttonTypography}
+        className="inline-flex flex-1 items-center justify-center gap-2 text-sm/6 sm:flex-none sm:gap-5 sm:text-lg/7 rounded-[60px] border border-[#3191EA] px-3 py-[7px] sm:px-[29px] lg:px-6 xl:px-7.5 sm:py-[14px] whitespace-nowrap text-[#3191EA] transition-colors duration-200 hover:bg-[#3191EA] hover:text-white"
+      >
+        View Our Work
+        <ArrowRight className="size-4 sm:size-5" aria-hidden="true" />
+      </Link>
+    </div>
+  );
+
   return (
     <section className="w-full overflow-x-clip px-4">
       <div className="mx-auto grid w-full max-w-[1420px] items-center gap-12 pt-10 pb-16 lg:grid-cols-[minmax(0,723px)_minmax(0,744px)] lg:justify-between lg:gap-8 lg:pt-16 lg:pb-24">
@@ -99,28 +126,9 @@ const DoctorBanner = () => {
             Build a professional digital presence, streamline patient management, and create better experiences for your patients.
           </p>
 
-          <div className="flex flex-wrap items-center gap-4">
-            <Link
-              href="/contact-us"
-              style={buttonTypography}
-              className="inline-flex items-center gap-5 rounded-[60px] bg-[#3191EA] px-5 sm:px-[30px] lg:px-6 xl:px-7.5 py-[15px] whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#1f7fd4]"
-            >
-              Get Started
-              <ArrowRight className="size-5" aria-hidden="true" />
-            </Link>
-
-            {/* Outline variant: same box, same type, no fill. `border` adds 1px to each
-                axis, so this sits 2px taller than the filled button unless the border
-                is accounted for — hence the matching 1px inset on the padding. */}
-            <Link
-              href="#our-work"
-              style={buttonTypography}
-              className="inline-flex items-center gap-5 rounded-[60px] border border-[#3191EA] px-5 sm:px-[29px] lg:px-6 xl:px-7.5 py-[14px] whitespace-nowrap text-[#3191EA] transition-colors duration-200 hover:bg-[#3191EA] hover:text-white"
-            >
-              View Our Work
-              <ArrowRight className="size-5" aria-hidden="true" />
-            </Link>
-          </div>
+          {/* Desktop/tablet: CTAs stay inline with the text. Mobile copy renders
+              after the media column below. */}
+          {ctaButtons("hidden lg:flex")}
         </div>
 
         {/* media column: 744x684 stage, children positioned in % of it */}
@@ -165,9 +173,13 @@ const DoctorBanner = () => {
 
           <StatCard label="Billing & Invoicing" className="top-[10.09%] left-[28.9%]" />
           <StatCard label="Patient Management" className="top-[24.85%] left-[0.4%]" />
-          <StatCard label="Appointment Scheduling" className="top-[44.15%] right-0 lg:right-auto lg:left-[75.8%]" />
+          <StatCard label="Appointment Scheduling" className="hidden sm:block top-[44.15%] right-0 lg:right-auto lg:left-[75.8%]" />
           <StatCard label="Analytics Dasboard" className="top-[78.65%] left-[23.66%]" />
         </div>
+
+        {/* Mobile-only copy: appears after the media column. Hidden at lg: and up
+            since the inline copy above already covers that layout. */}
+        {ctaButtons("flex lg:hidden")}
       </div>
     </section>
   );
