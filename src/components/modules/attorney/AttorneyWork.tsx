@@ -160,10 +160,9 @@ const projects: Project[] = [
 /**
  * Cards revealed initially, and added per Load More click.
  *
- * 8 reproduces the Figma frame exactly now that there are 10 projects: eight visible
- * with Load More still offered, then the last two on click.
+ * Four visible initially; each Load More click reveals four more.
  */
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 4;
 
 const AttorneyWork = () => {
   const [activeFilter, setActiveFilter] = useState<Filter>(ALL_FILTER);

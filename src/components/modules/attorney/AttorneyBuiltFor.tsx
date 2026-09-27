@@ -102,7 +102,7 @@ const AttorneyBuiltFor = () => {
                 sizes="(min-width: 1024px) 682px, 100vw"
                 className="object-cover"
               />
-              <AttorneyPlayButton />
+              {/* <AttorneyPlayButton /> */}
             </div>
           </div>
 

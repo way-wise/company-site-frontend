@@ -361,7 +361,7 @@ const AttorneyPricing = () => {
             sizes="800px"
             className="object-cover"
           />
-          <AttorneyPlayButton />
+          {/* <AttorneyPlayButton /> */}
         </div>
       </AttorneyContainer>
     </section>

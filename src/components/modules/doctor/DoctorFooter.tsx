@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/images/doctor/logo.webp";
+import AttorneyScrollToTop from "../attorney/AttorneyScrollToTop";
 
 /**
  * Footer.
@@ -259,6 +260,7 @@ const DoctorFooter = () => {
           </div>
         </div>
       </div>
+      <AttorneyScrollToTop />
     </footer>
   );
 };

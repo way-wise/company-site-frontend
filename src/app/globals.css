@@ -482,3 +482,35 @@ div#magazineViewport .logo-backs2 {
 .ck.ck-heading-dropdown .ck-dropdown__button .ck-button__label {
    font-weight: 500;
 }
+
+/* Scroll-to-top button: drifting glass clouds on hover. */
+@keyframes scroll-top-drift-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(18px, 16px) scale(1.25);
+  }
+}
+@keyframes scroll-top-drift-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-16px, -18px) scale(1.3);
+  }
+}
+.group:hover .scroll-top-cloud-a {
+  animation: scroll-top-drift-a 2.4s ease-in-out infinite;
+}
+.group:hover .scroll-top-cloud-b {
+  animation: scroll-top-drift-b 2.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .scroll-top-cloud-a,
+  .group:hover .scroll-top-cloud-b {
+    animation: none;
+  }
+}

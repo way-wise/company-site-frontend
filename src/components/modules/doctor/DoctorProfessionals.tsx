@@ -90,7 +90,7 @@ const DoctorProfessionals = () => {
               className="object-cover"
               sizes="(min-width: 1024px) 700px, 100vw"
             />
-            <DoctorPlayButton />
+            {/* <DoctorPlayButton /> */}
           </div>
         </div>
       </div>

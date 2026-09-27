@@ -160,7 +160,7 @@ const DoctorBanner = () => {
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 bg-linear-to-b from-gray-500/10 via-gray-800/30 to-black/50"
             />
-            <DoctorPlayButton />
+            {/* <DoctorPlayButton /> */}
           </div>
 
           <StatCard label="Billing & Invoicing" className="top-[10.09%] left-[28.9%]" />

@@ -263,7 +263,7 @@ const DoctorPricing = () => {
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 bg-linear-to-b from-gray-500/10 via-gray-800/30 to-black/50"
             />
-            <DoctorPlayButton />
+            {/* <DoctorPlayButton /> */}
           </div>
           <div className="relative min-h-[260px] overflow-hidden rounded-2xl border border-[#D9E2EC]">
             <Image

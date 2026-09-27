@@ -193,7 +193,7 @@ const AttorneyBanner = () => {
             height={225}
             className="h-auto w-full object-cover"
           />
-          <AttorneyPlayButton className="sm:size-[80px] sm:border-[14px]" iconClassName="sm:size-6" />
+          {/* <AttorneyPlayButton className="sm:size-[80px] sm:border-[14px]" iconClassName="sm:size-6" /> */}
         </div>
       </section>
     </div>

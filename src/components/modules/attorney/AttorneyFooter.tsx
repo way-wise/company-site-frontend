@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AttorneyContainer from "./AttorneyContainer";
 import AttorneyLogo from "./AttorneyLogo";
+import AttorneyScrollToTop from "./AttorneyScrollToTop";
 
 /**
  * Section 7 — footer.
@@ -230,6 +231,7 @@ const AttorneyFooter = () => {
           </p>
         </div>
       </AttorneyContainer>
+      <AttorneyScrollToTop />
     </footer>
   );
 };
