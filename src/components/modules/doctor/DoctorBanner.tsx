@@ -82,7 +82,7 @@ export const DoctorPlayButton = () => (
 
 const DoctorBanner = () => {
   return (
-    <section className="w-full px-4">
+    <section className="w-full overflow-x-clip px-4">
       <div className="mx-auto grid w-full max-w-[1420px] items-center gap-12 pt-10 pb-16 lg:grid-cols-[minmax(0,723px)_minmax(0,744px)] lg:justify-between lg:gap-8 lg:pt-16 lg:pb-24">
         {/* content column */}
         <div className="flex flex-col gap-[50px]">
@@ -165,7 +165,7 @@ const DoctorBanner = () => {
 
           <StatCard label="Billing & Invoicing" className="top-[10.09%] left-[28.9%]" />
           <StatCard label="Patient Management" className="top-[24.85%] left-[0.4%]" />
-          <StatCard label="Appointment Scheduling" className="top-[44.15%] left-[75.8%]" />
+          <StatCard label="Appointment Scheduling" className="top-[44.15%] right-0 lg:right-auto lg:left-[75.8%]" />
           <StatCard label="Analytics Dasboard" className="top-[78.65%] left-[23.66%]" />
         </div>
       </div>
