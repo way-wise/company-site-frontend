@@ -26,10 +26,10 @@ const RestaurantPage = () => {
     <main className="min-h-screen bg-white">
       <RestaurantNavbar />
       <RestaurantBanner />
-      <RestaurantFoodBusiness />
+      {/* <RestaurantFoodBusiness /> */}
       <RestaurantGuestExperience />
-      <RestaurantScaleFaster />
-      <RestaurantGrowDigitally />
+      {/* <RestaurantScaleFaster /> */}
+      {/* <RestaurantGrowDigitally /> */}
       <RestaurantPricing />
       <RestaurantProjects />
       <RestaurantOutcomes />

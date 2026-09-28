@@ -131,7 +131,7 @@ const RestaurantBanner = () => {
               />
               <div className="absolute bottom-22 -right-2">
                 <Image src={video_bg} width={254} height={143} className="h-auto w-full max-w-[254px]" alt="video bg"/>
-                {/* <RestaurentPlayButton className="sm:size-[45px] sm:border-[6px]" iconClassName="sm:size-6" /> */}
+                <RestaurentPlayButton size="sm" />
               </div>
             </div>
           </div>

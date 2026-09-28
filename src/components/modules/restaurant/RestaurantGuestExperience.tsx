@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import RestaurentPlayButton from "./RestaurentPlayButton";
 /**
  * "Guest experience begins before arrival." — copy and a photo on the left, four
  * numbered problem/solution cards on the right.
@@ -12,7 +12,7 @@ import Image from "next/image";
  * The photo lives in `public/` rather than `src/assets/`, which is where it was
  * supplied, so it is referenced by path and needs its intrinsic size declared.
  */
-const PHOTO = "/images/restaurant/discovery.webp";
+const PHOTO = "/images/restaurant/discovery.png";
 const PHOTO_WIDTH = 630;
 const PHOTO_HEIGHT = 315;
 
@@ -94,8 +94,7 @@ const RestaurantGuestExperience = () => {
             style={titleTypography}
           >
             {/* Hard break reproduced from the Figma frame. */}
-            <span className="block">Guest experience begins</span>
-            <span className="block">before arrival.</span>
+            <span className="block">Why Restaurants Choose Way-Wise Tech to Simplify Operations and Accelerate Growth</span>
           </h2>
 
           <p className="mt-5 text-[#6D625C]" style={bodyTypography}>
@@ -119,14 +118,17 @@ const RestaurantGuestExperience = () => {
             })}
           </ul>
 
-          <Image
-            src={PHOTO}
-            alt="Restaurant manager holding a tablet in a dining room"
-            width={PHOTO_WIDTH}
-            height={PHOTO_HEIGHT}
-            className="mt-8 aspect-[630/315] w-full rounded-[18px] object-cover"
-            sizes="(min-width: 1024px) 630px, 100vw"
-          />
+          <div className="relative">
+            <Image
+              src={PHOTO}
+              alt="Restaurant manager holding a tablet in a dining room"
+              width={PHOTO_WIDTH}
+              height={PHOTO_HEIGHT}
+              className="mt-8 aspect-[630/315] w-full rounded-[18px] object-cover"
+              sizes="(min-width: 1024px) 630px, 100vw"
+            />
+            <RestaurentPlayButton width={120} iconSize={24} outerRingWidth={17} innerRingWidth={5} />
+          </div>
         </div>
 
         {/* Cards column */}
