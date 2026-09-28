@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import RestaurentPlayButton from "./RestaurentPlayButton";
 
 /**
  * Banner / hero.
@@ -16,6 +17,7 @@ import { ArrowUpRight } from "lucide-react";
  */
 const BACKDROP = "/images/restaurant/banner.webp";
 const VISUAL = "/images/restaurant/banner_right.webp";
+const video_bg = "/images/restaurant/video_bg.png";
 const VISUAL_WIDTH = 845;
 const VISUAL_HEIGHT = 715;
 
@@ -74,12 +76,11 @@ const RestaurantBanner = () => {
             {/* The page h1. Line breaks are hard-coded rather than left to wrapping
                 because the colour split falls on line boundaries: line 2 is the accent. */}
             <h1
-              className="text-[32px] sm:text-[52px] xl:text-[58px] xl:text-[70px]"
+              className="text-[32px] sm:text-[52px] xl:text-[50px]"
               style={titleTypography}
             >
-              <span className="block text-white">Digital Solutions For</span>
-              <span className="block text-[#E94222] leading-12 lg:leading-17.5">Food &amp; Restaurant</span>
-              <span className="block text-white ">Industry</span>
+              <span className="block text-white">Do You Own a Restaurant or Operate a Food Business?</span>
+              <span className="block text-[#FCB017] leading-12 lg:leading-17.5">Explore Our Exclusive Restaurant Service Packages.</span>
             </h1>
 
             <p
@@ -118,15 +119,21 @@ const RestaurantBanner = () => {
 
           {/* Visual column */}
           <div className="justify-self-center lg:justify-self-end">
-            <Image
-              src={VISUAL}
-              alt="Restaurant ordering app on a phone beside a revenue dashboard and a chef reviewing orders on a tablet"
-              width={VISUAL_WIDTH}
-              height={VISUAL_HEIGHT}
-              className="h-auto w-full max-w-[845px]"
-              sizes="(min-width: 1024px) 845px, 100vw"
-              priority
-            />
+            <div className="relative">
+              <Image
+                src={VISUAL}
+                alt="Restaurant ordering app on a phone beside a revenue dashboard and a chef reviewing orders on a tablet"
+                width={VISUAL_WIDTH}
+                height={VISUAL_HEIGHT}
+                className="h-auto w-full max-w-[845px]"
+                sizes="(min-width: 1024px) 845px, 100vw"
+                priority
+              />
+              <div className="absolute bottom-22 -right-2">
+                <Image src={video_bg} width={254} height={143} className="h-auto w-full max-w-[254px]" alt="video bg"/>
+                {/* <RestaurentPlayButton className="sm:size-[45px] sm:border-[6px]" iconClassName="sm:size-6" /> */}
+              </div>
+            </div>
           </div>
         </div>
       </div>
