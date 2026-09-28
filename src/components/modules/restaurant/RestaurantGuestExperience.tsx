@@ -104,7 +104,7 @@ const RestaurantGuestExperience = () => {
 
           {/* 12px gap per spec. `bg-[#F36F38]/12` is the 1F alpha suffix expressed as a
               Tailwind opacity modifier — same colour, fewer magic hex digits. */}
-          <ul className="mt-8 flex flex-wrap items-center gap-3">
+          {/* <ul className="mt-8 flex flex-wrap items-center gap-3">
             {badges.map((badge) => {
               const isActive = badge === ACTIVE_BADGE;
               return (
@@ -116,7 +116,7 @@ const RestaurantGuestExperience = () => {
                 </li>
               );
             })}
-          </ul>
+          </ul> */}
 
           <div className="relative">
             <Image
