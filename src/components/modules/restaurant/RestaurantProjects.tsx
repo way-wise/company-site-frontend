@@ -151,10 +151,10 @@ const RestaurantProjects = () => {
   };
 
   return (
-    <section id="our-work" className="w-full scroll-mt-[110px] bg-[#FFF8F2] px-4">
+    <section id="our-work" className="w-full scroll-mt-[110px] bg-[#17120F] bg-[url('/images/restaurant/work_bg.png')] bg-cover bg-center bg-no-repeat px-4">
       <div className="mx-auto w-full max-w-[1320px] py-10 lg:py-[100px]">
         <h2
-          className="text-center text-[30px] leading-[1.2] text-[#0F1A1A] sm:text-[38px] lg:text-[48px] lg:leading-[60px]"
+          className="text-center text-[30px] leading-[1.2] text-white sm:text-[38px] lg:text-[48px] lg:leading-[60px]"
           style={titleTypography}
         >
           {/* Hard break reproduced from the Figma frame. */}
@@ -163,7 +163,7 @@ const RestaurantProjects = () => {
         </h2>
 
         <p
-          className="mx-auto mt-4 max-w-[860px] text-center text-[#6D625C]"
+          className="mx-auto mt-4 max-w-[860px] text-center text-[#E8DED7]"
           style={introTypography}
         >
           From online ordering and restaurant websites to loyalty platforms and
@@ -184,7 +184,7 @@ const RestaurantProjects = () => {
                 className={`rounded-[6px] border border-[#E94222] px-[30px] py-3 whitespace-nowrap transition-colors duration-200 hover:bg-[#E94222] hover:text-white ${
                   isActive
                     ? "bg-[#E94222] text-white"
-                    : "bg-transparent text-[#E94222]"
+                    : "bg-transparent text-[#F36F38]"
                 }`}
               >
                 {filter}
@@ -196,7 +196,7 @@ const RestaurantProjects = () => {
         <ul className="mt-12 grid grid-cols-1 gap-x-10 gap-y-12 md:grid-cols-2">
           {visible.map((project) => (
             <li key={project.title}>
-              <div className="relative overflow-hidden rounded-[10px]">
+              <div className="relative overflow-hidden rounded-[12px]">
                 <Image
                   src={project.image}
                   alt={`${project.title} — ${project.meta}`}
@@ -212,16 +212,36 @@ const RestaurantProjects = () => {
                 >
                   {project.badge}
                 </span>
+
+                {/* Gradient border. A real (transparent) border painted with the
+                    gradient, then masked so only the border ring shows — it shares the
+                    card's radius, so the stroke is the same thickness at the corners as
+                    along the edges. Change `border-[1.5px]` to adjust the thickness.
+                    Faint at the top-left, brightest along the top-right / bottom-left
+                    diagonal. */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 rounded-[inherit] border-[1.5px] border-transparent"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(233,66,34,0.15) 0%, rgba(233,66,34,0.35) 25%, #E94222 55%, rgba(233,66,34,0.6) 100%) border-box",
+                    mask: "linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0)",
+                    maskComposite: "exclude",
+                    WebkitMask:
+                      "linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0)",
+                    WebkitMaskComposite: "xor",
+                  }}
+                />
               </div>
 
               {/* h3: nested under this section's h2. */}
               <h3
-                className="mt-6 text-[#17120F] text-[20px] md:text-[30px]"
+                className="mt-6 text-white text-[20px] md:text-[30px]"
                 style={projectTitleTypography}
               >
                 {project.title}
               </h3>
-              <p className="mt-3 text-[#6D625C] text-[16px] md:text-[18px]" style={projectMetaTypography}>
+              <p className="mt-3 text-[#BFB3AB] text-[16px] md:text-[18px]" style={projectMetaTypography}>
                 {project.meta}
               </p>
             </li>

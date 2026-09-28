@@ -32,8 +32,8 @@ const RestaurantPage = () => {
       {/* <RestaurantGrowDigitally /> */}
       <RestaurantPricing />
       <RestaurantProjects />
-      <RestaurantOutcomes />
-      <RestaurantGrowthPartner />
+      {/* <RestaurantOutcomes /> */}
+      {/* <RestaurantGrowthPartner /> */}
       <RestaurantFuture />
       <RestaurantFooter />
     </main>

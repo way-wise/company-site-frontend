@@ -41,17 +41,17 @@ const buttonTypography = {
 
 const RestaurantFuture = () => {
   return (
-    <section className="w-full bg-white px-4">
-      <div className="mx-auto w-full max-w-[1520px] py-10 lg:py-[100px]">
+    <section className="w-full bg-[#FFF8F2] px-4">
+      <div className="mx-auto w-full max-w-[1520px] pt-10 lg:pt-[100px]">
         {/*
           Ground for the banner: it backs the copy on mobile, where the artwork sits
           above rather than behind it, and covers the gap before the image paints.
 
-          Three stops per the Figma gradient panel: #E94222 at full opacity on both
-          ends, and the same hue at 50% alpha (#E9422280) at the 57% mark, which lightens
-          the middle of the band.
+          Gradient per the mock: solid #E94222 under the copy, easing to a pale
+          salmon (#EFA08C) behind the phone, then back to #E94222 at the right edge.
+          Opaque stops, so the result doesn't depend on the section colour behind it.
         */}
-        <div className="relative rounded-[20px] bg-[#E94222] lg:bg-[linear-gradient(115deg,#E94222_40%,#E9422280_70%,#E94222_100%)]">
+        <div className="relative rounded-t-[20px] bg-[#E94222] lg:bg-[linear-gradient(100deg,#E94222_0%,#E94222_32%,#EFA08C_62%,#E94222_100%)]">
           {/*
             Two layouts from one element: in flow at the top on mobile, and absolutely
             covering the banner from lg up. `object-right` keeps the phone anchored to
