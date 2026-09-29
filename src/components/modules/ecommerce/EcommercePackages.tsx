@@ -1,20 +1,29 @@
-import Link from "next/link";
-import { Check } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { Check, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import priceVideoBg from "@/assets/images/ecommerce/price_video_bg.png";
+import EcommercePlayButton from "./EcommercePlayButton";
 
 /**
- * "Start With What You Need. Scale When You're Ready." — three phase packages.
+ * "Grow Your Retail Business with Our Most Popular Package" — three phase cards joined
+ * into one panel.
  *
- * Every card inverts to the dark treatment on hover; the Figma frame shows the middle
- * one already inverted, which is that hover state being demonstrated rather than a
- * permanent style. The only thing genuinely unique to the middle card is its badge.
+ * Same layout and mechanics as the /restaurant and /plumber pricing sections: the
+ * popular (middle) card sits on a permanent dark ground, the others stay white, and
+ * feature groups are an accordion (one open per card) that opens with a 0fr -> 1fr grid
+ * row rather than max-height, so it eases to the list's real height.
  *
- * The inversion is driven by `group-hover:` AND `group-focus-within:` so a keyboard user
- * tabbing to the "Get Started" link sees the same state a pointer user does.
+ * Outfit comes from the ROOT layout, which puts --font-outfit on <body>.
  */
 
-// Section header — same ramp as the industries section, as requested.
+const font = "var(--font-outfit), sans-serif";
+
+// Section header — same ramp as the industries section.
 const eyebrowTypography = {
-  fontFamily: "var(--font-outfit), sans-serif",
+  fontFamily: font,
   fontWeight: 500,
   fontSize: "16px",
   lineHeight: "16px",
@@ -22,255 +31,336 @@ const eyebrowTypography = {
 } as const;
 
 const titleTypography = {
-  fontFamily: "var(--font-outfit), sans-serif",
+  fontFamily: font,
   fontWeight: 600,
   letterSpacing: "0",
 } as const;
 
 const paragraphTypography = {
-  fontFamily: "var(--font-outfit), sans-serif",
+  fontFamily: font,
   fontWeight: 400,
   fontSize: "18px",
   lineHeight: "24px",
   letterSpacing: "0",
 } as const;
 
-// Figma spec: Outfit Bold 14px / 16px, 1.2px letter-spacing, #A07B62.
-const cardEyebrowTypography = {
-  fontFamily: "var(--font-outfit), sans-serif",
-  fontWeight: 700,
-  fontSize: "14px",
-  lineHeight: "16px",
-  letterSpacing: "1.2px",
-} as const;
-
-// Figma spec: Outfit Bold 24px / 28px, zero letter-spacing, #1E130A.
-const cardTitleTypography = {
-  fontFamily: "var(--font-outfit), sans-serif",
-  fontWeight: 700,
-  fontSize: "24px",
-  lineHeight: "28px",
-  letterSpacing: "0",
-} as const;
-
-// Figma spec: Outfit Regular 16px / 20px, zero letter-spacing, #5F6B7A.
-// Shared by the sub-heading, the service items and the "Best for" paragraph — the spec
-// gives all three identical values.
-const bodyTypography = {
-  fontFamily: "var(--font-outfit), sans-serif",
-  fontWeight: 400,
-  fontSize: "16px",
-  lineHeight: "20px",
-  letterSpacing: "0",
-} as const;
-
-// Figma spec: Outfit SemiBold 14px / 16px, zero letter-spacing, #1E130A.
-const bestForLabelTypography = {
-  fontFamily: "var(--font-outfit), sans-serif",
+// "Phase 1" — Outfit SemiBold.
+const phaseTypography = {
+  fontFamily: font,
   fontWeight: 600,
-  fontSize: "14px",
-  lineHeight: "16px",
-  letterSpacing: "0",
+  letterSpacing: "-0.32px",
 } as const;
 
-// Figma spec: Inter Regular 12px / 16px, zero letter-spacing. Inter comes from the ROOT
-// layout, which puts --font-inter on <body>.
-const badgeTypography = {
-  fontFamily: "var(--font-inter), sans-serif",
-  fontWeight: 400,
-  fontSize: "12px",
-  lineHeight: "16px",
-  letterSpacing: "0",
-} as const;
-
-// No spec was given for the CTA label; it takes the same 16/20 Outfit as the body copy.
-const buttonTypography = {
-  fontFamily: "var(--font-outfit), sans-serif",
-  fontWeight: 400,
+// Card subtitle — Outfit SemiBold 16px.
+const cardTitleTypography = {
+  fontFamily: font,
+  fontWeight: 600,
   fontSize: "16px",
+  lineHeight: "22px",
+  letterSpacing: "0",
+} as const;
+
+// Price badge — Inter Bold. Inter comes from the ROOT layout, which puts --font-inter
+// on <body>.
+const priceTypography = {
+  fontFamily: "var(--font-inter), sans-serif",
+  fontWeight: 700,
+  letterSpacing: "-0.32px",
+} as const;
+
+// Card body — Outfit Regular 14px / 21px.
+const cardBodyTypography = {
+  fontFamily: font,
+  fontWeight: 400,
+  fontSize: "14px",
+  lineHeight: "21px",
+  letterSpacing: "0",
+} as const;
+
+// Accordion header — Outfit Regular 16px.
+const groupTitleTypography = {
+  fontFamily: font,
+  fontWeight: 400,
+  lineHeight: "22px",
+  letterSpacing: "0",
+} as const;
+
+// Accordion item — Outfit Regular 15px.
+const featureTypography = {
+  fontFamily: font,
+  fontWeight: 400,
   lineHeight: "20px",
   letterSpacing: "0",
 } as const;
 
-const packages: {
-  phase: string;
-  title: string;
-  subtitle: string;
-  badge?: string;
-  services: string[];
-  bestFor: string;
-}[] = [
+// Prices, bodies and group titles follow the Figma frame; the services inside each
+// group are the page's existing Phase 1–3 lists, sorted into those groups.
+const plans = [
   {
-    phase: "PHASE 1",
+    phase: "Phase 1",
     title: "Retail Launch",
-    subtitle: "Build a strong brand and digital foundation.",
-    services: [
-      "Custom Logo & Brand Identity",
-      "Brand Guidelines & Marketing Materials",
-      "Responsive Retail Website",
-      "Store Locations, Products & Photo Galleries",
-      "Product Category Showcase",
-      "Google Maps, Local SEO & Social Profiles",
-      "Contact Forms, Store Hours & Location Details",
-      "Hosting, Domain, Business Email & SSL Security",
+    price: "$950 – $2,950",
+    body: "Build your retail brand and establish a strong online presence.",
+    popular: false,
+    groups: [
+      {
+        title: "Brand Identity",
+        items: [
+          "Custom Logo & Brand Identity",
+          "Brand Guidelines & Marketing Materials",
+        ],
+      },
+      {
+        title: "Website Development",
+        items: [
+          "Responsive Retail Website",
+          "Store Locations, Products & Photo Galleries",
+          "Product Category Showcase",
+        ],
+      },
+      {
+        title: "Online Presence",
+        items: [
+          "Google Maps, Local SEO & Social Profiles",
+          "Contact Forms, Store Hours & Location Details",
+        ],
+      },
+      {
+        title: "Hosting & Security",
+        items: ["Hosting, Domain, Business Email & SSL Security"],
+      },
     ],
-    bestFor:
-      "Retail stores, specialty shops, local businesses, and new brands.",
   },
   {
-    phase: "PHASE 2",
+    phase: "Phase 2",
     title: "Online Store Platform",
-    subtitle: "Create a seamless shopping experience that converts.",
-    badge: "Most Popular",
-    services: [
-      "Custom Online Store & Shopping Cart",
-      "Product Categories, Search & Filters",
-      "Secure Checkout & Payment Gateway",
-      "Customer Accounts & Wishlist",
-      "Product, Inventory & Order Tracking",
-      "Email & SMS Order Updates",
-      "Discounts, Reviews & Product Recommendations",
-      "Customer Retention & Follow-Up Automation",
+    price: "$2,975 – $6,700",
+    body: "Everything in Phase 1 plus expand your business online with a complete e-commerce experience.",
+    popular: true,
+    groups: [
+      {
+        title: "Customer Experience",
+        items: [
+          "Customer Accounts & Wishlist",
+          "Product Categories, Search & Filters",
+        ],
+      },
+      {
+        title: "Sales and Communication",
+        items: [
+          "Secure Checkout & Payment Gateway",
+          "Email & SMS Order Updates",
+        ],
+      },
+      {
+        title: "E-Commerce Features",
+        items: [
+          "Custom Online Store & Shopping Cart",
+          "Product, Inventory & Order Tracking",
+        ],
+      },
+      {
+        title: "Growth & Features",
+        items: [
+          "Discounts, Reviews & Product Recommendations",
+          "Customer Retention & Follow-Up Automation",
+        ],
+      },
     ],
-    bestFor: "Growing retailers, online stores, and multi-category businesses.",
   },
   {
-    phase: "PHASE 3",
+    phase: "Phase 3",
     title: "Smart Commerce Management",
-    subtitle: "Connect your sales, operations, team, and customer data.",
-    services: [
-      "Customer CRM & Sales Dashboard",
-      "Inventory & Order Management",
-      "Revenue, Sales, Customer & Inventory Reports",
-      "Staff Management & Role Permissions",
-      "Loyalty Programs & Communication Logs",
-      "Shopping App & Secure Cloud Access",
-      "Custom AI Tools & Business Automation",
-      "Ongoing Growth & System Support",
+    price: "$6,800 – $19,500",
+    body: "Everything in Phase 1 & 2 plus transform your business with a complete commerce management system.",
+    popular: false,
+    groups: [
+      {
+        title: "Commerce Management",
+        items: [
+          "Customer CRM & Sales Dashboard",
+          "Inventory & Order Management",
+        ],
+      },
+      {
+        title: "Analytics & Reports",
+        items: ["Revenue, Sales, Customer & Inventory Reports"],
+      },
+      {
+        title: "Team Management",
+        items: [
+          "Staff Management & Role Permissions",
+          "Loyalty Programs & Communication Logs",
+        ],
+      },
+      {
+        title: "Mobile & Cloud Solutions",
+        items: [
+          "Shopping App & Secure Cloud Access",
+          "Custom AI Tools & Business Automation",
+          "Ongoing Growth & System Support",
+        ],
+      },
     ],
-    bestFor:
-      "Retail chains, wholesale businesses, multi-location stores, and scaling e-commerce brands.",
   },
 ];
 
+type Plan = (typeof plans)[number];
+
+const PlanCard = ({ plan }: { plan: Plan }) => {
+  // Index of the open feature group; null = all collapsed.
+  const [openGroup, setOpenGroup] = useState<number | null>(null);
+  const dark = plan.popular;
+
+  return (
+    <li
+      className={cn(
+        "flex flex-col p-6 sm:p-8 lg:p-10",
+        dark ? "bg-[#1E130A]" : "bg-white",
+      )}
+    >
+      {/* h3: nested under this section's h2. */}
+      <h3
+        className={cn(
+          "text-[28px] leading-[36px] sm:text-[32px] sm:leading-[40px]",
+          dark ? "text-white" : "text-[#0B0B0B]",
+        )}
+        style={phaseTypography}
+      >
+        {plan.phase}
+      </h3>
+
+      <p
+        className={cn("mt-1", dark ? "text-[#F3EDE8]" : "text-[#5F6B7A]")}
+        style={cardTitleTypography}
+      >
+        {plan.title}
+      </p>
+
+      <p
+        className="mt-4 w-fit rounded-[10px] bg-[#A07B62] px-3 py-1 text-[26px] leading-[40px] text-white sm:text-[30px] sm:leading-[44px]"
+        style={priceTypography}
+      >
+        {plan.price}
+      </p>
+
+      <p
+        className={cn("mt-4", dark ? "text-[#D8CEC6]" : "text-[#5F6B7A]")}
+        style={cardBodyTypography}
+      >
+        {plan.body}
+      </p>
+
+      {/* Accordion. Rows are separated by a thin rule; the last one has none. */}
+      <div
+        className={cn(
+          "mt-4 flex flex-col divide-y",
+          dark ? "divide-white/25" : "divide-[#1E130A]/15",
+        )}
+      >
+        {plan.groups.map((group, index) => {
+          const isOpen = openGroup === index;
+          const panelId = `ecommerce-${plan.phase.replace(/\s+/g, "-").toLowerCase()}-group-${index}`;
+
+          return (
+            <div key={group.title}>
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                onClick={() => setOpenGroup(isOpen ? null : index)}
+                className={cn(
+                  "flex w-full cursor-pointer items-center justify-between gap-4 py-4 text-left text-[15px] sm:text-[16px] focus-visible:underline focus-visible:outline-none",
+                  dark ? "text-[#F3EDE8]" : "text-[#5F6B7A]",
+                )}
+                style={groupTitleTypography}
+              >
+                {group.title}
+                <ChevronDown
+                  aria-hidden="true"
+                  className={cn(
+                    "size-4 shrink-0 transition-transform duration-300",
+                    isOpen && "rotate-180",
+                  )}
+                />
+              </button>
+
+              <div
+                id={panelId}
+                className={cn(
+                  "grid transition-[grid-template-rows] duration-300 ease-out",
+                  isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                )}
+              >
+                <div className="overflow-hidden">
+                  <ul className="flex flex-col gap-2.5 pb-4" inert={!isOpen}>
+                    {group.items.map((item) => (
+                      <li
+                        key={item}
+                        className={cn(
+                          "flex items-start gap-2.5 text-[14px] sm:text-[15px]",
+                          dark ? "text-[#D8CEC6]" : "text-[#5F6B7A]",
+                        )}
+                        style={featureTypography}
+                      >
+                        <Check
+                          className="mt-0.5 size-4 shrink-0 text-[#A07B62]"
+                          aria-hidden="true"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </li>
+  );
+};
+
 const EcommercePackages = () => {
   return (
-    <section id="packages" className="scroll-mt-[110px] bg-[#F7FAFC] px-4">
-      {/* 1420px, matching the navbar. */}
+    <section id="packages" className="scroll-mt-[110px] bg-[#F3EFEC] px-4">
       <div className="mx-auto w-full max-w-[1420px] py-10 lg:py-[100px]">
         <div className="mx-auto max-w-[768px] text-center">
-          <h3 style={eyebrowTypography} className="pb-4 text-[#A07B62]">
+          <p style={eyebrowTypography} className="pb-4 text-[#A07B62]">
             BUILT AROUND YOUR BUSINESS STAGE
-          </h3>
+          </p>
           <h2
             style={titleTypography}
-            className="pb-4 text-[30px] leading-10 text-[#1E130A] md:text-[48px] md:leading-12.5"
+            className="pb-4 text-[30px] leading-10 text-[#E14B31] md:text-[48px] md:leading-12.5"
           >
-            Start With What You Need. Scale When You&apos;re Ready.
+            Grow Your Retail Business with Our Most Popular Package
           </h2>
-          <p style={paragraphTypography} className="text-[#5F6B7A]">
+          <p style={paragraphTypography} className="mx-auto max-w-[520px] text-[#5F6B7A]">
             Choose the right stage for your business today, then add smarter
             commerce tools as your needs grow.
           </p>
         </div>
 
-        <ul className="grid grid-cols-1 gap-10 pt-12 md:grid-cols-2 lg:grid-cols-3">
-          {packages.map(
-            ({ phase, title, subtitle, badge, services, bestFor }) => (
-              /* The grid stretches every card to the tallest row height by default, so no
-               `h-full` is needed here — adding one would fight the stretch and stagger
-               the bottoms. `flex-col` plus `mt-auto` on the footer is what pins the CTAs
-               to a common baseline while the "Best for" blocks stay where their copy
-               ends, matching the frame. */
-              <li
-                key={phase}
-                className="group flex flex-col rounded-2xl border-[0.8px] border-[#DDE6F2] bg-white p-10 transition-colors duration-300 hover:border-[#A07B62]/35 hover:bg-[#1E130A] hover:shadow-[0_20px_50px_rgba(30,19,10,0.18)] focus-within:border-[#A07B62]/35 focus-within:bg-[#1E130A] focus-within:shadow-[0_20px_50px_rgba(30,19,10,0.18)]"
-              >
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span
-                    style={cardEyebrowTypography}
-                    className="text-[#A07B62]"
-                  >
-                    {phase}
-                  </span>
-                  {badge ? (
-                    /* No rest-state fill was specced, only the hover one. The accent at
-                     12% is the nearest quiet equivalent, so the badge shifts weight
-                     rather than changing character when the card inverts. */
-                    <span
-                      style={badgeTypography}
-                      className="rounded-full bg-[#A07B62]/12 px-2 py-1 text-[#A07B62] transition-colors duration-300 group-hover:bg-[#A07B62]/15 group-focus-within:bg-[#A07B62]/15"
-                    >
-                      {badge}
-                    </span>
-                  ) : null}
-                </div>
-
-                {/* h3: nested under this section's h2. */}
-                <h3
-                  style={cardTitleTypography}
-                  className="mt-3 text-[#1E130A] transition-colors duration-300 group-hover:text-white group-focus-within:text-white"
-                >
-                  {title}
-                </h3>
-                <p
-                  style={bodyTypography}
-                  className="mt-4 text-[#5F6B7A] transition-colors duration-300 group-hover:text-white/70 group-focus-within:text-white/70"
-                >
-                  {subtitle}
-                </p>
-
-                <ul className="mt-7 flex flex-col gap-4">
-                  {services.map((service) => (
-                    <li key={service} className="flex items-start gap-3">
-                      {/* Only the hover fill was specced as an alpha (#A07B62 at 15%);
-                        the rest fill is read the same way, since a solid #5F6B7A tile
-                        would be a dark slate square against the white card. */}
-                      <span
-                        className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-[#5F6B7A]/15 transition-colors duration-300 group-hover:bg-[#A07B62]/15 group-focus-within:bg-[#A07B62]/15"
-                        aria-hidden="true"
-                      >
-                        <Check className="size-2.5 text-[#A07B62]" />
-                      </span>
-                      <span
-                        style={bodyTypography}
-                        className="text-[#5F6B7A] transition-colors duration-300 group-hover:text-white/70 group-focus-within:text-white/70"
-                      >
-                        {service}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <p
-                  style={bestForLabelTypography}
-                  className="mt-8 text-[#1E130A] transition-colors duration-300 group-hover:text-white group-focus-within:text-white"
-                >
-                  Best for
-                </p>
-                <p
-                  style={bodyTypography}
-                  className="mt-3 text-[#5F6B7A] transition-colors duration-300 group-hover:text-white/70 group-focus-within:text-white/70"
-                >
-                  {bestFor}
-                </p>
-
-                {/* `mt-auto` absorbs the height each card is short of the tallest, which is
-                  what lines the three CTAs up; `pt-8` keeps a floor under the gap. */}
-                <div className="mt-auto pt-8">
-                  <Link
-                    href="/contact-us"
-                    style={buttonTypography}
-                    className="block rounded-[12px] border-[0.8px] border-[#A07B62] py-2.5 text-center text-[#A07B62] transition-colors duration-300 group-hover:bg-[#A07B62] group-hover:text-white group-focus-within:bg-[#A07B62] group-focus-within:text-white"
-                  >
-                    Get Started
-                    <span className="sr-only"> with {title}</span>
-                  </Link>
-                </div>
-              </li>
-            ),
-          )}
+        {/* One panel: the cards share the outer border and radius, and
+            `overflow-hidden` squares off the dark card's corners against it. Cards
+            stretch (the grid default) so the dark card always spans the full height. */}
+        <ul className="mx-auto mt-10 grid max-w-[1320px] grid-cols-1 overflow-hidden rounded-2xl border border-[#DDE6F2] bg-white lg:mt-12 lg:grid-cols-3">
+          {plans.map((plan) => (
+            <PlanCard key={plan.phase} plan={plan} />
+          ))}
         </ul>
+
+        {/* Video teaser. The headline is baked into the image; the play button sits
+            dead centre with a red triangle, per the frame. */}
+        <div className="relative mx-auto mt-10 w-full max-w-[800px] overflow-hidden rounded-2xl lg:mt-15">
+          <Image
+            src={priceVideoBg}
+            alt="Power your retail business with smarter technology — Way-Wise Tech"
+            className="h-auto w-full"
+            sizes="(min-width: 832px) 800px, 100vw"
+          />
+          <EcommercePlayButton size="md" iconClassName="text-[#E5412F]" />
+        </div>
       </div>
     </section>
   );

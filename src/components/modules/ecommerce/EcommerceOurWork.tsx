@@ -10,6 +10,7 @@ import work3 from "@/assets/images/ecommerce/work3.webp";
 import work4 from "@/assets/images/ecommerce/work4.webp";
 import work5 from "@/assets/images/ecommerce/work5.webp";
 import work6 from "@/assets/images/ecommerce/work6.webp";
+import projectBanner from "@/assets/images/ecommerce/project_banner.png";
 
 /**
  * Filterable project grid.
@@ -173,8 +174,20 @@ const EcommerceOurWork = () => {
   return (
     <section
       id="our-work"
-      className="w-full scroll-mt-[110px] bg-[#1E130A] px-4"
+      className="relative isolate w-full scroll-mt-[110px] overflow-hidden bg-[#1E130A] px-4"
     >
+      {/* Background photo (pre-dimmed store interior). `-z-10` inside the `isolate`
+          section keeps it behind the content; #1E130A shows until it paints. */}
+      <Image
+        src={projectBanner}
+        alt=""
+        aria-hidden="true"
+        fill
+        sizes="100vw"
+        placeholder="blur"
+        className="-z-10 object-cover object-center"
+      />
+
       {/* 1420px, matching the navbar. Two 685px columns plus the 50px gutter is exactly
           that width, so the images render at their intrinsic size. */}
       <div className="mx-auto w-full max-w-[1420px] py-10 lg:py-[100px]">
@@ -203,8 +216,8 @@ const EcommerceOurWork = () => {
                 onClick={() => selectFilter(filter)}
                 aria-pressed={isActive}
                 style={controlTypography}
-                className={`rounded-[8px] border border-[#A07B62] px-[30px] py-2 whitespace-nowrap text-white transition-colors duration-200 hover:bg-[#A07B62] ${
-                  isActive ? "bg-[#A07B62]" : "bg-transparent"
+                className={`rounded-[8px] border border-[#A07B62] px-[30px] py-2 whitespace-nowrap text-[#A07B62] transition-colors duration-200 hover:bg-[#A07B62] hover:text-white ${
+                  isActive ? "bg-[#A07B62] text-white" : "bg-transparent"
                 }`}
               >
                 {filter}

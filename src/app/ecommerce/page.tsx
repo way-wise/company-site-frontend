@@ -26,14 +26,15 @@ const EcommercePage = () => {
     <main className="min-h-screen bg-white">
       <EcommerceNavbar />
       <EcommerceBanner />
-      <EcommerceIndustries />
-      <EcommerceConnected />
+      <EcommerceGreaterControl />
+      {/* <EcommerceIndustries /> */}
+      {/* <EcommerceConnected /> */}
       <EcommercePackages />
       <EcommerceOurWork />
-      <EcommerceThreePhases />
-      <EcommerceGreaterControl />
-      <EcommerceSolutions />
-      <EcommerceFaq />
+      {/* <EcommerceThreePhases /> */}
+      
+      {/* <EcommerceSolutions /> */}
+      {/* <EcommerceFaq /> */}
       <EcommerceCta />
       <EcommerceFooter />
     </main>

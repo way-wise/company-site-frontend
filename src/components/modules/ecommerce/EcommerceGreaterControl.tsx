@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import controlImage from "@/assets/images/ecommerce/greatercontrol.webp";
+import EcommercePlayButton from "./EcommercePlayButton";
 
 /**
  * "Run Your Retail Business With Greater Control." — copy and benefit list on the left,
@@ -81,14 +82,15 @@ const cardMetaTypography = {
 } as const;
 
 const points = [
-  "Know what is selling and what needs attention",
-  "Keep orders and inventory easier to manage",
+  "Know what’s selling and where your business needs attention.",
+  "Keep orders and inventory easier to manage.",
   "Improve communication with customers",
+  "Connect your retail operations through a unified digital system.",
 ];
 
 const EcommerceGreaterControl = () => {
   return (
-    <section className="w-full bg-[#F5EDE6] px-4">
+    <section className="w-full bg-[#F7FAFC] px-4">
       {/* 1420px, matching the navbar. Two 680px columns plus the 60px gutter is exactly
           that width, so the photo renders at its intrinsic size. */}
       <div className="mx-auto grid w-full max-w-[1420px] items-center gap-12 py-10 lg:grid-cols-2 lg:gap-[60px] lg:py-[100px]">
@@ -98,9 +100,9 @@ const EcommerceGreaterControl = () => {
               "With" as the frame does — no hard line break needed. */}
           <h2
             style={titleTypography}
-            className="text-[30px] leading-[1.1] text-[#1E130A] sm:text-[40px] lg:text-[48px] lg:leading-12"
+            className="text-[30px] leading-[1.1] text-[#1E130A] sm:text-[40px] lg:text-[48px] lg:leading-14"
           >
-            Run Your Retail Business With Greater Control.
+            Why Retail and eCommerce Businesses Choose Way-Wise Tech to Sell and Scale Smarter
           </h2>
 
           <p style={paragraphTypography} className="mt-6 text-[#5F6B7A]">
@@ -146,6 +148,9 @@ const EcommerceGreaterControl = () => {
             className="h-auto w-full rounded-[16px]"
             sizes="(min-width: 1024px) 680px, 100vw"
           />
+
+          {/* Play button centred on the photo, with the accent-brown triangle. */}
+          <EcommercePlayButton size="md" iconClassName="text-[#A07B62]" />
 
           {/* Overlay card. Not baked into the asset, so it is real text. `max-w` keeps it
               inside the photo on narrow viewports. */}
