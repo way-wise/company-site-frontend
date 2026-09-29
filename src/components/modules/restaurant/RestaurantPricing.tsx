@@ -373,14 +373,14 @@ const RestaurantPricing = () => {
             dead centre, over the faint one drawn into the artwork. */}
         <div className="relative mx-auto mt-10 w-full max-w-[800px] overflow-hidden rounded-2xl lg:mt-15">
           <Image
-            src="/images/restaurant/price-page-video-bg.png"
+            src="/images/restaurant/price-page-video-bg.jpeg"
             alt="Why our packages are the best for the food and restaurant industry — Way-Wise Tech"
             width={800}
             height={451}
             sizes="(min-width: 832px) 800px, 100vw"
             className="h-auto w-full"
           />
-          <RestaurentPlayButton size="md" />
+          {/* <RestaurentPlayButton size="md" /> */}
         </div>
       </div>
     </section>

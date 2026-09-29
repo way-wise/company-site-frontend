@@ -16,7 +16,7 @@ import RestaurentPlayButton from "./RestaurentPlayButton";
  * so they are referenced by path and need their intrinsic sizes declared by hand.
  */
 const BACKDROP = "/images/restaurant/banner.webp";
-const VISUAL = "/images/restaurant/banner_right.webp";
+const VISUAL = "/images/restaurant/banner_right.png";
 const video_bg = "/images/restaurant/video_bg.png";
 const VISUAL_WIDTH = 845;
 const VISUAL_HEIGHT = 715;
@@ -129,9 +129,9 @@ const RestaurantBanner = () => {
                 sizes="(min-width: 1024px) 845px, 100vw"
                 priority
               />
-              <div className="absolute bottom-22 -right-2">
+              <div className="absolute bottom-2.5 right-10">
                 <Image src={video_bg} width={254} height={143} className="h-auto w-full max-w-[254px]" alt="video bg"/>
-                <RestaurentPlayButton size="sm" />
+                {/* <RestaurentPlayButton size="sm" /> */}
               </div>
             </div>
           </div>

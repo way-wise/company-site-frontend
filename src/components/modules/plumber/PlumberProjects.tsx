@@ -10,6 +10,7 @@ import project3 from "@/assets/images/plumber/project3.webp";
 import project4 from "@/assets/images/plumber/project4.webp";
 import project5 from "@/assets/images/plumber/project5.webp";
 import project6 from "@/assets/images/plumber/project6.webp";
+import projectBg from "@/assets/images/plumber/project_bg.png";
 
 /**
  * Filterable project grid.
@@ -153,28 +154,34 @@ const PlumberProjects = () => {
   };
 
   return (
-    <section id="our-work" className="w-full scroll-mt-[110px] bg-[#101311] px-4">
+    <section id="our-work" className="relative isolate w-full scroll-mt-[110px] overflow-hidden px-4">
+      {/* Background photo (pre-dimmed workshop wall). `-z-10` inside the `isolate`
+          section keeps it behind the content without escaping the section. */}
+      <Image
+        src={projectBg}
+        alt=""
+        aria-hidden="true"
+        fill
+        sizes="100vw"
+        placeholder="blur"
+        className="-z-10 object-cover object-center"
+      />
+
       <div className="mx-auto w-full max-w-[1320px] py-10 lg:py-[100px]">
         <h2
-          className="text-center text-[30px] leading-[1.2] sm:text-[38px] lg:text-[48px] lg:leading-[60px]"
+          className="text-center max-w-[794px] mx-auto text-[30px] leading-[1.2] sm:text-[38px] lg:text-[48px] lg:leading-[60px]"
           style={titleTypography}
         >
           {/* Hard break reproduced from the Figma frame: the colour split falls mid-line
               on row one, so the rows cannot be left to wrap freely. */}
-          <span className="block">
-            <span className="text-white">Solutions We’ve Built </span>
-            <span className="text-[#B6D500]">for</span>
-          </span>
-          <span className="block text-[#B6D500]">Businesses Like Yours.</span>
+            <span className="text-white">Built for the Businesses That Keep Communities Running.</span>
         </h2>
 
         <p
           className="mx-auto mt-5 max-w-[880px] text-center text-white"
           style={introTypography}
         >
-          Explore digital solutions created for service professionals—from
-          high-converting websites to smarter booking, customer communication,
-          and business-management systems.
+          Explore digital solutions created for service professionals—from high-converting websites to smarter booking, customer communication, and business-management systems.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
@@ -187,7 +194,7 @@ const PlumberProjects = () => {
                 onClick={() => selectFilter(filter)}
                 aria-pressed={isActive}
                 style={chipTypography}
-                className={`rounded-[6px] border border-[#B6D500] px-[30px] py-3 whitespace-nowrap transition-colors duration-200 hover:bg-[#B6D500] hover:text-[#101311] ${
+                className={`rounded-[6px] border border-[#B6D500] px-4 md:px-[30px] py-3 whitespace-nowrap transition-colors duration-200 hover:bg-[#B6D500] hover:text-[#101311] ${
                   isActive
                     ? "bg-[#B6D500] text-[#101311]"
                     : "bg-transparent text-[#B6D500]"

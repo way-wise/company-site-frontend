@@ -92,7 +92,7 @@ const RestaurantFuture = () => {
                 <Link
                   href="/contact-us"
                   style={buttonTypography}
-                  className="inline-flex items-center gap-3 rounded-[10px] border border-white px-[60px] py-4 whitespace-nowrap text-white transition-colors duration-200 hover:bg-white hover:text-[#E94222]"
+                  className="inline-flex items-center gap-3 rounded-[10px] border border-white px-6 lg:px-[60px] py-4 whitespace-nowrap text-white transition-colors duration-200 hover:bg-white hover:text-[#E94222]"
                 >
                   Start Growing Today
                   <ArrowRight className="size-4" aria-hidden="true" />

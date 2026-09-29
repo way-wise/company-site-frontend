@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import logo from "@/assets/images/plumber/logo.webp";
-
+const profileGuide = "/images/shared/book-v2-front.png";
 /**
  * Navbar.
  *
@@ -30,11 +30,9 @@ const DRAWER_ID = "plumber-mobile-drawer";
 // further down. Section ids must match these as the sections get built.
 const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "Why Us", href: "#why-us" },
+  { label: "About", href: "#about" },
   { label: "Packages", href: "#packages" },
-  { label: "Solutions", href: "#our-work" },
-  { label: "Contact Us", href: "/contact-us" },
+  { label: "Our Work", href: "#our-work" },
 ];
 
 // Figma spec: Plus Jakarta Sans SemiBold 16px, line-height 100%, zero letter-spacing.
@@ -150,8 +148,7 @@ const PlumberNavbar = () => {
               pair against the right edge with all the slack falling after the logo.
               Treating the menu as a third sibling would centre it instead.
             */}
-            <div className="flex items-center gap-4 lg:gap-10 xl:gap-[75px]">
-              {/* Desktop navigation — 31px gap per spec */}
+          {/* Desktop navigation — 31px gap per spec */}
               <nav className="hidden items-center gap-5 xl:gap-[31px] lg:flex">
                 {/* Plain <a>, not <Link>: these are same-document fragments. next/link
                     routes them through the App Router, which does its own scrolling and
@@ -167,8 +164,25 @@ const PlumberNavbar = () => {
                     {link.label}
                   </a>
                 ))}
+                <Link
+                    href="/book"
+                    title="View Company Profile"
+                    className="hidden overflow-hidden rounded-sm shadow-[0_0_8px_rgba(0,163,255,0.3)] transition-all duration-300 hover:scale-[1.04] hover:ring-[#00A3FF]/80 hover:shadow-[0_0_14px_rgba(0,163,255,0.5)] lg:block"
+                  >
+                  <Image
+                    src={profileGuide}
+                    alt="Way Wise Tech company profile"
+                    width={1190}
+                    height={841}
+                    className="h-auto w-24 object-cover"
+                  />
+                </Link>
               </nav>
 
+
+
+            <div className="flex items-center gap-4 lg:gap-10 xl:gap-[75px]">
+          
               <Link
                 href="/contact-us"
                 style={navTypography}

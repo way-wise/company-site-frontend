@@ -1,115 +1,97 @@
-import Link from "next/link";
-import { Check } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { Check, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import priceVideoBg from "@/assets/images/plumber/price_video_bg.png";
+import RestaurentPlayButton from "@/components/modules/restaurant/RestaurentPlayButton";
 
 /**
- * Packages — three phase cards.
+ * Packages — three phase cards joined into one panel.
  *
- * Same mechanics and type ramps as the /restaurant pricing section, as requested: each
- * card inverts on hover to a dark ground with light copy, a drop shadow, and a "Get
- * Started" button that expands out of zero height at the bottom. The reveal animates a
- * 0fr -> 1fr grid row rather than max-height, so it eases to the button's real height.
+ * Same layout and mechanics as the /restaurant pricing section: the popular (middle)
+ * card sits on a permanent dark ground, the others stay light, and feature groups are an
+ * accordion (one open per card) that opens with a 0fr -> 1fr grid row rather than
+ * max-height, so it eases to the list's real height.
  *
- * The button is also revealed by `focus-within`, so it stays reachable by keyboard — a
- * hover-only control would be unusable without a pointer.
- *
- * Only the palette differs from that page: the lime accent replaces the orange, and this
- * frame has no "clear project scope" note pill under the intro.
+ * Only the palette differs: lime replaces the orange. On the light cards the price is
+ * plain lime text; on the dark card it sits in a lime badge with dark ink.
  */
+
+const font = "var(--font-plus-jakarta-sans), sans-serif";
 
 // Same ramp as the other sections on this page: Plus Jakarta Sans ExtraBold 48px / 60px,
 // -1.2px letter-spacing, centered. Only the desktop size is specced.
 const titleTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
+  fontFamily: font,
   fontWeight: 800,
   letterSpacing: "-1.2px",
 } as const;
 
 // Same ramp as the other sections: Plus Jakarta Sans Medium 18px / 28px, centered.
 const introTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
+  fontFamily: font,
   fontWeight: 500,
   fontSize: "18px",
   lineHeight: "28px",
   letterSpacing: "0",
 } as const;
 
-// Matching the /restaurant pricing card: Bold 16px / 16.5px, 1.1px letter-spacing.
+// "Phase 1" — Plus Jakarta Sans ExtraBold.
 const phaseTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
+  fontFamily: font,
+  fontWeight: 800,
+  letterSpacing: "-0.32px",
+} as const;
+
+// Card subtitle — Plus Jakarta Sans Bold 16px.
+const cardTitleTypography = {
+  fontFamily: font,
   fontWeight: 700,
   fontSize: "16px",
-  lineHeight: "16.5px",
-  letterSpacing: "1.1px",
-} as const;
-
-// Matching the /restaurant pricing card: ExtraBold 24px / 36px, -0.48px letter-spacing.
-const cardTitleTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
-  fontWeight: 800,
-  fontSize: "24px",
-  lineHeight: "36px",
-  letterSpacing: "-0.48px",
-} as const;
-
-// Matching the /restaurant pricing card: ExtraBold 28px / 42px, -0.84px letter-spacing.
-const priceTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
-  fontWeight: 800,
-  fontSize: "28px",
-  lineHeight: "42px",
-  letterSpacing: "-0.84px",
-} as const;
-
-// Matching the /restaurant pricing card: Regular 18px / 22px.
-const cardBodyTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
-  fontWeight: 400,
-  fontSize: "18px",
   lineHeight: "22px",
   letterSpacing: "0",
 } as const;
 
-// Matching the /restaurant pricing card: Bold 16px / 16.5px, 0.88px letter-spacing,
-// uppercase.
-const groupTitleTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
-  fontWeight: 700,
-  lineHeight: "16.5px",
-  letterSpacing: "0.88px",
+// Price — Plus Jakarta Sans ExtraBold.
+const priceTypography = {
+  fontFamily: font,
+  fontWeight: 800,
+  letterSpacing: "-0.32px",
 } as const;
 
-// Matching the /restaurant pricing card: Regular 16px / 20.25px.
-const featureTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
+// Card body — Plus Jakarta Sans Regular 14px / 21px.
+const cardBodyTypography = {
+  fontFamily: font,
   fontWeight: 400,
-  lineHeight: "20.25px",
-  letterSpacing: "0",
-} as const;
-
-// Matching the /restaurant pricing card: 16px / 18px.
-const bestForTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
-  fontWeight: 400,
-  fontSize: "16px",
-  lineHeight: "18px",
-  letterSpacing: "0",
-} as const;
-
-// Matching the /restaurant pricing card: Bold 18px / 21px, centered.
-const buttonTypography = {
-  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
-  fontWeight: 700,
-  fontSize: "18px",
+  fontSize: "14px",
   lineHeight: "21px",
+  letterSpacing: "0",
+} as const;
+
+// Accordion header — Plus Jakarta Sans Medium 16px.
+const groupTitleTypography = {
+  fontFamily: font,
+  fontWeight: 500,
+  lineHeight: "22px",
+  letterSpacing: "0",
+} as const;
+
+// Accordion item — Plus Jakarta Sans Regular 15px.
+const featureTypography = {
+  fontFamily: font,
+  fontWeight: 400,
+  lineHeight: "20px",
   letterSpacing: "0",
 } as const;
 
 const plans = [
   {
-    phase: "PHASE 1",
-    title: "Service Business Launch",
-    price: "$750 – $1,800",
-    body: "Build a professional brand and online presence that helps local customers discover, trust, and contact your business.",
+    phase: "Phase 1",
+    title: "Company Launch",
+    price: "$950-$2950",
+    body: "Build your construction brand and establish a strong digital presence.",
     popular: false,
     groups: [
       {
@@ -149,18 +131,16 @@ const plans = [
         ],
       },
     ],
-    bestFor:
-      " New plumbers, electricians, HVAC teams, mechanics, roofers, and handyman businesses.",
   },
   {
-    phase: "PHASE 2",
-    title: "Booking & Customer Engagement",
-    price: "$1,800 – $3,900",
-    body: "Everything in Phase 1, plus digital tools that help you capture leads, book more jobs, and communicate with customers.",
+    phase: "Phase 2",
+    title: "Collaboration Platform",
+    price: "$2975 – $6700",
+    body: "Improve project communication and simplify client collaboration.",
     popular: true,
     groups: [
       {
-        title: "Lead & Booking System",
+        title: "Client Experience",
         items: [
           "Online Service Booking",
           "Estimate Request System",
@@ -178,7 +158,7 @@ const plans = [
         ],
       },
       {
-        title: "Customer Services",
+        title: "Project Services",
         items: [
           "Online Estimates",
           "Digital Approvals",
@@ -196,18 +176,16 @@ const plans = [
         ],
       },
     ],
-    bestFor:
-      " Growing service businesses that want more bookings, faster communication, and better customer experiences.",
   },
   {
-    phase: "PHASE 3",
-    title: "Smart Service Management",
-    price: "$4,000 – $12,900",
-    body: "Everything in Phases 1 and 2, plus a connected platform for managing customers, jobs, field teams, payments, and business performance.",
+    phase: "Phase 3",
+    title: "Smart Communication Management",
+    price: "$6800-$19500",
+    body: "Everything in Phase 1 & 2 plus transform your business with a complete construction management system.",
     popular: false,
     groups: [
       {
-        title: "Service Management",
+        title: "Practice Management",
         items: [
           "Customer CRM",
           "Job Scheduling",
@@ -216,7 +194,7 @@ const plans = [
         ],
       },
       {
-        title: "Field Team Management",
+        title: "Analytics & Reports",
         items: [
           "Technician Dashboard",
           "Staff Scheduling",
@@ -225,7 +203,7 @@ const plans = [
         ],
       },
       {
-        title: "Analytics & Reporting",
+        title: "Team Management",
         items: [
           "Revenue Dashboard",
           "Job Performance Reports",
@@ -234,7 +212,7 @@ const plans = [
         ],
       },
       {
-        title: "Mobile, Cloud & Integrations",
+        title: "Mobile & Cloud Solutions",
         items: [
           "Field Service Mobile App",
           "Customer Mobile App",
@@ -244,26 +222,144 @@ const plans = [
         ],
       },
     ],
-    bestFor:
-      " Multi-team and multi-location plumbing, electrical, HVAC, roofing, automotive, and repair businesses.",
   },
 ];
+
+type Plan = (typeof plans)[number];
+
+const PlanCard = ({ plan }: { plan: Plan }) => {
+  // Index of the open feature group; null = all collapsed.
+  const [openGroup, setOpenGroup] = useState<number | null>(null);
+  const dark = plan.popular;
+
+  return (
+    <li
+      className={cn(
+        "flex flex-col p-6 sm:p-8 lg:p-10",
+        dark ? "bg-[#17120F]" : "bg-[#FFFAF6]",
+      )}
+    >
+      {/* h3: nested under this section's h2. */}
+      <h3
+        className={cn(
+          "text-[28px] leading-[36px] sm:text-[32px] sm:leading-[40px]",
+          dark ? "text-white" : "text-[#17120F]",
+        )}
+        style={phaseTypography}
+      >
+        {plan.phase}
+      </h3>
+
+      <p
+        className={cn("mt-1", dark ? "text-[#FFE0D1]" : "text-[#17120F]")}
+        style={cardTitleTypography}
+      >
+        {plan.title}
+      </p>
+
+      {/* Plain lime text on the light cards; a lime badge with dark ink on the dark
+          one. */}
+      <p
+        className={cn(
+          "mt-4 w-fit text-[26px] leading-[40px] sm:text-[30px] sm:leading-[44px]",
+          dark
+            ? "rounded-[10px] bg-[#B6D500] px-3 py-1 text-[#1C1817]"
+            : "text-[#AECC00]",
+        )}
+        style={priceTypography}
+      >
+        {plan.price}
+      </p>
+
+      <p
+        className={cn("mt-4", dark ? "text-[#D9CCC3]" : "text-[#26201D]")}
+        style={cardBodyTypography}
+      >
+        {plan.body}
+      </p>
+
+      {/* Accordion. Rows are separated by a thin rule; the last one has none. */}
+      <div
+        className={cn(
+          "mt-4 flex flex-col divide-y",
+          dark ? "divide-white/25" : "divide-[#17120F]/25",
+        )}
+      >
+        {plan.groups.map((group, index) => {
+          const isOpen = openGroup === index;
+          const panelId = `plumber-${plan.phase.replace(/\s+/g, "-").toLowerCase()}-group-${index}`;
+
+          return (
+            <div key={group.title}>
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                onClick={() => setOpenGroup(isOpen ? null : index)}
+                className={cn(
+                  "flex w-full cursor-pointer items-center justify-between gap-4 py-4 text-left text-[15px] sm:text-[16px] focus-visible:underline focus-visible:outline-none",
+                  dark ? "text-[#FFE0D1]" : "text-[#17120F]",
+                )}
+                style={groupTitleTypography}
+              >
+                {group.title}
+                <ChevronDown
+                  aria-hidden="true"
+                  className={cn(
+                    "size-4 shrink-0 transition-transform duration-300",
+                    isOpen && "rotate-180",
+                  )}
+                />
+              </button>
+
+              <div
+                id={panelId}
+                className={cn(
+                  "grid transition-[grid-template-rows] duration-300 ease-out",
+                  isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                )}
+              >
+                <div className="overflow-hidden">
+                  <ul className="flex flex-col gap-2.5 pb-4" inert={!isOpen}>
+                    {group.items.map((item) => (
+                      <li
+                        key={item}
+                        className={cn(
+                          "flex items-start gap-2.5 text-[14px] sm:text-[15px]",
+                          dark ? "text-[#D9CCC3]" : "text-[#6D625C]",
+                        )}
+                        style={featureTypography}
+                      >
+                        <Check
+                          className="mt-0.5 size-4 shrink-0 text-[#B6D500]"
+                          aria-hidden="true"
+                        />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </li>
+  );
+};
 
 const PlumberPackages = () => {
   return (
     <section id="packages" className="w-full scroll-mt-[110px] bg-white px-4">
       <div className="mx-auto w-full max-w-[1320px] py-10 lg:py-[100px]">
+        {/* Olive rather than the #B6D500 accent: the bright lime is too light to
+            carry a heading on white. */}
         <h2
-          className="text-center text-[30px] leading-[1.2] sm:text-[38px] lg:text-[48px] lg:leading-[60px]"
+          className="text-center max-w-[928px] mx-auto text-[30px] leading-[1.2] text-[#7E9400] sm:text-[38px] lg:text-[48px] lg:leading-[60px]"
           style={titleTypography}
         >
-          {/* Hard break reproduced from the Figma frame: the colour split falls mid-line
-              on row one, so the rows cannot be left to wrap freely. */}
-          <span className="block">
-            <span className="text-[#17120F]">Start with What You Need. </span>
-            <span className="text-[#B6D500]">Scale</span>
-          </span>
-          <span className="block text-[#B6D500]">When You&rsquo;re Ready.</span>
+          {/* Hard break reproduced from the Figma frame. */}
+          <span className="block">Grow Your Service Business with Our Most Popular Package</span>
         </h2>
 
         <p
@@ -275,119 +371,26 @@ const PlumberPackages = () => {
           workflow, and growth goals.
         </p>
 
-        {/* `items-start` so the hovered card grows downward without stretching its
-            neighbours to match. */}
-        <ul className="mt-[60px] grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+        {/* One panel: the cards share the outer border and radius, and
+            `overflow-hidden` squares off the dark card's corners against it. Cards
+            stretch (the grid default) so the dark card always spans the full height. */}
+        <ul className="mt-10 grid grid-cols-1 overflow-hidden rounded-2xl border border-[#17120F]/9 bg-[#FFFAF6] lg:mt-15 lg:grid-cols-3">
           {plans.map((plan) => (
-            <li
-              key={plan.phase}
-              // No `h-full`: with `align-items: start` the grid area is still the full
-              // row height, so height:100% would stretch every card to match the tallest
-              // one and leave uneven dead space under each "Best For".
-              className="group relative flex flex-col rounded-[20px] border border-[#17120F]/9 bg-[#FFFDF8] p-5 transition-all duration-300 hover:bg-[#17120F] hover:shadow-[0_20px_60px_0_rgba(23,18,15,0.25)] focus-within:bg-[#17120F] focus-within:shadow-[0_20px_60px_0_rgba(23,18,15,0.25)] md:p-10"
-            >
-              {plan.popular && (
-                // Dark at rest, lime on hover — the frame only shows the hovered state,
-                // so the resting fill is inferred.
-                <span className="absolute top-4 right-5 rounded-full bg-[#17120F] px-3 py-1.5 text-[11px] font-bold tracking-[0.5px] text-white uppercase transition-colors duration-300 group-hover:bg-[#B6D500] group-hover:text-[#101311] group-focus-within:bg-[#B6D500] group-focus-within:text-[#101311] md:top-10 md:right-10">
-                  Most Popular
-                </span>
-              )}
-
-              <p
-                className="text-[#17120F] transition-colors duration-300 group-hover:text-[#6D625C] group-focus-within:text-[#6D625C]"
-                style={phaseTypography}
-              >
-                {plan.phase}
-              </p>
-
-              {/* h3: nested under this section's h2. Uppercased in CSS rather than in
-                  the data, so the accessible name keeps its normal casing. */}
-              <h3
-                className="mt-4 text-[24px] text-[#17120F] uppercase transition-colors duration-300 group-hover:text-white group-focus-within:text-white"
-                style={cardTitleTypography}
-              >
-                {plan.title}
-              </h3>
-
-              {/* Price keeps the accent in both states. */}
-              <p className="mt-1 text-[#B6D500]" style={priceTypography}>
-                {plan.price}
-              </p>
-
-              <p
-                className="mt-3 text-[#6D625C] transition-colors duration-300 group-hover:text-white group-focus-within:text-white"
-                style={cardBodyTypography}
-              >
-                {plan.body}
-              </p>
-
-              {/* Divider after the paragraph. Inverts on hover, where the 8% dark rule
-                  would be invisible against #17120F. */}
-              <hr className="my-7 border-[#17120F]/8 transition-colors duration-300 group-hover:border-white/10 group-focus-within:border-white/10" />
-
-              <div className="flex flex-col gap-6">
-                {plan.groups.map((group) => (
-                  <div key={group.title}>
-                    <p
-                      className="text-[14px] text-[#17120F] uppercase transition-colors duration-300 group-hover:text-white group-focus-within:text-white md:text-[16px]"
-                      style={groupTitleTypography}
-                    >
-                      {group.title}
-                    </p>
-                    <ul className="mt-3 flex flex-col gap-2">
-                      {group.items.map((item) => (
-                        <li
-                          key={item}
-                          className="flex items-start gap-2 text-[14px] text-[#26201D] transition-colors duration-300 group-hover:text-white group-focus-within:text-white md:text-[16px]"
-                          style={featureTypography}
-                        >
-                          {/* Check keeps the accent in both states. */}
-                          <Check
-                            className="mt-0.5 size-4 shrink-0 text-[#B6D500]"
-                            aria-hidden="true"
-                          />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-
-              {/* Divider before "Best For". */}
-              <hr className="my-7 border-[#17120F]/8 transition-colors duration-300 group-hover:border-white/10 group-focus-within:border-white/10" />
-
-              <p
-                className="text-[#6D625C] transition-colors duration-300 group-hover:text-white group-focus-within:text-white"
-                style={bestForTypography}
-              >
-                <b>Best For:</b>
-                {plan.bestFor}
-              </p>
-
-              {/*
-                Hover-revealed CTA. The outer grid animates 0fr -> 1fr, which eases to the
-                button's own height; the inner element must carry `overflow-hidden` for
-                the collapsed row to actually clip it.
-
-                No `mt-auto`: the card is content-height, so there is no free space to
-                absorb and the button simply follows "Best For".
-              */}
-              <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr]">
-                <div className="overflow-hidden">
-                  <Link
-                    href="/contact-us"
-                    style={buttonTypography}
-                    className="mt-7 block rounded-[10px] bg-[#B6D500] py-[14px] text-center text-[#101311] transition-colors duration-200 hover:bg-[#a2bf00]"
-                  >
-                    Get Started
-                  </Link>
-                </div>
-              </div>
-            </li>
+            <PlanCard key={plan.phase} plan={plan} />
           ))}
         </ul>
+
+        {/* Video teaser. The headline is baked into the image; the play button sits
+            dead centre, over the laptop. */}
+        <div className="relative mx-auto mt-10 w-full max-w-[800px] overflow-hidden rounded-2xl lg:mt-15">
+          <Image
+            src={priceVideoBg}
+            alt="Why our packages are the best for smart technology and faster growth — Way-Wise Tech"
+            className="h-auto w-full"
+            sizes="(min-width: 832px) 800px, 100vw"
+          />
+          <RestaurentPlayButton size="md" iconClassName="text-[#101311]" />
+        </div>
       </div>
     </section>
   );

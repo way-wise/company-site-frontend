@@ -26,14 +26,14 @@ const PlumberPage = () => {
     <main className="min-h-screen bg-white">
       <PlumberNavbar />
       <PlumberBanner />
-      <PlumberServices />
+      {/* <PlumberServices /> */}
       <PlumberWhyChoose />
       <PlumberPackages />
       <PlumberProjects />
-      <PlumberWayToGrow />
-      <PlumberBusinessControl />
-      <PlumberBetterWay />
-      <PlumberFaq />
+      {/* <PlumberWayToGrow /> */}
+      {/* <PlumberBusinessControl /> */}
+      {/* <PlumberBetterWay /> */}
+      {/* <PlumberFaq /> */}
       <PlumberCta />
       <PlumberFooter />
     </main>

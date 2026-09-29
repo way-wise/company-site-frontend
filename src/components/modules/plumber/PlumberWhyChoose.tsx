@@ -4,6 +4,8 @@ import icon1 from "@/assets/images/plumber/1.webp";
 import icon2 from "@/assets/images/plumber/2.webp";
 import icon3 from "@/assets/images/plumber/3.webp";
 import icon4 from "@/assets/images/plumber/4.webp";
+import aboutImage from "@/assets/images/plumber/about_img.png";
+import RestaurentPlayButton from "@/components/modules/restaurant/RestaurentPlayButton";
 
 /**
  * "Your Crew Works in the Field. Your Business Should Work Everywhere." — four benefit
@@ -41,6 +43,13 @@ const cardTitleTypography = {
   lineHeight: "32px",
   letterSpacing: "0.3px",
 } as const;
+const cardNumTypography = {
+  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
+  fontWeight: 700,
+  fontSize: "24px",
+  lineHeight: "32px",
+  letterSpacing: "0.3px",
+} as const;
 
 // Figma spec: Plus Jakarta Sans Regular 18px / 26px, zero letter-spacing, #101311.
 const cardBodyTypography = {
@@ -51,82 +60,119 @@ const cardBodyTypography = {
   letterSpacing: "0",
 } as const;
 
-const cards: { icon: StaticImageData; title: string; body: string }[] = [
+
+// Figma spec: Plus Jakarta Sans Medium 18px / 26px, zero letter-spacing.
+const paragraphTypography = {
+  fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
+  fontWeight: 500,
+  fontSize: "18px",
+  lineHeight: "26px",
+  letterSpacing: "0",
+} as const;
+
+const cards: { num: number; title: string; body: string }[] = [
   {
-    icon: icon1,
+    num: 1,
     title: "Capture More Leads",
-    body: "Turn website visits, calls, and inquiries into booked jobs.",
+    body: "Turn website visits, calls, and inquiries into booked jobs with a smoother customer journey.",
   },
   {
-    icon: icon2,
+    num: 2,
     title: "Manage Jobs More Clearly",
-    body: "Organize customers, estimates, tasks, files, and project updates.",
+    body: "Organize customers, estimates, tasks, and job details in one place for a more manageable workflow.",
   },
   {
-    icon: icon3,
+    num: 3,
     title: "Improve Client Experience",
-    body: "Simplify client service requests, updates, and approvals.",
+    body: "Simplify service requests, appointment updates, and approvals to keep customers informed and satisfied.",
   },
   {
-    icon: icon4,
+    num: 4,
     title: "Give Your Team Better Visibility",
-    body: "Keep office staff and field teams connected on any device.",
+    body: "Keep office staff and field teams connected with clearer communication and real-time job visibility.",
   },
+];
+
+const paragraphs = [
+  "Managing a service business takes more than completing jobs. From scheduling and customer communication to team coordination and follow-ups, Way-Wise Tech brings your entire operation into one connected digital ecosystem.",
 ];
 
 const PlumberWhyChoose = () => {
   return (
-    <section id="why-us" className="w-full scroll-mt-[110px] bg-[#ECEEE2] px-4">
+    <section id="about" className="w-full scroll-mt-[110px] bg-[#ECEEE2] px-4">
       {/* 1420px, matching the navbar and banner — wider than the 1320 the services
           section uses, per this frame. */}
       <div className="mx-auto w-full max-w-[1420px] py-10 lg:py-[100px]">
-        <h2
-          className="text-center text-[30px] leading-[1.2] text-[#17120F] sm:text-[38px] lg:text-[48px] lg:leading-[60px]"
-          style={titleTypography}
-        >
-          {/* Hard break reproduced from the Figma frame. */}
-          <span className="block">Your Crew Works in the Field. Your</span>
-          <span className="block">Business Should Work Everywhere.</span>
-        </h2>
 
-        {/* 20px title -> paragraph, 60px paragraph -> cards, matching the services
-            section's rhythm. */}
-        <p
-          className="mx-auto mt-5 max-w-[900px] text-center text-[#17120F]"
-          style={introTypography}
-        >
-          Growing service businesses often lose time to missed calls, manual
-          follow-ups, scattered job information, and outdated systems. Way Wise
-          brings your customer journey, team communication, projects, and growth
-          tools into one connected digital ecosystem.
-        </p>
+        <div className="grid lg:grid-cols-2 gap-15">
+            <div>
+              <div>
+                <h2
+                  className="text-[30px] pr-10 leading-[1.2] text-[#101311] sm:text-[38px] xl:text-[48px] xl:leading-[60px]"
+                  style={titleTypography}
+                >
+                  {/* Hard breaks reproduced from the Figma frame. */}
+                  <span className="block">Why Service Businesses Rely on Way-Wise Tech to Work Smarter and Grow Faster</span>
+                </h2>
 
-        <ul className="mt-[60px] grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {cards.map(({ icon, title, body }) => (
-            <li key={title} className="rounded-[16px] bg-white p-8">
-              <span
-                className="flex size-[88px] items-center justify-center rounded-[16px] bg-[#B6D500]"
-                aria-hidden="true"
-              >
-                {/* Supplied at 48x48 and rendered at that size. Decorative: the card
-                    heading already names the benefit. */}
-                <Image src={icon} alt="" className="size-12" />
-              </span>
+                {/* No colour specced for the body copy; it reads a muted grey against the
+                    near-black heading in the frame. */}
+                <div className="mt-5 flex max-w-[670px] flex-col gap-6">
+                  {paragraphs.map((paragraph) => (
+                    <p
+                      key={paragraph}
+                      className="text-[#6D625C]"
+                      style={paragraphTypography}
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </div>
 
-              {/* h3: nested under this section's h2. Uppercased in CSS rather than in
-                  the data, so the accessible name keeps its normal casing. */}
-              <h3
-                className="mt-9 pr-0.5 text-[#101311] uppercase"
-                style={cardTitleTypography}
-              >
-                {title}
-              </h3>
-              <p className="mt-5 text-[#101311]" style={cardBodyTypography}>
-                {body}
-              </p>
-            </li>
-          ))}
-        </ul>
+            {/* Video teaser under the paragraph: photo with the shared play button
+                centred on it. */}
+            <div className="relative mt-10 w-full max-w-[670px] overflow-hidden rounded-[16px]">
+              <Image
+                src={aboutImage}
+                alt="Technician reviewing job details on a tablet while two colleagues load equipment from a service van"
+                className="h-auto w-full"
+                sizes="(min-width: 1024px) 670px, 100vw"
+              />
+              <RestaurentPlayButton size="md" iconClassName="text-[#101311]" />
+            </div>
+            </div>
+
+            <div>
+              <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {cards.map(({ num, title, body }) => (
+                  <li key={title} className="rounded-[16px] bg-white p-4 xl:p-8">
+                    <span
+                      className="flex size-[70px] items-center justify-center font- rounded-[16px] bg-[#B6D500]"
+                      aria-hidden="true" style={cardNumTypography}
+                    >
+                      {/* Supplied at 48x48 and rendered at that size. Decorative: the card
+                          heading already names the benefit. */}
+                      {num}
+                    </span>
+
+                    {/* h3: nested under this section's h2. Uppercased in CSS rather than in
+                        the data, so the accessible name keeps its normal casing. */}
+                    <h3
+                      className="mt-7.5 pr-0.5 text-[#101311] uppercase"
+                      style={cardTitleTypography}
+                    >
+                      {title}
+                    </h3>
+                    <p className="mt-5 text-[#101311]" style={cardBodyTypography}>
+                      {body}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            
+            </div>
+        </div>
       </div>
     </section>
   );

@@ -83,7 +83,7 @@ const cards = [
 
 const RestaurantGuestExperience = () => {
   return (
-    <section className="w-full bg-white px-4">
+    <section className="w-full bg-white px-4" id="about">
       {/* 630px per column: the photo's intrinsic width, and exactly half of 1320 once
           the 60px gap is taken out. */}
       <div className="mx-auto grid w-full max-w-[1320px] gap-10 py-10 lg:grid-cols-2 lg:gap-[60px] lg:py-[100px]">
@@ -127,7 +127,8 @@ const RestaurantGuestExperience = () => {
               className="mt-8 aspect-[630/315] w-full rounded-[18px] object-cover"
               sizes="(min-width: 1024px) 630px, 100vw"
             />
-            <RestaurentPlayButton width={120} iconSize={24} outerRingWidth={17} innerRingWidth={5} />
+            {/* <RestaurentPlayButton className="hidden md:block" width={120} iconSize={24} outerRingWidth={17} innerRingWidth={5} />
+            <RestaurentPlayButton className="md:hidden" width={60} iconSize={15} outerRingWidth={12} innerRingWidth={5} /> */}
           </div>
         </div>
 

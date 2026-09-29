@@ -29,7 +29,7 @@ const DRAWER_ID = "restaurant-mobile-drawer";
 // further down. Section ids must match these as the sections get built.
 const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "About", href: "#About" },
+  { label: "About", href: "#about" },
   { label: "Packages", href: "#packages" },
   { label: "Our Work", href: "#our-work" },
 ];
@@ -161,18 +161,18 @@ const RestaurantNavbar = () => {
                 </a>
               ))}
               <Link
-          href="/book"
-          title="View Company Profile"
-          className="hidden overflow-hidden rounded-sm shadow-[0_0_8px_rgba(0,163,255,0.3)] transition-all duration-300 hover:scale-[1.04] hover:ring-[#00A3FF]/80 hover:shadow-[0_0_14px_rgba(0,163,255,0.5)] lg:block"
-        >
-          <Image
-            src={profileGuide}
-            alt="Way Wise Tech company profile"
-            width={1190}
-            height={841}
-            className="h-auto w-24 object-cover"
-          />
-        </Link>
+                href="/book"
+                title="View Company Profile"
+                className="hidden overflow-hidden rounded-sm shadow-[0_0_8px_rgba(0,163,255,0.3)] transition-all duration-300 hover:scale-[1.04] hover:ring-[#00A3FF]/80 hover:shadow-[0_0_14px_rgba(0,163,255,0.5)] lg:block"
+              >
+              <Image
+                src={profileGuide}
+                alt="Way Wise Tech company profile"
+                width={1190}
+                height={841}
+                className="h-auto w-24 object-cover"
+              />
+            </Link>
             </nav>
 
             {/*

@@ -86,7 +86,7 @@ const RestaurentPlayButton = ({
           aria-hidden="true"
           style={iconSize !== undefined ? { width: toCss(iconSize), height: toCss(iconSize) } : undefined}
           className={cn(
-            "ml-[8%] size-[40%] text-[#F5282D] transition-transform duration-300 group-hover:scale-110",
+            "size-[40%] text-[#F5282D] transition-transform duration-300 group-hover:scale-110",
             iconClassName,
           )}
         >

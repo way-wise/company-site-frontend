@@ -42,7 +42,6 @@ const introTypography = {
 const chipTypography = {
   fontFamily: "var(--font-plus-jakarta-sans), sans-serif",
   fontWeight: 600,
-  fontSize: "16px",
   lineHeight: "100%",
   letterSpacing: "0",
 } as const;
@@ -181,7 +180,7 @@ const RestaurantProjects = () => {
                 onClick={() => selectFilter(filter)}
                 aria-pressed={isActive}
                 style={chipTypography}
-                className={`rounded-[6px] border border-[#E94222] px-[30px] py-3 whitespace-nowrap transition-colors duration-200 hover:bg-[#E94222] hover:text-white ${
+                className={`rounded-[6px] border text-[14px] md:text-[16px] border-[#E94222] px-4 md:px-[30px] py-3 whitespace-nowrap transition-colors duration-200 hover:bg-[#E94222] hover:text-white ${
                   isActive
                     ? "bg-[#E94222] text-white"
                     : "bg-transparent text-[#F36F38]"
@@ -202,7 +201,7 @@ const RestaurantProjects = () => {
                   alt={`${project.title} — ${project.meta}`}
                   width={IMAGE_WIDTH}
                   height={IMAGE_HEIGHT}
-                  className="aspect-[635/408] w-full object-cover"
+                  className="aspect-[635/408] w-full object-cover border md:border-0 border-[#E94222] rounded-2xl"
                   sizes="(min-width: 768px) 635px, 100vw"
                 />
 
@@ -221,7 +220,7 @@ const RestaurantProjects = () => {
                     diagonal. */}
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 rounded-[inherit] border-[1.5px] border-transparent"
+                  className="md:block hidden pointer-events-none absolute inset-0 rounded-[inherit] border-[1.5px] border-transparent"
                   style={{
                     background:
                       "linear-gradient(180deg, rgba(233,66,34,0.15) 0%, rgba(233,66,34,0.35) 25%, #E94222 55%, rgba(233,66,34,0.6) 100%) border-box",
