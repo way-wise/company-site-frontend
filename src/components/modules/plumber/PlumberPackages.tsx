@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import priceVideoBg from "@/assets/images/plumber/price_video_bg.png";
-import RestaurentPlayButton from "@/components/modules/restaurant/RestaurentPlayButton";
+import PlumberPlayButton from "./PlumberPlayButton";
 
 /**
  * Packages — three phase cards joined into one panel.
@@ -389,7 +389,7 @@ const PlumberPackages = () => {
             className="h-auto w-full"
             sizes="(min-width: 832px) 800px, 100vw"
           />
-          <RestaurentPlayButton size="md" iconClassName="text-[#101311]" />
+          {/* <PlumberPlayButton size="md" /> */}
         </div>
       </div>
     </section>

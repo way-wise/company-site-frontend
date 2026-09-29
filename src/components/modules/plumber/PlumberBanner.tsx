@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import bannerImage from "@/assets/images/plumber/banner_right.webp";
 import bannerBg from "@/assets/images/plumber/banner.png";
 import bannerVideo from "@/assets/images/plumber/bannervideo.png";
-import RestaurentPlayButton from "@/components/modules/restaurant/RestaurentPlayButton";
+import PlumberPlayButton from "./PlumberPlayButton";
 
 /**
  * Banner / hero.
@@ -161,7 +161,7 @@ const PlumberBanner = () => {
               className="h-auto w-full"
               sizes="254px"
             />
-            <RestaurentPlayButton size="sm" iconClassName="text-[#101311]" />
+            {/* <PlumberPlayButton size="sm" /> */}
           </div>
         </div>
       </div>

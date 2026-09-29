@@ -5,7 +5,7 @@ import icon2 from "@/assets/images/plumber/2.webp";
 import icon3 from "@/assets/images/plumber/3.webp";
 import icon4 from "@/assets/images/plumber/4.webp";
 import aboutImage from "@/assets/images/plumber/about_img.png";
-import RestaurentPlayButton from "@/components/modules/restaurant/RestaurentPlayButton";
+import PlumberPlayButton from "./PlumberPlayButton";
 
 /**
  * "Your Crew Works in the Field. Your Business Should Work Everywhere." — four benefit
@@ -139,7 +139,7 @@ const PlumberWhyChoose = () => {
                 className="h-auto w-full"
                 sizes="(min-width: 1024px) 670px, 100vw"
               />
-              <RestaurentPlayButton size="md" iconClassName="text-[#101311]" />
+              {/* <PlumberPlayButton size="md" /> */}
             </div>
             </div>
 

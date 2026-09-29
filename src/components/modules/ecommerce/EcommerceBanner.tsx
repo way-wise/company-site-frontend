@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import bannerImage from "@/assets/images/ecommerce/banner_right.webp";
+import bannerBg from "@/assets/images/ecommerce/banner_bg.png";
+import EcommercePlayButton from "./EcommercePlayButton";
 
 /**
  * Banner / hero.
@@ -10,6 +12,9 @@ import bannerImage from "@/assets/images/ecommerce/banner_right.webp";
  * cards ("CUSTOMER LOYALTY 94% Retention", "MOBILE STORE £4.2k") and their rounded
  * corners are baked in, so none of them are markup. That means those figures are not
  * selectable or translatable.
+ *
+ * The ground is a pre-dimmed store photo, so the copy reads without an extra overlay;
+ * #1E130A stays underneath as the colour shown before the image paints.
  *
  * Outfit comes from the ROOT layout, which puts --font-outfit on <body>, rather than
  * this route's own Plus Jakarta Sans.
@@ -54,16 +59,29 @@ const buttonTypography = {
 
 const EcommerceBanner = () => {
   return (
-    <section className="w-full bg-[#1E130A] px-4">
+    <section className="relative isolate w-full overflow-hidden bg-[#1E130A] px-4" id="home">
+      {/* Background photo. `-z-10` inside the `isolate` section keeps it behind the
+          content without escaping the section's stacking context. */}
+      <Image
+        src={bannerBg}
+        alt=""
+        aria-hidden="true"
+        fill
+        priority
+        sizes="100vw"
+        placeholder="blur"
+        className="-z-10 object-cover object-center"
+      />
+
       {/* 1420px, matching the navbar. 623px right column is the asset's intrinsic width,
           so the collage renders unscaled. */}
-      <div className="mx-auto grid w-full max-w-[1420px] items-center gap-12 py-16 lg:grid-cols-2 xl:grid-cols-[1fr_623px] xl:gap-16 lg:py-[100px]">
+      <div className="mx-auto grid w-full max-w-[1520px] items-center gap-12 xl:gap-16 py-16 lg:grid-cols-2 xl:grid-cols-[1fr_623px] lg:py-[100px]">
         {/* Copy column */}
-        <div>
+        <div className="max-w-[817px]">
           {/* No fill was specced for the eyebrow pill; the accent at 15% keeps it in
               palette against the #1E130A ground. */}
           <p
-            className="inline-flex md:items-center gap-2 rounded-full bg-[#2563EB]/12 border-[0.8px] border-[rgba(37,100,235,0.22)] px-4 py-2 text-[#A07B62] uppercase text-[12px] md:text-[14px]"
+            className="inline-flex md:items-center gap-2 rounded-full bg-[#FCB017]/12 border-[0.8px] border-[#FCB017]/22 px-4 py-2 text-[#FCB017] uppercase text-[12px] md:text-[14px]"
             style={eyebrowTypography}
           >
             <span aria-hidden="true">&bull;</span>
@@ -74,22 +92,20 @@ const EcommerceBanner = () => {
               because the colour split falls on a line boundary: row one is white and
               the rest is the accent. */}
           <h1
-            className="mt-8 text-[34px] leading-[1.15] sm:text-[46px] lg:text-[54px] xl:text-[64px]"
+            className="mt-8 text-[34px] sm:text-[46px] lg:text-[52px]]"
             style={titleTypography}
           >
-            <span className="block text-white">Power Your Retail</span>
-            <span className="mt-2 md:mt-4 block text-[#A07B62]">
-              Business with Smarter
+            <span className="block text-white leading-13">Do You Own a Retail Store or Operate an eCommerce Business?</span>
+            <span className="mt-2 block text-[#FCB017] leading-13">
+              Explore Our Exclusive Commerce Service Packages.
             </span>
-            <span className="mt-2 md:mt-4 block text-[#A07B62]">Technology.</span>
           </h1>
 
           <p
             className="mt-8 max-w-[660px] text-white/70"
             style={paragraphTypography}
           >
-            Build your online presence, increase sales, and manage customers,
-            orders, and inventory through connected retail solutions.
+            Build your online presence, increase sales, manage customers and orders, and grow your retail business with smarter technology.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -117,7 +133,7 @@ const EcommerceBanner = () => {
 
         {/* Visual column. Intrinsic size is 623x500; width and height come from the
             static import, so only the rendered width is capped here. */}
-        <div className="justify-self-center lg:justify-self-end">
+        <div className="relative justify-self-center lg:justify-self-end max-w-[603px]">
           <Image
             src={bannerImage}
             alt="Retail staff using a tablet and phone in store, a customer browsing shelves, and a sales dashboard on a desktop monitor"
@@ -125,6 +141,12 @@ const EcommerceBanner = () => {
             sizes="(min-width: 1024px) 623px, 100vw"
             priority
           />
+
+          {/* Play button centred on the bottom-right photo tile. Positioned in
+              percentages of the collage (tile spans x 300–623, y 248–500 of 623x500,
+              so its centre is ≈ 74%, 75%) so it stays centred as the collage scales;
+              the button's own centring translate is kept. */}
+          <EcommercePlayButton size="sm" className="top-[75%] left-[74%]" />
         </div>
       </div>
     </section>
