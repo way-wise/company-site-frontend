@@ -216,7 +216,7 @@ const EcommerceOurWork = () => {
                 onClick={() => selectFilter(filter)}
                 aria-pressed={isActive}
                 style={controlTypography}
-                className={`rounded-[8px] border border-[#A07B62] px-[30px] py-2 whitespace-nowrap text-[#A07B62] transition-colors duration-200 hover:bg-[#A07B62] hover:text-white ${
+                className={`rounded-[8px] border border-[#A07B62] px-4 md:px-[30px] py-2 whitespace-nowrap text-[#A07B62] transition-colors duration-200 hover:bg-[#A07B62] hover:text-white ${
                   isActive ? "bg-[#A07B62] text-white" : "bg-transparent"
                 }`}
               >
@@ -235,7 +235,7 @@ const EcommerceOurWork = () => {
                 <Image
                   src={project.image}
                   alt={`${project.title} — ${project.meta}`}
-                  className="aspect-[685/408] w-full object-cover"
+                  className="aspect-[685/408] w-full object-cover border border-[#A07B62] rounded-2xl"
                   sizes="(min-width: 768px) 685px, 100vw"
                 />
                 <span
@@ -244,6 +244,25 @@ const EcommerceOurWork = () => {
                 >
                   {project.badge}
                 </span>
+
+                {/* Gradient border, per the Figma stops: #A07B62 at 100% -> #A07B62 at
+                    20%. A real (transparent) border painted with the gradient, then
+                    masked so only the border ring shows — it shares the card's radius,
+                    so the stroke is the same thickness at the corners as along the
+                    edges. Change `border-[1.5px]` to adjust the thickness. */}
+                <span
+                  aria-hidden="true"
+                  className="hidden xxl:block pointer-events-none absolute inset-0 rounded-[inherit] border-[1.5px] border-transparent"
+                  style={{
+                    background:
+                      "linear-gradient(15deg, rgba(160,123,98,1) 0%, rgba(160,123,98,0.2) 100%) border-box",
+                    mask: "linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0)",
+                    maskComposite: "exclude",
+                    WebkitMask:
+                      "linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0)",
+                    WebkitMaskComposite: "xor",
+                  }}
+                />
               </div>
 
               {/* h3: nested under this section's h2. */}

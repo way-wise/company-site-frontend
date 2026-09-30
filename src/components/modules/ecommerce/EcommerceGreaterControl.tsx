@@ -90,10 +90,10 @@ const points = [
 
 const EcommerceGreaterControl = () => {
   return (
-    <section className="w-full bg-[#F7FAFC] px-4">
+    <section id="about" className="w-full bg-[#F7FAFC] px-4">
       {/* 1420px, matching the navbar. Two 680px columns plus the 60px gutter is exactly
           that width, so the photo renders at its intrinsic size. */}
-      <div className="mx-auto grid w-full max-w-[1420px] items-center gap-12 py-10 lg:grid-cols-2 lg:gap-[60px] lg:py-[100px]">
+      <div className="mx-auto grid w-full max-w-[1420px] items-center gap-12 py-10 xl:grid-cols-2 lg:gap-[60px] lg:py-[100px]">
         {/* Copy column */}
         <div>
           {/* Left to wrap inside the 680px column, which is what puts the break after
@@ -150,11 +150,11 @@ const EcommerceGreaterControl = () => {
           />
 
           {/* Play button centred on the photo, with the accent-brown triangle. */}
-          <EcommercePlayButton size="md" iconClassName="text-[#A07B62]" />
+          {/* <EcommercePlayButton size="md" iconClassName="text-[#A07B62]" /> */}
 
           {/* Overlay card. Not baked into the asset, so it is real text. `max-w` keeps it
               inside the photo on narrow viewports. */}
-          <div className="absolute bottom-5 left-6 max-w-[calc(100%-3rem)] rounded-[12px] bg-white/95 px-4 py-3 shadow-[0_8px_24px_rgba(30,19,10,0.12)]">
+          <div className="absolute bottom-5 hidden sm:block left-6 max-w-[calc(100%-3rem)] rounded-[12px] bg-white/95 px-4 py-3 shadow-[0_8px_24px_rgba(30,19,10,0.12)]">
             <p style={cardLabelTypography} className="text-[#A07B62]">
               OPERATIONS STATUS
             </p>

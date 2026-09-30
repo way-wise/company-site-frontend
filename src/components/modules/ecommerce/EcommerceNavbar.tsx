@@ -45,6 +45,23 @@ const navTypography = {
   letterSpacing: "0",
 } as const;
 
+/**
+ * "Home" goes to the very top of the page rather than to the banner's `#home` anchor.
+ * The banner starts below the navbar, so native fragment navigation would scroll it to
+ * the viewport top — i.e. ~92px down, with the navbar scrolled out of view. The hash is
+ * still written so the URL reads the same as before. Other links fall through to native
+ * fragment navigation.
+ */
+const handleNavClick = (
+  event: React.MouseEvent<HTMLAnchorElement>,
+  href: string,
+) => {
+  if (href !== "#home") return;
+  event.preventDefault();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.history.replaceState(null, "", href);
+};
+
 const EcommerceNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
@@ -160,6 +177,7 @@ const EcommerceNavbar = () => {
                 <a
                   key={link.label}
                   href={link.href}
+                  onClick={(event) => handleNavClick(event, link.href)}
                   style={navTypography}
                   className="whitespace-nowrap text-[16px] text-[#0F1A1A] transition-colors duration-200 hover:text-[#A07B62]"
                 >
@@ -258,7 +276,10 @@ const EcommerceNavbar = () => {
                 {/* Plain <a> for the same reason as the desktop row above. */}
                 <a
                   href={link.href}
-                  onClick={() => setMobileOpen(false)}
+                  onClick={(event) => {
+                    setMobileOpen(false);
+                    handleNavClick(event, link.href);
+                  }}
                   style={navTypography}
                   className="block border-b border-[#0F1A1A]/10 px-6 py-4 text-[#0F1A1A] transition-colors duration-200 hover:bg-white/40 hover:text-[#A07B62]"
                 >

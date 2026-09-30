@@ -25,7 +25,6 @@ const font = "var(--font-outfit), sans-serif";
 const eyebrowTypography = {
   fontFamily: font,
   fontWeight: 500,
-  fontSize: "16px",
   lineHeight: "16px",
   letterSpacing: "1.44px",
 } as const;
@@ -238,7 +237,7 @@ const PlanCard = ({ plan }: { plan: Plan }) => {
       </p>
 
       <p
-        className="mt-4 w-fit rounded-[10px] bg-[#A07B62] px-3 py-1 text-[26px] leading-[40px] text-white sm:text-[30px] sm:leading-[44px]"
+        className="mt-4 w-fit rounded-[10px] bg-[#A07B62] px-3 py-1 text-[24px] leading-[40px] text-white xl:text-[30px] lg:text-[26px] sm:leading-[44px]"
         style={priceTypography}
       >
         {plan.price}
@@ -326,7 +325,7 @@ const EcommercePackages = () => {
     <section id="packages" className="scroll-mt-[110px] bg-[#F3EFEC] px-4">
       <div className="mx-auto w-full max-w-[1420px] py-10 lg:py-[100px]">
         <div className="mx-auto max-w-[768px] text-center">
-          <p style={eyebrowTypography} className="pb-4 text-[#A07B62]">
+          <p style={eyebrowTypography} className="pb-4 text-[15px] sm:text-[16px] text-[#A07B62]">
             BUILT AROUND YOUR BUSINESS STAGE
           </p>
           <h2
@@ -359,7 +358,7 @@ const EcommercePackages = () => {
             className="h-auto w-full"
             sizes="(min-width: 832px) 800px, 100vw"
           />
-          <EcommercePlayButton size="md" iconClassName="text-[#E5412F]" />
+          {/* <EcommercePlayButton size="md" iconClassName="text-[#E5412F]" /> */}
         </div>
       </div>
     </section>

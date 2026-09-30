@@ -92,7 +92,7 @@ const EcommerceBanner = () => {
               because the colour split falls on a line boundary: row one is white and
               the rest is the accent. */}
           <h1
-            className="mt-8 text-[34px] sm:text-[46px] lg:text-[52px]]"
+            className="mt-8 text-[30px] sm:text-[46px] lg:text-[52px]]"
             style={titleTypography}
           >
             <span className="block text-white leading-13">Do You Own a Retail Store or Operate an eCommerce Business?</span>
@@ -146,7 +146,7 @@ const EcommerceBanner = () => {
               percentages of the collage (tile spans x 300–623, y 248–500 of 623x500,
               so its centre is ≈ 74%, 75%) so it stays centred as the collage scales;
               the button's own centring translate is kept. */}
-          <EcommercePlayButton size="sm" className="top-[75%] left-[74%]" />
+          {/* <EcommercePlayButton size="sm" className="top-[75%] left-[74%]" /> */}
         </div>
       </div>
     </section>
