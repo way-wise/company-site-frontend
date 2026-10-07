@@ -29,22 +29,22 @@ const processSteps = [
 const statistics = [
   {
     id: 1,
-    number: "2+",
+    number: "7+",
     label: "Years Experience",
   },
   {
     id: 2,
-    number: "21",
+    number: "25+",
     label: "Skilled IT-Experts",
   },
   {
     id: 3,
-    number: "70",
+    number: "320",
     label: "Projects Completed",
   },
   {
     id: 4,
-    number: "210",
+    number: "215",
     label: "Happy Customers",
   },
 ];
