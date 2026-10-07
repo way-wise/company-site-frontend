@@ -402,7 +402,7 @@ export default function Navbar() {
                   </nav>
 
                   {/* Desktop Company Profile Thumbnail */}
-                  <div
+                  {/* <div
                      className="hidden lg:flex gap-2 rounded-sm cursor-pointer overflow-hidden ring-2 ring-[#00A3FF]/60 transition-all duration-300 hover:scale-[1.04] hover:ring-[#00A3FF]/80"
                      style={{ boxShadow: "0 0 8px rgba(0, 163, 255, 0.3)" }}
                      onMouseEnter={(e) =>
@@ -422,7 +422,7 @@ export default function Navbar() {
                         height={841}
                         className="w-24 h-auto object-cover"
                      />
-                  </div>
+                  </div> */}
                   {/* <div className="hidden lg:flex items-center justify-center gap-2  rounded-md p-2 bg-[url('@/assets/images/home/contact.png')] bg-cover bg-center bg-no-repeat">
               <Phone className="w-5 h-5 text-white hidden xl:block" />
               <div>

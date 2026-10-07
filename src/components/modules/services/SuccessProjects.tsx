@@ -34,18 +34,18 @@ const statistics = [
   },
   {
     id: 2,
-    number: "25+",
+    number: "27+",
     label: "Skilled IT-Experts",
   },
   {
     id: 3,
-    number: "320",
+    number: "321",
     label: "Projects Completed",
   },
   {
     id: 4,
-    number: "215",
-    label: "Happy Customers",
+    number: "100%",
+    label: "Customer Satisfaction",
   },
 ];
 
@@ -108,7 +108,7 @@ const SuccessProjects = () => {
               {/* Large bordered number (text border only, no fill) */}
               <div className="absolute inset-0 flex items-center justify-center ">
                 <span
-                  className="text-transparent text-[100px] lg:text-[150px] font-black select-none"
+                  className="text-transparent text-[80px] lg:text-[120px] font-black select-none"
                   style={{
                     WebkitTextStroke: "1px #616781",
                     stroke: "1px #616781",
